@@ -15,6 +15,36 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# LDAP settings
+import ldap
+from django_auth_ldap.config import LDAPSearch
+
+LOGIN_URL = '/scorecard/'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'django_auth_ldap.backend.LDAPBackend',
+)
+
+AUTH_LDAP_SERVER_URI = "ldap://10.27.116.51"
+AUTH_LDAP_BIND_DN = "cn=LDAP Query\\, Domino Server, OU=Service Accounts,DC=corp,DC=westworlds,DC=com"
+AUTH_LDAP_BIND_PASSWORD = "Qu3ryLd@p"
+AUTH_LDAP_USER_SEARCH = LDAPSearch('DC=corp,DC=westworlds,DC=com',
+    ldap.SCOPE_SUBTREE, "(samaccountname=%(user)s)")
+
+AUTH_LDAP_CACHE_GROUPS = True
+AUTH_LDAP_GROUP_CACHE_TIMEOUT = 3600
+AUTH_LDAP_CONNECTION_OPTIONS = {
+    ldap.OPT_REFERRALS: 0
+}
+
+AUTH_LDAP_USER_ATTR_MAP = {
+    'first_name': 'givenname',
+    'last_name': 'sn',
+    'email': 'mail'
+}
+
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
