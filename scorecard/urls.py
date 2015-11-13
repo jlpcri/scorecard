@@ -13,9 +13,12 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import include, url
+from django.conf.urls import include, url, patterns
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^scorecard/$', 'scorecard.apps.core.views.landing', name='landing'),
+    url(r'^scorecard/', include('scorecard.apps.users.urls', namespace='users')),
+
+    url(r'^scorecard/admin/', include(admin.site.urls)),
 ]

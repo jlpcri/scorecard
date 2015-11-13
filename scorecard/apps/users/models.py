@@ -33,4 +33,4 @@ class HumanResource(models.Model):
     contractor = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return '{0}: {1}'.format(self.user.username, self.functional_group.name)
+        return '{0}: {1}'.format(self.user.username, self.manager)
