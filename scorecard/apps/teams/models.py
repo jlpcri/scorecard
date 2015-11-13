@@ -42,9 +42,9 @@ class BaseMetrics(models.Model):
         abstract = True
 
 
-class TestingMetrics(BaseMetrics):
+class TestMetrics(BaseMetrics):
     """
-    Metrics for groups: Quality Assurance, Testing Engineering, Product Quality
+    Metrics for groups: Quality Assurance, Test Engineering, Product Quality
     """
     # Throughput
     team_initiative = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -204,18 +204,10 @@ class InnovationMetrics(BaseMetrics):
         return self.operational_cost + self.license_cost
 
 
-class RequirementsMetrics(models.Model):
+class RequirementsMetrics(BaseMetrics):
     """
     Metrics for group: Requirements Engineering
     """
-    functional_group = models.ForeignKey(FunctionalGroup)
-    created = models.DateTimeField(auto_now_add=True, db_index=True)
-    confirmed = models.DateTimeField(auto_now=True, db_index=True)
-
-    # Human Resource
-    staffs = models.IntegerField(default=0)
-    contractors = models.IntegerField(default=0)
-    openings = models.IntegerField(default=0)
 
     # Throughput
 
@@ -231,14 +223,10 @@ class RequirementsMetrics(models.Model):
                                       localtime(self.created))
 
 
-class LabMetrics(models.Model):
+class LabMetrics(BaseMetrics):
     """
-    Metrics for group: Testing Lab
+    Metrics for group: Test Lab
     """
-    functional_group = models.ForeignKey(FunctionalGroup)
-    created = models.DateTimeField(auto_now_add=True, db_index=True)
-    confirmed = models.DateTimeField(auto_now=True, db_index=True)
-
     # Throughput
     tickets_received = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     tickets_closed = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -248,7 +236,6 @@ class LabMetrics(models.Model):
     # Costs
     power_consumption_ups_a = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in kw
     power_consumption_ups_b = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in kw
-    license_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __unicode__(self):
         return '{0}: {1}: {2}'.format(self.functional_group.name,
