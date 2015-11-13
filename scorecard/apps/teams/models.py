@@ -204,23 +204,63 @@ class InnovationMetrics(BaseMetrics):
         return self.operational_cost + self.license_cost
 
 
-class RequirementsMetrics(BaseMetrics):
+class RequirementMetrics(BaseMetrics):
     """
     Metrics for group: Requirements Engineering
     """
 
     # Throughput
+    backlog = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    team_initiative = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    active_projects = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
 
     # Quality
+    revisions = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    slas_missed = models.DecimalField(max_digits=3, decimal_places=2, default=0,
+                                      validators=[MaxValueValidator(1)])
 
     # Efficiency
+    rework_external_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     # Costs
+    travel_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __unicode__(self):
         return '{0}: {1}: {2}'.format(self.functional_group.name,
                                       localtime(self.confirmed),
                                       localtime(self.created))
+
+    @property
+    def avg_throughput(self):
+        return self.active_projects + self.team_initiative
+
+    @property
+    def gross_available_time(self):
+        return self.staffs * 6 * 5
+
+    @property
+    def efficiency(self):
+        if self.gross_available_time == 0:
+            return 0
+        else:
+            return self.elicitation_analysis_time / self.gross_available_time
+
+    @property
+    def rework_external_cost(self):
+        return self.rework_external_time * 50
+
+    @property
+    def operational_cost(self):
+        return (self.staffs + self.contractors) * 30 * 50
+
+    @property
+    def total_operational_cost(self):
+        return self.operational_cost + self.license_cost
+
+    @property
+    def overall_cost(self):
+        return self.total_operational_cost + self.travel_cost
 
 
 class LabMetrics(BaseMetrics):

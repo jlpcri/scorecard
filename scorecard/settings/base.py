@@ -67,6 +67,12 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'scorecard.apps.congregations',
+    'scorecard.apps.core',
+    'scorecard.apps.exportations',
+    'scorecard.apps.personage',
+    'scorecard.apps.teams',
+    'scorecard.apps.users'
 )
 
 MIDDLEWARE_CLASSES = (
