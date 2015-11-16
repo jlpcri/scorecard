@@ -133,6 +133,12 @@ USE_L10N = True
 
 USE_TZ = True
 
+SESSION_COOKIE_NAME = 'scoreCardSessionId'
+# Age of session cookies, in seconds
+SESSION_COOKIE_AGE = 43200  # 12 hours
+# Save the session data on every request
+SESSION_SAVE_EVERY_REQUEST = True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
