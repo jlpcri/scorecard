@@ -18,6 +18,11 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^scorecard/$', 'scorecard.apps.core.views.landing', name='landing'),
+    url(r'^scorecard/congregations/', include('scorecard.apps.congregations.urls', namespace='congregations')),
+    url(r'^scorecard/exportations/', include('scorecard.apps.exportations.urls', namespace='exportations')),
+    url(r'^scorecard/help/', include('scorecard.apps.help.urls', namespace='help')),
+    url(r'^scorecard/individuals/', include('scorecard.apps.individuals.urls', namespace='individuals')),
+    url(r'^scorecard/teams/', include('scorecard.apps.teams.urls', namespace='teams')),
     url(r'^scorecard/', include('scorecard.apps.users.urls', namespace='users')),
 
     url(r'^scorecard/admin/', include(admin.site.urls)),

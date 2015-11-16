@@ -3,5 +3,5 @@ from django.shortcuts import render
 
 
 @login_required
-def individuals(request):
-    return render(request, 'individuals/individuals.html')
+def guide(request):
+    return render(request, 'help/guide.html')

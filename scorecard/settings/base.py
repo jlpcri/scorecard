@@ -70,6 +70,7 @@ INSTALLED_APPS = (
     'scorecard.apps.congregations',
     'scorecard.apps.core',
     'scorecard.apps.exportations',
+    'scorecard.apps.help',
     'scorecard.apps.individuals',
     'scorecard.apps.teams',
     'scorecard.apps.users'
