@@ -1,0 +1,34 @@
+<div class="tab-content" id="qi-content">
+    <div class="row">
+        <div class="col-md-8">
+            <small>
+                <i class="fa fa-pencil fa=lg"></i><a href="#" data-target="#qi-metric-new"> Add a New Metric</a>
+            </small>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-condensed table-bordered">
+            <thead>
+                <tr>
+                    <td class="col-md-3"><strong>Date</strong></td>
+                    <td class="col-md-3"><strong>Staffs</strong></td>
+                    <td class="col-md-2"><strong>Backlog Story</strong></td>
+                    <td class="col-md-2"><strong>Avg Team Size</strong></td>
+                    <td class="col-md-2"><strong>Total Costs</strong></td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for qi in qis %}
+                    <tr>
+                        <td>{{ qi.created }}</td>
+                        <td>{{ qi.staffs }}</td>
+                        <td>{{ qi.story_points_backlog }}</td>
+                        <td>{{ qi.avg_team_size }}</td>
+                        <td>{{ qi.total_operational_cost }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

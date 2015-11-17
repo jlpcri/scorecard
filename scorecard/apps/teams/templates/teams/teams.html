@@ -2,8 +2,48 @@
 
 {% block title %} Teams {% endblock %}
 
+{% block subnav %}
+    <br><br>
+    <div class="container">
+        <ul id="subnav-tabs" class="nav nav-tabs">
+            <li><a href="#product_quality" data-toggle="tab">Product Quality</a> </li>
+            <li><a href="#quality_assurance" data-toggle="tab">Quality Assurance</a> </li>
+            <li><a href="#quality_innovation" data-toggle="tab">Quality Innovation</a> </li>
+            <li><a href="#test_engineering" data-toggle="tab">Test Engineering</a> </li>
+            <li><a href="#test_lab" data-toggle="tab">Test Lab</a> </li>
+        </ul>
+    </div>
+{% endblock %}
+
 {% block body %}
     <div class="container">
-        <h1>Teams</h1>
+        <div class="tab-content">
+            <div class="tab-pane" id="product_quality">
+                {% include 'teams/product_quality.html' %}
+            </div>
+
+            <div class="tab-pane" id="quality_assurance">
+                {% include 'teams/quality_assurance.html' %}
+            </div>
+
+            <div class="tab-pane" id="quality_innovation">
+                {% include 'teams/quality_innovation.html' %}
+            </div>
+
+            <div class="tab-pane" id="test_engineering">
+                {% include 'teams/test_engineering.html' %}
+            </div>
+
+            <div class="tab-pane" id="test_lab">
+                {% include 'teams/test_lab.html' %}
+            </div>
+
+        </div>
     </div>
+{% endblock %}
+
+{% block footer %}
+    <script>
+        {% include 'teams/teams.js' %}
+    </script>
 {% endblock %}
