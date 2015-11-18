@@ -6,6 +6,7 @@
         <title>ScoreCard - {% block title %}{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="utf-8">
+        <link rel="shortcut icon" href="http://www.west.com/wp-content/themes/cornerstone-master/images/west_favicon.png" />
         <link href="{% static 'common/font-awesome/4.4.0/css/font-awesome.min.css' %}" rel="stylesheet">
         <link href="{% static 'common/bootswatch/3.3.5/spacelab/bootstrap.min.css' %}" rel="stylesheet">
         <link href="{% static 'ceeq/jqueryui/css/jquery-ui-1.9.2.custom.min.css' %}" rel="stylesheet">
@@ -103,8 +104,8 @@
             {% if user.is_authenticated %}
                 <div class="collapse navbar-collapse" id="main-navbar">
                     <ul class="nav navbar-nav">
-                        <li><a href="{% url 'users:home' %}"><i class="fa fa-home"></i> Home </a></li>
-                        <li><a href="{% url 'teams:teams' %}"><i class="fa fa-bar-chart"></i>Team</a></li>
+                        <li><a href="{% url 'users:home' %}"><i class="fa fa-home fa-fw"></i> Home </a></li>
+                        <li><a href="{% url 'teams:teams' %}"><i class="fa fa-weibo fa-fw"></i>Team</a></li>
                         <li><a href="{% url 'individuals:individuals' %}"><i class="fa fa-area-chart fa-fw"></i>Individual</a> </li>
                         <li><a href="{% url 'congregations:congregations' %}"><i class="fa fa-table fa-fw"></i>Congregation</a> </li>
                         <li><a href="{% url 'exportations:exportations' %}"><i class="fa fa-pie-chart fa-fw"></i>Exportation</a> </li>

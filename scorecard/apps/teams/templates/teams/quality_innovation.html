@@ -1,8 +1,8 @@
 <div class="tab-content" id="qi-content">
-    <div class="row">
+    <div class="row" style="margin-bottom:20px;">
         <div class="col-md-8">
             <small>
-                <i class="fa fa-pencil fa=lg"></i><a href="#" data-target="#qi-metric-new"> Add a New Metric</a>
+                <i class="fa fa-pencil fa=lg"></i><a href="{% url 'teams:qi_new' %}" > Add a New Metric</a>
             </small>
         </div>
     </div>
@@ -21,7 +21,7 @@
             <tbody>
                 {% for qi in qis %}
                     <tr>
-                        <td>{{ qi.created }}</td>
+                        <td><a href="{% url 'teams:qi_detail' qi.id %}">{{ qi.created }}</a></td>
                         <td>{{ qi.staffs }}</td>
                         <td>{{ qi.story_points_backlog }}</td>
                         <td>{{ qi.avg_team_size }}</td>
@@ -32,3 +32,4 @@
         </table>
     </div>
 </div>
+

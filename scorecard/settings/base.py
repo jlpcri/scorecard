@@ -125,7 +125,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Chicago'
 
 USE_I18N = True
 
@@ -144,3 +144,9 @@ SESSION_SAVE_EVERY_REQUEST = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Flag of metric New/Detail
+METRIC_OPERATION = {
+    'new': 'NEW',
+    'detail': 'DETAIL'
+}
