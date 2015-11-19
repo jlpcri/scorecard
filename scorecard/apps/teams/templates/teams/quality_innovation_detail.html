@@ -4,8 +4,8 @@
 
 {% block body %}
     <div class="container">
-        <h2>Quality Innovation Metric {% if operation == 'NEW' %} New {% else %} Detail{% endif %}</h2>
-        <form {% if operation == 'NEW' %}action="{% url 'teams:qi_new' %}" {% elif operation == 'DETAIL' %}action="{% url 'teams:qi_edit' qi.id %}"{% endif %} method="post">
+        <h2>Quality Innovation Metric Detail</h2>
+        <form action="{% url 'teams:qi_edit' qi.id %}" method="post">
             <legend style="margin-top: 30px;">Human Resource</legend>
             <div class="row">
                 <div class="col-sm-2"><label>Staffs</label></div>
@@ -119,7 +119,7 @@
             <div class="row" style="margin-top: 30px; margin-bottom: 50px;">
                 <div class="col-md-4"></div>
                 <div class="col-md-2">
-                    <input id="qi_post" class="btn btn-primary" style="width: 100%;" type="submit" {% if operation == 'NEW' %}value="New Metric" {% elif operation == 'DETAIL' %}value="Save Metric" {% endif %}>
+                    <input id="qi_edit" class="btn btn-primary" style="width: 100%;" type="submit" value="Save Metric">
                 </div>
                 <div class="col-md-2">
                     <a href="{% url 'teams:teams' %}" class="btn btn-default" style="width: 100%;">Cancel</a>

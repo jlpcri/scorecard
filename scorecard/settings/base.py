@@ -145,8 +145,9 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 STATIC_URL = '/static/'
 
-# Flag of metric New/Detail
-METRIC_OPERATION = {
-    'new': 'NEW',
-    'detail': 'DETAIL'
+
+# Messages error tag
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
 }
