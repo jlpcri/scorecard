@@ -1,1 +1,30 @@
-Test Lab
+<div class="tab-content" id="tl-content">
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-condensed table-bordered">
+            <thead>
+                <tr>
+                    <td class="col-md-3"><strong>Date</strong></td>
+                    <td class="col-md-1"><strong>Staffs</strong></td>
+                    <td class="col-md-2"><strong>Tickets Received</strong></td>
+                    <td class="col-md-2"><strong>Tickets Closed</strong></td>
+                    <td class="col-md-2"><strong>Virtual Machines</strong></td>
+                    <td class="col-md-2"><strong>Total Costs</strong></td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in tls %}
+                    <tr>
+                        <td><a href="{% url 'teams:qi_detail' item.id %}">{{ item.created }}</a></td>
+                        <td>{{ item.staffs }}</td>
+                        <td>{{ item.tickets_received }}</td>
+                        <td>{{ item.tickets_closed }}</td>
+                        <td>{{ item.virtual_machines }}</td>
+                        <td>{{ item.total_operational_cost }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+

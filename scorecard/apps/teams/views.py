@@ -1,11 +1,15 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
 
 from models import TestMetrics, RequirementMetrics, InnovationMetrics, LabMetrics
 from forms import InnovationForm, LabForm, RequirementForm, TestForm
 from scorecard.apps.users.models import FunctionalGroup
+from scorecard.apps.users.views import user_is_superuser
+from tasks import weekly_metric_new
 
 
 @login_required
@@ -36,17 +40,15 @@ def teams(request):
     return render(request, 'teams/teams.html', context)
 
 
-def qi_new(request):
-    functional_groups = FunctionalGroup.objects.all()
-    for functional_group in functional_groups:
-        if functional_group.key in ['PQ', 'QA', 'TE']:
-            TestMetrics.objects.create(functional_group=functional_group)
-        elif functional_group.key == 'QI':
-            InnovationMetrics.objects.create(functional_group=functional_group)
-        elif functional_group.key == 'RE':
-            RequirementMetrics.objects.create(functional_group=functional_group)
-        elif functional_group.key == 'TL':
-            LabMetrics.objects.create(functional_group=functional_group)
+@user_passes_test(user_is_superuser)
+def weekly_metric_new_manually(request):
+    """
+    Manually add new metric
+    :param request:
+    :return:
+    """
+    weekly_metric_new()
+    return HttpResponseRedirect(reverse('teams:teams'))
 
 
 def qi_detail(request, qi_id):

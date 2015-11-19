@@ -12,13 +12,13 @@
                 </tr>
             </thead>
             <tbody>
-                {% for qi in qis %}
+                {% for item in qis %}
                     <tr>
-                        <td><a href="{% url 'teams:qi_detail' qi.id %}">{{ qi.created }}</a></td>
-                        <td>{{ qi.staffs }}</td>
-                        <td>{{ qi.story_points_backlog }}</td>
-                        <td>{{ qi.avg_team_size }}</td>
-                        <td>{{ qi.total_operational_cost }}</td>
+                        <td><a href="{% url 'teams:qi_detail' item.id %}">{{ item.created }}</a></td>
+                        <td>{{ item.staffs }}</td>
+                        <td>{{ item.story_points_backlog }}</td>
+                        <td>{{ item.avg_team_size }}</td>
+                        <td>{{ item.total_operational_cost }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
