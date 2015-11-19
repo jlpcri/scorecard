@@ -51,15 +51,30 @@ def weekly_metric_new_manually(request):
     return HttpResponseRedirect(reverse('teams:teams'))
 
 
-def qi_detail(request, qi_id):
-    qi = get_object_or_404(InnovationMetrics, pk=qi_id)
-    form = InnovationForm(instance=qi)
+def metric_detail(request, metric_id):
+    key = request.GET.get('key', '')
+    if key in ['PQ', 'QA', 'TE']:
+        print 'test'
+    elif key == 'QI':
+        metric = get_object_or_404(InnovationMetrics, pk=metric_id)
+        form = InnovationForm(instance=metric)
+    elif key == 'RE':
+        print 're'
+    elif key == 'TL':
+        metric = get_object_or_404(LabMetrics, pk=metric_id)
+        form = LabForm(instance=metric)
+    else:
+        messages.error(request, 'No key to Functional Group found')
+        return redirect('teams:teams')
+
+    # qi = get_object_or_404(InnovationMetrics, pk=qi_id)
+    # form = InnovationForm(instance=qi)
     context = RequestContext(request, {
-        'qi': qi,
+        'metric': metric,
         'form': form,
     })
 
-    return render(request, 'teams/quality_innovation_detail.html', context)
+    return render(request, 'teams/metric_detail.html', context)
 
 
 def qi_edit(request, qi_id):
@@ -74,6 +89,6 @@ def qi_edit(request, qi_id):
             context = RequestContext(request, {
                 'form': form
             })
-            return render(request, 'teams/quality_innovation_detail.html', context)
+            return render(request, 'teams/metric_detail.html', context)
     else:
         return redirect('teams:teams')

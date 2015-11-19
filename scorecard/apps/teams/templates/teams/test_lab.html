@@ -15,7 +15,7 @@
             <tbody>
                 {% for item in tls %}
                     <tr>
-                        <td><a href="{% url 'teams:qi_detail' item.id %}">{{ item.created }}</a></td>
+                        <td><a href="{% url 'teams:metric_detail' item.id %}?key={{ item.functional_group.key }}">{{ item.created|date }}</a></td>
                         <td>{{ item.staffs }}</td>
                         <td>{{ item.tickets_received }}</td>
                         <td>{{ item.tickets_closed }}</td>
