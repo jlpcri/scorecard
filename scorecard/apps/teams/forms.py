@@ -58,7 +58,12 @@ class RequirementForm(ModelForm):
 
     class Meta:
         model = RequirementMetrics
-        exclude = ['created', 'confirmed']
+        fields = ['functional_group', 'staffs', 'openings', 'contractors',
+                  'backlog', 'team_initiative', 'active_projects', 'elicitation_analysis_time',
+                  'revisions', 'rework_introduced_time', 'slas_met', 'slas_missed', 'delays_introduced_time', 'escalations',
+                  'overtime_weekday', 'overtime_weekend', 'rework_external_time',
+                  'travel_cost'
+                  ]
         widgets = {
             'functional_group': forms.Select(attrs={
                 'class': 'form-control',

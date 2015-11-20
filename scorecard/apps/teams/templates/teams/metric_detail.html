@@ -6,7 +6,7 @@
     <div class="container">
         <h2>{{ metric.functional_group.name }} Metric Detail - {{ metric.created|date }}</h2>
         <form action="{% url 'teams:metric_edit' metric.id %}?key={{ metric.functional_group.key }}" method="post">
-            {% if metric.functional_group.key == 'TL' %}  <!-- Test Lab -->
+            {% if metric.functional_group.key == 'TL' %}  <!-- Test Lab separate-->
                 <legend style="margin-top: 30px;">Human Resource</legend>
                 <div class="row">
                     <div class="col-sm-2"><label>Staffs</label></div>
@@ -60,7 +60,7 @@
                 </div>
 
                 <legend style="margin-top: 30px;">Throughput</legend>
-                {% if metric.functional_group.key == 'QI' %}
+                {% if metric.functional_group.key == 'QI' %}  <!-- Throughput -->
                     <div class="row">
                         <div class="col-sm-2"><label>Backlog Story</label></div>
                         <div class="col-sm-2"><label>Story Points Prep</label></div>
@@ -152,6 +152,7 @@
                 {% endif %}
 
                 <legend style="margin-top: 30px;">Quality</legend>
+                {% if metric.functional_group.key == 'QI' %}  <!-- Quality -->
                     <div class="row">
                         <div class="col-sm-2"><label>SLAs Met</label></div>
                         <div class="col-sm-2"><label>Delays Introduced</label></div>
@@ -174,8 +175,29 @@
                         <div class="col-sm-2">{{ form.escalations }}</div>
                         <div class="col-sm-2">{{ form.rework_introduced_time }}</div>
                     </div>
+                {% elif metric.functional_group.key == 'RE' %}
+                    <div class="row">
+                        <div class="col-sm-2"><label>Revisions</label></div>
+                        <div class="col-sm-2"><label>Rework Introduced</label></div>
+                        <div class="col-sm-2"><label>SLAs Met</label></div>
+                        <div class="col-sm-2"><label>SLAs Missed</label></div>
+                        <div class="col-sm-2"><label>Delays Introduced</label></div>
+                        <div class="col-sm-2"><label>Escalations</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">{{ form.revisions }}</div>
+                        <div class="col-sm-2">{{ form.rework_introduced_time }}</div>
+                        <div class="col-sm-2">{{ form.slas_met }}</div>
+                        <div class="col-sm-2">{{ form.slas_missed }}</div>
+                        <div class="col-sm-2">{{ form.delays_introduced_time }}</div>
+                        <div class="col-sm-2">{{ form.escalations }}</div>
+                    </div>
+                {% else %}
+                    Else
+                {% endif %}
 
-                    <legend style="margin-top: 30px;">Efficiency</legend>
+                <legend style="margin-top: 30px;">Efficiency</legend>
+                {% if metric.functional_group.key == 'QI' %}  <!-- Efficiency -->
                     <div class="row">
                         <div class="col-sm-2"><label>Average Team Size</label></div>
                         <div class="col-sm-2"><label>Overtime Weekday</label></div>
@@ -190,8 +212,23 @@
                         <div class="col-sm-2">{{ form.rework_time }}</div>
                         <div class="col-sm-2">{{ form.resource_swap_time }}</div>
                     </div>
+                {% elif metric.functional_group.key == 'RE' %}
+                    <div class="row">
+                        <div class="col-sm-2"><label>Overtime Weekday</label></div>
+                        <div class="col-sm-2"><label>Overtime Weekend</label></div>
+                        <div class="col-sm-2"><label>Rework External</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">{{ form.overtime_weekday }}</div>
+                        <div class="col-sm-2">{{ form.overtime_weekend }}</div>
+                        <div class="col-sm-2">{{ form.rework_external_time }}</div>
+                    </div>
+                {% else %}
+                    Else
+                {% endif %}
 
-                    <legend style="margin-top: 30px;">Costs</legend>
+                <legend style="margin-top: 30px;">Costs</legend>
+                {% if metric.functional_group.key == 'QI' %}  <!-- Cost and Usage-->
                     <div class="row">
                         <div class="col-sm-2"><label>License Cost</label></div>
                         <div class="col-sm-2"><label>Other Savings</label></div>
@@ -200,8 +237,6 @@
                         <div class="col-sm-2">{{ form.license_cost }}</div>
                         <div class="col-sm-2">{{ form.other_savings }}</div>
                     </div>
-
-
                     <legend style="margin-top: 30px;">Usage</legend>
                     <div class="row">
                         <div class="col-sm-2"><label>Pheme Manual Tests</label></div>
@@ -214,8 +249,17 @@
                         <div class="col-sm-2">{{ form.pheme_auto_tests }}</div>
                         <div class="col-sm-2">{{ form.visilog_txl_parsed }}</div>
                         <div class="col-sm-2">{{ form.visilog_txl_schema_violation }}</div>
-                </div>
-
+                    </div>
+                {% elif metric.functional_group.key == 'RE' %}
+                    <div class="row">
+                        <div class="col-sm-2"><label>Travel Cost</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">{{ form.travel_cost }}</div>
+                    </div>
+                {% else %}
+                    Else
+                {% endif %}
             {% endif %}
 
 
