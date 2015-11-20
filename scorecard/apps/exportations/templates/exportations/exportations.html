@@ -5,11 +5,39 @@
 {% block body %}
     <div class="container">
         <h1>Exportations</h1>
-        <h4>Export data to different formats include:</h4>
-        <ul>
-            <li>Graph</li>
-            <li>Chart</li>
-            <li>Table</li>
-        </ul>
+{#        <h4>Export data to different formats include:</h4>#}
+{#        <ul>#}
+{#            <li>Graph</li>#}
+{#            <li>Chart</li>#}
+{#            <li>Table</li>#}
+{#        </ul>#}
+
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-condensed table-bordered">
+            <thead>
+                <tr>
+                    <td class="col-md-1"><strong>Date</strong></td>
+                    {% for name in data.name %}
+                        <td class="col-md-1"><strong><small>{{ name }}</small></strong></td>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in data.dates %}
+                    <tr>
+                        <td><a href="#">{{ item|date }}</a></td>
+                        {% for key in data.key %}
+                            <td><a href="#?date={{ item|date }}">{{ key }}</a> </td>
+                        {% endfor %}
+
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+
     </div>
 {% endblock %}
