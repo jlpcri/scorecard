@@ -136,18 +136,18 @@
                         <div class="col-sm-2">{{ form.tc_manual_execution }}</div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2"><label>Manual Tcs Execution Time</label></div>
                         <div class="col-sm-2"><label>Auto TCs Dev</label></div>
                         <div class="col-sm-2"><label>Auto TCs Dev Time</label></div>
                         <div class="col-sm-2"><label>Auto Tcs Execution</label></div>
-                        <div class="col-sm-2"><label>Auto Tcs Execution Time</label></div>
+                        <div class="col-sm-3"><label>Auto Tcs Execution Time</label></div>
+                        <div class="col-sm-3"><label>Manual Tcs Execution Time</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2">{{ form.tc_manual_execution_time }}</div>
                         <div class="col-sm-2">{{ form.tc_auto_dev }}</div>
                         <div class="col-sm-2">{{ form.tc_auto_dev_time }}</div>
                         <div class="col-sm-2">{{ form.tc_auto_execution }}</div>
-                        <div class="col-sm-2">{{ form.tc_auto_execution_time }}</div>
+                        <div class="col-sm-3">{{ form.tc_auto_execution_time }}</div>
+                        <div class="col-sm-3">{{ form.tc_manual_execution_time }}</div>
                     </div>
                 {% endif %}
 
@@ -193,7 +193,30 @@
                         <div class="col-sm-2">{{ form.escalations }}</div>
                     </div>
                 {% else %}
-                    Else
+                    <div class="row">
+                        <div class="col-sm-2"><label>SLAs Met</label></div>
+                        <div class="col-sm-2"><label>Delays Introduced</label></div>
+                        <div class="col-sm-2"><label>Defects Caught</label></div>
+                        <div class="col-sm-3"><label>UAT defects not prevented</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">{{ form.slas_met }}</div>
+                        <div class="col-sm-2">{{ form.rework_introduced_time }}</div>
+                        <div class="col-sm-2">{{ form.defect_caught }}</div>
+                        <div class="col-sm-3">{{ form.uat_defects_not_prevented }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2"><label>Resource Swap</label></div>
+                        <div class="col-sm-2"><label>Escalations</label></div>
+                        <div class="col-sm-2"><label>Rework Introduced</label></div>
+                        <div class="col-sm-2"><label>SDIs not prevented</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">{{ form.resource_swap }}</div>
+                        <div class="col-sm-2">{{ form.escalations }}</div>
+                        <div class="col-sm-2">{{ form.rework_introduced_time }}</div>
+                        <div class="col-sm-2">{{ form.sdis_not_prevented }}</div>
+                    </div>
                 {% endif %}
 
                 <legend style="margin-top: 30px;">Efficiency</legend>
@@ -224,7 +247,29 @@
                         <div class="col-sm-2">{{ form.rework_external_time }}</div>
                     </div>
                 {% else %}
-                    Else
+                    <div class="row">
+                        <div class="col-sm-2"><label>Average Team Size</label></div>
+                        <div class="col-sm-2"><label>Average TimeFrame</label></div>
+                        <div class="col-sm-2"><label>Overtime Weekday</label></div>
+                        <div class="col-sm-2"><label>Overtime Weekend</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">{{ form.avg_team_size }}</div>
+                        <div class="col-sm-2">{{ form.avg_time_frame }}</div>
+                        <div class="col-sm-2">{{ form.overtime_weekday }}</div>
+                        <div class="col-sm-2">{{ form.overtime_weekend }}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-2"><label>Rework Time</label></div>
+                        <div class="col-sm-2"><label>Resource Swap time</label></div>
+                        <div class="col-sm-2"><label>Escalations</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">{{ form.rework_time }}</div>
+                        <div class="col-sm-2">{{ form.resource_swap_time }}</div>
+                        <div class="col-sm-2">{{ form.escalations }}</div>
+                    </div>
                 {% endif %}
 
                 <legend style="margin-top: 30px;">Costs</legend>
