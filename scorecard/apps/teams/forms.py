@@ -35,7 +35,10 @@ class LabForm(ModelForm):
 
     class Meta:
         model = LabMetrics
-        exclude = ['created', 'confirmed']
+        fields = ['functional_group', 'staffs', 'openings', 'contractors',
+                  'tickets_received', 'tickets_closed', 'virtual_machines', 'physical_machines',
+                  'power_consumption_ups_a', 'power_consumption_ups_b', 'license_cost'
+                  ]
         widgets = {
             'functional_group': forms.Select(attrs={
                 'class': 'form-control',

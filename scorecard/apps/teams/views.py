@@ -53,13 +53,16 @@ def weekly_metric_new_manually(request):
 
 def metric_detail(request, metric_id):
     key = request.GET.get('key', '')
+
     if key in ['PQ', 'QA', 'TE']:
-        print 'test'
+        metric = get_object_or_404(TestMetrics, pk=metric_id)
+        form = TestForm(instance=metric)
     elif key == 'QI':
         metric = get_object_or_404(InnovationMetrics, pk=metric_id)
         form = InnovationForm(instance=metric)
     elif key == 'RE':
-        print 're'
+        metric = get_object_or_404(RequirementMetrics, pk=metric_id)
+        form = RequirementForm(instance=metric)
     elif key == 'TL':
         metric = get_object_or_404(LabMetrics, pk=metric_id)
         form = LabForm(instance=metric)
@@ -77,12 +80,28 @@ def metric_detail(request, metric_id):
     return render(request, 'teams/metric_detail.html', context)
 
 
-def qi_edit(request, qi_id):
-    qi = get_object_or_404(InnovationMetrics, pk=qi_id)
+def metric_edit(request, metric_id):
+    key = request.GET.get('key', '')
+
     if request.method == 'POST':
-        form = InnovationForm(request.POST, instance=qi)
+        if key in ['PQ', 'QA', 'TE']:
+            metric = get_object_or_404(TestMetrics, pk=metric_id)
+            form = TestForm(request.POST, instance=metric)
+        elif key == 'QI':
+            metric = get_object_or_404(InnovationMetrics, pk=metric_id)
+            form = InnovationForm(request.POST, instance=metric)
+        elif key == 'RE':
+            metric = get_object_or_404(RequirementMetrics, pk=metric_id)
+            form = RequirementForm(request.POST, instance=metric)
+        elif key == 'TL':
+            metric = get_object_or_404(LabMetrics, pk=metric_id)
+            form = LabForm(request.POST, instance=metric)
+        else:
+            messages.error(request, 'No key to Functional Group found')
+            return redirect('teams:teams')
+
         if form.is_valid():
-            qi = form.save()
+            form.save()
             return redirect('teams:teams')
         else:
             messages.error(request, 'Correct errors in the form')
