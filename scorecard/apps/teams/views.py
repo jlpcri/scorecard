@@ -1,3 +1,4 @@
+from datetime import date
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
@@ -47,7 +48,18 @@ def weekly_metric_new_manually(request):
     :param request:
     :return:
     """
-    weekly_metric_new()
+    today = date.today()
+    if today.isoweekday() == 5:
+        try:
+            qi = InnovationMetrics.objects.latest('created')
+            if qi.created.date() == today:
+                messages.error(request, 'Metric is already exist')
+            else:
+                weekly_metric_new()
+        except InnovationMetrics.DoesNotExist:
+            weekly_metric_new()
+    else:
+        messages.error(request, 'Today is not Friday')
     return HttpResponseRedirect(reverse('teams:teams'))
 
 

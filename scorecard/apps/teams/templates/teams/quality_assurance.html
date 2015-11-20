@@ -19,7 +19,7 @@
                         <td>{{ item.staffs }}</td>
                         <td>{{ item.active_projects }}</td>
                         <td>{{ item.active_tickets }}</td>
-                        <td>{{ item.avg_throughput }}</td>
+                        <td>{{ item.avg_throughput|floatformat:2 }}</td>
                         <td>{{ item.total_operational_cost }}</td>
                     </tr>
                 {% endfor %}
