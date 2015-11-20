@@ -201,7 +201,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-2">{{ form.slas_met }}</div>
-                        <div class="col-sm-2">{{ form.rework_introduced_time }}</div>
+                        <div class="col-sm-2">{{ form.delays_introduced_time }}</div>
                         <div class="col-sm-2">{{ form.defect_caught }}</div>
                         <div class="col-sm-3">{{ form.uat_defects_not_prevented }}</div>
                     </div>
@@ -273,7 +273,14 @@
                 {% endif %}
 
                 <legend style="margin-top: 30px;">Costs</legend>
-                {% if metric.functional_group.key == 'QI' %}  <!-- Cost and Usage-->
+                {% if metric.functional_group.key == 'RE' %} <!-- Cost and Usage-->
+                    <div class="row">
+                        <div class="col-sm-2"><label>Travel Cost</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">{{ form.travel_cost }}</div>
+                    </div>
+                {% else %}
                     <div class="row">
                         <div class="col-sm-2"><label>License Cost</label></div>
                         <div class="col-sm-2"><label>Other Savings</label></div>
@@ -282,28 +289,21 @@
                         <div class="col-sm-2">{{ form.license_cost }}</div>
                         <div class="col-sm-2">{{ form.other_savings }}</div>
                     </div>
-                    <legend style="margin-top: 30px;">Usage</legend>
-                    <div class="row">
-                        <div class="col-sm-2"><label>Pheme Manual Tests</label></div>
-                        <div class="col-sm-2"><label>Pheme Auto Tests</label></div>
-                        <div class="col-sm-2"><label>Visilog TXL Parsed</label></div>
-                        <div class="col-sm-2"><label>Visilog TXL Violation</label></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-2">{{ form.pheme_manual_tests }}</div>
-                        <div class="col-sm-2">{{ form.pheme_auto_tests }}</div>
-                        <div class="col-sm-2">{{ form.visilog_txl_parsed }}</div>
-                        <div class="col-sm-2">{{ form.visilog_txl_schema_violation }}</div>
-                    </div>
-                {% elif metric.functional_group.key == 'RE' %}
-                    <div class="row">
-                        <div class="col-sm-2"><label>Travel Cost</label></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-2">{{ form.travel_cost }}</div>
-                    </div>
-                {% else %}
-                    Else
+                    {% if metric.functional_group.key == 'QI' %}  <!-- QI Usage -->
+                        <legend style="margin-top: 30px;">Usage</legend>
+                        <div class="row">
+                            <div class="col-sm-2"><label>Pheme Manual Tests</label></div>
+                            <div class="col-sm-2"><label>Pheme Auto Tests</label></div>
+                            <div class="col-sm-2"><label>Visilog TXL Parsed</label></div>
+                            <div class="col-sm-2"><label>Visilog TXL Violation</label></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">{{ form.pheme_manual_tests }}</div>
+                            <div class="col-sm-2">{{ form.pheme_auto_tests }}</div>
+                            <div class="col-sm-2">{{ form.visilog_txl_parsed }}</div>
+                            <div class="col-sm-2">{{ form.visilog_txl_schema_violation }}</div>
+                        </div>
+                    {% endif %}
                 {% endif %}
             {% endif %}
 
