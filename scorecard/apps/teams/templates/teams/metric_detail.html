@@ -139,15 +139,31 @@
                         <div class="col-sm-2"><label>Auto TCs Dev</label></div>
                         <div class="col-sm-2"><label>Auto TCs Dev Time</label></div>
                         <div class="col-sm-2"><label>Auto Tcs Execution</label></div>
-                        <div class="col-sm-3"><label>Auto Tcs Execution Time</label></div>
-                        <div class="col-sm-3"><label>Manual Tcs Execution Time</label></div>
+                        <div class="col-sm-2"><label>Auto Tcs ExecTime</label></div>
+                        <div class="col-sm-2"><label>Manual Tcs ExecutTime</label></div>
                     </div>
                     <div class="row">
                         <div class="col-sm-2">{{ form.tc_auto_dev }}</div>
                         <div class="col-sm-2">{{ form.tc_auto_dev_time }}</div>
                         <div class="col-sm-2">{{ form.tc_auto_execution }}</div>
-                        <div class="col-sm-3">{{ form.tc_auto_execution_time }}</div>
-                        <div class="col-sm-3">{{ form.tc_manual_execution_time }}</div>
+                        <div class="col-sm-2">{{ form.tc_auto_execution_time }}</div>
+                        <div class="col-sm-2">{{ form.tc_manual_execution_time }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2"><label>Auto Footprint Dev</label></div>
+                        <div class="col-sm-2"><label>Auto Footprint Execut</label></div>
+                        <div class="col-sm-2"><label>Avg Throughput</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <input class="gentle" id="auto_footprint_dev" value="{{ metric.auto_footprint_dev_age }}" disabled/>
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="gentle" id="auto_footprint_execution" value="{{ metric.auto_footprint_execution_age }}" disabled/>
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="gentle" id="avg_throughput" value="{{ metric.avg_throughput|floatformat:2 }}" disabled/>
+                        </div>
                     </div>
                 {% endif %}
 
