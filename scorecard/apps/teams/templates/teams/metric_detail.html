@@ -197,7 +197,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-2">
-                            <input id="avg_throughput" value="{{ metric.avg_throughput }}" disabled/>
+                            <input class="gentle" id="avg_throughput" value="{{ metric.avg_throughput }}" disabled/>
                         </div>
                     </div>
                 {% else %}
@@ -245,11 +245,19 @@
                     </div>
                 {% elif metric.functional_group.key == 'RE' %}
                     <div class="row">
+                        <div class="col-sm-2"><label>Gross Available</label></div>
+                        <div class="col-sm-2"><label>Efficiency</label></div>
                         <div class="col-sm-2"><label>Overtime Weekday</label></div>
                         <div class="col-sm-2"><label>Overtime Weekend</label></div>
                         <div class="col-sm-2"><label>Rework External</label></div>
                     </div>
                     <div class="row">
+                        <div class="col-sm-2">
+                            <input class="gentle" id="gross_available" value="{{ metric.gross_available_time }}" disabled/>
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="gentle" id="id_efficiency" value="{{ metric.efficiency|floatformat:2 }}%" disabled/>
+                        </div>
                         <div class="col-sm-2">{{ form.overtime_weekday }}</div>
                         <div class="col-sm-2">{{ form.overtime_weekend }}</div>
                         <div class="col-sm-2">{{ form.rework_external_time }}</div>
@@ -290,10 +298,10 @@
                     <div class="row">
                         <div class="col-sm-2">{{ form.travel_cost }}</div>
                         <div class="col-sm-2">
-                            <input id="operational_cost" value="{{ metric.operational_cost }}" disabled/>
+                            <input class="gentle" id="operational_cost" value="{{ metric.operational_cost }}" disabled/>
                         </div>
                         <div class="col-sm-2">
-                            <input id="rework_external_cost" value="{{ metric.rework_external_cost }}" disabled/>
+                            <input class="gentle" id="rework_external_cost" value="{{ metric.rework_external_cost }}" disabled/>
                         </div>
                     </div>
                 {% elif metric.functional_group.key == 'QI' %} <!-- QI Cost and Usage -->
@@ -306,10 +314,10 @@
                     <div class="row">
                         <div class="col-sm-2">{{ form.license_cost }}</div>
                         <div class="col-sm-2">
-                            <input id="operational_cost" value="{{ metric.operational_cost }}" disabled/>
+                            <input class="gentle" id="operational_cost" value="{{ metric.operational_cost }}" disabled/>
                         </div>
                         <div class="col-sm-2">
-                            <input id="total_cost" value="{{ metric.total_operational_cost }}" disabled />
+                            <input class="gentle" id="total_cost" value="{{ metric.total_operational_cost }}" disabled />
                         </div>
                         <div class="col-sm-2">{{ form.other_savings }}</div>
                     </div>
@@ -338,13 +346,13 @@
                     <div class="row">
                         <div class="col-sm-2">{{ form.license_cost }}</div>
                         <div class="col-sm-2">
-                            <input id="operational_cost" value="{{ metric.operational_cost }}" disabled/>
+                            <input class="gentle" id="operational_cost" value="{{ metric.operational_cost }}" disabled/>
                         </div>
                         <div class="col-sm-2">
-                            <input id="total_cost" value="{{ metric.total_operational_cost }}" disabled />
+                            <input class="gentle" id="total_cost" value="{{ metric.total_operational_cost }}" disabled />
                         </div>
                         <div class="col-sm-2">
-                            <input id="auto_savings" value="{{ metric.auto_savings }}" disabled/>
+                            <input class="gentle" id="auto_savings" value="{{ metric.auto_savings }}" disabled/>
                         </div>
                         <div class="col-sm-2">{{ form.other_savings }}</div>
                     </div>

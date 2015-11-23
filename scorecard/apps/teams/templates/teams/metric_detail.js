@@ -3,11 +3,15 @@ var hours,
     hourly_rate, hourly_rate_contractor,
     hourly_rate_auto;
 
+var staff = $('#id_staffs'),
+    operational_cost = $('#operational_cost'),
+    license_cost = $('#id_license_cost');
+
 switch (key) {
     case 'QI':
         hours = 40;
         hourly_rate = 45;
-        costCalculation();
+        costCal();
         break;
     case 'TL':
         //console.log('tl, nothing to do');
@@ -15,81 +19,82 @@ switch (key) {
     case 'RE':
         hours = 30;
         hourly_rate = 50;
-        costCalculation();
-        costReworkCalculation();
-        avgThroughputCalculation();
+        costCal();
+        costReworkCal();
+        avgThroughputCal();
+        efficiencyCal();
         break;
     case 'PQ':
         hours = 30;
         hourly_rate = 60;
         hourly_rate_auto = 40;
-        costCalculation();
-        autoCalculation();
+        costCal();
+        autoCal();
         break;
     case 'QA':
         hours = 40;
         hourly_rate = 40;
         hourly_rate_contractor = 100;
         hourly_rate_auto = 40;
-        costCalculation();
-        autoCalculation();
+        costCal();
+        autoCal();
         break;
     case 'TE':
         hours = 40;
         hourly_rate = 50;
         hourly_rate_auto = 50;
-        costCalculation();
-        autoCalculation();
+        costCal();
+        autoCal();
 }
 
-function costCalculation() {
+function costCal() {
     switch (key) {
         case 'QA':
-            $('#id_staffs').on('input', function(){
-                $('#operational_cost').val(operationalCalculation(this.value, hours, hourly_rate)
-                    + operationalCalculation($('#id_contractors').val(), hours, hourly_rate_contractor));
-                $('#total_cost').val(parseFloat($('#id_license_cost').val()) + parseFloat($('#operational_cost').val()));
+            staff.on('input', function(){
+                operational_cost.val(operationalCal(this.value, hours, hourly_rate)
+                    + operationalCal($('#id_contractors').val(), hours, hourly_rate_contractor));
+                $('#total_cost').val(parseFloat(license_cost.val()) + parseFloat(operational_cost.val()));
             });
 
             $('#id_contractors').on('input', function(){
-                $('#operational_cost').val(operationalCalculation(this.value, hours, hourly_rate_contractor)
-                    + operationalCalculation($('#id_staffs').val(), hours, hourly_rate));
-                $('#total_cost').val(parseFloat($('#id_license_cost').val()) + parseFloat($('#operational_cost').val()));
+                operational_cost.val(operationalCal(this.value, hours, hourly_rate_contractor)
+                    + operationalCal(staff.val(), hours, hourly_rate));
+                $('#total_cost').val(parseFloat(license_cost.val()) + parseFloat(operational_cost.val()));
             });
 
-            $('#id_license_cost').on('input', function(){
-                $('#total_cost').val(parseFloat(this.value) + parseFloat($('#operational_cost').val()));
+            license_cost.on('input', function(){
+                $('#total_cost').val(parseFloat(this.value) + parseFloat(operational_cost.val()));
             });
             break;
         default:
-            $('#id_staffs').on('input', function(){
-                $('#operational_cost').val(operationalCalculation(this.value, hours, hourly_rate));
-                $('#total_cost').val(parseFloat($('#id_license_cost').val()) + parseFloat($('#operational_cost').val()));
+            staff.on('input', function(){
+                operational_cost.val(operationalCal(this.value, hours, hourly_rate));
+                $('#total_cost').val(parseFloat(license_cost.val()) + parseFloat(operational_cost.val()));
             });
 
-            $('#id_license_cost').on('input', function(){
-                $('#total_cost').val(parseFloat(this.value) + parseFloat($('#operational_cost').val()));
+            license_cost.on('input', function(){
+                $('#total_cost').val(parseFloat(this.value) + parseFloat(operational_cost.val()));
             });
         }
 }
 
-function costReworkCalculation() {
+function costReworkCal() {
     $('#id_rework_external_time').on('input', function(){
         $('#rework_external_cost').val(this.value * 50);
     });
 }
 
-function autoCalculation() {
+function autoCal() {
     $('#id_tc_auto_execution_time').on('input', function(){
-        $('#auto_savings').val(autoSavingsCalculation(this.value, hourly_rate_auto));
+        $('#auto_savings').val(autoSavingsCal(this.value, hourly_rate_auto));
     })
 }
 
-function operationalCalculation(staffs, hours, hourly_rate) {
+function operationalCal(staffs, hours, hourly_rate) {
     return staffs * hours * hourly_rate;
 }
 
-function autoSavingsCalculation(tc_auto_time, hourly_rate_auto) {
+function autoSavingsCal(tc_auto_time, hourly_rate_auto) {
     switch (key) {
         case 'TE':
             return (parseFloat(tc_auto_time) + 37) * hourly_rate_auto;
@@ -100,7 +105,7 @@ function autoSavingsCalculation(tc_auto_time, hourly_rate_auto) {
     }
 }
 
-function avgThroughputCalculation() {
+function avgThroughputCal() {
     switch (key) {
         case 'RE':
             $('#id_active_projects').on('input', function(){
@@ -110,4 +115,18 @@ function avgThroughputCalculation() {
                 $('#avg_throughput').val(parseFloat(this.value) + parseFloat($('#id_active_projects').val()));
             });
     }
+}
+
+function efficiencyCal() {
+    switch (key) {
+        case 'RE':
+            staff.on('input', function(){
+                $('#gross_available').val(this.value * 6 * 5);
+            });
+            $('#id_elicitation_analysis_time').on('input', function(){
+                var efficiency = (this.value / $('#gross_available').val() * 100).toFixed(2) ;
+                $('#id_efficiency').val(efficiency + '%');
+            });
+    }
+
 }

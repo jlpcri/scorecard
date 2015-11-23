@@ -245,7 +245,7 @@ class RequirementMetrics(BaseMetrics):
         if self.gross_available_time == 0:
             return 0
         else:
-            return self.elicitation_analysis_time / self.gross_available_time
+            return self.elicitation_analysis_time / self.gross_available_time * 100
 
     @property
     def rework_external_cost(self):
