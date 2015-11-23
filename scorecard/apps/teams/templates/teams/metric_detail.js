@@ -16,9 +16,8 @@ switch (key) {
         hours = 30;
         hourly_rate = 50;
         costCalculation();
-        $('#id_rework_external_time').on('input', function(){
-            $('#rework_external_cost').val(this.value * 50);
-        });
+        costReworkCalculation();
+        avgThroughputCalculation();
         break;
     case 'PQ':
         hours = 30;
@@ -74,6 +73,12 @@ function costCalculation() {
         }
 }
 
+function costReworkCalculation() {
+    $('#id_rework_external_time').on('input', function(){
+        $('#rework_external_cost').val(this.value * 50);
+    });
+}
+
 function autoCalculation() {
     $('#id_tc_auto_execution_time').on('input', function(){
         $('#auto_savings').val(autoSavingsCalculation(this.value, hourly_rate_auto));
@@ -92,5 +97,17 @@ function autoSavingsCalculation(tc_auto_time, hourly_rate_auto) {
         case 'PQ':
         case 'QA':
             return tc_auto_time * hourly_rate_auto;
+    }
+}
+
+function avgThroughputCalculation() {
+    switch (key) {
+        case 'RE':
+            $('#id_active_projects').on('input', function(){
+                $('#avg_throughput').val(parseFloat(this.value) + parseFloat($('#id_team_initiative').val()));
+            });
+            $('#id_team_initiative').on('input', function(){
+                $('#avg_throughput').val(parseFloat(this.value) + parseFloat($('#id_active_projects').val()));
+            });
     }
 }

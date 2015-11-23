@@ -192,6 +192,14 @@
                         <div class="col-sm-2">{{ form.delays_introduced_time }}</div>
                         <div class="col-sm-2">{{ form.escalations }}</div>
                     </div>
+                    <div class="row">
+                        <div class="col-sm-2"><label>Avg Throughput</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <input id="avg_throughput" value="{{ metric.avg_throughput }}" disabled/>
+                        </div>
+                    </div>
                 {% else %}
                     <div class="row">
                         <div class="col-sm-2"><label>SLAs Met</label></div>
