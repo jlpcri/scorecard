@@ -276,34 +276,70 @@
                 {% if metric.functional_group.key == 'RE' %} <!-- Cost and Usage-->
                     <div class="row">
                         <div class="col-sm-2"><label>Travel Cost</label></div>
+                        <div class="col-sm-2"><label>Operational Cost</label></div>
+                        <div class="col-sm-2"><label>Rework External Cost</label></div>
                     </div>
                     <div class="row">
                         <div class="col-sm-2">{{ form.travel_cost }}</div>
+                        <div class="col-sm-2">
+                            <input id="operational_cost" value="{{ metric.operational_cost }}" disabled/>
+                        </div>
+                        <div class="col-sm-2">
+                            <input id="rework_external_cost" value="{{ metric.rework_external_cost }}" disabled/>
+                        </div>
                     </div>
-                {% else %}
+                {% elif metric.functional_group.key == 'QI' %} <!-- QI Cost and Usage -->
                     <div class="row">
                         <div class="col-sm-2"><label>License Cost</label></div>
+                        <div class="col-sm-2"><label>Operational Cost</label></div>
+                        <div class="col-sm-2"><label>Total Cost</label></div>
                         <div class="col-sm-2"><label>Other Savings</label></div>
                     </div>
                     <div class="row">
                         <div class="col-sm-2">{{ form.license_cost }}</div>
+                        <div class="col-sm-2">
+                            <input id="operational_cost" value="{{ metric.operational_cost }}" disabled/>
+                        </div>
+                        <div class="col-sm-2">
+                            <input id="total_cost" value="{{ metric.total_operational_cost }}" disabled />
+                        </div>
                         <div class="col-sm-2">{{ form.other_savings }}</div>
                     </div>
-                    {% if metric.functional_group.key == 'QI' %}  <!-- QI Usage -->
-                        <legend style="margin-top: 30px;">Usage</legend>
-                        <div class="row">
-                            <div class="col-sm-2"><label>Pheme Manual Tests</label></div>
-                            <div class="col-sm-2"><label>Pheme Auto Tests</label></div>
-                            <div class="col-sm-2"><label>Visilog TXL Parsed</label></div>
-                            <div class="col-sm-2"><label>Visilog TXL Violation</label></div>
+                    <!-- Usage -->
+                    <legend style="margin-top: 30px;">Usage</legend>
+                    <div class="row">
+                        <div class="col-sm-2"><label>Pheme Manual Tests</label></div>
+                        <div class="col-sm-2"><label>Pheme Auto Tests</label></div>
+                        <div class="col-sm-2"><label>Visilog TXL Parsed</label></div>
+                        <div class="col-sm-2"><label>Visilog TXL Violation</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">{{ form.pheme_manual_tests }}</div>
+                        <div class="col-sm-2">{{ form.pheme_auto_tests }}</div>
+                        <div class="col-sm-2">{{ form.visilog_txl_parsed }}</div>
+                        <div class="col-sm-2">{{ form.visilog_txl_schema_violation }}</div>
+                    </div>
+                {% else %} <!-- PQ, QA, TE cost -->
+                    <div class="row">
+                        <div class="col-sm-2"><label>License Cost</label></div>
+                        <div class="col-sm-2"><label>Operational Cost</label></div>
+                        <div class="col-sm-2"><label>Total Cost</label></div>
+                        <div class="col-sm-2"><label>Automation Savings</label></div>
+                        <div class="col-sm-2"><label>Other Savings</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">{{ form.license_cost }}</div>
+                        <div class="col-sm-2">
+                            <input id="operational_cost" value="{{ metric.operational_cost }}" disabled/>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-2">{{ form.pheme_manual_tests }}</div>
-                            <div class="col-sm-2">{{ form.pheme_auto_tests }}</div>
-                            <div class="col-sm-2">{{ form.visilog_txl_parsed }}</div>
-                            <div class="col-sm-2">{{ form.visilog_txl_schema_violation }}</div>
+                        <div class="col-sm-2">
+                            <input id="total_cost" value="{{ metric.total_operational_cost }}" disabled />
                         </div>
-                    {% endif %}
+                        <div class="col-sm-2">
+                            <input id="auto_savings" value="{{ metric.auto_savings }}" disabled/>
+                        </div>
+                        <div class="col-sm-2">{{ form.other_savings }}</div>
+                    </div>
                 {% endif %}
             {% endif %}
 
@@ -320,4 +356,10 @@
             </div>
         </form>
     </div>
+{% endblock %}
+
+{% block footer %}
+    <script>
+        {% include 'teams/metric_detail.js' %}
+    </script>
 {% endblock %}

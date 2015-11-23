@@ -197,6 +197,7 @@ class InnovationMetrics(BaseMetrics):
 
     @property
     def operational_cost(self):
+        # 40 (hours per week) * 45(hourly rate)
         return (self.staffs + self.contractors) * 40 * 45
 
     @property
