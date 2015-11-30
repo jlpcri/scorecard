@@ -127,7 +127,7 @@ class TestMetrics(BaseMetrics):
         if self.gross_available_time == 0:
             return 0
         else:
-            return self.auto_and_execution_time / self.gross_available_time
+            return self.auto_and_execution_time / self.gross_available_time * 100
 
     @property
     def operational_cost(self):

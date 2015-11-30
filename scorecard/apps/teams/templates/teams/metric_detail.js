@@ -28,27 +28,30 @@ switch (key) {
         hours = 30;
         hourly_rate = 60;
         hourly_rate_auto = 40;
-        costCal();
-        autoCal();
-        avgThroughputCal();
+        bundleTestMetricCal();
         break;
     case 'QA':
         hours = 40;
         hourly_rate = 40;
         hourly_rate_contractor = 100;
         hourly_rate_auto = 40;
-        costCal();
-        autoCal();
-        avgThroughputCal();
+        bundleTestMetricCal();
         break;
     case 'TE':
         hours = 40;
         hourly_rate = 50;
         hourly_rate_auto = 50;
-        costCal();
-        autoCal();
-        avgThroughputCal();
+        bundleTestMetricCal();
 }
+
+// put TestMetric calculation together
+function bundleTestMetricCal() {
+    costCal();
+    autoCal();
+    avgThroughputCal();
+    efficiencyCal();
+}
+
 
 // Cost calculation include: Operational Cost and Total Cost
 function costCal() {
@@ -129,9 +132,11 @@ function avgThroughputCal() {
         case 'TE':
             $('#id_staffs').on('input', function(){
                 avgThroughputTestMetric();
+                grossAvailableTimeCal();
             });
             $('#id_contractors').on('input', function() {
                 avgThroughputTestMetric();
+                grossAvailableTimeCal();
             });
             $('#id_tc_manual_dev').on('input', function() {
                 avgThroughputTestMetric();
@@ -180,11 +185,70 @@ function efficiencyCal() {
         case 'RE':
             staff.on('input', function(){
                 $('#gross_available').val(this.value * 6 * 5);
+                var efficiency = ($('#id_elicitation_analysis_time').val() / (this.value * 6 * 5) * 100).toFixed(2) ;
+                $('#id_efficiency').val(efficiency + '%');
             });
             $('#id_elicitation_analysis_time').on('input', function(){
                 var efficiency = (this.value / $('#gross_available').val() * 100).toFixed(2) ;
                 $('#id_efficiency').val(efficiency + '%');
             });
+            break;
+        case 'PQ':
+        case 'QA':
+        case 'TE':
+            $('#id_ticket_prep').on('input', function(){
+                activeTicketsCal();
+            });
+            $('#id_ticket_execution').on('input', function(){
+                activeTicketsCal();
+            });
+            $('#id_project_prep').on('input', function(){
+                activeProjectsCal();
+            });
+            $('#id_project_execution').on('input', function(){
+                activeProjectsCal();
+            });
+            $('#id_tc_manual_dev_time').on('input', function(){
+                autoExecTimeCal();
+            });
+            $('#id_tc_manual_execution_time').on('input', function(){
+                autoExecTimeCal();
+            });
+            $('#id_tc_auto_dev_time').on('input', function(){
+                autoExecTimeCal();
+            });
+            $('#id_tc_auto_execution_time').on('input', function(){
+                autoExecTimeCal();
+            });
     }
+}
 
+function activeTicketsCal(){
+    var tickets = parseFloat($('#id_ticket_prep').val()) + parseFloat($('#id_ticket_execution').val());
+    $('#active_tickets').val(tickets);
+}
+
+function activeProjectsCal(){
+    var projects = parseFloat($('#id_project_prep').val()) + parseFloat($('#id_project_execution').val());
+    $('#active_projects').val(projects);
+}
+
+function autoExecTimeCal(){
+    var time = parseFloat($('#id_tc_manual_dev_time').val())
+        + parseFloat($('#id_tc_manual_execution_time').val())
+        + parseFloat($('#id_tc_auto_dev_time').val())
+        + parseFloat($('#id_tc_auto_execution_time').val());
+    $('#auto_and_execution_time').val(time.toFixed(2));
+    efficiencyTestMetricCal();
+}
+
+function grossAvailableTimeCal(){
+    var gross = (parseFloat(staff.val()) + parseFloat($('#id_contractors').val())) * 30;
+    $('#gross_available_time').val(gross.toFixed(2));
+    efficiencyTestMetricCal();
+}
+
+function efficiencyTestMetricCal(){
+    var effi = parseFloat($('#auto_and_execution_time').val()) / parseFloat($('#gross_available_time').val()) * 100;
+    $('#id_test_efficiency').val(effi.toFixed(2) + '%');
 }

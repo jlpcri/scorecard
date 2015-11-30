@@ -284,23 +284,43 @@
                         <div class="col-sm-2"><label>Average TimeFrame</label></div>
                         <div class="col-sm-2"><label>Overtime Weekday</label></div>
                         <div class="col-sm-2"><label>Overtime Weekend</label></div>
+                        <div class="col-sm-2"><label>Rework Time</label></div>
+                        <div class="col-sm-2"><label>Resource Swap time</label></div>
                     </div>
                     <div class="row">
                         <div class="col-sm-2">{{ form.avg_team_size }}</div>
                         <div class="col-sm-2">{{ form.avg_time_frame }}</div>
                         <div class="col-sm-2">{{ form.overtime_weekday }}</div>
                         <div class="col-sm-2">{{ form.overtime_weekend }}</div>
+                        <div class="col-sm-2">{{ form.rework_time }}</div>
+                        <div class="col-sm-2">{{ form.resource_swap_time }}</div>
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-2"><label>Rework Time</label></div>
-                        <div class="col-sm-2"><label>Resource Swap time</label></div>
                         <div class="col-sm-2"><label>Escalations</label></div>
+                        <div class="col-sm-2"><label>Active Tickets</label></div>
+                        <div class="col-sm-2"><label>Active Projects</label></div>
+                        <div class="col-sm-2"><label>AutoExec Time</label></div>
+                        <div class="col-sm-2"><label>GrossAvai time</label></div>
+                        <div class="col-sm-2"><label>Efficiency</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2">{{ form.rework_time }}</div>
-                        <div class="col-sm-2">{{ form.resource_swap_time }}</div>
                         <div class="col-sm-2">{{ form.escalations }}</div>
+                        <div class="col-sm-2">
+                            <input class="gentle" id="active_tickets" value="{{ metric.active_tickets }}" disabled/>
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="gentle" id="active_projects" value="{{ metric.active_projects }}" disabled/>
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="gentle" id="auto_and_execution_time" value="{{ metric.auto_and_execution_time }}" disabled/>
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="gentle" id="gross_available_time" value="{{ metric.gross_available_time }}" disabled/>
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="gentle" id="id_test_efficiency" value="{{ metric.efficiency|floatformat:2 }}%" disabled/>
+                        </div>
                     </div>
                 {% endif %}
 
