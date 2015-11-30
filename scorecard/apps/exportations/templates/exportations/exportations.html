@@ -26,9 +26,9 @@
             <tbody>
                 {% for item in data.dates %}
                     <tr>
-                        <td><a href="#">{{ item|date }}</a></td>
+                        <td><a href="{% url 'exportations:export_excel' %}?key=SU&date={{ item|date }}">{{ item|date }}</a></td>
                         {% for key in data.key %}
-                            <td><a href="#?date={{ item|date }}">{{ key }}</a> </td>
+                            <td><a href="{% url 'exportations:export_excel' %}?key={{ key }}&date={{ item|date }}">{{ key }}</a> </td>
                         {% endfor %}
 
                     </tr>

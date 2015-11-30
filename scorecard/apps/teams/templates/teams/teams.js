@@ -9,6 +9,6 @@ $('#subnav-tabs').find('a[data-toggle="tab"]').on('show.bs.tab', function(e){
 
 
 $(document).ready(function(){
-    $('#subnav-tabs').find('a[href="#quality_innovation"]').tab('show');
+    $('#subnav-tabs').find('a[href="#product_quality"]').tab('show');
 });
 
