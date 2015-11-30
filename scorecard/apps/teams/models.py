@@ -84,14 +84,14 @@ class TestMetrics(BaseMetrics):
         if self.tc_manual_dev + self.tc_auto_dev == 0:
             return self.tc_auto_dev
         else:
-            return self.tc_auto_dev / (self.tc_manual_dev + self.tc_auto_dev)
+            return self.tc_auto_dev / (self.tc_manual_dev + self.tc_auto_dev) * 100
 
     @property
     def auto_footprint_execution_age(self):
         if self.tc_manual_execution + self.tc_auto_execution == 0:
             return self.tc_auto_execution
         else:
-            return self.tc_auto_execution / (self.tc_manual_execution + self.tc_auto_execution)
+            return self.tc_auto_execution / (self.tc_manual_execution + self.tc_auto_execution) * 100
 
     @property
     def avg_throughput(self):
