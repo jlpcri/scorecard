@@ -12,6 +12,7 @@ switch (key) {
         hours = 40;
         hourly_rate = 45;
         costCal();
+        avgThroughputCal();
         break;
     case 'TL':
         //console.log('tl, nothing to do');
@@ -119,6 +120,16 @@ function autoSavingsCal(tc_auto_time, hourly_rate_auto) {
 // Calculation of average throughput for RE, 'PQ, QA, TE'
 function avgThroughputCal() {
     switch (key) {
+        case 'QI':
+            staff.on('input', function(){
+                var avg_throughput = parseFloat($('#id_story_points_execution').val()) / parseFloat(this.value)
+                $('#avg_throughput_qi').val(avg_throughput.toFixed(2));
+            });
+            $('#id_story_points_execution').on('input', function(){
+                var avg_throughput = parseFloat(this.value) / parseFloat(staff.val())
+                $('#avg_throughput_qi').val(avg_throughput.toFixed(2));
+            });
+            break;
         case 'RE':
             $('#id_active_projects').on('input', function(){
                 $('#avg_throughput').val(parseFloat(this.value) + parseFloat($('#id_team_initiative').val()));

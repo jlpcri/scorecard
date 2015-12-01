@@ -249,6 +249,7 @@
                         <div class="col-sm-2"><label>Average Team Size</label></div>
                         <div class="col-sm-2"><label>Overtime Weekday</label></div>
                         <div class="col-sm-2"><label>Overtime Weekend</label></div>
+                        <div class="col-sm-2"><label>Average Throughput</label></div>
                         <div class="col-sm-2"><label>Rework Time</label></div>
                         <div class="col-sm-2"><label>Resource Swap time</label></div>
                     </div>
@@ -256,6 +257,9 @@
                         <div class="col-sm-2">{{ form.avg_team_size }}</div>
                         <div class="col-sm-2">{{ form.overtime_weekday }}</div>
                         <div class="col-sm-2">{{ form.overtime_weekend }}</div>
+                        <div class="col-sm-2">
+                            <input class="gentle" id="avg_throughput_qi" value="{{ metric.avg_throughput }}" disabled/>
+                        </div>
                         <div class="col-sm-2">{{ form.rework_time }}</div>
                         <div class="col-sm-2">{{ form.resource_swap_time }}</div>
                     </div>
