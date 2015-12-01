@@ -196,6 +196,13 @@ class InnovationMetrics(BaseMetrics):
                                       localtime(self.created))
 
     @property
+    def avg_throughput(self):
+        if self.staffs == 0:
+            return 0
+        else:
+            return self.story_points_execution / self.staffs
+
+    @property
     def operational_cost(self):
         # 40 (hours per week) * 45(hourly rate)
         return (self.staffs + self.contractors) * 40 * 45
