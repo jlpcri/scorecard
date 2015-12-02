@@ -81,6 +81,8 @@ def export_excel(request):
                                                     created__year=date.year,
                                                     created__month=date.month,
                                                     created__day=date.day)
+            write_to_excel(metric, ws)
+
         elif key == 'TL':
             metric = LabMetrics.objects.get(functional_group__key=key,
                                             created__year=date.year,
@@ -99,6 +101,7 @@ def export_excel(request):
                                              created__year=date.year,
                                              created__month=date.month,
                                              created__day=date.day)
+            write_to_excel(metric, ws)
 
         # print metric.functional_group.name, metric.created.year, metric.created.month, metric.created.day
 

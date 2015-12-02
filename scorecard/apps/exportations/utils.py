@@ -44,6 +44,7 @@ HEAD_QI = [
 
 HEAD_RE = [
     'Week Ending',
+    'Requirement Engineering',
     'Staff',
     'Opening Positions',
     'Contractors',
@@ -89,7 +90,27 @@ HEAD_TL = [
     'Licensing Costs'
 ]
 
-HEAD_PQ_QA_TE = []
+HEAD_PQ = [
+    'Week Ending',
+    'Product Quality',
+]
+
+HEAD_QA = [
+    'Week Ending',
+    'Quality Assurance',
+]
+
+HEAD_TE = [
+    'Week Ending',
+    'Test Engineering',
+]
+
+HEAD_TESTING = [
+    'Staff',
+    'Opening Positions',
+    'Contractors',
+    'Throughput',
+]
 
 blackFill = PatternFill(
     fill_type='solid',
@@ -131,32 +152,16 @@ thinBorder = Border(left=Side(style='thin'),
 
 def write_to_excel(metric, ws):
     if metric.functional_group.key == 'QI':
-        for col in range(1, len(HEAD_QI) + 1):
-            cell = ws.cell(row=1, column=col)
-            cell.value = HEAD_QI[col-1]
-            cell.alignment = headAlignment
+        # write head title
+        write_head_title(ws, HEAD_QI)
 
         row = 4
 
         # apply border style
         apply_border_style(ws, row + 1, len(HEAD_QI) + 1)
 
-        # column 1 Weed Ending
-        ws.cell(row=row, column=1).value = get_week_ending_date(metric)
-
-        # column 2
-        ws.cell(row=1, column=2).font = Font(color=colors.WHITE)
-        for r_index in range(1, row + 1):
-            ws.cell(row=r_index, column=2).fill = blackFill
-
-        ws.cell(row=row, column=3).value = metric.staffs
-        ws.cell(row=row, column=4).value = metric.openings
-        ws.cell(row=row, column=5).value = metric.contractors
-
-        # column 6
-        ws.cell(row=1, column=6).font = Font(color=colors.WHITE)
-        for r_index in range(1, row + 1):
-            ws.cell(row=r_index, column=6).fill = cornFlowerBlueFill
+        # column 1-6
+        write_human_resource(ws, row, metric)
 
         ws.cell(row=row, column=7).value = metric.story_points_backlog
         ws.cell(row=row, column=8).value = metric.story_points_prep
@@ -167,9 +172,7 @@ def write_to_excel(metric, ws):
         ws.cell(row=row, column=13).value = metric.defects_in_dev
 
         # column 14
-        ws.cell(row=1, column=14).font = Font(color=colors.WHITE)
-        for r_index in range(1, row + 1):
-            ws.cell(row=r_index, column=14).fill = rebeccaPurpleFill
+        background_color_fill(ws, row, col=14, background_color=rebeccaPurpleFill)
 
         ws.cell(row=row, column=15).value = metric.slas_met
         ws.cell(row=row, column=16).value = metric.delays_introduced_time
@@ -180,9 +183,7 @@ def write_to_excel(metric, ws):
         ws.cell(row=row, column=21).value = metric.rework_introduced_time
 
         # column 22
-        ws.cell(row=1, column=22).font = Font(color=colors.WHITE)
-        for r_index in range(1, row + 1):
-            ws.cell(row=r_index, column=22).fill = saddleBrownFill
+        background_color_fill(ws, row, col=22, background_color=saddleBrownFill)
 
         ws.cell(row=row, column=23).value = metric.avg_team_size
         ws.cell(row=row, column=24).value = metric.overtime_weekday
@@ -192,18 +193,14 @@ def write_to_excel(metric, ws):
         ws.cell(row=row, column=28).value = metric.resource_swap_time
 
         # column 29
-        ws.cell(row=1, column=29).font = Font(color=colors.WHITE)
-        for r_index in range(1, row + 1):
-            ws.cell(row=r_index, column=29).fill = oliveDrabFill
+        background_color_fill(ws, row, col=29, background_color=oliveDrabFill)
 
         ws.cell(row=row, column=30).value = metric.operational_cost
         ws.cell(row=row, column=31).value = metric.license_cost
         ws.cell(row=row, column=32).value = metric.total_operational_cost
 
         # column 33
-        ws.cell(row=1, column=33).font = Font(color=colors.WHITE)
-        for r_index in range(1, row + 1):
-            ws.cell(row=r_index, column=33).fill = darkGreenFill
+        background_color_fill(ws, row, col=33, background_color=darkGreenFill)
 
         ws.cell(row=row, column=34).value = metric.pheme_manual_tests
         ws.cell(row=row, column=35).value = metric.pheme_auto_tests
@@ -212,32 +209,16 @@ def write_to_excel(metric, ws):
         ws.cell(row=row, column=38).value = metric.other_savings
 
     elif metric.functional_group.key == 'TL':
-        for col in range(1, len(HEAD_TL) + 1):
-            cell = ws.cell(row=1, column=col)
-            cell.value = HEAD_TL[col-1]
-            cell.alignment = headAlignment
+        # write head title
+        write_head_title(ws, HEAD_TL)
 
         row = 4
 
         # apply border style
         apply_border_style(ws, row + 1, len(HEAD_TL) + 1)
 
-        # column 1 Weed Ending
-        ws.cell(row=row, column=1).value = get_week_ending_date(metric)
-
-        # column 2
-        ws.cell(row=1, column=2).font = Font(color=colors.WHITE)
-        for r_index in range(1, row + 1):
-            ws.cell(row=r_index, column=2).fill = blackFill
-
-        ws.cell(row=row, column=3).value = metric.staffs
-        ws.cell(row=row, column=4).value = metric.openings
-        ws.cell(row=row, column=5).value = metric.contractors
-
-        # column 6
-        ws.cell(row=1, column=6).font = Font(color=colors.WHITE)
-        for r_index in range(1, row + 1):
-            ws.cell(row=r_index, column=6).fill = cornFlowerBlueFill
+        # column 1-6
+        write_human_resource(ws, row, metric)
 
         ws.cell(row=row, column=7).value = metric.tickets_received
         ws.cell(row=row, column=8).value = metric.tickets_closed
@@ -245,22 +226,86 @@ def write_to_excel(metric, ws):
         ws.cell(row=row, column=10).value = metric.physical_machines
 
         # column 11
-        ws.cell(row=1, column=11).font = Font(color=colors.WHITE)
-        for r_index in range(1, row + 1):
-            ws.cell(row=r_index, column=11).fill = oliveDrabFill
+        background_color_fill(ws, row, col=11, background_color=rebeccaPurpleFill)
 
         ws.cell(row=row, column=12).value = metric.power_consumption_ups_a
         ws.cell(row=row, column=13).value = metric.power_consumption_ups_b
         ws.cell(row=row, column=14).value = metric.license_cost
 
+    elif metric.functional_group.key == 'RE':
+        write_head_title(ws, HEAD_RE)
+
+        row = 4
+        apply_border_style(ws, row + 1, len(HEAD_RE) + 1)
+
+        # column 1-6
+        write_human_resource(ws, row, metric)
+
+        # column 7
+        ws.cell(row=row, column=7).value = metric.backlog
+        ws.cell(row=row, column=8).value = metric.active_projects
+        ws.cell(row=row, column=9).value = metric.team_initiative
+        ws.cell(row=row, column=10).value = metric.elicitation_analysis_time
+
+        # column 11
+        background_color_fill(ws, row, col=11, background_color=rebeccaPurpleFill)
+
+    else:
+        head = []
+        if metric.functional_group.key == 'PQ':
+            head = HEAD_PQ + HEAD_TESTING
+        elif metric.functional_group.key == 'QA':
+            head = HEAD_QA + HEAD_TESTING
+        elif metric.functional_group.key == 'TE':
+            head = HEAD_TE + HEAD_TESTING
+
+        write_head_title(ws, head)
+        row = 4
+        apply_border_style(ws, row + 1, len(head) + 1)
+
+        # column 1-6
+        write_human_resource(ws, row, metric)
+
+        # column 7
+
+
+def write_head_title(ws, title):
+    for col in range(1, len(title) + 1):
+        cell = ws.cell(row=1, column=col)
+        cell.value = title[col - 1]
+        cell.alignment = headAlignment
+        cell.font = Font(bold=True)
+
 
 def apply_border_style(ws, rows, columns):
-    for i in range(1, rows):
-            for j in range(1, columns):
-                ws.cell(row=i, column=j).border = thinBorder
+    for r_index in range(1, rows):
+        for c_index in range(1, columns):
+            ws.cell(row=r_index, column=c_index).border = thinBorder
+
+
+def write_human_resource(ws, row, metric):
+    # column 1 Weed Ending
+    ws.cell(row=row, column=1).value = get_week_ending_date(metric)
+
+    # column 2
+    background_color_fill(ws, row, col=2, background_color=blackFill)
+
+    ws.cell(row=row, column=3).value = metric.staffs
+    ws.cell(row=row, column=4).value = metric.openings
+    ws.cell(row=row, column=5).value = metric.contractors
+
+    # column 6
+    background_color_fill(ws, row, col=6, background_color=cornFlowerBlueFill)
 
 
 def get_week_ending_date(metric):
     return str(metric.created.year) + '-' \
                + str(metric.created.month) + '-' \
                + str(metric.created.day)
+
+
+def background_color_fill(ws, row, col, background_color):
+    ws.cell(row=1, column=col).font = Font(color=colors.WHITE)
+    for r_index in range(1, row + 1):
+        ws.cell(row=r_index, column=col).fill = background_color
+
