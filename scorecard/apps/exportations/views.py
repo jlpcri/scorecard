@@ -51,20 +51,27 @@ def export_excel(request):
                 metric = functional_group.requirementmetrics_set.get(created__year=date.year,
                                                                      created__month=date.month,
                                                                      created__day=date.day)
+                write_to_excel(metric, ws)
+
             elif functional_group.key == 'TL':
                 metric = functional_group.labmetrics_set.get(created__year=date.year,
                                                              created__month=date.month,
                                                              created__day=date.day)
+                write_to_excel(metric, ws)
+
             elif functional_group.key == 'QI':
                 metric = functional_group.innovationmetrics_set.get(created__year=date.year,
                                                                     created__month=date.month,
                                                                     created__day=date.day)
+                write_to_excel(metric, ws)
+
             else:
                 metric = functional_group.testmetrics_set.get(created__year=date.year,
                                                               created__month=date.month,
                                                               created__day=date.day)
+                write_to_excel(metric, ws)
 
-            print metric.functional_group.name, metric.created.day
+            # print metric.functional_group.name, metric.created.day
 
     else:
         ws = wb.create_sheet(key)

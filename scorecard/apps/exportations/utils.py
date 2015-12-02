@@ -1,5 +1,5 @@
-from openpyxl.styles import colors
-from openpyxl.styles import Fill, Color, PatternFill, Font
+from openpyxl.styles import PatternFill, Font, colors, Alignment
+from openpyxl.styles.borders import Border, Side
 
 HEAD_QI = [
     'Week Ending',
@@ -116,14 +116,34 @@ darkGreenFill = PatternFill(
     end_color='006400',
     fill_type='solid')
 
+headAlignment = Alignment(horizontal='center',
+                          vertical='bottom',
+                          textRotation=60,
+                          wrap_text=False,
+                          shrink_to_fit=False,
+                          indent=0)
+
+thinBorder = Border(left=Side(style='thin'),
+                    right=Side(style='thin'),
+                    top=Side(style='thin'),
+                    bottom=Side(style='thin'))
+
 
 def write_to_excel(metric, ws):
     if metric.functional_group.key == 'QI':
         for col in range(1, len(HEAD_QI) + 1):
             cell = ws.cell(row=1, column=col)
             cell.value = HEAD_QI[col-1]
+            cell.alignment = headAlignment
 
         row = 4
+
+        # apply border style
+        apply_border_style(ws, row + 1, len(HEAD_QI) + 1)
+
+        # column 1 Weed Ending
+        ws.cell(row=row, column=1).value = get_week_ending_date(metric)
+
         # column 2
         ws.cell(row=1, column=2).font = Font(color=colors.WHITE)
         for r_index in range(1, row + 1):
@@ -195,8 +215,15 @@ def write_to_excel(metric, ws):
         for col in range(1, len(HEAD_TL) + 1):
             cell = ws.cell(row=1, column=col)
             cell.value = HEAD_TL[col-1]
+            cell.alignment = headAlignment
+
         row = 4
-        # ws.cell(row=row, column=1).value = ''
+
+        # apply border style
+        apply_border_style(ws, row + 1, len(HEAD_TL) + 1)
+
+        # column 1 Weed Ending
+        ws.cell(row=row, column=1).value = get_week_ending_date(metric)
 
         # column 2
         ws.cell(row=1, column=2).font = Font(color=colors.WHITE)
@@ -227,6 +254,13 @@ def write_to_excel(metric, ws):
         ws.cell(row=row, column=14).value = metric.license_cost
 
 
+def apply_border_style(ws, rows, columns):
+    for i in range(1, rows):
+            for j in range(1, columns):
+                ws.cell(row=i, column=j).border = thinBorder
 
 
-
+def get_week_ending_date(metric):
+    return str(metric.created.year) + '-' \
+               + str(metric.created.month) + '-' \
+               + str(metric.created.day)
