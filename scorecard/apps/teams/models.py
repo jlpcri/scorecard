@@ -84,14 +84,14 @@ class TestMetrics(BaseMetrics):
         if self.tc_manual_dev + self.tc_auto_dev == 0:
             return self.tc_auto_dev
         else:
-            return self.tc_auto_dev / (self.tc_manual_dev + self.tc_auto_dev) * 100
+            return self.tc_auto_dev / (self.tc_manual_dev + self.tc_auto_dev)
 
     @property
     def auto_footprint_execution_age(self):
         if self.tc_manual_execution + self.tc_auto_execution == 0:
             return self.tc_auto_execution
         else:
-            return self.tc_auto_execution / (self.tc_manual_execution + self.tc_auto_execution) * 100
+            return self.tc_auto_execution / (self.tc_manual_execution + self.tc_auto_execution)
 
     @property
     def avg_throughput(self):
@@ -127,7 +127,7 @@ class TestMetrics(BaseMetrics):
         if self.gross_available_time == 0:
             return 0
         else:
-            return self.auto_and_execution_time / self.gross_available_time * 100
+            return self.auto_and_execution_time / self.gross_available_time
 
     @property
     def operational_cost(self):
@@ -252,7 +252,7 @@ class RequirementMetrics(BaseMetrics):
         if self.gross_available_time == 0:
             return 0
         else:
-            return self.elicitation_analysis_time / self.gross_available_time * 100
+            return self.elicitation_analysis_time / self.gross_available_time
 
     @property
     def rework_external_cost(self):

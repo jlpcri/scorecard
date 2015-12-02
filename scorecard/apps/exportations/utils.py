@@ -58,6 +58,7 @@ HEAD_RE = [
     'Rework introduced',
     'Avg Throughput',
     'SLAs met',
+    'SLAs missed',
     'Delays introduced',
     'Escalations',
     'Efficiency',
@@ -69,6 +70,7 @@ HEAD_RE = [
     'Costs',
     'Cost of Rework',
     'Resource Swap Hours',
+    'Operational Costs',
     'Travel Costs',
     'Overall Operating Costs'
 ]
@@ -85,8 +87,8 @@ HEAD_TL = [
     'Virtual Machines',
     'Physical Machines',
     'Costs',
-    'Power Consumption UPS A',
-    'Power Consumption UPS B',
+    'Power Consumption - UPS A(KW)',
+    'Power Consumption - UPS B(KW)',
     'Licensing Costs'
 ]
 
@@ -110,6 +112,54 @@ HEAD_TESTING = [
     'Opening Positions',
     'Contractors',
     'Throughput',
+    'Team Initiatives',
+    'Backlog Tickets',
+    'Tickets Prep',
+    'Tickets Execution',
+    'Tickets Closure',
+    'Backlog Projects',
+    'Projects Prep',
+    'Projects Execution',
+    'Projects Closure',
+    'Manual TCs Dev',
+    'Manual TC dev(Hours)',
+    'Automated TCs Dev',
+    'Automated TC Dev(Hours)',
+    'Automation Footprint Dev age',
+    'Manual TCs Execution',
+    'Manual TCs Execution (Hours)',
+    'Automated TCs Execution',
+    'Automated TCs Execution (Hours)',
+    'Automation Footprint Execution age',
+    'Average Throughput',
+    'Quality',
+    'SLAs met',
+    'Delays Introduced (Hours)',
+    'Defects Caught',
+    'UAT defects not prevented',
+    'SDIs not prevented',
+    'Resource Swap',
+    'Escalations',
+    'Standard violated',
+    'Rework Introduced (Hours)',
+    'Efficiency',
+    'Average Team size',
+    'Avg timeframe (tickets)',
+    'Active Tickets',
+    'Active Projects',
+    'Automation + Execution (Hours)',
+    'Gross Available (Hours)',
+    'Efficiency',
+    'Overtime Weekend (Hours)',
+    'Overtime Weekday (Hours)',
+    'Rework Hours',
+    'Resource Swap (Hours)',
+    'Costs',
+    'Testing Operational Costs',
+    'Licensing Costs',
+    'Total Operational Costs',
+    'Cost Saved by Automation',
+    'Other savings'
 ]
 
 blackFill = PatternFill(
@@ -168,7 +218,9 @@ def write_to_excel(metric, ws):
         ws.cell(row=row, column=9).value = metric.story_points_execution
         ws.cell(row=row, column=10).value = metric.unit_tests_dev
         ws.cell(row=row, column=11).value = metric.unit_tests_coverage
+        ws.cell(row=row, column=11).number_format = '0.00%'
         ws.cell(row=row, column=12).value = metric.documentation_coverage
+        ws.cell(row=row, column=12).number_format = '0.00%'
         ws.cell(row=row, column=13).value = metric.defects_in_dev
 
         # column 14
@@ -195,6 +247,9 @@ def write_to_excel(metric, ws):
         # column 29
         background_color_fill(ws, row, col=29, background_color=oliveDrabFill)
 
+        # add $ symbol
+        add_dollar_symbol(ws, row, col_start=30, col_end=32)
+
         ws.cell(row=row, column=30).value = metric.operational_cost
         ws.cell(row=row, column=31).value = metric.license_cost
         ws.cell(row=row, column=32).value = metric.total_operational_cost
@@ -206,6 +261,8 @@ def write_to_excel(metric, ws):
         ws.cell(row=row, column=35).value = metric.pheme_auto_tests
         ws.cell(row=row, column=36).value = metric.visilog_txl_parsed
         ws.cell(row=row, column=37).value = metric.visilog_txl_schema_violation
+
+        add_dollar_symbol(ws, row, col_start=38, col_end=38)
         ws.cell(row=row, column=38).value = metric.other_savings
 
     elif metric.functional_group.key == 'TL':
@@ -232,6 +289,8 @@ def write_to_excel(metric, ws):
         ws.cell(row=row, column=13).value = metric.power_consumption_ups_b
         ws.cell(row=row, column=14).value = metric.license_cost
 
+        add_dollar_symbol(ws, row, col_start=14, col_end=14)
+
     elif metric.functional_group.key == 'RE':
         write_head_title(ws, HEAD_RE)
 
@@ -250,6 +309,39 @@ def write_to_excel(metric, ws):
         # column 11
         background_color_fill(ws, row, col=11, background_color=rebeccaPurpleFill)
 
+        # column 12
+        ws.cell(row=row, column=12).value = metric.revisions
+        ws.cell(row=row, column=13).value = metric.rework_introduced_time
+        ws.cell(row=row, column=14).value = metric.avg_throughput
+        ws.cell(row=row, column=15).value = metric.slas_met
+        ws.cell(row=row, column=16).value = metric.slas_missed
+        ws.cell(row=row, column=17).value = metric.delays_introduced_time
+        ws.cell(row=row, column=18).value = metric.escalations
+
+        # column 19
+        background_color_fill(ws, row, col=19, background_color=saddleBrownFill)
+
+        # column 20
+        ws.cell(row=row, column=20).value = metric.gross_available_time
+        ws.cell(row=row, column=21).value = metric.efficiency
+        ws.cell(row=row, column=21).number_format = '0.00%'
+        ws.cell(row=row, column=22).value = metric.overtime_weekend
+        ws.cell(row=row, column=23).value = metric.overtime_weekday
+        ws.cell(row=row, column=24).value = metric.rework_external_time
+
+        # column 25
+        background_color_fill(ws, row, col=25, background_color=oliveDrabFill)
+
+        # column 26
+        add_dollar_symbol(ws, row, col_start=26, col_end=26)
+        add_dollar_symbol(ws, row, col_start=28, col_end=30)
+
+        ws.cell(row=row, column=26).value = metric.rework_external_cost
+        ws.cell(row=row, column=27).value = metric.resource_swap_time
+        ws.cell(row=row, column=28).value = metric.operational_cost
+        ws.cell(row=row, column=29).value = metric.travel_cost
+        ws.cell(row=row, column=30).value = metric.overall_cost
+
     else:
         head = []
         if metric.functional_group.key == 'PQ':
@@ -267,6 +359,76 @@ def write_to_excel(metric, ws):
         write_human_resource(ws, row, metric)
 
         # column 7
+        ws.cell(row=row, column=7).value = metric.team_initiative
+        ws.cell(row=row, column=8).value = metric.ticket_backlog
+        ws.cell(row=row, column=9).value = metric.ticket_prep
+        ws.cell(row=row, column=10).value = metric.ticket_execution
+        ws.cell(row=row, column=11).value = metric.ticket_closed
+        ws.cell(row=row, column=12).value = metric.project_backlog
+        ws.cell(row=row, column=13).value = metric.project_prep
+        ws.cell(row=row, column=14).value = metric.project_execution
+        ws.cell(row=row, column=15).value = metric.project_closed
+        ws.cell(row=row, column=16).value = metric.tc_manual_dev
+        ws.cell(row=row, column=17).value = metric.tc_manual_dev_time
+        ws.cell(row=row, column=18).value = metric.tc_auto_dev
+        ws.cell(row=row, column=19).value = metric.tc_auto_dev_time
+
+        ws.cell(row=row, column=20).value = metric.auto_footprint_dev_age
+        ws.cell(row=row, column=20).number_format = '0.00%'
+
+        ws.cell(row=row, column=21).value = metric.tc_manual_execution
+        ws.cell(row=row, column=22).value = metric.tc_manual_execution_time
+        ws.cell(row=row, column=23).value = metric.tc_auto_execution
+        ws.cell(row=row, column=24).value = metric.tc_auto_execution_time
+
+        ws.cell(row=row, column=25).value = metric.auto_footprint_execution_age
+        ws.cell(row=row, column=25).number_format = '0.00%'
+
+        ws.cell(row=row, column=26).value = metric.avg_throughput
+
+        # column 27
+        background_color_fill(ws, row, col=27, background_color=rebeccaPurpleFill)
+
+        # column 28
+        ws.cell(row=row, column=28).value = metric.slas_met
+        ws.cell(row=row, column=29).value = metric.delays_introduced_time
+        ws.cell(row=row, column=30).value = metric.defect_caught
+        ws.cell(row=row, column=31).value = metric.uat_defects_not_prevented
+        ws.cell(row=row, column=32).value = metric.sdis_not_prevented
+        ws.cell(row=row, column=33).value = metric.resource_swap
+        ws.cell(row=row, column=34).value = metric.escalations
+        # ws.cell(row=row, column=35).value = metric.standards_violated
+        ws.cell(row=row, column=36).value = metric.rework_introduced_time
+
+        # column 37
+        background_color_fill(ws, row, col=37, background_color=saddleBrownFill)
+
+        # column 38
+        ws.cell(row=row, column=38).value = metric.avg_team_size
+        ws.cell(row=row, column=39).value = metric.avg_time_frame
+        ws.cell(row=row, column=40).value = metric.active_tickets
+        ws.cell(row=row, column=41).value = metric.active_projects
+        ws.cell(row=row, column=42).value = metric.auto_and_execution_time
+        ws.cell(row=row, column=43).value = metric.gross_available_time
+
+        ws.cell(row=row, column=44).value = metric.efficiency
+        ws.cell(row=row, column=44).number_format = '0.00%'
+
+        ws.cell(row=row, column=45).value = metric.overtime_weekend
+        ws.cell(row=row, column=46).value = metric.overtime_weekday
+        ws.cell(row=row, column=47).value = metric.rework_time
+        ws.cell(row=row, column=48).value = metric.resource_swap_time
+
+        # column 49
+        background_color_fill(ws, row, col=49, background_color=oliveDrabFill)
+
+        # column 50
+        add_dollar_symbol(ws, row, col_start=50, col_end=54)
+        ws.cell(row=row, column=50).value = metric.operational_cost
+        ws.cell(row=row, column=51).value = metric.license_cost
+        ws.cell(row=row, column=52).value = metric.total_operational_cost
+        ws.cell(row=row, column=53).value = metric.auto_savings
+        ws.cell(row=row, column=54).value = metric.other_savings
 
 
 def write_head_title(ws, title):
@@ -281,6 +443,7 @@ def apply_border_style(ws, rows, columns):
     for r_index in range(1, rows):
         for c_index in range(1, columns):
             ws.cell(row=r_index, column=c_index).border = thinBorder
+            ws.cell(row=r_index, column=c_index).number_format = '0.00'
 
 
 def write_human_resource(ws, row, metric):
@@ -308,4 +471,11 @@ def background_color_fill(ws, row, col, background_color):
     ws.cell(row=1, column=col).font = Font(color=colors.WHITE)
     for r_index in range(1, row + 1):
         ws.cell(row=r_index, column=col).fill = background_color
+
+
+def add_dollar_symbol(ws, row, col_start, col_end):
+    for r_index in range(2, row + 1):
+        for c_index in range(col_start, col_end + 1):
+            ws.cell(row=r_index, column=c_index).number_format = '$0.00'
+
 

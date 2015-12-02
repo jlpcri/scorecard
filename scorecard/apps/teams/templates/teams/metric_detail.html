@@ -156,10 +156,10 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-2">
-                            <input class="gentle" id="auto_footprint_dev" value="{{ metric.auto_footprint_dev_age|floatformat:2 }}%" disabled/>
+                            <input class="gentle" id="auto_footprint_dev" value="{% widthratio metric.auto_footprint_dev_age 1 100 %}%" disabled/>
                         </div>
                         <div class="col-sm-2">
-                            <input class="gentle" id="auto_footprint_execution" value="{{ metric.auto_footprint_execution_age|floatformat:2 }}%" disabled/>
+                            <input class="gentle" id="auto_footprint_execution" value="{% widthratio metric.auto_footprint_execution_age 1 100 %}%" disabled/>
                         </div>
                         <div class="col-sm-2">
                             <input class="gentle" id="avg_throughput" value="{{ metric.avg_throughput|floatformat:2 }}" disabled/>
@@ -276,7 +276,7 @@
                             <input class="gentle" id="gross_available" value="{{ metric.gross_available_time }}" disabled/>
                         </div>
                         <div class="col-sm-2">
-                            <input class="gentle" id="id_efficiency" value="{{ metric.efficiency|floatformat:2 }}%" disabled/>
+                            <input class="gentle" id="id_efficiency" value="{% widthratio metric.efficiency 1 100 %}%" disabled/>
                         </div>
                         <div class="col-sm-2">{{ form.overtime_weekday }}</div>
                         <div class="col-sm-2">{{ form.overtime_weekend }}</div>
@@ -323,7 +323,7 @@
                             <input class="gentle" id="gross_available_time" value="{{ metric.gross_available_time }}" disabled/>
                         </div>
                         <div class="col-sm-2">
-                            <input class="gentle" id="id_test_efficiency" value="{{ metric.efficiency|floatformat:2 }}%" disabled/>
+                            <input class="gentle" id="id_test_efficiency" value="{% widthratio metric.efficiency 1 100 %}%" disabled/>
                         </div>
                     </div>
                 {% endif %}
@@ -354,7 +354,7 @@
                     <div class="row">
                         <div class="col-sm-2">{{ form.license_cost }}</div>
                         <div class="col-sm-2">
-                            <input class="gentle" id="operational_cost" value="{{ metric.operational_cost }}" disabled/>
+                            <input class="gentle" id="operational_cost" value="{{ metric.operational_cost|floatformat:2 }}" disabled/>
                         </div>
                         <div class="col-sm-2">
                             <input class="gentle" id="total_cost" value="{{ metric.total_operational_cost }}" disabled />
