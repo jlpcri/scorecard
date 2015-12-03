@@ -68,6 +68,7 @@ class TestMetrics(BaseMetrics):
     # Quality
     defect_caught = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     uat_defects_not_prevented = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    standards_violated = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     # Efficiency
     avg_time_frame = models.DecimalField(max_digits=10, decimal_places=2, default=0)
