@@ -100,7 +100,7 @@ def export_excel(request):
             write_to_excel(metric, ws)
 
     else:
-        dates = InnovationMetrics.objects.values_list('created', flat=True)
+        # dates = InnovationMetrics.objects.values_list('created', flat=True)
         for functional_group in functional_groups:
             ws = wb.create_sheet(functional_group.name)
             if functional_group.key == 'RE':

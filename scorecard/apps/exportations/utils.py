@@ -1,5 +1,6 @@
 from openpyxl.styles import PatternFill, Font, colors, Alignment
 from openpyxl.styles.borders import Border, Side
+from openpyxl.utils import get_column_letter
 
 HEAD_QI = [
     'Week Ending',
@@ -199,37 +200,45 @@ thinBorder = Border(left=Side(style='thin'),
                     top=Side(style='thin'),
                     bottom=Side(style='thin'))
 
+mediumBorder = Border(left=Side(style='medium'),
+                      right=Side(style='medium'),
+                      top=Side(style='medium'),
+                      bottom=Side(style='medium'))
+
 
 def write_to_excel(metric, ws):
+    row_start = 4
+
     if metric.functional_group.key == 'QI':
         # write head title
         write_head_title(ws, HEAD_QI)
 
-        row = 4
-
         # apply border style
-        apply_border_style(ws, row + 1, len(HEAD_QI) + 1)
+        apply_border_style(ws, row_start + 1, len(HEAD_QI) + 1)
 
-        write_body_qi(ws, row, metric)
+        write_ytd(ws, len(HEAD_QI) + 1, row_start, row_start)
+
+        write_body_qi(ws, row_start, metric)
 
     elif metric.functional_group.key == 'TL':
         # write head title
         write_head_title(ws, HEAD_TL)
 
-        row = 4
-
         # apply border style
-        apply_border_style(ws, row + 1, len(HEAD_TL) + 1)
+        apply_border_style(ws, row_start + 1, len(HEAD_TL) + 1)
 
-        write_body_tl(ws, row, metric)
+        write_ytd(ws, len(HEAD_TL) + 1, row_start, row_start)
+
+        write_body_tl(ws, row_start, metric)
 
     elif metric.functional_group.key == 'RE':
         write_head_title(ws, HEAD_RE)
 
-        row = 4
-        apply_border_style(ws, row + 1, len(HEAD_RE) + 1)
+        apply_border_style(ws, row_start + 1, len(HEAD_RE) + 1)
 
-        write_body_re(ws, row, metric)
+        write_ytd(ws, len(HEAD_RE) + 1, row_start, row_start)
+
+        write_body_re(ws, row_start, metric)
 
     else:
         head = []
@@ -241,10 +250,12 @@ def write_to_excel(metric, ws):
             head = HEAD_TE + HEAD_TESTING
 
         write_head_title(ws, head)
-        row = 4
-        apply_border_style(ws, row + 1, len(head) + 1)
 
-        write_body_pq_qa_te(ws, row, metric)
+        apply_border_style(ws, row_start + 1, len(head) + 1)
+
+        write_ytd(ws, len(head) + 1, row_start, row_start)
+
+        write_body_pq_qa_te(ws, row_start, metric)
 
 
 def write_head_title(ws, title):
@@ -252,7 +263,7 @@ def write_head_title(ws, title):
         cell = ws.cell(row=1, column=col)
         cell.value = title[col - 1]
         cell.alignment = headAlignment
-        cell.font = Font(bold=True)
+        cell.font = Font(bold=True, size=12)
 
 
 def apply_border_style(ws, rows, columns):
@@ -260,6 +271,9 @@ def apply_border_style(ws, rows, columns):
         for c_index in range(1, columns):
             ws.cell(row=r_index, column=c_index).border = thinBorder
             ws.cell(row=r_index, column=c_index).number_format = '0.00'
+
+    for c_index in range(2, columns):
+        ws.column_dimensions[get_column_letter(c_index)].width = 10
 
 
 def write_body_qi(ws, row, metric):
@@ -278,6 +292,7 @@ def write_body_qi(ws, row, metric):
 
         # column 14
         background_color_fill(ws, row, col=14, background_color=rebeccaPurpleFill)
+        ws.column_dimensions[get_column_letter(14)].width = 4
 
         ws.cell(row=row, column=15).value = metric.slas_met
         ws.cell(row=row, column=16).value = metric.delays_introduced_time
@@ -289,6 +304,7 @@ def write_body_qi(ws, row, metric):
 
         # column 22
         background_color_fill(ws, row, col=22, background_color=saddleBrownFill)
+        ws.column_dimensions[get_column_letter(22)].width = 4
 
         ws.cell(row=row, column=23).value = metric.avg_team_size
         ws.cell(row=row, column=24).value = metric.overtime_weekday
@@ -299,6 +315,7 @@ def write_body_qi(ws, row, metric):
 
         # column 29
         background_color_fill(ws, row, col=29, background_color=oliveDrabFill)
+        ws.column_dimensions[get_column_letter(29)].width = 4
 
         # add $ symbol
         add_dollar_symbol(ws, row, col_start=30, col_end=32)
@@ -309,6 +326,7 @@ def write_body_qi(ws, row, metric):
 
         # column 33
         background_color_fill(ws, row, col=33, background_color=darkGreenFill)
+        ws.column_dimensions[get_column_letter(33)].width = 4
 
         ws.cell(row=row, column=34).value = metric.pheme_manual_tests
         ws.cell(row=row, column=35).value = metric.pheme_auto_tests
@@ -330,6 +348,7 @@ def write_body_tl(ws, row, metric):
 
     # column 11
     background_color_fill(ws, row, col=11, background_color=rebeccaPurpleFill)
+    ws.column_dimensions[get_column_letter(11)].width = 4
 
     ws.cell(row=row, column=12).value = metric.power_consumption_ups_a
     ws.cell(row=row, column=13).value = metric.power_consumption_ups_b
@@ -350,6 +369,7 @@ def write_body_re(ws, row, metric):
 
     # column 11
     background_color_fill(ws, row, col=11, background_color=rebeccaPurpleFill)
+    ws.column_dimensions[get_column_letter(11)].width = 4
 
     # column 12
     ws.cell(row=row, column=12).value = metric.revisions
@@ -362,6 +382,7 @@ def write_body_re(ws, row, metric):
 
     # column 19
     background_color_fill(ws, row, col=19, background_color=saddleBrownFill)
+    ws.column_dimensions[get_column_letter(19)].width = 4
 
     # column 20
     ws.cell(row=row, column=20).value = metric.gross_available_time
@@ -373,6 +394,7 @@ def write_body_re(ws, row, metric):
 
     # column 25
     background_color_fill(ws, row, col=25, background_color=oliveDrabFill)
+    ws.column_dimensions[get_column_letter(25)].width = 4
 
     # column 26
     add_dollar_symbol(ws, row, col_start=26, col_end=26)
@@ -419,6 +441,7 @@ def write_body_pq_qa_te(ws, row, metric):
 
     # column 27
     background_color_fill(ws, row, col=27, background_color=rebeccaPurpleFill)
+    ws.column_dimensions[get_column_letter(27)].width = 4
 
     # column 28
     ws.cell(row=row, column=28).value = metric.slas_met
@@ -433,6 +456,7 @@ def write_body_pq_qa_te(ws, row, metric):
 
     # column 37
     background_color_fill(ws, row, col=37, background_color=saddleBrownFill)
+    ws.column_dimensions[get_column_letter(37)].width = 4
 
     # column 38
     ws.cell(row=row, column=38).value = metric.avg_team_size
@@ -452,6 +476,7 @@ def write_body_pq_qa_te(ws, row, metric):
 
     # column 49
     background_color_fill(ws, row, col=49, background_color=oliveDrabFill)
+    ws.column_dimensions[get_column_letter(49)].width = 4
 
     # column 50
     add_dollar_symbol(ws, row, col_start=50, col_end=54)
@@ -465,9 +490,11 @@ def write_body_pq_qa_te(ws, row, metric):
 def write_human_resource(ws, row, metric):
     # column 1 Weed Ending
     ws.cell(row=row, column=1).value = get_week_ending_date(metric)
+    ws.cell(row=row, column=1).alignment = Alignment(horizontal='right')
 
     # column 2
     background_color_fill(ws, row, col=2, background_color=blackFill)
+    ws.column_dimensions[get_column_letter(2)].width = 4
 
     ws.cell(row=row, column=3).value = metric.staffs
     ws.cell(row=row, column=4).value = metric.openings
@@ -475,6 +502,7 @@ def write_human_resource(ws, row, metric):
 
     # column 6
     background_color_fill(ws, row, col=6, background_color=cornFlowerBlueFill)
+    ws.column_dimensions[get_column_letter(6)].width = 4
 
 
 def get_week_ending_date(metric):
@@ -496,10 +524,77 @@ def add_dollar_symbol(ws, row, col_start, col_end):
 
 
 def write_to_excel_all(metrics, ws, key):
+    row_start = 4
+
     if key == 'QI':
         write_head_title(ws, HEAD_QI)
 
-        row = len(metrics) + 3
+        apply_border_style(ws, row_start + len(metrics), len(HEAD_QI) + 1)
 
-        apply_border_style(ws, row + 1, len(HEAD_QI) + 1)
+        write_ytd(ws, len(HEAD_QI) + 1, row_start, row_start + len(metrics) - 1)
 
+        for metric in metrics:
+            write_body_qi(ws, row_start, metric)
+            row_start += 1
+    elif key == 'TL':
+        write_head_title(ws, HEAD_TL)
+
+        apply_border_style(ws, row_start + len(metrics), len(HEAD_TL) - 1)
+
+        write_ytd(ws, len(HEAD_TL) + 1, row_start, row_start + len(metrics) + 1)
+
+        for metric in metrics:
+            write_body_tl(ws, row_start, metric)
+            row_start += 1
+
+    elif key == 'RE':
+        write_head_title(ws, HEAD_RE)
+
+        apply_border_style(ws, row_start + len(metrics), len(HEAD_RE) - 1)
+
+        write_ytd(ws, len(HEAD_RE) + 1, row_start, row_start + len(metrics) + 1)
+
+        for metric in metrics:
+            write_body_re(ws, row_start, metric)
+            row_start += 1
+
+    else:
+        head = []
+        if key == 'PQ':
+            head = HEAD_PQ + HEAD_TESTING
+        elif key == 'QA':
+            head = HEAD_QA + HEAD_TESTING
+        elif key == 'TE':
+            head = HEAD_TE + HEAD_TESTING
+
+        write_head_title(ws, head)
+
+        apply_border_style(ws, row_start + len(metrics), len(head) + 1)
+
+        write_ytd(ws, len(head) + 1, row_start, row_start + len(metrics) - 1)
+
+        for metric in metrics:
+            write_body_pq_qa_te(ws, row_start, metric)
+            row_start += 1
+
+
+def write_ytd(ws, columns, row_start, row_end):
+    ws.column_dimensions['A'].width = 12
+    ws.cell(row=2, column=1).alignment = Alignment(horizontal='right')
+    ws.cell(row=3, column=1).alignment = Alignment(horizontal='right')
+
+    ws.cell(row=2, column=1).value = 'YTD Average'
+    ws.cell(row=3, column=1).value = 'YTD Totals'
+
+    for r_index in range(2, 4):
+        for c_index in range(1, columns):
+            ws.cell(row=r_index, column=c_index).border = mediumBorder
+            ws.cell(row=r_index, column=c_index).font = Font(bold=True)
+
+    for c_index in range(2, columns):
+        c_letter = get_column_letter(c_index)
+        start = c_letter + str(row_start)
+        end = c_letter + str(row_end)
+        # print start, end
+        ws.cell(row=2, column=c_index).value = '=AVERAGE({0}:{1})'.format(start, end)
+        ws.cell(row=3, column=c_index).value = '=SUM({0}:{1})'.format(start, end)
