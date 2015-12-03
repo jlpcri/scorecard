@@ -205,6 +205,11 @@ mediumBorder = Border(left=Side(style='medium'),
                       top=Side(style='medium'),
                       bottom=Side(style='medium'))
 
+col_exclude_qi = [2, 6, 14, 22, 29, 37]
+col_exclude_re = [2, 6, 11, 19, 25]
+col_exclude_tl = [2, 6, 11]
+col_exclude_pq_qa_te = [2, 6, 27, 37, 49]
+
 
 def write_to_excel(metric, ws):
     row_start = 4
@@ -216,7 +221,7 @@ def write_to_excel(metric, ws):
         # apply border style
         apply_border_style(ws, row_start + 1, len(HEAD_QI) + 1)
 
-        write_ytd(ws, len(HEAD_QI) + 1, row_start, row_start)
+        write_ytd(ws, len(HEAD_QI) + 1, row_start, row_start, col_exclude_qi)
 
         write_body_qi(ws, row_start, metric)
 
@@ -227,7 +232,7 @@ def write_to_excel(metric, ws):
         # apply border style
         apply_border_style(ws, row_start + 1, len(HEAD_TL) + 1)
 
-        write_ytd(ws, len(HEAD_TL) + 1, row_start, row_start)
+        write_ytd(ws, len(HEAD_TL) + 1, row_start, row_start, col_exclude_tl)
 
         write_body_tl(ws, row_start, metric)
 
@@ -236,7 +241,7 @@ def write_to_excel(metric, ws):
 
         apply_border_style(ws, row_start + 1, len(HEAD_RE) + 1)
 
-        write_ytd(ws, len(HEAD_RE) + 1, row_start, row_start)
+        write_ytd(ws, len(HEAD_RE) + 1, row_start, row_start, col_exclude_re)
 
         write_body_re(ws, row_start, metric)
 
@@ -253,7 +258,7 @@ def write_to_excel(metric, ws):
 
         apply_border_style(ws, row_start + 1, len(head) + 1)
 
-        write_ytd(ws, len(head) + 1, row_start, row_start)
+        write_ytd(ws, len(head) + 1, row_start, row_start, col_exclude_pq_qa_te)
 
         write_body_pq_qa_te(ws, row_start, metric)
 
@@ -531,7 +536,7 @@ def write_to_excel_all(metrics, ws, key):
 
         apply_border_style(ws, row_start + len(metrics), len(HEAD_QI) + 1)
 
-        write_ytd(ws, len(HEAD_QI) + 1, row_start, row_start + len(metrics) - 1)
+        write_ytd(ws, len(HEAD_QI) + 1, row_start, row_start + len(metrics) - 1, col_exclude_qi)
 
         for metric in metrics:
             write_body_qi(ws, row_start, metric)
@@ -541,7 +546,7 @@ def write_to_excel_all(metrics, ws, key):
 
         apply_border_style(ws, row_start + len(metrics), len(HEAD_TL) - 1)
 
-        write_ytd(ws, len(HEAD_TL) + 1, row_start, row_start + len(metrics) + 1)
+        write_ytd(ws, len(HEAD_TL) + 1, row_start, row_start + len(metrics) + 1, col_exclude_tl)
 
         for metric in metrics:
             write_body_tl(ws, row_start, metric)
@@ -552,7 +557,7 @@ def write_to_excel_all(metrics, ws, key):
 
         apply_border_style(ws, row_start + len(metrics), len(HEAD_RE) - 1)
 
-        write_ytd(ws, len(HEAD_RE) + 1, row_start, row_start + len(metrics) + 1)
+        write_ytd(ws, len(HEAD_RE) + 1, row_start, row_start + len(metrics) + 1, col_exclude_re)
 
         for metric in metrics:
             write_body_re(ws, row_start, metric)
@@ -571,14 +576,14 @@ def write_to_excel_all(metrics, ws, key):
 
         apply_border_style(ws, row_start + len(metrics), len(head) + 1)
 
-        write_ytd(ws, len(head) + 1, row_start, row_start + len(metrics) - 1)
+        write_ytd(ws, len(head) + 1, row_start, row_start + len(metrics) - 1, col_exclude_pq_qa_te)
 
         for metric in metrics:
             write_body_pq_qa_te(ws, row_start, metric)
             row_start += 1
 
 
-def write_ytd(ws, columns, row_start, row_end):
+def write_ytd(ws, columns, row_start, row_end, col_exclude):
     ws.column_dimensions['A'].width = 12
     ws.cell(row=2, column=1).alignment = Alignment(horizontal='right')
     ws.cell(row=3, column=1).alignment = Alignment(horizontal='right')
@@ -592,6 +597,8 @@ def write_ytd(ws, columns, row_start, row_end):
             ws.cell(row=r_index, column=c_index).font = Font(bold=True)
 
     for c_index in range(2, columns):
+        if c_index in col_exclude:
+            continue
         c_letter = get_column_letter(c_index)
         start = c_letter + str(row_start)
         end = c_letter + str(row_end)
