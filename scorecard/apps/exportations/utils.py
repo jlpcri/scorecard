@@ -397,7 +397,7 @@ def write_to_excel(metric, ws):
         ws.cell(row=row, column=32).value = metric.sdis_not_prevented
         ws.cell(row=row, column=33).value = metric.resource_swap
         ws.cell(row=row, column=34).value = metric.escalations
-        # ws.cell(row=row, column=35).value = metric.standards_violated
+        ws.cell(row=row, column=35).value = metric.standards_violated
         ws.cell(row=row, column=36).value = metric.rework_introduced_time
 
         # column 37

@@ -230,16 +230,20 @@
                         <div class="col-sm-3">{{ form.uat_defects_not_prevented }}</div>
                     </div>
                     <div class="row">
+                        <div class="col-sm-2"><label>SDIs not prevented</label></div>
                         <div class="col-sm-2"><label>Resource Swap</label></div>
                         <div class="col-sm-2"><label>Escalations</label></div>
+                        <div class="col-sm-2"><label>Standards Violated</label></div>
+                        <div class="col-sm-2"><label>Escalations</label></div>
                         <div class="col-sm-2"><label>Rework Introduced</label></div>
-                        <div class="col-sm-2"><label>SDIs not prevented</label></div>
                     </div>
                     <div class="row">
+                        <div class="col-sm-2">{{ form.sdis_not_prevented }}</div>
                         <div class="col-sm-2">{{ form.resource_swap }}</div>
                         <div class="col-sm-2">{{ form.escalations }}</div>
+                        <div class="col-sm-2">{{ form.standards_violated }}</div>
+                        <div class="col-sm-2">{{ form.escalations }}</div>
                         <div class="col-sm-2">{{ form.rework_introduced_time }}</div>
-                        <div class="col-sm-2">{{ form.sdis_not_prevented }}</div>
                     </div>
                 {% endif %}
 
@@ -301,7 +305,6 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-2"><label>Escalations</label></div>
                         <div class="col-sm-2"><label>Active Tickets</label></div>
                         <div class="col-sm-2"><label>Active Projects</label></div>
                         <div class="col-sm-2"><label>AutoExec Time</label></div>
@@ -309,7 +312,6 @@
                         <div class="col-sm-2"><label>Efficiency</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2">{{ form.escalations }}</div>
                         <div class="col-sm-2">
                             <input class="gentle" id="active_tickets" value="{{ metric.active_tickets }}" disabled/>
                         </div>
