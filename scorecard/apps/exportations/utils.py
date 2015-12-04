@@ -163,6 +163,30 @@ HEAD_TESTING = [
     'Other savings'
 ]
 
+HEAD_TESTING_SUMMARY = [
+    'Week Ending',
+    'Testing Combined',
+    'Staff',
+    'Opening Positions',
+    'Contractors',
+    'Throughput',
+    'Team Initiatives',
+    'Active Projects',
+    'Active Tickets',
+    'Avg Throughput per week',
+    'Quality',
+    'Delays Introduced'
+]
+
+HEAD_QI_TL_SUMMARY = [
+    'Week Ending',
+    'Quality Innovation',
+    'Staff',
+    'Opening Positions',
+    'Contractors',
+    'Throughput',
+]
+
 blackFill = PatternFill(
     fill_type='solid',
     start_color='FF000000',
@@ -205,14 +229,18 @@ mediumBorder = Border(left=Side(style='medium'),
                       top=Side(style='medium'),
                       bottom=Side(style='medium'))
 
-col_exclude_qi = [2, 6, 14, 22, 29, 33]
-col_exclude_re = [2, 6, 11, 19, 25]
-col_exclude_tl = [2, 6, 11]
-col_exclude_pq_qa_te = [2, 6, 27, 37, 49]
+ROW_START_INDEX = 4
+
+COL_EXCLUDE_QI = [2, 6, 14, 22, 29, 33]
+COL_EXCLUDE_RE = [2, 6, 11, 19, 25]
+COL_EXCLUDE_TL = [2, 6, 11]
+COL_EXCLUDE_PQ_QA_TE = [2, 6, 27, 37, 49]
+COL_EXCLUDE_TEST_SUMMARY = [2, 6, 11]
+COL_EXCLUDE_QI_TL_SUMMARY = [2, 6, 13, 17, 21, 26]
 
 
 def write_to_excel(metric, ws):
-    row_start = 4
+    row_start = ROW_START_INDEX
 
     if metric.functional_group.key == 'QI':
         # write head title
@@ -221,7 +249,7 @@ def write_to_excel(metric, ws):
         # apply border style
         apply_border_style(ws, row_start + 1, len(HEAD_QI) + 1)
 
-        write_ytd(ws, len(HEAD_QI) + 1, row_start, row_start, col_exclude_qi)
+        write_ytd(ws, len(HEAD_QI) + 1, row_start, row_start, COL_EXCLUDE_QI)
 
         write_body_qi(ws, row_start, metric)
 
@@ -232,7 +260,7 @@ def write_to_excel(metric, ws):
         # apply border style
         apply_border_style(ws, row_start + 1, len(HEAD_TL) + 1)
 
-        write_ytd(ws, len(HEAD_TL) + 1, row_start, row_start, col_exclude_tl)
+        write_ytd(ws, len(HEAD_TL) + 1, row_start, row_start, COL_EXCLUDE_TL)
 
         write_body_tl(ws, row_start, metric)
 
@@ -241,7 +269,7 @@ def write_to_excel(metric, ws):
 
         apply_border_style(ws, row_start + 1, len(HEAD_RE) + 1)
 
-        write_ytd(ws, len(HEAD_RE) + 1, row_start, row_start, col_exclude_re)
+        write_ytd(ws, len(HEAD_RE) + 1, row_start, row_start, COL_EXCLUDE_RE)
 
         write_body_re(ws, row_start, metric)
 
@@ -258,7 +286,7 @@ def write_to_excel(metric, ws):
 
         apply_border_style(ws, row_start + 1, len(head) + 1)
 
-        write_ytd(ws, len(head) + 1, row_start, row_start, col_exclude_pq_qa_te)
+        write_ytd(ws, len(head) + 1, row_start, row_start, COL_EXCLUDE_PQ_QA_TE)
 
         write_body_pq_qa_te(ws, row_start, metric)
 
@@ -494,7 +522,7 @@ def write_body_pq_qa_te(ws, row, metric):
 
 def write_human_resource(ws, row, metric):
     # column 1 Weed Ending
-    ws.cell(row=row, column=1).value = get_week_ending_date(metric)
+    ws.cell(row=row, column=1).value = get_week_ending_date(metric.created)
     ws.cell(row=row, column=1).alignment = Alignment(horizontal='right')
 
     # column 2
@@ -510,10 +538,18 @@ def write_human_resource(ws, row, metric):
     ws.column_dimensions[get_column_letter(6)].width = 4
 
 
-def get_week_ending_date(metric):
-    return str(metric.created.year) + '-' \
-               + str(metric.created.month) + '-' \
-               + str(metric.created.day)
+def get_week_ending_date(date):
+    if date.month < 10:
+        month = '0' + str(date.month)
+    else:
+        month = str(date.month)
+
+    if date.day < 10:
+        day = '0' + str(date.day)
+    else:
+        day = str(date.day)
+
+    return str(date.year) + '-' + month + '-' + day
 
 
 def background_color_fill(ws, row, col, background_color):
@@ -529,14 +565,14 @@ def add_dollar_symbol(ws, row, col_start, col_end):
 
 
 def write_to_excel_all(metrics, ws, key):
-    row_start = 4
+    row_start = ROW_START_INDEX
 
     if key == 'QI':
         write_head_title(ws, HEAD_QI)
 
         apply_border_style(ws, row_start + len(metrics), len(HEAD_QI) + 1)
 
-        write_ytd(ws, len(HEAD_QI) + 1, row_start, row_start + len(metrics) - 1, col_exclude_qi)
+        write_ytd(ws, len(HEAD_QI) + 1, row_start, row_start + len(metrics) - 1, COL_EXCLUDE_QI)
 
         for metric in metrics:
             write_body_qi(ws, row_start, metric)
@@ -546,7 +582,7 @@ def write_to_excel_all(metrics, ws, key):
 
         apply_border_style(ws, row_start + len(metrics), len(HEAD_TL) + 1)
 
-        write_ytd(ws, len(HEAD_TL) + 1, row_start, row_start + len(metrics) - 1, col_exclude_tl)
+        write_ytd(ws, len(HEAD_TL) + 1, row_start, row_start + len(metrics) - 1, COL_EXCLUDE_TL)
 
         for metric in metrics:
             write_body_tl(ws, row_start, metric)
@@ -557,7 +593,7 @@ def write_to_excel_all(metrics, ws, key):
 
         apply_border_style(ws, row_start + len(metrics), len(HEAD_RE) + 1)
 
-        write_ytd(ws, len(HEAD_RE) + 1, row_start, row_start + len(metrics) - 1, col_exclude_re)
+        write_ytd(ws, len(HEAD_RE) + 1, row_start, row_start + len(metrics) - 1, COL_EXCLUDE_RE)
 
         for metric in metrics:
             write_body_re(ws, row_start, metric)
@@ -576,7 +612,7 @@ def write_to_excel_all(metrics, ws, key):
 
         apply_border_style(ws, row_start + len(metrics), len(head) + 1)
 
-        write_ytd(ws, len(head) + 1, row_start, row_start + len(metrics) - 1, col_exclude_pq_qa_te)
+        write_ytd(ws, len(head) + 1, row_start, row_start + len(metrics) - 1, COL_EXCLUDE_PQ_QA_TE)
 
         for metric in metrics:
             write_body_pq_qa_te(ws, row_start, metric)
@@ -605,3 +641,58 @@ def write_ytd(ws, columns, row_start, row_end, col_exclude):
         # print start, end
         ws.cell(row=2, column=c_index).value = '=AVERAGE({0}:{1})'.format(start, end)
         ws.cell(row=3, column=c_index).value = '=SUM({0}:{1})'.format(start, end)
+
+
+def write_to_excel_test_summary(ws, dates):
+    row_start = ROW_START_INDEX
+
+    write_head_title(ws, HEAD_TESTING_SUMMARY)
+
+    apply_border_style(ws, row_start + len(dates), len(HEAD_TESTING_SUMMARY) + 1)
+
+    write_ytd(ws, len(HEAD_TESTING_SUMMARY) + 1, row_start, row_start + len(dates) - 1, COL_EXCLUDE_TEST_SUMMARY)
+
+    for date in dates:
+        # column 1
+        ws.cell(row=row_start, column=1).value = get_week_ending_date(date)
+
+        # column 2
+        background_color_fill(ws, row_start, col=2, background_color=blackFill)
+        ws.column_dimensions[get_column_letter(2)].width = 4
+
+        # column 3
+        ws.cell(row=row_start, column=3).value = get_formula_from_pq_qa_te(row_start, 3)
+        ws.cell(row=row_start, column=4).value = get_formula_from_pq_qa_te(row_start, 4)
+        ws.cell(row=row_start, column=5).value = get_formula_from_pq_qa_te(row_start, 5)
+
+        # column 6
+        background_color_fill(ws, row_start, col=6, background_color=cornFlowerBlueFill)
+        ws.column_dimensions[get_column_letter(6)].width = 4
+
+        # column 7
+        ws.cell(row=row_start, column=7).value = get_formula_from_pq_qa_te(row_start, 7)
+        ws.cell(row=row_start, column=8).value = get_formula_from_pq_qa_te(row_start, 41)
+        ws.cell(row=row_start, column=9).value = get_formula_from_pq_qa_te(row_start, 40)
+        ws.cell(row=row_start, column=10).value = get_formula_from_pq_qa_te(row_start, 26)
+
+        # column 11
+        background_color_fill(ws, row_start, col=11, background_color=rebeccaPurpleFill)
+        ws.column_dimensions[get_column_letter(11)].width = 4
+
+        # column 12
+        ws.cell(row=row_start, column=12).value = get_formula_from_pq_qa_te(row_start, 29)
+
+        row_start += 1
+
+
+def write_to_excel_qi_tl_summary(ws, dates):
+    row_start = ROW_START_INDEX
+
+    write_head_title(ws, HEAD_QI_TL_SUMMARY)
+
+    apply_border_style(ws, row_start + len(dates), len(HEAD_TESTING_SUMMARY) + 1)
+
+
+def get_formula_from_pq_qa_te(row, col):
+    row = str(row)
+    return '=SUM(\'Quality Assurance\'!{0}, \'Test Engineering\'!{0}, \'Product Quality\'!{0})'.format(get_column_letter(col) + row)

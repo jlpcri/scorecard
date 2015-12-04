@@ -6,7 +6,8 @@ from django.shortcuts import render, redirect
 from django.template import RequestContext
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
-from scorecard.apps.exportations.utils import write_to_excel, write_to_excel_all
+from scorecard.apps.exportations.utils import write_to_excel, write_to_excel_all, write_to_excel_test_summary, \
+    write_to_excel_qi_tl_summary
 
 from scorecard.apps.users.models import FunctionalGroup
 from scorecard.apps.teams.models import InnovationMetrics, LabMetrics, RequirementMetrics, TestMetrics
@@ -37,7 +38,6 @@ def exportations(request):
 @login_required
 def export_excel(request):
     wb = Workbook()
-    wb.active.title = 'Testing Summary'
     functional_groups = FunctionalGroup.objects.all().order_by('name')
     key = request.GET.get('key', '')
     date = request.GET.get('date', '')
@@ -50,6 +50,7 @@ def export_excel(request):
         # print date
 
         if key == 'SU':
+            wb.active.title = 'Testing Summary'
             for functional_group in functional_groups:
                 ws = wb.create_sheet(functional_group.name)
                 if functional_group.key == 'RE':
@@ -82,7 +83,8 @@ def export_excel(request):
                 return redirect('exportations:exportations')
 
         else:
-            ws = wb.create_sheet(key)
+            ws = wb.active
+            ws.title = key
             # ws.sheet_properties.tabColor = '1072BA'
             if key == 'RE':
                 metric = RequirementMetrics.objects.get(functional_group__key=key,
@@ -115,7 +117,17 @@ def export_excel(request):
                 write_to_excel(metric, ws)
 
     else:
-        # dates = InnovationMetrics.objects.values_list('created', flat=True)
+        dates = InnovationMetrics.objects.values_list('created', flat=True)
+
+        # export formula to Testing Summar
+        ws = wb.active
+        ws.title = 'Testing Summary'
+        write_to_excel_test_summary(ws, dates)
+
+        # export formula to Innovation+Lab Summary
+        ws = wb.create_sheet('Innovation + Lab Summary')
+        write_to_excel_qi_tl_summary(ws, dates)
+
         for functional_group in functional_groups:
             ws = wb.create_sheet(functional_group.name)
             if functional_group.key == 'RE':
