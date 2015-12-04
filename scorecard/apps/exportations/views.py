@@ -1,4 +1,5 @@
 from datetime import datetime
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -52,6 +53,9 @@ def export_excel(request):
                     metric = functional_group.requirementmetrics_set.get(created__year=date.year,
                                                                          created__month=date.month,
                                                                          created__day=date.day)
+                    if metric.confirmed == metric.created:
+                        messages.error(request, 'Not updated')
+                        return redirect('exportations:exportations')
 
                 elif functional_group.key == 'TL':
                     metric = functional_group.labmetrics_set.get(created__year=date.year,

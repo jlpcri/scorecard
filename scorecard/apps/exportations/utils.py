@@ -205,7 +205,7 @@ mediumBorder = Border(left=Side(style='medium'),
                       top=Side(style='medium'),
                       bottom=Side(style='medium'))
 
-col_exclude_qi = [2, 6, 14, 22, 29, 37]
+col_exclude_qi = [2, 6, 14, 22, 29, 33]
 col_exclude_re = [2, 6, 11, 19, 25]
 col_exclude_tl = [2, 6, 11]
 col_exclude_pq_qa_te = [2, 6, 27, 37, 49]
@@ -544,9 +544,9 @@ def write_to_excel_all(metrics, ws, key):
     elif key == 'TL':
         write_head_title(ws, HEAD_TL)
 
-        apply_border_style(ws, row_start + len(metrics), len(HEAD_TL) - 1)
+        apply_border_style(ws, row_start + len(metrics), len(HEAD_TL) + 1)
 
-        write_ytd(ws, len(HEAD_TL) + 1, row_start, row_start + len(metrics) + 1, col_exclude_tl)
+        write_ytd(ws, len(HEAD_TL) + 1, row_start, row_start + len(metrics) - 1, col_exclude_tl)
 
         for metric in metrics:
             write_body_tl(ws, row_start, metric)
@@ -555,9 +555,9 @@ def write_to_excel_all(metrics, ws, key):
     elif key == 'RE':
         write_head_title(ws, HEAD_RE)
 
-        apply_border_style(ws, row_start + len(metrics), len(HEAD_RE) - 1)
+        apply_border_style(ws, row_start + len(metrics), len(HEAD_RE) + 1)
 
-        write_ytd(ws, len(HEAD_RE) + 1, row_start, row_start + len(metrics) + 1, col_exclude_re)
+        write_ytd(ws, len(HEAD_RE) + 1, row_start, row_start + len(metrics) - 1, col_exclude_re)
 
         for metric in metrics:
             write_body_re(ws, row_start, metric)

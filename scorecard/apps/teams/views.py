@@ -48,18 +48,11 @@ def weekly_metric_new_manually(request):
     :param request:
     :return:
     """
-    today = date.today()
-    if today.isoweekday() == 5:
-        try:
-            qi = InnovationMetrics.objects.latest('created')
-            if qi.created.date() == today:
-                messages.error(request, 'Metric is already exist')
-            else:
-                weekly_metric_new()
-        except InnovationMetrics.DoesNotExist:
-            weekly_metric_new()
-    else:
-        messages.error(request, 'Today is not Friday')
+
+    result = weekly_metric_new()
+    if not result['valid']:
+        messages.error(request, result['message'])
+
     return HttpResponseRedirect(reverse('teams:teams'))
 
 
