@@ -42,6 +42,9 @@ def export_excel(request):
     key = request.GET.get('key', '')
     date = request.GET.get('date', '')
 
+    update_error = False
+    update_error_list = []
+
     if date:
         date = datetime.strptime(date, '%b. %d, %Y')
         # print date
@@ -53,26 +56,39 @@ def export_excel(request):
                     metric = functional_group.requirementmetrics_set.get(created__year=date.year,
                                                                          created__month=date.month,
                                                                          created__day=date.day)
-                    if metric.confirmed == metric.created:
-                        messages.error(request, 'Not updated')
-                        return redirect('exportations:exportations')
+                    if not metric.updated:
+                        update_error = True
+                        update_error_list.append(str(functional_group.key))
 
                 elif functional_group.key == 'TL':
                     metric = functional_group.labmetrics_set.get(created__year=date.year,
                                                                  created__month=date.month,
                                                                  created__day=date.day)
+                    if not metric.updated:
+                        update_error = True
+                        update_error_list.append(str(functional_group.key))
 
                 elif functional_group.key == 'QI':
                     metric = functional_group.innovationmetrics_set.get(created__year=date.year,
                                                                         created__month=date.month,
                                                                         created__day=date.day)
+                    if not metric.updated:
+                        update_error = True
+                        update_error_list.append(str(functional_group.key))
 
                 else:
                     metric = functional_group.testmetrics_set.get(created__year=date.year,
                                                                   created__month=date.month,
                                                                   created__day=date.day)
+                    if not metric.updated:
+                        update_error = True
+                        update_error_list.append(str(functional_group.key))
 
                 write_to_excel(metric, ws)
+
+            if update_error:
+                messages.error(request, 'Team {0} not updated'.format(update_error_list))
+                return redirect('exportations:exportations')
 
         else:
             ws = wb.create_sheet(key)
@@ -100,6 +116,10 @@ def export_excel(request):
                                                  created__year=date.year,
                                                  created__month=date.month,
                                                  created__day=date.day)
+
+            if not metric.updated:
+                messages.error(request, 'Team \'{0}\' not updated'.format(metric.functional_group.name))
+                return redirect('exportations:exportations')
 
             write_to_excel(metric, ws)
 

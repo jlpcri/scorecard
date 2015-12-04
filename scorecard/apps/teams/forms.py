@@ -6,7 +6,7 @@ from models import TestMetrics, InnovationMetrics, LabMetrics, RequirementMetric
 class InnovationForm(ModelForm):
     class Meta:
         model = InnovationMetrics
-        exclude = ['created', 'confirmed']
+        exclude = ['created', 'confirmed', 'updated']
         widgets = {
             'functional_group': forms.Select(attrs={
                 'class': 'form-control',
@@ -50,7 +50,7 @@ class RequirementForm(ModelForm):
 class TestForm(ModelForm):
     class Meta:
         model = TestMetrics
-        exclude = ['created', 'confirmed']
+        exclude = ['created', 'confirmed', 'updated']
         widgets = {
             'functional_group': forms.Select(attrs={
                 'class': 'form-control',

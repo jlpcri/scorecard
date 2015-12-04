@@ -12,6 +12,7 @@ class BaseMetrics(models.Model):
     functional_group = models.ForeignKey(FunctionalGroup)
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     confirmed = models.DateTimeField(auto_now=True, db_index=True)
+    updated = models.BooleanField(default=False)
 
     # Human Resource
     staffs = models.IntegerField(default=0)

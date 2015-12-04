@@ -106,7 +106,10 @@ def metric_edit(request, metric_id):
             return redirect('teams:teams')
 
         if form.is_valid():
-            form.save()
+            metric = form.save()
+            if not metric.updated:
+                metric.updated = True
+                metric.save()
             return redirect('teams:teams')
         else:
             messages.error(request, 'Correct errors in the form')
