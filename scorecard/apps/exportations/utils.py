@@ -175,7 +175,24 @@ HEAD_TESTING_SUMMARY = [
     'Active Tickets',
     'Avg Throughput per week',
     'Quality',
-    'Delays Introduced'
+    'Delays Introduced',
+    'Defects identified',
+    'UAT defects not prevented',
+    'SDIs not prevented',
+    'Average team size',
+    'Avg timeframe (project)',
+    'Automation Footprint',
+    'Automation Hours',
+    'Test Execution Hours',
+    'Gross Available Hours',
+    'Efficiency',
+    'Overtime Weekend in Hours',
+    'Overtime Weekday Hours',
+    'Rework Hours',
+    'Resource Swap (hours)',
+    'Escalations',
+    'Overall Operating Costs',
+    'Total Savings'
 ]
 
 HEAD_QI_TL_SUMMARY = [
@@ -661,26 +678,46 @@ def write_to_excel_test_summary(ws, dates):
         ws.column_dimensions[get_column_letter(2)].width = 4
 
         # column 3
-        ws.cell(row=row_start, column=3).value = get_formula_from_pq_qa_te(row_start, 3)
-        ws.cell(row=row_start, column=4).value = get_formula_from_pq_qa_te(row_start, 4)
-        ws.cell(row=row_start, column=5).value = get_formula_from_pq_qa_te(row_start, 5)
+        ws.cell(row=row_start, column=3).value = get_formula_sum_from_pq_qa_te(row_start, 3)  # staff
+        ws.cell(row=row_start, column=4).value = get_formula_sum_from_pq_qa_te(row_start, 4)  # openings
+        ws.cell(row=row_start, column=5).value = get_formula_sum_from_pq_qa_te(row_start, 5)  # contractors
 
         # column 6
         background_color_fill(ws, row_start, col=6, background_color=cornFlowerBlueFill)
         ws.column_dimensions[get_column_letter(6)].width = 4
 
         # column 7
-        ws.cell(row=row_start, column=7).value = get_formula_from_pq_qa_te(row_start, 7)
-        ws.cell(row=row_start, column=8).value = get_formula_from_pq_qa_te(row_start, 41)
-        ws.cell(row=row_start, column=9).value = get_formula_from_pq_qa_te(row_start, 40)
-        ws.cell(row=row_start, column=10).value = get_formula_from_pq_qa_te(row_start, 26)
+        ws.cell(row=row_start, column=7).value = get_formula_sum_from_pq_qa_te(row_start, 7)    # team initiatives
+        ws.cell(row=row_start, column=8).value = get_formula_sum_from_pq_qa_te(row_start, 41)   # active projects
+        ws.cell(row=row_start, column=9).value = get_formula_sum_from_pq_qa_te(row_start, 40)   # active tickets
+        ws.cell(row=row_start, column=10).value = get_formula_avg_from_pq_qa_te(row_start, 26)  # avg throughput
 
         # column 11
         background_color_fill(ws, row_start, col=11, background_color=rebeccaPurpleFill)
         ws.column_dimensions[get_column_letter(11)].width = 4
 
         # column 12
-        ws.cell(row=row_start, column=12).value = get_formula_from_pq_qa_te(row_start, 29)
+        ws.cell(row=row_start, column=12).value = get_formula_sum_from_pq_qa_te(row_start, 29)  # delays introduced
+        ws.cell(row=row_start, column=13).value = get_formula_sum_from_pq_qa_te(row_start, 30)  # defects identified
+        ws.cell(row=row_start, column=14).value = get_formula_sum_from_pq_qa_te(row_start, 31)  # uat defects not prevented
+        ws.cell(row=row_start, column=15).value = get_formula_sum_from_pq_qa_te(row_start, 32)  # SDIs not prevented
+        ws.cell(row=row_start, column=16).value = get_formula_avg_from_pq_qa_te(row_start, 38)  # Avg team size
+        ws.cell(row=row_start, column=17).value = get_formula_avg_from_pq_qa_te(row_start, 39)  # avg timeframe
+
+        ws.cell(row=row_start, column=18).value = get_formula_sum_from_pq_qa_te(row_start, 20)  # automation footprint
+        ws.cell(row=row_start, column=18).number_format = '0.00%'
+
+        ws.cell(row=row_start, column=19).value = get_formula_sum_from_pq_qa_te(row_start, 24)  # automation hours
+        ws.cell(row=row_start, column=20).value = get_formula_sum_from_pq_qa_te(row_start, 22)  # test exec hours
+        ws.cell(row=row_start, column=21).value = get_formula_sum_from_pq_qa_te(row_start, 43)  # gross available
+        ws.cell(row=row_start, column=22).value = get_formula_avg_from_pq_qa_te(row_start, 44)  # efficiency
+        ws.cell(row=row_start, column=23).value = get_formula_sum_from_pq_qa_te(row_start, 45)  # overtime weekend
+        ws.cell(row=row_start, column=24).value = get_formula_sum_from_pq_qa_te(row_start, 46)  # overtime weekday
+        ws.cell(row=row_start, column=25).value = get_formula_sum_from_pq_qa_te(row_start, 47)  # rework hours
+        ws.cell(row=row_start, column=26).value = get_formula_sum_from_pq_qa_te(row_start, 48)  # resource swap hours
+        ws.cell(row=row_start, column=27).value = get_formula_sum_from_pq_qa_te(row_start, 34)  # escalations
+        ws.cell(row=row_start, column=28).value = get_formula_sum_from_pq_qa_te(row_start, 52)  # overall opening costs
+        ws.cell(row=row_start, column=29).value = get_formula_sum_from_pq_qa_te_total_savings(row_start, [53, 54])  # total savings
 
         row_start += 1
 
@@ -693,6 +730,22 @@ def write_to_excel_qi_tl_summary(ws, dates):
     apply_border_style(ws, row_start + len(dates), len(HEAD_TESTING_SUMMARY) + 1)
 
 
-def get_formula_from_pq_qa_te(row, col):
+def get_formula_sum_from_pq_qa_te(row, col):
     row = str(row)
     return '=SUM(\'Quality Assurance\'!{0}, \'Test Engineering\'!{0}, \'Product Quality\'!{0})'.format(get_column_letter(col) + row)
+
+
+def get_formula_sum_from_pq_qa_te_total_savings(row, cols):
+    row = str(row)
+    string = ''
+    for col in cols:
+        tmp = '\'Quality Assurance\'!{0}, \'Test Engineering\'!{0}, \'Product Quality\'!{0},'.format(get_column_letter(col) + row)
+        string += tmp
+
+    string = '=SUM(' + string + ')'
+    return string
+
+
+def get_formula_avg_from_pq_qa_te(row, col):
+    row = str(row)
+    return '=AVERAGE(\'Quality Assurance\'!{0}, \'Test Engineering\'!{0}, \'Product Quality\'!{0})'.format(get_column_letter(col) + row)
