@@ -7,7 +7,7 @@ from django.template import RequestContext
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 from scorecard.apps.exportations.utils import write_to_excel, write_to_excel_all, write_to_excel_test_summary, \
-    write_to_excel_qi_tl_summary
+    write_to_excel_qi_tl_summary, get_week_ending_date
 
 from scorecard.apps.users.models import FunctionalGroup
 from scorecard.apps.teams.models import InnovationMetrics, LabMetrics, RequirementMetrics, TestMetrics
@@ -41,6 +41,10 @@ def export_excel(request):
     functional_groups = FunctionalGroup.objects.all().order_by('name')
     key = request.GET.get('key', '')
     date = request.GET.get('date', '')
+
+    today = get_week_ending_date(datetime.today())
+    export_file_name = 'Scorecard-'
+    export_date = ''
 
     update_error = False
     update_error_list = []
@@ -77,6 +81,9 @@ def export_excel(request):
                     update_error_list.append(str(functional_group.key))
                 else:
                     write_to_excel(metric, ws)
+                    export_date = metric.created
+
+            export_file_name += get_week_ending_date(export_date)
 
             if update_error:
                 messages.error(request, 'Team {0} not updated'.format(update_error_list))
@@ -114,9 +121,11 @@ def export_excel(request):
                 messages.error(request, 'Team \'{0}\' not updated'.format(metric.functional_group.name))
                 return redirect('exportations:exportations')
             else:
+                export_file_name += key + '-' + get_week_ending_date(metric.created)
                 write_to_excel(metric, ws)
 
     else:
+        export_file_name += 'All-' + today
         dates = InnovationMetrics.objects.values_list('created', flat=True)
 
         # export formula to Testing Summar
@@ -152,7 +161,7 @@ def export_excel(request):
             return redirect('exportations:exportations')
 
     response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
-    response['Content-disposition'] = 'attachment; filename="foo.xlsx"'
+    response['Content-disposition'] = 'attachment; filename="{0}.xlsx"'.format(export_file_name)
     return response
 
 
