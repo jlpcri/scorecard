@@ -797,10 +797,45 @@ def write_to_excel_qi_tl_summary(ws, dates):
         ws.cell(row=row_start, column=12).value = get_cell_value_from_qi(row_start, 16)  # revisions
 
         # column 13
-        background_color_fill(ws, row_start, col=13, background_color=darkGreenFill)
+        background_color_fill(ws, row_start, col=13, background_color=oliveDrabFill)
         ws.column_dimensions[get_column_letter(13)].width = 4
 
+        # column 14
+        ws.cell(row=row_start, column=14).value = get_formula_sum_from_qi(row_start, 37)
+        ws.cell(row=row_start, column=15).value = get_formula_savings_from_qi(row_start, 37)
+        ws.cell(row=row_start, column=16).value = get_formula_value_add_from_qi(row_start, 39)
+
+        # column 17
+        background_color_fill(ws, row_start, col=17, background_color=blackFill)
+        ws.column_dimensions[get_column_letter(17)].width = 4
+
+        # column 18
+        ws.cell(row=row_start, column=18).value = get_cell_value_from_tl(row_start, 3)
+        ws.cell(row=row_start, column=19).value = get_cell_value_from_tl(row_start, 4)
+        ws.cell(row=row_start, column=20).value = get_cell_value_from_tl(row_start, 5)
+
+        # column 21
+        background_color_fill(ws, row_start, col=21, background_color=cornFlowerBlueFill)
+        ws.column_dimensions[get_column_letter(21)].width = 4
+
+        # column 22
+        ws.cell(row=row_start, column=22).value = get_cell_value_from_tl(row_start, 7)
+        ws.cell(row=row_start, column=23).value = get_cell_value_from_tl(row_start, 8)
+        ws.cell(row=row_start, column=24).value = get_cell_value_from_tl(row_start, 9)
+        ws.cell(row=row_start, column=25).value = get_cell_value_from_tl(row_start, 10)
+
+        # column 26
+        background_color_fill(ws, row_start, col=26, background_color=oliveDrabFill)
+        ws.column_dimensions[get_column_letter(26)].width = 4
+
+        # column 27
+        ws.cell(row=row_start, column=27).value = get_cell_value_from_tl(row_start, 12)
+        ws.cell(row=row_start, column=28).value = get_cell_value_from_tl(row_start, 13)
+        ws.cell(row=row_start, column=29).value = get_cell_value_from_tl(row_start, 14)
+
         row_start += 1
+
+    add_dollar_symbol(ws, row_start, col_start=29, col_end=29)
 
 
 def get_formula_sum_from_pq_qa_te(row, col):
@@ -828,3 +863,27 @@ def get_cell_value_from_qi(row, col):
     row = str(row)
 
     return '=\'Quality Innovation\'!{0}'.format(get_column_letter(col) + row)
+
+
+def get_formula_sum_from_qi(row, col):
+    row = str(row)
+
+    return '=SUM(\'Quality Innovation\'!{0}:{1})'.format(get_column_letter(col) + row, get_column_letter(col + 2) + row)
+
+
+def get_formula_savings_from_qi(row, col):
+    row = str(row)
+
+    return '=(\'Quality Innovation\'!{0}*1.73)+(\'Quality Innovation\'!{1}*1.97)'.format(get_column_letter(col) + row, get_column_letter(col + 1) + row)
+
+
+def get_formula_value_add_from_qi(row, col):
+    row = str(row)
+
+    return '=(\'Quality Innovation\'!{0}*0.33)'.format(get_column_letter(col) + row)
+
+
+def get_cell_value_from_tl(row, col):
+    row = str(row)
+
+    return '=\'Test Lab\'!{0}'.format(get_column_letter(col) + row)
