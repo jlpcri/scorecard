@@ -16,6 +16,9 @@ HEAD_QI = [
     'Unit Testing Coverage',
     'Documentation',
     'Defects due to Dev',
+    'Active Projects',
+    'Elicitation Analysis',
+    'Revisions',
     'Quality',
     'SLAS met',
     'Delays Introduced',
@@ -202,6 +205,29 @@ HEAD_QI_TL_SUMMARY = [
     'Opening Positions',
     'Contractors',
     'Throughput',
+    'Active Projects',
+    'Elicitation and Analysis Hours',
+    'Rework Hours',
+    'Avg Throughput per developer',
+    'Delays introduced (Hours)',
+    '# of revisions',
+    'Costs',
+    'Tests executed on platform',
+    'Savings',
+    'Value Add',
+    'Test Lab',
+    'Staff',
+    'Opening Positions',
+    'Contractors',
+    'Throughput',
+    'Tickets Received',
+    'Tickets Closed',
+    'Virtual Machines',
+    'Physical machines',
+    'Costs',
+    'Power Consumption - UPS A(kw)',
+    'Power Consumption - UPS B(kw)',
+    'Licensing Costs'
 ]
 
 blackFill = PatternFill(
@@ -228,6 +254,10 @@ darkGreenFill = PatternFill(
     start_color='006400',
     end_color='006400',
     fill_type='solid')
+silverGrayFill = PatternFill(
+    start_color='C0C0C0',
+    end_color='C0C0C0',
+    fill_type='solid')
 
 headAlignment = Alignment(horizontal='center',
                           vertical='bottom',
@@ -248,7 +278,7 @@ mediumBorder = Border(left=Side(style='medium'),
 
 ROW_START_INDEX = 4
 
-COL_EXCLUDE_QI = [2, 6, 14, 22, 29, 33]
+COL_EXCLUDE_QI = [2, 6, 17, 25, 32, 36]
 COL_EXCLUDE_RE = [2, 6, 11, 19, 25]
 COL_EXCLUDE_TL = [2, 6, 11]
 COL_EXCLUDE_PQ_QA_TE = [2, 6, 27, 37, 49]
@@ -339,52 +369,55 @@ def write_body_qi(ws, row, metric):
         ws.cell(row=row, column=12).value = metric.documentation_coverage
         ws.cell(row=row, column=12).number_format = '0.00%'
         ws.cell(row=row, column=13).value = metric.defects_in_dev
+        ws.cell(row=row, column=14).value = metric.active_projects
+        ws.cell(row=row, column=15).value = metric.elicitation_analysis_time
+        ws.cell(row=row, column=16).value = metric.revisions
 
-        # column 14
-        background_color_fill(ws, row, col=14, background_color=rebeccaPurpleFill)
-        ws.column_dimensions[get_column_letter(14)].width = 4
+        # column 17
+        background_color_fill(ws, row, col=17, background_color=rebeccaPurpleFill)
+        ws.column_dimensions[get_column_letter(17)].width = 4
 
-        ws.cell(row=row, column=15).value = metric.slas_met
-        ws.cell(row=row, column=16).value = metric.delays_introduced_time
-        ws.cell(row=row, column=17).value = metric.uat_defects_not_prevented
-        ws.cell(row=row, column=18).value = metric.sdis_not_prevented
-        ws.cell(row=row, column=19).value = metric.resource_swap
-        ws.cell(row=row, column=20).value = metric.escalations
-        ws.cell(row=row, column=21).value = metric.rework_introduced_time
+        ws.cell(row=row, column=18).value = metric.slas_met
+        ws.cell(row=row, column=19).value = metric.delays_introduced_time
+        ws.cell(row=row, column=20).value = metric.uat_defects_not_prevented
+        ws.cell(row=row, column=21).value = metric.sdis_not_prevented
+        ws.cell(row=row, column=22).value = metric.resource_swap
+        ws.cell(row=row, column=23).value = metric.escalations
+        ws.cell(row=row, column=24).value = metric.rework_introduced_time
 
-        # column 22
-        background_color_fill(ws, row, col=22, background_color=saddleBrownFill)
-        ws.column_dimensions[get_column_letter(22)].width = 4
+        # column 25
+        background_color_fill(ws, row, col=25, background_color=saddleBrownFill)
+        ws.column_dimensions[get_column_letter(25)].width = 4
 
-        ws.cell(row=row, column=23).value = metric.avg_team_size
-        ws.cell(row=row, column=24).value = metric.overtime_weekday
-        ws.cell(row=row, column=25).value = metric.overtime_weekend
-        ws.cell(row=row, column=26).value = metric.avg_throughput
-        ws.cell(row=row, column=27).value = metric.rework_time
-        ws.cell(row=row, column=28).value = metric.resource_swap_time
+        ws.cell(row=row, column=26).value = metric.avg_team_size
+        ws.cell(row=row, column=27).value = metric.overtime_weekday
+        ws.cell(row=row, column=28).value = metric.overtime_weekend
+        ws.cell(row=row, column=29).value = metric.avg_throughput
+        ws.cell(row=row, column=30).value = metric.rework_time
+        ws.cell(row=row, column=31).value = metric.resource_swap_time
 
-        # column 29
-        background_color_fill(ws, row, col=29, background_color=oliveDrabFill)
-        ws.column_dimensions[get_column_letter(29)].width = 4
+        # column 32
+        background_color_fill(ws, row, col=32, background_color=oliveDrabFill)
+        ws.column_dimensions[get_column_letter(32)].width = 4
 
         # add $ symbol
-        add_dollar_symbol(ws, row, col_start=30, col_end=32)
+        add_dollar_symbol(ws, row, col_start=33, col_end=35)
 
-        ws.cell(row=row, column=30).value = metric.operational_cost
-        ws.cell(row=row, column=31).value = metric.license_cost
-        ws.cell(row=row, column=32).value = metric.total_operational_cost
+        ws.cell(row=row, column=33).value = metric.operational_cost
+        ws.cell(row=row, column=34).value = metric.license_cost
+        ws.cell(row=row, column=35).value = metric.total_operational_cost
 
-        # column 33
-        background_color_fill(ws, row, col=33, background_color=darkGreenFill)
-        ws.column_dimensions[get_column_letter(33)].width = 4
+        # column 36
+        background_color_fill(ws, row, col=36, background_color=darkGreenFill)
+        ws.column_dimensions[get_column_letter(36)].width = 4
 
-        ws.cell(row=row, column=34).value = metric.pheme_manual_tests
-        ws.cell(row=row, column=35).value = metric.pheme_auto_tests
-        ws.cell(row=row, column=36).value = metric.visilog_txl_parsed
-        ws.cell(row=row, column=37).value = metric.visilog_txl_schema_violation
+        ws.cell(row=row, column=37).value = metric.pheme_manual_tests
+        ws.cell(row=row, column=38).value = metric.pheme_auto_tests
+        ws.cell(row=row, column=39).value = metric.visilog_txl_parsed
+        ws.cell(row=row, column=40).value = metric.visilog_txl_schema_violation
 
-        add_dollar_symbol(ws, row, col_start=38, col_end=38)
-        ws.cell(row=row, column=38).value = metric.other_savings
+        add_dollar_symbol(ws, row, col_start=41, col_end=41)
+        ws.cell(row=row, column=41).value = metric.other_savings
 
 
 def write_body_tl(ws, row, metric):
@@ -570,7 +603,7 @@ def get_week_ending_date(date):
 
 
 def background_color_fill(ws, row, col, background_color):
-    ws.cell(row=1, column=col).font = Font(color=colors.WHITE)
+    ws.cell(row=1, column=col).font = Font(color=colors.WHITE, size=12)
     for r_index in range(1, row + 1):
         ws.cell(row=r_index, column=col).fill = background_color
 
@@ -648,6 +681,8 @@ def write_ytd(ws, columns, row_start, row_end, col_exclude):
         for c_index in range(1, columns):
             ws.cell(row=r_index, column=c_index).border = mediumBorder
             ws.cell(row=r_index, column=c_index).font = Font(bold=True)
+            if c_index > 1:
+                ws.cell(row=r_index, column=c_index).fill = silverGrayFill
 
     for c_index in range(2, columns):
         if c_index in col_exclude:
@@ -732,7 +767,40 @@ def write_to_excel_qi_tl_summary(ws, dates):
 
     write_head_title(ws, HEAD_QI_TL_SUMMARY)
 
-    apply_border_style(ws, row_start + len(dates), len(HEAD_TESTING_SUMMARY) + 1)
+    apply_border_style(ws, row_start + len(dates), len(HEAD_QI_TL_SUMMARY) + 1)
+
+    write_ytd(ws, len(HEAD_QI_TL_SUMMARY) + 1, row_start, row_start + len(dates) - 1, COL_EXCLUDE_QI_TL_SUMMARY)
+
+    for date in dates:
+        # column 1
+        ws.cell(row=row_start, column=1).value = get_week_ending_date(date)
+
+        # column 2
+        background_color_fill(ws, row_start, col=2, background_color=blackFill)
+        ws.column_dimensions[get_column_letter(2)].width = 4
+
+        # column 3
+        ws.cell(row=row_start, column=3).value = get_cell_value_from_qi(row_start, 3)
+        ws.cell(row=row_start, column=4).value = get_cell_value_from_qi(row_start, 4)
+        ws.cell(row=row_start, column=5).value = get_cell_value_from_qi(row_start, 5)
+
+        # column 6
+        background_color_fill(ws, row_start, col=6, background_color=cornFlowerBlueFill)
+        ws.column_dimensions[get_column_letter(6)].width = 4
+
+        # column 7
+        ws.cell(row=row_start, column=7).value = get_cell_value_from_qi(row_start, 14)   # active projects
+        ws.cell(row=row_start, column=8).value = get_cell_value_from_qi(row_start, 15)   # elicitation analysis
+        ws.cell(row=row_start, column=9).value = get_cell_value_from_qi(row_start, 30)   # rework hours
+        ws.cell(row=row_start, column=10).value = get_cell_value_from_qi(row_start, 29)  # avg throughput
+        ws.cell(row=row_start, column=11).value = get_cell_value_from_qi(row_start, 19)  # delays introduced hours
+        ws.cell(row=row_start, column=12).value = get_cell_value_from_qi(row_start, 16)  # revisions
+
+        # column 13
+        background_color_fill(ws, row_start, col=13, background_color=darkGreenFill)
+        ws.column_dimensions[get_column_letter(13)].width = 4
+
+        row_start += 1
 
 
 def get_formula_sum_from_pq_qa_te(row, col):
@@ -754,3 +822,9 @@ def get_formula_sum_from_pq_qa_te_total_savings(row, cols):
 def get_formula_avg_from_pq_qa_te(row, col):
     row = str(row)
     return '=AVERAGE(\'Quality Assurance\'!{0}, \'Test Engineering\'!{0}, \'Product Quality\'!{0})'.format(get_column_letter(col) + row)
+
+
+def get_cell_value_from_qi(row, col):
+    row = str(row)
+
+    return '=\'Quality Innovation\'!{0}'.format(get_column_letter(col) + row)
