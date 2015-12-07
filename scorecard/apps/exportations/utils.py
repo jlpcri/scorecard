@@ -6,7 +6,7 @@ HEAD_QI = [
     'Week Ending',
     'Quality Innovation',
     'Staff',
-    'Opening Positions',
+    'Opening Positions (Recruiting, Pending start etc.)',
     'Contractors',
     'Throughput',
     'Backlog Story Points',
@@ -50,7 +50,7 @@ HEAD_RE = [
     'Week Ending',
     'Requirement Engineering',
     'Staff',
-    'Opening Positions',
+    'Opening Positions (Recruiting, Pending start etc.)',
     'Contractors',
     'Throughput',
     'Backlog',
@@ -83,7 +83,7 @@ HEAD_TL = [
     'Week Ending',
     'Test Lab',
     'Staff',
-    'Opening Positions',
+    'Opening Positions (Recruiting, Pending start etc.)',
     'Contractors',
     'Throughput',
     'Tickets Received',
@@ -113,7 +113,7 @@ HEAD_TE = [
 
 HEAD_TESTING = [
     'Staff',
-    'Opening Positions',
+    'Opening Positions (Recruiting, Pending start etc.)',
     'Contractors',
     'Throughput',
     'Team Initiatives',
@@ -170,7 +170,7 @@ HEAD_TESTING_SUMMARY = [
     'Week Ending',
     'Testing Combined',
     'Staff',
-    'Opening Positions',
+    'Opening Positions (Recruiting, Pending start etc.)',
     'Contractors',
     'Throughput',
     'Team Initiatives',
@@ -202,7 +202,7 @@ HEAD_QI_TL_SUMMARY = [
     'Week Ending',
     'Quality Innovation',
     'Staff',
-    'Opening Positions',
+    'Opening Positions (Recruiting, Pending start etc.)',
     'Contractors',
     'Throughput',
     'Active Projects',
@@ -217,7 +217,7 @@ HEAD_QI_TL_SUMMARY = [
     'Value Add',
     'Test Lab',
     'Staff',
-    'Opening Positions',
+    'Opening Positions (Recruiting, Pending start etc.)',
     'Contractors',
     'Throughput',
     'Tickets Received',
@@ -235,24 +235,24 @@ blackFill = PatternFill(
     start_color='FF000000',
     end_color='FFFFFFFF')
 cornFlowerBlueFill = PatternFill(
-    start_color='6495ED',
-    end_color='6495ED',
+    start_color='4F81BD',
+    end_color='4F81BD',
     fill_type='solid')
 oliveDrabFill = PatternFill(
-    start_color='6B8E23',
-    end_color='6B8E23',
+    start_color='9BBB59',
+    end_color='9BBB59',
     fill_type='solid')
 rebeccaPurpleFill = PatternFill(
-    start_color='663399',
-    end_color='663399',
+    start_color='8064A2',
+    end_color='8064A2',
     fill_type='solid')
 saddleBrownFill = PatternFill(
-    start_color='8B4513',
-    end_color='8B4513',
+    start_color='F79646',
+    end_color='F79646',
     fill_type='solid')
 darkGreenFill = PatternFill(
-    start_color='006400',
-    end_color='006400',
+    start_color='00B050',
+    end_color='00B050',
     fill_type='solid')
 paleGreenFill = PatternFill(
     start_color='D8E4BC',
@@ -619,7 +619,7 @@ def get_week_ending_date(date):
 
 
 def background_color_fill(ws, row, col, background_color):
-    ws.cell(row=1, column=col).font = Font(color=colors.WHITE, size=12)
+    ws.cell(row=1, column=col).font = Font(color=colors.WHITE, size=12, bold=True)
     for r_index in range(1, row + 1):
         ws.cell(row=r_index, column=col).fill = background_color
 
@@ -722,6 +722,8 @@ def write_to_excel_test_summary(ws, dates):
 
     write_head_title(ws, HEAD_TESTING_SUMMARY)
 
+    apply_header_style(ws, len(HEAD_TESTING_SUMMARY) + 1, 'TEST_SUMMARY')
+
     apply_border_style(ws, row_start + len(dates), len(HEAD_TESTING_SUMMARY) + 1)
 
     write_ytd(ws, len(HEAD_TESTING_SUMMARY) + 1, row_start, row_start + len(dates) - 1, COL_EXCLUDE_TEST_SUMMARY)
@@ -788,6 +790,8 @@ def write_to_excel_qi_tl_summary(ws, dates):
     row_start = ROW_START_INDEX
 
     write_head_title(ws, HEAD_QI_TL_SUMMARY)
+
+    apply_header_style(ws, len(HEAD_QI_TL_SUMMARY) + 1, 'QI_TL_SUMMARY')
 
     apply_border_style(ws, row_start + len(dates), len(HEAD_QI_TL_SUMMARY) + 1)
 
@@ -923,6 +927,12 @@ def apply_header_style(ws, cols, key):
     elif key in ['PQ', 'QA', 'TE']:
         pale_green = [4, 20, 24, 38, 51, 54]
         corn_silk = [25, 26, 42, 43, 44, 50, 52, 53]
+    elif key == 'TEST_SUMMARY':
+        pale_green = [4, 10, 18, 22, 28, 29]
+        corn_silk = [23, 24]
+    elif key == 'QI_TL_SUMMARY':
+        pale_green = [4, 19, 24, 25, 27, 28, 29]
+        corn_silk = [10]
 
     for col in range(1, cols):
         if col in pale_green:
