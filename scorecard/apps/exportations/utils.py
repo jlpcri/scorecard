@@ -254,10 +254,19 @@ darkGreenFill = PatternFill(
     start_color='006400',
     end_color='006400',
     fill_type='solid')
+paleGreenFill = PatternFill(
+    start_color='D8E4BC',
+    end_color='D8E4BC',
+    fill_type='solid')
 silverGrayFill = PatternFill(
     start_color='C0C0C0',
     end_color='C0C0C0',
     fill_type='solid')
+cornSilkFill = PatternFill(
+    start_color='EEECE1',
+    end_color='EEECE1',
+    fill_type='solid')
+
 
 headAlignment = Alignment(horizontal='center',
                           vertical='bottom',
@@ -293,6 +302,9 @@ def write_to_excel(metric, ws):
         # write head title
         write_head_title(ws, HEAD_QI)
 
+        # apply header style
+        apply_header_style(ws, len(HEAD_QI) + 1, metric.functional_group.key)
+
         # apply border style
         apply_border_style(ws, row_start + 1, len(HEAD_QI) + 1)
 
@@ -314,6 +326,8 @@ def write_to_excel(metric, ws):
     elif metric.functional_group.key == 'RE':
         write_head_title(ws, HEAD_RE)
 
+        apply_header_style(ws, len(HEAD_RE) + 1, metric.functional_group.key)
+
         apply_border_style(ws, row_start + 1, len(HEAD_RE) + 1)
 
         write_ytd(ws, len(HEAD_RE) + 1, row_start, row_start, COL_EXCLUDE_RE)
@@ -330,6 +344,8 @@ def write_to_excel(metric, ws):
             head = HEAD_TE + HEAD_TESTING
 
         write_head_title(ws, head)
+
+        apply_header_style(ws, len(head) + 1, metric.functional_group.key)
 
         apply_border_style(ws, row_start + 1, len(head) + 1)
 
@@ -620,6 +636,8 @@ def write_to_excel_all(metrics, ws, key):
     if key == 'QI':
         write_head_title(ws, HEAD_QI)
 
+        apply_header_style(ws, len(HEAD_QI) + 1, key)
+
         apply_border_style(ws, row_start + len(metrics), len(HEAD_QI) + 1)
 
         write_ytd(ws, len(HEAD_QI) + 1, row_start, row_start + len(metrics) - 1, COL_EXCLUDE_QI)
@@ -641,6 +659,8 @@ def write_to_excel_all(metrics, ws, key):
     elif key == 'RE':
         write_head_title(ws, HEAD_RE)
 
+        apply_header_style(ws, len(HEAD_RE) + 1, key)
+
         apply_border_style(ws, row_start + len(metrics), len(HEAD_RE) + 1)
 
         write_ytd(ws, len(HEAD_RE) + 1, row_start, row_start + len(metrics) - 1, COL_EXCLUDE_RE)
@@ -659,6 +679,8 @@ def write_to_excel_all(metrics, ws, key):
             head = HEAD_TE + HEAD_TESTING
 
         write_head_title(ws, head)
+
+        apply_header_style(ws, len(head) + 1, key)
 
         apply_border_style(ws, row_start + len(metrics), len(head) + 1)
 
@@ -887,3 +909,23 @@ def get_cell_value_from_tl(row, col):
     row = str(row)
 
     return '=\'Test Lab\'!{0}'.format(get_column_letter(col) + row)
+
+
+def apply_header_style(ws, cols, key):
+    pale_green = []
+    corn_silk = []
+    if key == 'QI':
+        pale_green = [4, 11, 12, 19, 26, 34, 37, 38, 39, 40, 41]
+        corn_silk = [33, 35]
+    elif key == 'RE':
+        pale_green = [4, 28]
+        corn_silk = [20, 21, 25, 27, 29]
+    elif key in ['PQ', 'QA', 'TE']:
+        pale_green = [4, 20, 24, 38, 51, 54]
+        corn_silk = [25, 26, 42, 43, 44, 50, 52, 53]
+
+    for col in range(1, cols):
+        if col in pale_green:
+            ws.cell(row=1, column=col).fill = paleGreenFill
+        elif col in corn_silk:
+            ws.cell(row=1, column=col).fill = cornSilkFill
