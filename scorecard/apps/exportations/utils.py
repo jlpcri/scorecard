@@ -711,6 +711,7 @@ def write_to_excel_test_summary(ws, dates):
         ws.cell(row=row_start, column=20).value = get_formula_sum_from_pq_qa_te(row_start, 22)  # test exec hours
         ws.cell(row=row_start, column=21).value = get_formula_sum_from_pq_qa_te(row_start, 43)  # gross available
         ws.cell(row=row_start, column=22).value = get_formula_avg_from_pq_qa_te(row_start, 44)  # efficiency
+        ws.cell(row=row_start, column=22).number_format = '0.00%'
         ws.cell(row=row_start, column=23).value = get_formula_sum_from_pq_qa_te(row_start, 45)  # overtime weekend
         ws.cell(row=row_start, column=24).value = get_formula_sum_from_pq_qa_te(row_start, 46)  # overtime weekday
         ws.cell(row=row_start, column=25).value = get_formula_sum_from_pq_qa_te(row_start, 47)  # rework hours
@@ -720,6 +721,10 @@ def write_to_excel_test_summary(ws, dates):
         ws.cell(row=row_start, column=29).value = get_formula_sum_from_pq_qa_te_total_savings(row_start, [53, 54])  # total savings
 
         row_start += 1
+
+    add_dollar_symbol(ws, row_start, col_start=28, col_end=29)
+    ws.column_dimensions[get_column_letter(28)].width = 14
+    ws.column_dimensions[get_column_letter(29)].width = 14
 
 
 def write_to_excel_qi_tl_summary(ws, dates):
