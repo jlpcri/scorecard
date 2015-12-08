@@ -1,4 +1,4 @@
-from base import  *
+from base import *
 
 SETTINGS_MODULE = 'scorecard.settings.qaci01'
 
