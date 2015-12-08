@@ -1,5 +1,6 @@
 from datetime import date, datetime
-from django.core.mail import send_mail, EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
 
 from scorecard.celery_module import app
 from scorecard.apps.users.models import FunctionalGroup
@@ -50,6 +51,7 @@ def metric_new():
 
 
 def weekly_send_email():
+
     today = datetime.today()
     functional_groups = FunctionalGroup.objects.all()
 
@@ -58,8 +60,19 @@ def weekly_send_email():
     to_email = ['sliu@west.com']
     content = '<p>Following are the links to access the week <strong>{0}</strong> Scorecard manager input:</p>'.format(get_week_ending_date(today))
     content += '<ul>'
+
     for functional_group in functional_groups:
-        content += '<li>{0}</li>'.format(functional_group.name)
+        if functional_group.key == 'QI':
+            metric = InnovationMetrics.objects.latest('created')
+        elif functional_group.key == 'RE':
+            metric = RequirementMetrics.objects.latest('created')
+        elif functional_group.key == 'TL':
+            metric = LabMetrics.objects.latest('created')
+        else:
+            metric = TestMetrics.objects.filter(functional_group=functional_group).latest('created')
+
+        content += '<li><a href=\'{0}teams/metric_detail/{1}/?key={2}\'>{3}</a></li>'.format(settings.HOST_URL, metric.id, functional_group.key, functional_group.name)
+
     content += '</ul>'
 
     msg = EmailMultiAlternatives(subject, content, from_email, to_email)
