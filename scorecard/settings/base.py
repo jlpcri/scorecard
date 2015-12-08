@@ -156,4 +156,4 @@ MESSAGE_TAGS = {
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.west.com'
 EMAIL_HOST_USER = 'QEIInnovation@west.com'
-EMAIL_PORT = 25
+# EMAIL_PORT = 25
