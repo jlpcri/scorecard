@@ -151,3 +151,9 @@ from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
+
+# Email Backend
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.west.com'
+EMAIL_HOST_USER = 'QEIInnovation@west.com'
+EMAIL_PORT = 25
