@@ -9,9 +9,9 @@ ALLOWED_HOSTS = ['*']
 
 HOST_URL = 'http://10.6.20.109:8000' + LOGIN_URL
 
-#----------------GMAIL Backend----------------
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'ceeqwic@gmail.com'
-EMAIL_HOST_PASSWORD = '^S=+c3gyYu6F74D'
-EMAIL_PORT = 587
+# #----------------GMAIL Backend----------------
+# EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = 'ceeqwic@gmail.com'
+# EMAIL_HOST_PASSWORD = '^S=+c3gyYu6F74D'
+# EMAIL_PORT = 587
