@@ -83,7 +83,8 @@ def export_excel(request):
                     write_to_excel(metric, ws)
                     export_date = metric.created
 
-            export_file_name += get_week_ending_date(export_date)
+            if export_date:
+                export_file_name += get_week_ending_date(export_date)
 
             if update_error:
                 messages.error(request, 'Team {0} not updated'.format(update_error_list))

@@ -15,9 +15,12 @@ def weekly_metric_new():
         try:
             qi = InnovationMetrics.objects.latest('created')
             if qi.created.date() == today:
+                err_message = 'Metric is already exist'
+                err_message_send_email(err_message)
+
                 return {
                     'valid': False,
-                    'message': 'Metric is already exist'
+                    'message': err_message
                 }
             else:
                 metric_new()
@@ -30,10 +33,12 @@ def weekly_metric_new():
                 'valid': True
             }
     else:
-        weekly_send_email()
+        err_message = 'Today is not Friday'
+        err_message_send_email(err_message)
+
         return {
             'valid': False,
-            'message': 'Today is not Friday'
+            'message': err_message
         }
 
 
@@ -48,6 +53,8 @@ def metric_new():
             RequirementMetrics.objects.create(functional_group=functional_group)
         elif functional_group.key == 'TL':
             LabMetrics.objects.create(functional_group=functional_group)
+
+    weekly_send_email()
 
 
 def weekly_send_email():
@@ -74,6 +81,17 @@ def weekly_send_email():
         content += '<li><a href=\'{0}teams/metric_detail/{1}/?key={2}\'>{3}</a></li>'.format(settings.HOST_URL, metric.id, functional_group.key, functional_group.name)
 
     content += '</ul>'
+
+    msg = EmailMultiAlternatives(subject, content, from_email, to_email)
+    msg.content_subtype = 'html'
+    msg.send()
+
+
+def err_message_send_email(err_message):
+    subject = 'Add New Metric Error'
+    from_email = 'QEIInnovation@west.com'
+    to_email = ['sliu@west.com']
+    content = '<h4>{0}</h4>'.format(err_message)
 
     msg = EmailMultiAlternatives(subject, content, from_email, to_email)
     msg.content_subtype = 'html'
