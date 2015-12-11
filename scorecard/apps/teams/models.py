@@ -292,8 +292,8 @@ class LabMetrics(BaseMetrics):
                                       localtime(self.confirmed),
                                       localtime(self.created))
 
-    @property
-    def total_operational_cost(self):
-        return self.power_consumption_ups_a + self.power_consumption_ups_b + self.license_cost
+    # @property
+    # def total_operational_cost(self):
+    #     return self.power_consumption_ups_a + self.power_consumption_ups_b + self.license_cost
 
 

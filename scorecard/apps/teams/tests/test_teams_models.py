@@ -62,8 +62,8 @@ class InnovationMetricsModelTest(TestCase):
 class RequirementMetricsModelTest(TestCase):
     def setUp(self):
         self.functional_group = FunctionalGroup.objects.create(
-            name='Quality Innovation',
-            key='QI'
+            name='Requirement Engineering',
+            key='RE'
         )
         self.requirement = RequirementMetrics.objects.create(
             functional_group=self.functional_group,
@@ -145,3 +145,277 @@ class RequirementMetricsModelTest(TestCase):
         self.assertEqual(self.requirement.overall_cost,
                          self.requirement.total_operational_cost + self.travel_cost)
 
+
+class LabMetricsModelTest(TestCase):
+    def setUp(self):
+        self.functional_group = FunctionalGroup.objects.create(
+            name='Test Lab',
+            key='TL'
+        )
+        self.lab = LabMetrics.objects.create(
+            functional_group=self.functional_group,
+            created=datetime.utcnow().replace(tzinfo=pytz.utc),
+            confirmed=datetime.utcnow().replace(tzinfo=pytz.utc)
+        )
+
+    def test_string_representations(self):
+        self.assertEqual(str(self.lab), '{0}: {1}: {2}'.format(self.lab.functional_group.name,
+                                                               localtime(self.lab.confirmed),
+                                                               localtime(self.lab.created)))
+
+    def test_verbose_name_plural(self):
+        self.assertEqual(str(LabMetrics._meta.verbose_name_plural), 'lab metricss')
+
+
+class TestMetricsModelTest(TestCase):
+    def setUp(self):
+        self.functional_group = FunctionalGroup.objects.create(
+            name='Quality Assurance',
+            key='QA'
+        )
+        self.functional_group_pq = FunctionalGroup.objects.create(
+            name='Product Quality',
+            key='PQ'
+        )
+        self.functional_group_te = FunctionalGroup.objects.create(
+            name='Test Engineering',
+            key='TE'
+        )
+        self.functional_group_others = FunctionalGroup.objects.create(
+            name='Other Group',
+            key='OG'
+        )
+        self.test_metric = TestMetrics.objects.create(
+            functional_group=self.functional_group,
+            created=datetime.utcnow().replace(tzinfo=pytz.utc),
+            confirmed=datetime.utcnow().replace(tzinfo=pytz.utc)
+        )
+        self.staffs = random.randint(1, 100)
+        self.contractors = random.randint(1, 100)
+
+        self.tc_manual_dev = random.random() * 100
+        self.tc_auto_dev = random.random() * 100
+
+        self.tc_manual_execution = random.random() * 100
+        self.tc_auto_execution = random.random() * 100
+
+        self.tc_manual_dev_time = random.random() * 100
+        self.tc_auto_dev_time = random.random() * 100
+
+        self.tc_manual_execution_time = random.random() * 100
+        self.tc_auto_execution_time = random.random() * 100
+
+        self.project_prep = random.randint(1, 100)
+        self.project_execution = random.randint(1, 100)
+
+        self.ticket_prep = random.randint(1, 100)
+        self.ticket_execution = random.randint(1, 100)
+
+        self.license_cost = random.random() * 100
+
+    def test_string_representations(self):
+        self.assertEqual(str(self.test_metric), '{0}: {1}: {2}'.format(self.test_metric.functional_group.name,
+                                                                       localtime(self.test_metric.confirmed),
+                                                                       localtime(self.test_metric.created)))
+
+    def test_verbose_name_plural(self):
+        self.assertEqual(str(TestMetrics._meta.verbose_name_plural), 'test metricss')
+
+    def test_auto_footprint_dev_age_none_of_both(self):
+        self.assertEqual(self.test_metric.auto_footprint_dev_age, 0)
+
+    def test_auto_footprint_dev_age_only_tc_manual_dev(self):
+        self.test_metric.tc_maual_dev = self.tc_manual_dev
+        self.test_metric.save()
+
+        self.assertEqual(self.test_metric.auto_footprint_dev_age, 0)
+
+    def test_auto_footprint_dev_age_only_tc_auto_dev(self):
+        self.test_metric.tc_auto_dev = self.tc_auto_dev
+        self.test_metric.save()
+
+        self.assertEqual(self.test_metric.auto_footprint_dev_age, 1)
+
+    def test_auto_footprint_dev_age(self):
+        self.test_metric.tc_manual_dev = self.tc_manual_dev
+        self.test_metric.tc_auto_dev = self.tc_auto_dev
+        self.test_metric.save()
+
+        self.assertEqual(self.test_metric.auto_footprint_dev_age,
+                         self.tc_auto_dev / (self.tc_manual_dev + self.tc_auto_dev))
+
+    def test_auto_footprint_execution_age_none_of_both(self):
+        self.assertEqual(self.test_metric.auto_footprint_execution_age, 0)
+
+    def test_auto_footprint_execution_age_only_tc_manual_execution(self):
+        self.test_metric.tc_manual_execution = self.tc_manual_execution
+        self.test_metric.save()
+
+        self.assertEqual(self.test_metric.auto_footprint_execution_age, 0)
+
+    def test_auto_footprint_execution_age_only_tc_auto_execution(self):
+        self.test_metric.tc_auto_execution = self.tc_auto_execution
+        self.test_metric.save()
+
+        self.assertEqual(self.test_metric.auto_footprint_execution_age, 1)
+
+    def test_auto_footprint_execution_age(self):
+        self.test_metric.tc_manual_execution = self.tc_manual_execution
+        self.test_metric.tc_auto_execution = self.tc_auto_execution
+        self.test_metric.save()
+
+        self.assertEqual(self.test_metric.auto_footprint_execution_age,
+                         self.tc_auto_execution / (self.tc_manual_execution + self.tc_auto_execution))
+
+    def test_avg_throughput_no_human_resources(self):
+        self.assertEqual(self.test_metric.avg_throughput, 0)
+
+    def test_avg_throughput(self):
+        self.test_metric.staffs = self.staffs
+        self.test_metric.contractors = self.contractors
+        self.test_metric.tc_manual_dev = self.tc_manual_dev
+        self.test_metric.tc_manual_execution = self.tc_manual_execution
+        self.test_metric.tc_auto_dev = self.tc_auto_dev
+        self.test_metric.tc_auto_execution = self.tc_auto_execution
+        self.test_metric.save()
+
+        self.assertEqual(round(self.test_metric.avg_throughput, 10),
+                         round((self.tc_manual_dev + self.tc_auto_dev + self.tc_manual_execution + self.tc_auto_execution) / (self.staffs + self.contractors), 10))
+
+    def test_active_projects(self):
+        self.test_metric.project_prep = self.project_prep
+        self.test_metric.project_execution = self.project_execution
+        self.test_metric.save()
+
+        self.assertEqual(self.test_metric.active_projects,
+                         self.project_prep + self.project_execution)
+
+    def test_active_tickets(self):
+        self.test_metric.ticket_prep = self.ticket_prep
+        self.test_metric.ticket_execution = self.ticket_execution
+        self.test_metric.save()
+
+        self.assertEqual(self.test_metric.active_tickets,
+                         self.ticket_prep + self.ticket_execution)
+
+    def test_auto_and_execution_time(self):
+        self.test_metric.tc_manual_dev_time = self.tc_manual_dev_time
+        self.test_metric.tc_auto_dev_time = self.tc_auto_dev_time
+        self.test_metric.tc_manual_execution_time = self.tc_manual_execution_time
+        self.test_metric.tc_auto_execution_time = self.tc_auto_execution_time
+        self.test_metric.save()
+
+        self.assertEqual(round(self.test_metric.auto_and_execution_time, 6),
+                         round(self.tc_manual_dev_time + self.tc_auto_dev_time + self.tc_manual_execution_time + self.tc_auto_execution_time, 6))
+
+    def test_gross_available_time(self):
+        self.test_metric.staffs = self.staffs
+        self.test_metric.contractors = self.contractors
+        self.test_metric.save()
+
+        self.assertEqual(self.test_metric.gross_available_time,
+                         (self.staffs + self.contractors) * 30)
+
+    def test_efficiency_no_human_resources(self):
+        self.assertEqual(self.test_metric.efficiency, 0)
+
+    def test_efficiency(self):
+        self.test_metric.staffs = self.staffs
+        self.test_metric.contractors = self.contractors
+        self.test_metric.tc_manual_dev_time = self.tc_manual_dev_time
+        self.test_metric.tc_auto_dev_time = self.tc_auto_dev_time
+        self.test_metric.tc_manual_execution_time = self.tc_manual_execution_time
+        self.test_metric.tc_auto_execution_time = self.tc_auto_execution_time
+        self.test_metric.save()
+
+        auto_execution_time = self.tc_manual_dev_time + self.tc_auto_dev_time + self.tc_manual_execution_time + self.tc_auto_execution_time
+        gross_available = (self.staffs + self.contractors) * 30
+
+        self.assertEqual(round(self.test_metric.efficiency, 10),
+                         round(auto_execution_time / gross_available, 10))
+
+    def test_operational_cost_qa(self):
+        self.test_metric.staffs = self.staffs
+        self.test_metric.contractors = self.contractors
+        self.test_metric.save()
+
+        self.assertEqual(self.test_metric.operational_cost,
+                         self.staffs * 40 * 40 + self.contractors * 100 * 40)
+
+    def test_operational_cost_pq(self):
+        self.test_metric.functional_group = self.functional_group_pq
+        self.test_metric.staffs = self.staffs
+        self.test_metric.contractors = self.contractors
+        self.test_metric.save()
+
+        self.assertEqual(self.test_metric.operational_cost,
+                         (self.staffs + self.contractors) * 30 * 60)
+
+    def test_operational_cost_te(self):
+        self.test_metric.functional_group = self.functional_group_te
+        self.test_metric.staffs = self.staffs
+        self.test_metric.contractors = self.contractors
+        self.test_metric.save()
+
+        self.assertEqual(self.test_metric.operational_cost,
+                         self.staffs * 40 * 50)
+
+    def test_total_operational_cost_qa(self):
+        # self.test_metric.functional_group = self.functional_group_te
+        self.test_metric.staffs = self.staffs
+        self.test_metric.contractors = self.contractors
+        self.test_metric.license_cost = self.license_cost
+        self.test_metric.save()
+
+        self.assertEqual(self.test_metric.total_operational_cost,
+                         self.staffs * 40 * 40 + self.contractors * 100 * 40 + self.license_cost)
+
+    def test_total_operational_cost_pq(self):
+        self.test_metric.functional_group = self.functional_group_pq
+        self.test_metric.staffs = self.staffs
+        self.test_metric.contractors = self.contractors
+        self.test_metric.license_cost = self.license_cost
+        self.test_metric.save()
+
+        self.assertEqual(self.test_metric.total_operational_cost,
+                         (self.staffs + self.contractors) * 30 * 60 + self.license_cost)
+
+    def test_total_operational_cost_te(self):
+        self.test_metric.functional_group = self.functional_group_te
+        self.test_metric.staffs = self.staffs
+        self.test_metric.contractors = self.contractors
+        self.test_metric.license_cost = self.license_cost
+        self.test_metric.save()
+
+        self.assertEqual(self.test_metric.total_operational_cost,
+                         self.staffs * 40 * 50 + self.license_cost)
+
+    def test_auto_savings_qa(self):
+        self.test_metric.tc_auto_execution_time = self.tc_auto_execution_time
+        self.test_metric.save()
+
+        self.assertEqual(self.test_metric.auto_savings,
+                         self.tc_auto_execution_time * 40)
+
+    def test_auto_savings_pq(self):
+        self.test_metric.functional_group = self.functional_group_pq
+        self.test_metric.tc_auto_execution_time = self.tc_auto_execution_time
+        self.test_metric.save()
+
+        self.assertEqual(self.test_metric.auto_savings,
+                         self.tc_auto_execution_time * 40)
+
+    def test_auto_savings_te(self):
+        self.test_metric.functional_group = self.functional_group_te
+        self.test_metric.tc_auto_execution_time = self.tc_auto_execution_time
+        self.test_metric.save()
+
+        self.assertEqual(self.test_metric.auto_savings,
+                         (self.tc_auto_execution_time + 37) * 50)
+
+    def test_auto_savings_others(self):
+        self.test_metric.functional_group = self.functional_group_others
+        self.test_metric.tc_auto_execution_time = self.tc_auto_execution_time
+        self.test_metric.save()
+
+        self.assertEqual(self.test_metric.auto_savings, 0)
