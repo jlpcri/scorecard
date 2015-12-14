@@ -5,4 +5,4 @@ virtualenv --no-site-packages --clear env
 
 pip install --download-cache /tmp/kenkins/pip-cache -r requirements/jenkins.txt
 
- python manage.py jenkins --enable-converage --settings=scorecard.settings.jenkins
+ python manage.py jenkins --enable-coverage --settings=scorecard.settings.jenkins
