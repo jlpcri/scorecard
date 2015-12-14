@@ -1,4 +1,4 @@
-#!/bin/ bash
+#!/bin/sh
 
 virtualenv --no-site-packages --clear env
 . /usr/local/virtualenvs/scorecard/bin/activate
