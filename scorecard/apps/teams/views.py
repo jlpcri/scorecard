@@ -114,6 +114,7 @@ def metric_edit(request, metric_id):
         else:
             messages.error(request, 'Correct errors in the form')
             context = RequestContext(request, {
+                'metric': metric,
                 'form': form
             })
             return render(request, 'teams/metric_detail.html', context)
