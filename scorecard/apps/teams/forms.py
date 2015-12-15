@@ -4,6 +4,21 @@ from models import TestMetrics, InnovationMetrics, LabMetrics, RequirementMetric
 
 
 class InnovationForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(InnovationForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            if field in ['elicitation_analysis_time',
+                         'delays_introduced_time', 'rework_introduced_time',
+                         'avg_team_size', 'overtime_weekday', 'overtime_weekend', 'rework_time', 'resource_swap_time',
+                         'license_cost', 'other_savings',
+                         ]:
+                self.fields[field] = forms.DecimalField(widget=forms.NumberInput(attrs={'min': '0'}))
+            elif field in ['unit_tests_coverage', 'documentation_coverage', 'slas_met']:
+                self.fields[field] = forms.DecimalField(widget=forms.NumberInput(attrs={'min': '0',
+                                                                                        'max': '1',
+                                                                                        'step': '0.05',
+                                                                                        'style': 'width: 100%'}))
+
     class Meta:
         model = InnovationMetrics
         exclude = ['created', 'confirmed', 'updated']
@@ -31,6 +46,21 @@ class LabForm(ModelForm):
 
 
 class RequirementForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(RequirementForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            if field in ['elicitation_analysis_time',
+                         'slas_missed', 'delays_introduced_time', 'rework_introduced_time',
+                         'overtime_weekday', 'overtime_weekend', 'rework_external_time', 'resource_swap_time',
+                         'travel_cost'
+                         ]:
+                self.fields[field] = forms.DecimalField(widget=forms.NumberInput(attrs={'min': '0'}))
+
+        self.fields['slas_met'] = forms.DecimalField(widget=forms.NumberInput(attrs={'min': '0',
+                                                                                     'max': '1',
+                                                                                     'step': '0.05',
+                                                                                     'style': 'width: 100%'}))
+
     class Meta:
         model = RequirementMetrics
         fields = ['functional_group', 'staffs', 'openings', 'contractors',
