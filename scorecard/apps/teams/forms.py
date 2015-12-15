@@ -4,12 +4,6 @@ from models import TestMetrics, InnovationMetrics, LabMetrics, RequirementMetric
 
 
 class InnovationForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(InnovationForm, self).__init__(*args, **kwargs)
-        for field in self.fields:
-            if field not in ['functional_group', 'staffs', 'openings', 'contractors']:
-                self.fields[field] = forms.DecimalField(widget=forms.TextInput())
-
     class Meta:
         model = InnovationMetrics
         exclude = ['created', 'confirmed', 'updated']
@@ -22,12 +16,6 @@ class InnovationForm(ModelForm):
 
 
 class LabForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(LabForm, self).__init__(*args, **kwargs)
-        for field in self.fields:
-            if field not in ['functional_group', 'staffs', 'openings', 'contractors']:
-                self.fields[field] = forms.DecimalField(widget=forms.TextInput())
-
     class Meta:
         model = LabMetrics
         fields = ['functional_group', 'staffs', 'openings', 'contractors',
@@ -43,12 +31,6 @@ class LabForm(ModelForm):
 
 
 class RequirementForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(RequirementForm, self).__init__(*args, **kwargs)
-        for field in self.fields:
-            if field not in ['functional_group', 'staffs', 'openings', 'contractors']:
-                self.fields[field] = forms.DecimalField(widget=forms.TextInput())
-
     class Meta:
         model = RequirementMetrics
         fields = ['functional_group', 'staffs', 'openings', 'contractors',
@@ -66,11 +48,11 @@ class RequirementForm(ModelForm):
 
 
 class TestForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(TestForm, self).__init__(*args, **kwargs)
-        for field in self.fields:
-            if field not in ['functional_group', 'staffs', 'openings', 'contractors']:
-                self.fields[field] = forms.DecimalField(widget=forms.TextInput())
+    # def __init__(self, *args, **kwargs):
+    #     super(TestForm, self).__init__(*args, **kwargs)
+    #     for field in self.fields:
+    #         if field not in ['functional_group', 'staffs', 'openings', 'contractors']:
+    #             self.fields[field] = forms.DecimalField(widget=forms.TextInput())
 
     class Meta:
         model = TestMetrics

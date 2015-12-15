@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.validators import MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.timezone import localtime
 
 from scorecard.apps.users.models import FunctionalGroup
@@ -15,29 +15,38 @@ class BaseMetrics(models.Model):
     updated = models.BooleanField(default=False)
 
     # Human Resource
-    staffs = models.IntegerField(default=0)
-    contractors = models.IntegerField(default=0)
-    openings = models.IntegerField(default=0)
+    staffs = models.PositiveIntegerField(default=0)
+    contractors = models.PositiveIntegerField(default=0)
+    openings = models.PositiveIntegerField(default=0)
 
     # Quality
     slas_met = models.DecimalField(max_digits=3, decimal_places=2, default=0,
-                                   validators=[MaxValueValidator(1)])
-    delays_introduced_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    sdis_not_prevented = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    resource_swap = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    escalations = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    rework_introduced_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+                                   validators=[MaxValueValidator(1), MinValueValidator(0)])
+    delays_introduced_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                                 validators=[MinValueValidator(0)])  # in hours
+    sdis_not_prevented = models.PositiveIntegerField(default=0)
+    resource_swap = models.PositiveIntegerField(default=0)
+    escalations = models.PositiveIntegerField(default=0)
+    rework_introduced_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                                 validators=[MinValueValidator(0)])  # in hours
 
     # Efficiency
-    avg_team_size = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    overtime_weekday = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    overtime_weekend = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    rework_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    resource_swap_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+    avg_team_size = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                        validators=[MinValueValidator(0)])
+    overtime_weekday = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                           validators=[MinValueValidator(0)])  # in hours
+    overtime_weekend = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                           validators=[MinValueValidator(0)])  # in hours
+    rework_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                      validators=[MinValueValidator(0)])  # in hours
+    resource_swap_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                             validators=[MinValueValidator(0)])  # in hours
 
     # Costs
-    license_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    other_savings = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    license_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                       validators=[MinValueValidator(0)])
+    other_savings = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                        validators=[MinValueValidator(0)])
 
     class Meta:
         abstract = True
@@ -48,31 +57,36 @@ class TestMetrics(BaseMetrics):
     Metrics for groups: Quality Assurance, Test Engineering, Product Quality
     """
     # Throughput
-    team_initiative = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    ticket_backlog = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    ticket_prep = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    ticket_execution = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    ticket_closed = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    project_backlog = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    project_prep = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    project_execution = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    project_closed = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    tc_manual_dev = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    tc_manual_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    tc_manual_execution = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    tc_manual_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    tc_auto_dev = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    tc_auto_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    tc_auto_execution = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    tc_auto_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+    team_initiative = models.PositiveIntegerField(default=0)
+    ticket_backlog = models.PositiveIntegerField(default=0)
+    ticket_prep = models.PositiveIntegerField(default=0)
+    ticket_execution = models.PositiveIntegerField(default=0)
+    ticket_closed = models.PositiveIntegerField(default=0)
+    project_backlog = models.PositiveIntegerField(default=0)
+    project_prep = models.PositiveIntegerField(default=0)
+    project_execution = models.PositiveIntegerField(default=0)
+    project_closed = models.PositiveIntegerField(default=0)
+    tc_manual_dev = models.PositiveIntegerField(default=0)
+    tc_manual_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                             validators=[MinValueValidator(0)])  # in hours
+    tc_manual_execution = models.PositiveIntegerField(default=0)
+    tc_manual_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                                   validators=[MinValueValidator(0)])  # in hours
+    tc_auto_dev = models.PositiveIntegerField(default=0)
+    tc_auto_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                           validators=[MinValueValidator(0)])  # in hours
+    tc_auto_execution = models.PositiveIntegerField(default=0)
+    tc_auto_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                                 validators=[MinValueValidator(0)])  # in hours
 
     # Quality
-    defect_caught = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    uat_defects_not_prevented = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    standards_violated = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    defect_caught = models.PositiveIntegerField(default=0)
+    uat_defects_not_prevented = models.PositiveIntegerField(default=0)
+    standards_violated = models.PositiveIntegerField(default=0)
 
     # Efficiency
-    avg_time_frame = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    avg_time_frame = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                         validators=[MinValueValidator(0)])
 
     # Costs
 
@@ -170,27 +184,28 @@ class InnovationMetrics(BaseMetrics):
     """
 
     # Throughput
-    story_points_backlog = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    story_points_prep = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    story_points_execution = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    unit_tests_dev = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    story_points_backlog = models.PositiveIntegerField(default=0)
+    story_points_prep = models.PositiveIntegerField(default=0)
+    story_points_execution = models.PositiveIntegerField(default=0)
+    unit_tests_dev = models.PositiveIntegerField(default=0)
     unit_tests_coverage = models.DecimalField(max_digits=3, decimal_places=2, default=0,
-                                              validators=[MaxValueValidator(1)])
+                                              validators=[MaxValueValidator(1), MinValueValidator(0)])
     documentation_coverage = models.DecimalField(max_digits=3, decimal_places=2, default=0,
-                                                 validators=[MaxValueValidator(1)])
-    defects_in_dev = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    revisions = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    active_projects = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+                                                 validators=[MaxValueValidator(1), MinValueValidator(0)])
+    defects_in_dev = models.PositiveIntegerField(default=0)
+    elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                                    validators=[MinValueValidator(0)])  # in hours
+    revisions = models.PositiveIntegerField(default=0)
+    active_projects = models.PositiveIntegerField(default=0)
 
     # Quality
-    uat_defects_not_prevented = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    uat_defects_not_prevented = models.PositiveIntegerField(default=0)
 
     # Usage
-    pheme_manual_tests = models.DecimalField(max_digits=19, decimal_places=2, default=0)
-    pheme_auto_tests = models.DecimalField(max_digits=19, decimal_places=2, default=0)
-    visilog_txl_parsed = models.DecimalField(max_digits=19, decimal_places=2, default=0)
-    visilog_txl_schema_violation = models.DecimalField(max_digits=19, decimal_places=2, default=0)
+    pheme_manual_tests = models.PositiveIntegerField(default=0)
+    pheme_auto_tests = models.PositiveIntegerField(default=0)
+    visilog_txl_parsed = models.PositiveIntegerField(default=0)
+    visilog_txl_schema_violation = models.PositiveIntegerField(default=0)
 
     def __unicode__(self):
         return '{0}: {1}: {2}'.format(self.functional_group.name,
@@ -220,21 +235,24 @@ class RequirementMetrics(BaseMetrics):
     """
 
     # Throughput
-    backlog = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    team_initiative = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    active_projects = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+    backlog = models.PositiveIntegerField(default=0)
+    team_initiative = models.PositiveIntegerField(default=0)
+    active_projects = models.PositiveIntegerField(default=0)
+    elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                                    validators=[MinValueValidator(0)])  # in hours
 
     # Quality
-    revisions = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    revisions = models.PositiveIntegerField(default=0)
     slas_missed = models.DecimalField(max_digits=3, decimal_places=2, default=0,
-                                      validators=[MaxValueValidator(1)])
+                                      validators=[MaxValueValidator(1), MinValueValidator(0)])
 
     # Efficiency
-    rework_external_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    rework_external_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                               validators=[MinValueValidator(0)])
 
     # Costs
-    travel_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    travel_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                      validators=[MinValueValidator(0)])
 
     def __unicode__(self):
         return '{0}: {1}: {2}'.format(self.functional_group.name,
@@ -278,14 +296,14 @@ class LabMetrics(BaseMetrics):
     Metrics for group: Test Lab
     """
     # Throughput
-    tickets_received = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    tickets_closed = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    virtual_machines = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    physical_machines = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    tickets_received = models.PositiveIntegerField(default=0)
+    tickets_closed = models.PositiveIntegerField(default=0)
+    virtual_machines = models.PositiveIntegerField(default=0)
+    physical_machines = models.PositiveIntegerField(default=0)
 
     # Costs
-    power_consumption_ups_a = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in kw
-    power_consumption_ups_b = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in kw
+    power_consumption_ups_a = models.PositiveIntegerField(default=0)  # in kw
+    power_consumption_ups_b = models.PositiveIntegerField(default=0)  # in kw
 
     def __unicode__(self):
         return '{0}: {1}: {2}'.format(self.functional_group.name,
