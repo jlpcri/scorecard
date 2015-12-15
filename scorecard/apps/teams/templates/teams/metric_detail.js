@@ -13,7 +13,6 @@ switch (key) {
         hourly_rate = 45;
         costCal();
         avgThroughputCal();
-        checkNegativeInput();
         break;
     case 'TL':
         //console.log('tl, nothing to do');
@@ -263,10 +262,4 @@ function grossAvailableTimeCal(){
 function efficiencyTestMetricCal(){
     var effi = parseFloat($('#auto_and_execution_time').val()) / parseFloat($('#gross_available_time').val()) * 100;
     $('#id_test_efficiency').val(effi.toFixed(2) + '%');
-}
-
-function checkNegativeInput() {
-    $('form').each(function(){
-        console.log($(this).find(':input'))
-    })
 }
