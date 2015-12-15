@@ -11,33 +11,37 @@ from forms import InnovationForm, LabForm, RequirementForm, TestForm
 from scorecard.apps.users.models import FunctionalGroup
 from scorecard.apps.users.views import user_is_superuser, user_is_manager
 from tasks import weekly_metric_new
+from utils import context_teams
 
 
 @login_required
 def teams(request):
-    functional_groups = FunctionalGroup.objects.all()
-    for functional_group in functional_groups:
-        if functional_group.key == 'PQ':
-            pqs = functional_group.testmetrics_set.all()
-        elif functional_group.key == 'QA':
-            qas = functional_group.testmetrics_set.all()
-        elif functional_group.key == 'QI':
-            qis = functional_group.innovationmetrics_set.all()
-        elif functional_group.key == 'RE':
-            res = functional_group.requirementmetrics_set.all()
-        elif functional_group.key == 'TE':
-            tes = functional_group.testmetrics_set.all()
-        elif functional_group.key == 'TL':
-            tls = functional_group.labmetrics_set.all()
+    # functional_groups = FunctionalGroup.objects.all()
+    # for functional_group in functional_groups:
+    #     if functional_group.key == 'PQ':
+    #         pqs = functional_group.testmetrics_set.all()
+    #     elif functional_group.key == 'QA':
+    #         qas = functional_group.testmetrics_set.all()
+    #     elif functional_group.key == 'QI':
+    #         qis = functional_group.innovationmetrics_set.all()
+    #     elif functional_group.key == 'RE':
+    #         res = functional_group.requirementmetrics_set.all()
+    #     elif functional_group.key == 'TE':
+    #         tes = functional_group.testmetrics_set.all()
+    #     elif functional_group.key == 'TL':
+    #         tls = functional_group.labmetrics_set.all()
+    #
+    # context = RequestContext(request, {
+    #     'pqs': pqs,
+    #     'qas': qas,
+    #     'qis': qis,
+    #     'res': res,
+    #     'tes': tes,
+    #     'tls': tls,
+    # })
 
-    context = RequestContext(request, {
-        'pqs': pqs,
-        'qas': qas,
-        'qis': qis,
-        'res': res,
-        'tes': tes,
-        'tls': tls,
-    })
+    context = RequestContext(request, context_teams())
+
     return render(request, 'teams/teams.html', context)
 
 
@@ -112,7 +116,10 @@ def metric_edit(request, metric_id):
             if not metric.updated:
                 metric.updated = True
                 metric.save()
-            return redirect('teams:teams')
+
+            context = context_teams()
+            context['key'] = key
+            return render(request, 'teams/teams.html', context)
         else:
             messages.error(request, 'Correct errors in the form')
             context = RequestContext(request, {
