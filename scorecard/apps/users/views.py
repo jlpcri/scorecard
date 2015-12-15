@@ -17,6 +17,10 @@ def user_is_superuser(user):
     return user.is_superuser
 
 
+def user_is_manager(user):
+    return user.is_superuser or user.humanresource.manager
+
+
 def sign_in(request):
     if request.method == "POST":
         user = authenticate(username=request.POST['username'], password=request.POST['password'])

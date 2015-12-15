@@ -9,7 +9,7 @@ from django.template import RequestContext
 from models import TestMetrics, RequirementMetrics, InnovationMetrics, LabMetrics
 from forms import InnovationForm, LabForm, RequirementForm, TestForm
 from scorecard.apps.users.models import FunctionalGroup
-from scorecard.apps.users.views import user_is_superuser
+from scorecard.apps.users.views import user_is_superuser, user_is_manager
 from tasks import weekly_metric_new
 
 
@@ -56,6 +56,7 @@ def weekly_metric_new_manually(request):
     return HttpResponseRedirect(reverse('teams:teams'))
 
 
+@user_passes_test(user_is_manager)
 def metric_detail(request, metric_id):
     key = request.GET.get('key', '')
 
@@ -85,6 +86,7 @@ def metric_detail(request, metric_id):
     return render(request, 'teams/metric_detail.html', context)
 
 
+@user_passes_test(user_is_manager)
 def metric_edit(request, metric_id):
     key = request.GET.get('key', '')
 
