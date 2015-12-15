@@ -15,12 +15,28 @@
             </div>
         {% endif %}
         <ul id="subnav-tabs" class="nav nav-tabs">
-            <li><a href="#product_quality" data-toggle="tab">Product Quality</a> </li>
-            <li><a href="#quality_assurance" data-toggle="tab">Quality Assurance</a> </li>
-            <li><a href="#quality_innovation" data-toggle="tab">Quality Innovation</a> </li>
-            <li><a href="#requirements_engineering" data-toggle="tab">Requirements Engineering</a> </li>
-            <li><a href="#test_engineering" data-toggle="tab">Test Engineering</a> </li>
-            <li><a href="#test_lab" data-toggle="tab">Test Lab</a> </li>
+            {% if user.is_superuser %}
+                <li><a href="#product_quality" data-toggle="tab">Product Quality</a> </li>
+                <li><a href="#quality_assurance" data-toggle="tab">Quality Assurance</a> </li>
+                <li><a href="#quality_innovation" data-toggle="tab">Quality Innovation</a> </li>
+                <li><a href="#requirements_engineering" data-toggle="tab">Requirements Engineering</a> </li>
+                <li><a href="#test_engineering" data-toggle="tab">Test Engineering</a> </li>
+                <li><a href="#test_lab" data-toggle="tab">Test Lab</a> </li>
+            {% elif user.humanresource.manager  %}
+                {% if user.humanresource.functional_group.key == 'PQ' %}
+                    <li><a href="#product_quality" data-toggle="tab">Product Quality</a> </li>
+                {% elif user.humanresource.functional_group.key == 'QA' %}
+                    <li><a href="#quality_assurance" data-toggle="tab">Quality Assurance</a> </li>
+                {% elif user.humanresource.functional_group.key == 'QI' %}
+                    <li><a href="#quality_innovation" data-toggle="tab">Quality Innovation</a> </li>
+                {% elif user.humanresource.functional_group.key == 'RE' %}
+                    <li><a href="#requirements_engineering" data-toggle="tab">Requirements Engineering</a> </li>
+                {% elif user.humanresource.functional_group.key == 'TE' %}
+                    <li><a href="#test_engineering" data-toggle="tab">Test Engineering</a> </li>
+                {% elif user.humanresource.functional_group.key == 'TL' %}
+                    <li><a href="#test_lab" data-toggle="tab">Test Lab</a> </li>
+                {% endif %}
+            {% endif %}
         </ul>
     </div>
 {% endblock %}
