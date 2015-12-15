@@ -48,11 +48,22 @@ class RequirementForm(ModelForm):
 
 
 class TestForm(ModelForm):
-    # def __init__(self, *args, **kwargs):
-    #     super(TestForm, self).__init__(*args, **kwargs)
-    #     for field in self.fields:
-    #         if field not in ['functional_group', 'staffs', 'openings', 'contractors']:
-    #             self.fields[field] = forms.DecimalField(widget=forms.TextInput())
+    def __init__(self, *args, **kwargs):
+        super(TestForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            if field in ['delays_introduced_time', 'rework_introduced_time', 'avg_team_size',
+                         'overtime_weekday', 'overtime_weekend', 'rework_time', 'resource_swap_time',
+                         'license_cost', 'other_savings',
+                         'tc_manual_dev_time', 'tc_manual_execution_time',
+                         'tc_auto_dev_time', 'tc_auto_execution_time',
+                         'avg_time_frame'
+                         ]:
+                self.fields[field] = forms.DecimalField(widget=forms.NumberInput(attrs={'min': '0'}))
+
+        self.fields['slas_met'] = forms.DecimalField(widget=forms.NumberInput(attrs={'min': '0',
+                                                                                     'max': '1',
+                                                                                     'step': '0.05',
+                                                                                     'style': 'width: 100%'}))
 
     class Meta:
         model = TestMetrics
