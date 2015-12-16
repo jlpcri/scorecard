@@ -4,6 +4,10 @@
 var active_tab = String(""),
     key = '{{key}}';
 
+if (!key){
+    key = '{{user.humanresource.functional_group.key}}';
+}
+
 $('#subnav-tabs').find('a[data-toggle="tab"]').on('show.bs.tab', function(e){
     active_tab = e.target.hash;
 });
