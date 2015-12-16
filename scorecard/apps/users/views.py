@@ -1,11 +1,13 @@
+import json
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.template import RequestContext
 
-from models import  HumanResource
+from models import HumanResource, FunctionalGroup
 
 
 @login_required
@@ -19,6 +21,16 @@ def user_is_superuser(user):
 
 def user_is_manager(user):
     return user.is_superuser or user.humanresource.manager
+
+
+def user_manager_check(request):
+    user_id = request.GET.get('user_id', '')
+    user = User.objects.get(pk=user_id)
+
+    if user.humanresource.manager:
+        return HttpResponse(json.dumps('True'), content_type='application/json')
+    else:
+        return HttpResponse(json.dumps('False'), content_type='application/json')
 
 
 def sign_in(request):
@@ -75,3 +87,19 @@ def user_management(request):
         return render(request, 'users/user_management.html', context)
 
 
+def user_manager_assign(request):
+    context = {}
+
+    if request.method == 'GET':
+        users = User.objects.all().order_by('username')
+        groups = FunctionalGroup.objects.all().order_by('name')
+
+        context = RequestContext(request, {
+            'users': users,
+            'groups': groups
+        })
+
+    elif request.method == 'POST':
+        print 'POST'
+
+    return render(request, 'users/user_manager_assign.html', context)
