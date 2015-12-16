@@ -24,13 +24,17 @@ def user_is_manager(user):
 
 
 def user_manager_check(request):
+    data = {}
     user_id = request.GET.get('user_id', '')
     user = User.objects.get(pk=user_id)
+    data['group'] = user.humanresource.functional_group.id
 
     if user.humanresource.manager:
-        return HttpResponse(json.dumps('True'), content_type='application/json')
+        data['manager'] = True
     else:
-        return HttpResponse(json.dumps('False'), content_type='application/json')
+        data['manager'] = False
+
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 def sign_in(request):
@@ -87,19 +91,38 @@ def user_management(request):
         return render(request, 'users/user_management.html', context)
 
 
+@user_passes_test(user_is_manager)
 def user_manager_assign(request):
-    context = {}
+    user = request.user
+    key = request.user.humanresource.functional_group.key
 
     if request.method == 'GET':
         users = User.objects.all().order_by('username')
-        groups = FunctionalGroup.objects.all().order_by('name')
+        if user.is_superuser:
+            groups = FunctionalGroup.objects.all().order_by('name')
+        else:
+            groups = FunctionalGroup.objects.filter(key=key)
 
         context = RequestContext(request, {
             'users': users,
-            'groups': groups
+            'groups': groups,
+            'first_check': users[0].humanresource.manager
         })
 
-    elif request.method == 'POST':
-        print 'POST'
+        return render(request, 'users/user_manager_assign.html', context)
 
-    return render(request, 'users/user_manager_assign.html', context)
+    elif request.method == 'POST':
+        user_id = request.POST.get('user_select', '')
+        group_id = request.POST.get('group_select', '')
+        is_manager = request.POST.get('is_manager', '')
+
+        user = User.objects.get(id=user_id)
+        user.humanresource.functional_group = FunctionalGroup.objects.get(pk=group_id)
+        if is_manager:
+            user.humanresource.manager = True
+        else:
+            user.humanresource.manager = False
+
+        user.humanresource.save()
+
+        return redirect('users:home')

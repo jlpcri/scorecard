@@ -20,21 +20,21 @@
                 <tbody>
                     <tr>
                         <td>
-                            <select id="user_select" class="form-control">
+                            <select id="user_select" name='user_select' class="form-control">
                                 {% for user in users %}
                                     <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
                                 {% endfor %}
                             </select>
                         </td>
                         <td>
-                            <select id="group_select" class="form-control">
+                            <select id="group_select" name="group_select" class="form-control">
                                 {% for group in groups %}
                                     <option value="{{ group.id }}">{{ group.name }}</option>
                                 {% endfor %}
                             </select>
                         </td>
                         <td>
-                            <input type="checkbox" id="is_manager" {% if user.user_is_manager %} checked {% endif %}>
+                            <input type="checkbox" id="is_manager" name="is_manager" {% if first_check %} checked {% endif %}>
                         </td>
                     </tr>
                 </tbody>
@@ -70,11 +70,12 @@
         $('#user_select').change(function(){
             var user_id = $(this).val();
             $.getJSON("{% url 'users:user_manager_check' %}?user_id={0}".format(user_id)).done(function(data){
-                if (data == 'True') {
+                if (data['manager'] == true) {
                     $('#is_manager').prop('checked', true);
                 } else {
                     $('#is_manager').prop('checked', false);
                 }
+                $('#group_select').val(data['group']);
             })
         })
     </script>
