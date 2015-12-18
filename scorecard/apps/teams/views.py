@@ -8,7 +8,7 @@ from django.template import RequestContext
 from models import TestMetrics, RequirementMetrics, InnovationMetrics, LabMetrics
 from forms import InnovationForm, LabForm, RequirementForm, TestForm
 from scorecard.apps.users.views import user_is_superuser, user_is_manager
-from tasks import weekly_metric_new
+from tasks import weekly_metric_new, weekly_send_email
 from utils import context_teams
 
 
@@ -31,6 +31,14 @@ def weekly_metric_new_manually(request):
     result = weekly_metric_new()
     if not result['valid']:
         messages.error(request, result['message'])
+
+    return HttpResponseRedirect(reverse('teams:teams'))
+
+
+@login_required
+@user_passes_test(user_is_superuser)
+def send_email(request):
+    weekly_send_email()
 
     return HttpResponseRedirect(reverse('teams:teams'))
 

@@ -77,6 +77,7 @@ def weekly_send_email():
         'CAHeyden@west.com'  # QI
     ]
     to_email = ['sliu@west.com', 'QEIInnovation@west.com']
+    # to_email = ['sliu@west.com']
     content = '<p>Following are the links to access the week <strong>{0}</strong> Scorecard manager input:</p>'.format(get_week_ending_date(today))
     content += '<ul>'
 
@@ -97,7 +98,7 @@ def weekly_send_email():
     msg = EmailMultiAlternatives(subject, content, from_email, to_email)
     msg.content_subtype = 'html'
 
-    if socket.gethostname() != 'qaci01':
+    if socket.gethostname() == 'sliu-OptiPlex-GX520':
         msg.send()
 
 
@@ -111,5 +112,5 @@ def err_message_send_email(err_message):
     msg = EmailMultiAlternatives(subject, content, from_email, to_email)
     msg.content_subtype = 'html'
 
-    if socket.gethostname() != 'qaci01':
+    if socket.gethostname() == 'sliu-OptiPlex-GX520':
         msg.send()
