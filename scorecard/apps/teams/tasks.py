@@ -1,3 +1,4 @@
+import socket
 from datetime import date, datetime
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
@@ -95,7 +96,9 @@ def weekly_send_email():
 
     msg = EmailMultiAlternatives(subject, content, from_email, to_email)
     msg.content_subtype = 'html'
-    msg.send()
+
+    if socket.gethostname() != 'qaci01':
+        msg.send()
 
 
 def err_message_send_email(err_message):
@@ -107,4 +110,6 @@ def err_message_send_email(err_message):
 
     msg = EmailMultiAlternatives(subject, content, from_email, to_email)
     msg.content_subtype = 'html'
-    msg.send()
+
+    if socket.gethostname() != 'qaci01':
+        msg.send()
