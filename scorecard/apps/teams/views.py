@@ -19,6 +19,7 @@ def teams(request):
     return render(request, 'teams/teams.html', context)
 
 
+@login_required
 @user_passes_test(user_is_superuser)
 def weekly_metric_new_manually(request):
     """
@@ -34,6 +35,7 @@ def weekly_metric_new_manually(request):
     return HttpResponseRedirect(reverse('teams:teams'))
 
 
+@login_required
 @user_passes_test(user_is_manager)
 def metric_detail(request, metric_id):
     key = request.GET.get('key', '')
@@ -64,6 +66,7 @@ def metric_detail(request, metric_id):
     return render(request, 'teams/metric_detail.html', context)
 
 
+@login_required
 @user_passes_test(user_is_manager)
 def metric_edit(request, metric_id):
     key = request.GET.get('key', '')
