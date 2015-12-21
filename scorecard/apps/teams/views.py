@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
 
-from models import TestMetrics, RequirementMetrics, InnovationMetrics, LabMetrics
+from models import TestMetrics, RequirementMetrics, InnovationMetrics, LabMetrics, TestMetricsConfiguration
 from forms import InnovationForm, LabForm, RequirementForm, TestForm
 from scorecard.apps.users.views import user_is_superuser, user_is_manager
 from tasks import weekly_metric_new, weekly_send_email
@@ -47,6 +47,10 @@ def send_email(request):
 @user_passes_test(user_is_manager)
 def metric_detail(request, metric_id):
     key = request.GET.get('key', '')
+    try:
+        test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=key)
+    except TestMetricsConfiguration.DoesNotExist:
+        test_metric_config = ''
 
     if key in ['PQ', 'QA', 'TE']:
         metric = get_object_or_404(TestMetrics, pk=metric_id)
@@ -69,6 +73,7 @@ def metric_detail(request, metric_id):
     context = RequestContext(request, {
         'metric': metric,
         'form': form,
+        'test_metric_config': test_metric_config
     })
 
     return render(request, 'teams/metric_detail.html', context)
