@@ -135,11 +135,11 @@ class TestMetrics(BaseMetrics):
         Different computer formula for Product Quality, Quality Assrance, and Test Engineering
         """
         if self.functional_group.key == 'PQ':
-            return (self.staffs + self.contractors) * 30 * 60
+            return self.staffs * 40 * 60 + self.contractors * 40 * 100
         elif self.functional_group.key == 'QA':
-            return self.staffs * 40 * 40 + self.contractors * 100 * 40
+            return self.staffs * 40 * 40 + self.contractors * 40 * 100
         elif self.functional_group.key == 'TE':
-            return self.staffs * 40 * 50
+            return self.staffs * 40 * 50 + self.contractors * 40 * 100
         else:
             return 0
 
@@ -153,11 +153,11 @@ class TestMetrics(BaseMetrics):
         Cost Saved by Automation
         """
         if self.functional_group.key == 'PQ':
-            return self.tc_auto_execution_time * 40
+            return self.tc_auto_execution_time * 60
         elif self.functional_group.key == 'QA':
             return self.tc_auto_execution_time * 40
         elif self.functional_group.key == 'TE':
-            return (self.tc_auto_execution_time + 37) * 50
+            return self.tc_auto_execution_time * 50
         else:
             return 0
 
