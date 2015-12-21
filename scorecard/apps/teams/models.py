@@ -132,16 +132,25 @@ class TestMetrics(BaseMetrics):
     @property
     def operational_cost(self):
         """
-        Different computer formula for Product Quality, Quality Assrance, and Test Engineering
+        Different computer formula for Product Quality, Quality Assurance, and Test Engineering
         """
-        if self.functional_group.key == 'PQ':
-            return self.staffs * 40 * 60 + self.contractors * 40 * 100
-        elif self.functional_group.key == 'QA':
-            return self.staffs * 40 * 40 + self.contractors * 40 * 100
-        elif self.functional_group.key == 'TE':
-            return self.staffs * 40 * 50 + self.contractors * 40 * 100
-        else:
-            return 0
+        # if self.functional_group.key == 'PQ':
+        #     return self.staffs * 40 * 60 + self.contractors * 40 * 100
+        # elif self.functional_group.key == 'QA':
+        #     return self.staffs * 40 * 40 + self.contractors * 40 * 100
+        # elif self.functional_group.key == 'TE':
+        #     return self.staffs * 40 * 50 + self.contractors * 40 * 100
+        # else:
+        #     return 0
+        try:
+            test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=self.functional_group.key)
+            hours = test_metric_config.hours_per_week
+            costs_staff = test_metric_config.costs_per_hour_staff
+            costs_contractor = test_metric_config.costs_per_hour_contractor
+        except TestMetricsConfiguration.DoesNotExist:
+            hours, costs_staff, costs_contractor = 0, 0, 0
+
+        return self.staffs * hours * costs_staff + self.contractors * hours * costs_contractor
 
     @property
     def total_operational_cost(self):
@@ -152,14 +161,21 @@ class TestMetrics(BaseMetrics):
         """
         Cost Saved by Automation
         """
-        if self.functional_group.key == 'PQ':
-            return self.tc_auto_execution_time * 60
-        elif self.functional_group.key == 'QA':
-            return self.tc_auto_execution_time * 40
-        elif self.functional_group.key == 'TE':
-            return self.tc_auto_execution_time * 50
-        else:
-            return 0
+        # if self.functional_group.key == 'PQ':
+        #     return self.tc_auto_execution_time * 60
+        # elif self.functional_group.key == 'QA':
+        #     return self.tc_auto_execution_time * 40
+        # elif self.functional_group.key == 'TE':
+        #     return self.tc_auto_execution_time * 50
+        # else:
+        #     return 0
+        try:
+            test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=self.functional_group.key)
+            costs_staff = test_metric_config.costs_per_hour_staff
+        except TestMetricsConfiguration.DoesNotExist:
+            costs_staff = 0
+
+        return self.tc_auto_execution_time * costs_staff
 
 
 class InnovationMetrics(BaseMetrics):
@@ -286,3 +302,19 @@ class LabMetrics(BaseMetrics):
         return '{0}: {1}: {2}'.format(self.functional_group.name,
                                       localtime(self.confirmed),
                                       localtime(self.created))
+
+
+class TestMetricsConfiguration(models.Model):
+    """
+    Configuration of Test Metric costs
+    """
+    functional_group = models.ForeignKey(FunctionalGroup)
+    hours_per_week = models.PositiveSmallIntegerField(default=0)
+    costs_per_hour_staff = models.PositiveSmallIntegerField(default=0)
+    costs_per_hour_contractor = models.PositiveSmallIntegerField(default=0)
+
+    def __unicode__(self):
+        return '{0}: {1}: {2}: {3}'.format(self.functional_group.key,
+                                           self.hours_per_week,
+                                           self.costs_per_hour_staff,
+                                           self.costs_per_hour_contractor)
