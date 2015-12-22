@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.utils.timezone import localtime
 import pytz
 
-from scorecard.apps.teams.models import InnovationMetrics, LabMetrics, RequirementMetrics, TestMetrics, FunctionalGroup
+from scorecard.apps.teams.models import InnovationMetrics, LabMetrics, RequirementMetrics, TestMetrics, FunctionalGroup, TestMetricsConfiguration
 
 
 class InnovationMetricsModelTest(TestCase):
@@ -185,6 +185,24 @@ class TestMetricsModelTest(TestCase):
             name='Other Group',
             key='OG'
         )
+        self.test_metric_config_pq = TestMetricsConfiguration.objects.create(
+            functional_group=self.functional_group_pq,
+            hours_per_week=random.randint(1, 100),
+            costs_per_hour_staff=random.randint(1, 100),
+            costs_per_hour_contractor=random.randint(1, 100)
+        )
+        self.test_metric_config_qa = TestMetricsConfiguration.objects.create(
+            functional_group=self.functional_group,
+            hours_per_week=random.randint(1, 100),
+            costs_per_hour_staff=random.randint(1, 100),
+            costs_per_hour_contractor=random.randint(1, 100)
+        )
+        self.test_metric_config_te = TestMetricsConfiguration.objects.create(
+            functional_group=self.functional_group_te,
+            hours_per_week=random.randint(1, 100),
+            costs_per_hour_staff=random.randint(1, 100),
+            costs_per_hour_contractor=random.randint(1, 100)
+        )
         self.test_metric = TestMetrics.objects.create(
             functional_group=self.functional_group,
             created=datetime.utcnow().replace(tzinfo=pytz.utc),
@@ -339,8 +357,16 @@ class TestMetricsModelTest(TestCase):
         self.test_metric.contractors = self.contractors
         self.test_metric.save()
 
+        test_configs = self.functional_group.testmetricsconfiguration_set.all()
+        if len(test_configs) > 0:
+            hours = test_configs[0].hours_per_week
+            rate_staff = test_configs[0].costs_per_hour_staff
+            rate_contractor = test_configs[0].costs_per_hour_contractor
+        else:
+            hours, rate_staff, rate_contractor = 0, 0, 0
+
         self.assertEqual(self.test_metric.operational_cost,
-                         self.staffs * 40 * 40 + self.contractors * 100 * 40)
+                         self.staffs * hours * rate_staff + self.contractors * hours * rate_contractor)
 
     def test_operational_cost_pq(self):
         self.test_metric.functional_group = self.functional_group_pq
@@ -348,8 +374,16 @@ class TestMetricsModelTest(TestCase):
         self.test_metric.contractors = self.contractors
         self.test_metric.save()
 
+        test_configs = self.functional_group_pq.testmetricsconfiguration_set.all()
+        if len(test_configs) > 0:
+            hours = test_configs[0].hours_per_week
+            rate_staff = test_configs[0].costs_per_hour_staff
+            rate_contractor = test_configs[0].costs_per_hour_contractor
+        else:
+            hours, rate_staff, rate_contractor = 0, 0, 0
+
         self.assertEqual(self.test_metric.operational_cost,
-                         (self.staffs + self.contractors) * 30 * 60)
+                         self.staffs * hours * rate_staff + self.contractors * hours * rate_contractor)
 
     def test_operational_cost_te(self):
         self.test_metric.functional_group = self.functional_group_te
@@ -357,18 +391,25 @@ class TestMetricsModelTest(TestCase):
         self.test_metric.contractors = self.contractors
         self.test_metric.save()
 
+        test_configs = self.functional_group_te.testmetricsconfiguration_set.all()
+        if len(test_configs) > 0:
+            hours = test_configs[0].hours_per_week
+            rate_staff = test_configs[0].costs_per_hour_staff
+            rate_contractor = test_configs[0].costs_per_hour_contractor
+        else:
+            hours, rate_staff, rate_contractor = 0, 0, 0
+
         self.assertEqual(self.test_metric.operational_cost,
-                         self.staffs * 40 * 50)
+                         self.staffs * hours * rate_staff + self.contractors * hours * rate_contractor)
 
     def test_total_operational_cost_qa(self):
-        # self.test_metric.functional_group = self.functional_group_te
         self.test_metric.staffs = self.staffs
         self.test_metric.contractors = self.contractors
         self.test_metric.license_cost = self.license_cost
         self.test_metric.save()
 
         self.assertEqual(self.test_metric.total_operational_cost,
-                         self.staffs * 40 * 40 + self.contractors * 100 * 40 + self.license_cost)
+                         self.test_metric.operational_cost + self.license_cost)
 
     def test_total_operational_cost_pq(self):
         self.test_metric.functional_group = self.functional_group_pq
@@ -378,7 +419,7 @@ class TestMetricsModelTest(TestCase):
         self.test_metric.save()
 
         self.assertEqual(self.test_metric.total_operational_cost,
-                         (self.staffs + self.contractors) * 30 * 60 + self.license_cost)
+                         self.test_metric.operational_cost + self.license_cost)
 
     def test_total_operational_cost_te(self):
         self.test_metric.functional_group = self.functional_group_te
@@ -388,30 +429,48 @@ class TestMetricsModelTest(TestCase):
         self.test_metric.save()
 
         self.assertEqual(self.test_metric.total_operational_cost,
-                         self.staffs * 40 * 50 + self.license_cost)
+                         self.test_metric.operational_cost + self.license_cost)
 
     def test_auto_savings_qa(self):
         self.test_metric.tc_auto_execution_time = self.tc_auto_execution_time
         self.test_metric.save()
 
+        test_configs = self.functional_group.testmetricsconfiguration_set.all()
+        if len(test_configs) > 0:
+            rate = test_configs[0].costs_per_hour_staff
+        else:
+            rate = 0
+
         self.assertEqual(self.test_metric.auto_savings,
-                         self.tc_auto_execution_time * 40)
+                         self.tc_auto_execution_time * rate)
 
     def test_auto_savings_pq(self):
         self.test_metric.functional_group = self.functional_group_pq
         self.test_metric.tc_auto_execution_time = self.tc_auto_execution_time
         self.test_metric.save()
 
+        test_configs = self.functional_group_pq.testmetricsconfiguration_set.all()
+        if len(test_configs) > 0:
+            rate = test_configs[0].costs_per_hour_staff
+        else:
+            rate = 0
+
         self.assertEqual(self.test_metric.auto_savings,
-                         self.tc_auto_execution_time * 40)
+                         self.tc_auto_execution_time * rate)
 
     def test_auto_savings_te(self):
         self.test_metric.functional_group = self.functional_group_te
         self.test_metric.tc_auto_execution_time = self.tc_auto_execution_time
         self.test_metric.save()
 
+        test_configs = self.functional_group_te.testmetricsconfiguration_set.all()
+        if len(test_configs) > 0:
+            rate = test_configs[0].costs_per_hour_staff
+        else:
+            rate = 0
+
         self.assertEqual(self.test_metric.auto_savings,
-                         (self.tc_auto_execution_time + 37) * 50)
+                         self.tc_auto_execution_time * rate)
 
     def test_auto_savings_others(self):
         self.test_metric.functional_group = self.functional_group_others
@@ -419,3 +478,26 @@ class TestMetricsModelTest(TestCase):
         self.test_metric.save()
 
         self.assertEqual(self.test_metric.auto_savings, 0)
+
+
+class TestMetricsConfigurationModelTest(TestCase):
+    def setUp(self):
+        self.functional_group = FunctionalGroup.objects.create(
+            name='Quality Innovation',
+            key='QI'
+        )
+        self.test_config = TestMetricsConfiguration.objects.create(
+            functional_group=self.functional_group,
+            hours_per_week=random.randint(1, 100),
+            costs_per_hour_staff=random.randint(1, 100),
+            costs_per_hour_contractor=random.randint(1, 100)
+        )
+
+    def test_string_representations(self):
+        self.assertEqual(str(self.test_config), '{0}: {1}: {2}: {3}'.format(self.test_config.functional_group.key,
+                                                                            self.test_config.hours_per_week,
+                                                                            self.test_config.costs_per_hour_staff,
+                                                                            self.test_config.costs_per_hour_contractor))
+
+    def test_verbose_name_plural(self):
+        self.assertEqual(str(TestMetricsConfiguration._meta.verbose_name_plural), 'test metrics configurations')
