@@ -76,8 +76,8 @@ def weekly_send_email():
         'pjneuberger@west.com',  # TL: Paul Neuberger
         'CAHeyden@west.com'  # QI
     ]
-    to_email = ['sliu@west.com', 'QEIInnovation@west.com']
-    # to_email = ['sliu@west.com']
+    # to_email = ['sliu@west.com', 'QEIInnovation@west.com']
+    to_email = ['sliu@west.com']
     content = '<p>Following are the links to access the week <strong>{0}</strong> Scorecard manager input:</p>'.format(get_week_ending_date(today))
     content += '<ul>'
 

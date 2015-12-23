@@ -23,7 +23,7 @@ def exportations(request):
         data_name.append(functional_group.name)
         data_key.append(functional_group.key)
 
-    dates = InnovationMetrics.objects.values_list('created', flat=True)
+    dates = InnovationMetrics.objects.values_list('created', flat=True).order_by('created')
     data['name'] = data_name
     data['key'] = data_key
     data['dates'] = dates
