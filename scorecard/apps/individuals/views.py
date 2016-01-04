@@ -4,6 +4,7 @@ from django.template import RequestContext
 
 from scorecard.apps.users.models import FunctionalGroup
 
+
 @login_required
 def individuals(request):
     function_groups = FunctionalGroup.objects.all()
