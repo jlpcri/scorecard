@@ -33,13 +33,12 @@ class InnovationStats(BaseStats):
     # Throughput
     story_points_execution = models.PositiveIntegerField(default=0)
     unit_tests_dev = models.PositiveIntegerField(default=0)
-    defects_in_dev = models.PositiveIntegerField(default=0)
     elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    revisions = models.PositiveIntegerField(default=0)
-    active_projects = models.PositiveIntegerField(default=0)
 
-    # Quality
-    uat_defects_not_prevented = models.PositiveIntegerField(default=0)
+    def __unicode__(self):
+        return '{0}: {1}: {2}'.format(self.human_resource.user.username,
+                                      self.human_resource.functional_group.key,
+                                      localtime(self.created))
 
 
 class LabStats(BaseStats):
@@ -47,7 +46,6 @@ class LabStats(BaseStats):
     Personal Performance status for TL team
     """
     # Throughput
-    tickets_received = models.PositiveIntegerField(default=0)
     tickets_closed = models.PositiveIntegerField(default=0)
 
 
@@ -56,7 +54,6 @@ class RequirementStats(BaseStats):
     Personal Performance status for RE team
     """
     # Throughput
-    active_projects = models.PositiveIntegerField(default=0)
     elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
 
     # Quality
@@ -74,10 +71,6 @@ class TestStats(BaseStats):
     Personal Performance status for PQ, QA, TE team
     """
     # Throughput
-    ticket_execution = models.PositiveIntegerField(default=0)
-    ticket_closed = models.PositiveIntegerField(default=0)
-    project_execution = models.PositiveIntegerField(default=0)
-    project_closed = models.PositiveIntegerField(default=0)
     tc_manual_dev = models.PositiveIntegerField(default=0)
     tc_manual_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
     tc_manual_execution = models.PositiveIntegerField(default=0)
