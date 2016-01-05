@@ -3,6 +3,6 @@ from django.shortcuts import render
 
 
 @login_required
-def congregations(request):
-    return render(request, 'congregations/congregations.html')
+def automations(request):
+    return render(request, 'automations/automations.html')
 
