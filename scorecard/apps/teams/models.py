@@ -44,6 +44,11 @@ class BaseMetrics(models.Model):
     class Meta:
         abstract = True
 
+    def __unicode__(self):
+        return '{0}: {1}: {2}'.format(self.functional_group.name,
+                                      localtime(self.confirmed),
+                                      localtime(self.created))
+
 
 class TestMetrics(BaseMetrics):
     """
@@ -77,11 +82,6 @@ class TestMetrics(BaseMetrics):
     avg_time_frame = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     # Costs
-
-    def __unicode__(self):
-        return '{0}: {1}: {2}'.format(self.functional_group.name,
-                                      localtime(self.confirmed),
-                                      localtime(self.created))
 
     @property
     def auto_footprint_dev_age(self):
@@ -208,11 +208,6 @@ class InnovationMetrics(BaseMetrics):
     visilog_txl_parsed = models.PositiveIntegerField(default=0)
     visilog_txl_schema_violation = models.PositiveIntegerField(default=0)
 
-    def __unicode__(self):
-        return '{0}: {1}: {2}'.format(self.functional_group.name,
-                                      localtime(self.confirmed),
-                                      localtime(self.created))
-
     @property
     def avg_throughput(self):
         if self.staffs == 0:
@@ -250,11 +245,6 @@ class RequirementMetrics(BaseMetrics):
 
     # Costs
     travel_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-
-    def __unicode__(self):
-        return '{0}: {1}: {2}'.format(self.functional_group.name,
-                                      localtime(self.confirmed),
-                                      localtime(self.created))
 
     @property
     def avg_throughput(self):
@@ -301,11 +291,6 @@ class LabMetrics(BaseMetrics):
     # Costs
     power_consumption_ups_a = models.PositiveIntegerField(default=0)  # in kw
     power_consumption_ups_b = models.PositiveIntegerField(default=0)  # in kw
-
-    def __unicode__(self):
-        return '{0}: {1}: {2}'.format(self.functional_group.name,
-                                      localtime(self.confirmed),
-                                      localtime(self.created))
 
 
 class TestMetricsConfiguration(models.Model):

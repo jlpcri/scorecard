@@ -21,6 +21,11 @@ class BaseStats(models.Model):
     class Meta:
         abstract = True
 
+    def __unicode__(self):
+        return '{0}: {1}: {2}'.format(self.human_resource.user.username,
+                                      self.human_resource.functional_group.key,
+                                      localtime(self.created))
+
 
 class InnovationStats(BaseStats):
     """
@@ -30,11 +35,6 @@ class InnovationStats(BaseStats):
     story_points_execution = models.PositiveIntegerField(default=0)
     unit_tests_dev = models.PositiveIntegerField(default=0)
     elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-
-    def __unicode__(self):
-        return '{0}: {1}: {2}'.format(self.human_resource.user.username,
-                                      self.human_resource.functional_group.key,
-                                      localtime(self.created))
 
 
 class LabStats(BaseStats):

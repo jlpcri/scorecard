@@ -1,9 +1,8 @@
 from datetime import date, datetime
 
 from scorecard.celery_module import app
-from scorecard.apps.users.models import FunctionalGroup, HumanResource
+from scorecard.apps.users.models import FunctionalGroup
 from models import InnovationStats, LabStats, RequirementStats, TestStats
-from scorecard.apps.datas.utils import get_week_ending_date
 
 
 @app.task
@@ -42,12 +41,18 @@ def personal_stats_new():
     functional_groups = FunctionalGroup.objects.all()
     for functional_group in functional_groups:
         if functional_group.key in ['PQ', 'QA', 'TE']:
-            print functional_group.key
+            hrs = functional_group.humanresource_set.all()
+            for hr in hrs:
+                TestStats.objects.create(human_resource=hr)
         elif functional_group.key == 'QI':
             hrs = functional_group.humanresource_set.all()
             for hr in hrs:
-                print hr.user.username
+                InnovationStats.objects.create(human_resource=hr)
         elif functional_group.key == 'RE':
-            print functional_group.key
+            hrs = functional_group.humanresource_set.all()
+            for hr in hrs:
+                RequirementStats.objects.create(human_resource=hr)
         elif functional_group.key == 'TL':
-            print functional_group.key
+            hrs = functional_group.humanresource_set.all()
+            for hr in hrs:
+                LabStats.objects.create(human_resource=hr)
