@@ -13,7 +13,7 @@
 {#        </ul>#}
     <div class="row" style="margin-bottom:10px;">
         <div class="col-md-8">
-            <i class="fa fa-file-excel-o fa=lg"></i><a href="{% url 'exportations:export_excel' %}?key=SU" > Export All</a>
+            <i class="fa fa-file-excel-o fa=lg"></i><a href="{% url 'datas:export_excel' %}?key=SU" > Export All</a>
         </div>
     </div>
 
@@ -31,9 +31,9 @@
             <tbody>
                 {% for item in data.dates %}
                     <tr>
-                        <td><a href="{% url 'exportations:export_excel' %}?key=SU&date={{ item|date }}">{{ item|date }}</a></td>
+                        <td><a href="{% url 'datas:export_excel' %}?key=SU&date={{ item|date }}">{{ item|date }}</a></td>
                         {% for key in data.key %}
-                            <td><a href="{% url 'exportations:export_excel' %}?key={{ key }}&date={{ item|date }}">{{ key }}</a> </td>
+                            <td><a href="{% url 'datas:export_excel' %}?key={{ key }}&date={{ item|date }}">{{ key }}</a> </td>
                         {% endfor %}
 
                     </tr>

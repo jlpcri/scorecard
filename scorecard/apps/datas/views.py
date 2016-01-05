@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.template import RequestContext
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
-from scorecard.apps.exportations.utils import write_to_excel, write_to_excel_all, write_to_excel_test_summary, \
+from scorecard.apps.datas.utils import write_to_excel, write_to_excel_all, write_to_excel_test_summary, \
     write_to_excel_qi_tl_summary, get_week_ending_date
 
 from scorecard.apps.users.models import FunctionalGroup
@@ -32,7 +32,7 @@ def exportations(request):
         'data': data
     })
 
-    return render(request, 'exportations/exportations.html', context)
+    return render(request, 'datas/datas.html', context)
 
 
 @login_required
@@ -88,7 +88,7 @@ def export_excel(request):
 
             if update_error:
                 messages.error(request, 'Team {0} not updated'.format(update_error_list))
-                return redirect('exportations:exportations')
+                return redirect('datas:datas')
 
         else:
             ws = wb.active
@@ -120,7 +120,7 @@ def export_excel(request):
 
             if not metric.updated:
                 messages.error(request, 'Team \'{0}\' not updated'.format(metric.functional_group.name))
-                return redirect('exportations:exportations')
+                return redirect('datas:datas')
             else:
                 export_file_name += key + '-' + get_week_ending_date(metric.created)
                 write_to_excel(metric, ws)
@@ -159,7 +159,7 @@ def export_excel(request):
 
         if update_error:
             messages.error(request, 'Team {0} not updated'.format(update_error_list))
-            return redirect('exportations:exportations')
+            return redirect('datas:datas')
 
     response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
     response['Content-disposition'] = 'attachment; filename="{0}.xlsx"'.format(export_file_name)

@@ -14,7 +14,7 @@ INSTALLED_APPS += ('django_jenkins', )
 PROJECT_APPS = (
     'scorecard.apps.automations',
     'scorecard.apps.core',
-    'scorecard.apps.exportations',
+    'scorecard.apps.datas',
     'scorecard.apps.help',
     'scorecard.apps.personals',
     'scorecard.apps.teams',

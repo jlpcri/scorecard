@@ -69,7 +69,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'scorecard.apps.automations',
     'scorecard.apps.core',
-    'scorecard.apps.exportations',
+    'scorecard.apps.datas',
     'scorecard.apps.help',
     'scorecard.apps.personals',
     'scorecard.apps.teams',
