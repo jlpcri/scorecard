@@ -1,8 +1,14 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.template import RequestContext
 
+from scorecard.apps.personals.tasks import weekly_personal_stats_new
 from scorecard.apps.users.models import FunctionalGroup
+from models import InnovationStats, LabStats, RequirementStats, TestStats
+from scorecard.apps.users.views import user_is_superuser, user_is_manager
 
 
 @login_required
@@ -33,3 +39,17 @@ def personals(request):
     })
 
     return render(request, 'personals/personals.html', context)
+
+
+@login_required
+@user_passes_test(user_is_superuser)
+def weekly_personal_stats_new_manually(request):
+    """
+    :param request:
+    :return: result valid or error
+    """
+    result = weekly_personal_stats_new()
+    if not result['valid']:
+        messages.error(request, result['message'])
+
+    return HttpResponseRedirect(reverse('personals:personals'))
