@@ -14,7 +14,7 @@ from scorecard.apps.teams.models import InnovationMetrics, LabMetrics, Requireme
 
 
 @login_required
-def exportations(request):
+def datas(request):
     functional_groups = FunctionalGroup.objects.all().order_by('name')
     data = {}
     data_name = []

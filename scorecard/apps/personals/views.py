@@ -6,7 +6,7 @@ from scorecard.apps.users.models import FunctionalGroup
 
 
 @login_required
-def individuals(request):
+def personals(request):
     function_groups = FunctionalGroup.objects.all()
     pq_individuals = []
     qa_individuals = []

@@ -72,6 +72,7 @@ INSTALLED_APPS = (
     'scorecard.apps.datas',
     'scorecard.apps.help',
     'scorecard.apps.personals',
+    'scorecard.apps.projects',
     'scorecard.apps.teams',
     'scorecard.apps.users'
 )

@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^scorecard/datas/', include('scorecard.apps.datas.urls', namespace='datas')),
     url(r'^scorecard/help/', include('scorecard.apps.help.urls', namespace='help')),
     url(r'^scorecard/personals/', include('scorecard.apps.personals.urls', namespace='personals')),
+    url(r'^scorecard/projects/', include('scorecard.apps.projects.urls', namespace='projects')),
     url(r'^scorecard/teams/', include('scorecard.apps.teams.urls', namespace='teams')),
     url(r'^scorecard/', include('scorecard.apps.users.urls', namespace='users')),
 
