@@ -18,12 +18,16 @@ class BaseMetrics(models.Model):
     contractors = models.PositiveIntegerField(default=0)
     openings = models.PositiveIntegerField(default=0)
 
+    # Awards and Punish
+    compliments = models.PositiveIntegerField(default=0)
+    complaints = models.PositiveIntegerField(default=0)
+    escalations = models.PositiveIntegerField(default=0)
+
     # Quality
     slas_met = models.DecimalField(max_digits=3, decimal_places=2, default=0)
     delays_introduced_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
     sdis_not_prevented = models.PositiveIntegerField(default=0)
     resource_swap = models.PositiveIntegerField(default=0)
-    escalations = models.PositiveIntegerField(default=0)
     rework_introduced_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
 
     # Efficiency

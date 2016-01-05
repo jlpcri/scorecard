@@ -13,10 +13,6 @@ class BaseStats(models.Model):
     confirmed = models.DateTimeField(auto_now=True, db_index=True)
     updated = models.BooleanField(default=False)
 
-    compliments = models.PositiveIntegerField(default=0)
-    complaints = models.PositiveIntegerField(default=0)
-    escalations = models.PositiveIntegerField(default=0)
-
     # Efficiency
     overtime_weekday = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
     overtime_weekend = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
