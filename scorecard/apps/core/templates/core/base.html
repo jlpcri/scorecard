@@ -133,7 +133,7 @@
                                     <li><a href="{% url 'users:manager_assign' %}"><i class="fa fa-anchor"></i> Manager Assign</a> </li>
                                     <li><a href="{% url 'admin:index' %}" target="_blank"><i class="fa fa-cogs"></i> Django Admin</a> </li>
                                 {% elif user.humanresource.manager %}
-{#                                    <li><a href="{% url 'users:manager_assign' %}"><i class="fa fa-anchor"></i> Manager Assign</a> </li>#}
+                                    <li><a href="{% url 'users:manager_assign' %}"><i class="fa fa-anchor"></i> Manager Assign</a> </li>
                                 {% endif %}
                                 <li><a href="{% url 'users:sign_out' %}"><i class="fa fa-user"></i> Sign Out</a></li>
                             </ul>

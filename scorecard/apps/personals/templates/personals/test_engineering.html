@@ -1,2 +1,61 @@
-Test Engineering
-{{ te_personals }}
+<div class="tab-content" id="qi-content">
+    {% if user.is_superuser or user.humanresource.manager%}
+        {% if te_personals %}
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-condensed table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="col-xs-3">Date</th>
+                            <th class="col-xs-2">TC Manual Dev</th>
+                            <th class="col-xs-2">TC Manual Exec</th>
+                            <th class="col-xs-2">TC Auto Dev</th>
+                            <th class="col-xs-2">TC Auto Exec</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in te_personals %}
+                            <tr>
+                                <td>{{ item.created|date }}</td>
+                                <td>{{ item.tc_manual_dev }}</td>
+                                <td>{{ item.tc_manual_execution }}</td>
+                                <td>{{ item.tc_auto_dev }}</td>
+                                <td>{{ item.tc_auto_execution }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            No Contents
+        {% endif %}
+    {% else %}
+        {% if current_user_personals %}
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-condensed table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="col-xs-3">Date</th>
+                            <th class="col-xs-2">TC Manual Dev</th>
+                            <th class="col-xs-2">TC Manual Exec</th>
+                            <th class="col-xs-2">TC Auto Dev</th>
+                            <th class="col-xs-2">TC Auto Exec</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in current_user_personals %}
+                            <tr>
+                                <td>{{ item.created|date }}</td>
+                                <td>{{ item.tc_manual_dev }}</td>
+                                <td>{{ item.tc_manual_execution }}</td>
+                                <td>{{ item.tc_auto_dev }}</td>
+                                <td>{{ item.tc_auto_execution }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            No Contents
+        {% endif %}
+    {% endif %}
+</div>
