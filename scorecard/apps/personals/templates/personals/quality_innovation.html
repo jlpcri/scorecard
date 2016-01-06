@@ -15,7 +15,7 @@
                     <tbody>
                         {% for item in qi_personals %}
                             <tr>
-                                <td>{{ item.created|date }}</td>
+                                <td><a href="{% url 'personals:personal_stats' item.id %}?key={{ item.human_resource.functional_group.key }}">{{ item.created|date }}</a></td>
                                 <td>{{ item.human_resource.user }}</td>
                                 <td>{{ item.story_points_execution }}</td>
                                 <td>{{ item.unit_tests_dev }}</td>
@@ -44,7 +44,7 @@
                     <tbody>
                         {% for item in current_user_personals %}
                             <tr>
-                                <td>{{ item.created|date }}</td>
+                                <td><a href="{% url 'personals:personal_stats' item.id %}?key={{ item.human_resource.functional_group.key }}">{{ item.created|date }}</a></td>
                                 <td>{{ item.human_resource.user }}</td>
                                 <td>{{ item.story_points_execution }}</td>
                                 <td>{{ item.unit_tests_dev }}</td>

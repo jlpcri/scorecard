@@ -96,3 +96,9 @@ def weekly_personal_stats_new_manually(request):
         messages.error(request, result['message'])
 
     return HttpResponseRedirect(reverse('personals:personals'))
+
+
+@login_required
+def personal_stats(request, stats_id):
+    key = request.GET.get('key', '')
+    print key

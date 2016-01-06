@@ -16,7 +16,7 @@
                     <tbody>
                         {% for item in re_personals %}
                             <tr>
-                                <td>{{ item.created|date }}</td>
+                                <td><a href="{% url 'personals:personal_stats' item.id %}?key={{ item.human_resource.functional_group.key }}">{{ item.created|date }}</a></td>
                                 <td>{{ item.elicitation_analysis_time }}</td>
                                 <td>{{ item.revisions }}</td>
                                 <td>{{ item.rework_time }}</td>
@@ -47,7 +47,7 @@
                     <tbody>
                         {% for item in current_user_personals %}
                             <tr>
-                                <td>{{ item.created|date }}</td>
+                                <td><a href="{% url 'personals:personal_stats' item.id %}?key={{ item.human_resource.functional_group.key }}">{{ item.created|date }}</a></td>
                                 <td>{{ item.elicitation_analysis_time }}</td>
                                 <td>{{ item.revisions }}</td>
                                 <td>{{ item.rework_time }}</td>
