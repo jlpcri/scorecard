@@ -2,13 +2,14 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.template import RequestContext
 
 from scorecard.apps.personals.tasks import weekly_personal_stats_new
 from scorecard.apps.users.models import FunctionalGroup, HumanResource
 from models import InnovationStats, LabStats, RequirementStats, TestStats
 from scorecard.apps.users.views import user_is_superuser, user_is_manager
+from forms import InnovationForm, LabForm, RequirementForm, TestForm
 
 
 @login_required
@@ -101,4 +102,63 @@ def weekly_personal_stats_new_manually(request):
 @login_required
 def personal_stats(request, stats_id):
     key = request.GET.get('key', '')
-    print key
+
+    if key in ['PQ', 'QA', 'TE']:
+        personal_stat = get_object_or_404(TestStats, pk=stats_id)
+        form = TestForm(instance=personal_stat)
+    elif key == 'QI':
+        personal_stat = get_object_or_404(InnovationStats, pk=stats_id)
+        form = InnovationForm(instance=personal_stat)
+    elif key == 'RE':
+        personal_stat = get_object_or_404(RequirementStats, pk=stats_id)
+        form = RequirementForm(instance=personal_stat)
+    elif key == 'TL':
+        personal_stat = get_object_or_404(LabStats, pk=stats_id)
+        form = LabForm(instance=personal_stat)
+    else:
+        messages.error(request, 'No key to Human Resource found')
+        return redirect('personals:personals')
+
+    context = RequestContext(request, {
+        'personal_stat': personal_stat,
+        'form': form
+    })
+
+    return render(request, 'personals/personal_stats.html', context)
+
+
+@login_required
+def personal_stats_edit(request, stats_id):
+    key = request.GET.get('key', '')
+
+    if request.method == 'POST':
+        if key in ['PQ', 'QA', 'TE']:
+            personal_stat = get_object_or_404(TestStats, pk=stats_id)
+            form = TestForm(request.POST, instance=personal_stat)
+        elif key == 'QI':
+            personal_stat = get_object_or_404(InnovationStats, pk=stats_id)
+            form = InnovationForm(request.POST, instance=personal_stat)
+        elif key == 'RE':
+            personal_stat = get_object_or_404(RequirementStats, pk=stats_id)
+            form = RequirementForm(request.POST, instance=personal_stat)
+        elif key == 'TL':
+            personal_stat = get_object_or_404(LabStats, pk=stats_id)
+            form = LabForm(request.POST, instance=personal_stat)
+
+        if form.is_valid():
+            personal_stat = form.save()
+            if not personal_stat.updated:
+                personal_stat.updated = True
+                personal_stat.save()
+
+            context = ''
+            return render(request, 'personals/personals.html', context)
+        else:
+            messages.error(request, 'Correct errors in the form')
+            context = RequestContext(request, {
+                'personal_stat': personal_stat,
+                'form': form
+            })
+            return render(request, 'personals/personal_stats.html', context)
+    else:
+        return redirect('personals:personals')
