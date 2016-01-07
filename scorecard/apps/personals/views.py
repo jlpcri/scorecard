@@ -151,8 +151,7 @@ def personal_stats_edit(request, stats_id):
                 personal_stat.updated = True
                 personal_stat.save()
 
-            context = ''
-            return render(request, 'personals/personals.html', context)
+            return redirect('personals:personals')
         else:
             messages.error(request, 'Correct errors in the form')
             context = RequestContext(request, {

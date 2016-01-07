@@ -8,7 +8,7 @@ from models import InnovationStats, LabStats, RequirementStats, TestStats
 @app.task
 def weekly_personal_stats_new():
     today = date.today()
-    if today.isoweekday() == 3:
+    if today.isoweekday() == 5:
         try:
             qi = InnovationStats.objects.latest('created')
             if qi.created.date() == today:
