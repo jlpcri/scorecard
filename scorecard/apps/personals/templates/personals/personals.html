@@ -14,13 +14,18 @@
                 {% endif %}
             </div>
             <div class="col-xs-6 dropdown">
-                {% if user.is_superuser or user.human_resource.manager %}
+                {% if user.is_superuser or user.humanresource.manager %}
                     <button class="btn btn-primary dropdown-toggle pull-right" type="button" data-toggle="dropdown">Select Week Date <span class="caret"></span></button>
                     <ul class="dropdown-menu pull-right">
                         {% for date in dates %}
                             <li><a href="#">{{ date }}</a></li>
                         {% endfor %}
                     </ul>
+{#                    <select class="pull-right">#}
+{#                        {% for date in dates %}#}
+{#                            <option value="{{ date }}">{{ date }}</option>#}
+{#                        {% endfor %}#}
+{#                    </select>#}
                 {% endif %}
             </div>
         </div>

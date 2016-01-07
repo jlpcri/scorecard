@@ -126,3 +126,9 @@ $(".dropdown-menu li a").click(function(){
         $("#tl-content .table-responsive .table tbody").html(tl_content);
     })
 });
+
+//$("select").change(function(){
+//    $("select option:selected").each(function(){
+//        console.log($(this).text())
+//    })
+//})
