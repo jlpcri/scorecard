@@ -20,7 +20,7 @@ $(document).ready(function(){
             break;
         case 'QA':
             $('#subnav-tabs').find('a[href="#quality_assurance"]').tab('show');
-            break
+            break;
         case 'QI':
             $('#subnav-tabs').find('a[href="#quality_innovation"]').tab('show');
             break;
@@ -33,7 +33,7 @@ $(document).ready(function(){
         case 'TL':
             $('#subnav-tabs').find('a[href="#test_lab"]').tab('show');
             break;
-        default :
+        default:
             $('#subnav-tabs').find('a[href="#product_quality"]').tab('show');
     }
 });

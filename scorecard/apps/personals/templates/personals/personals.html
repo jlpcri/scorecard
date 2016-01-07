@@ -1,26 +1,35 @@
 {% extends 'core/base.html' %}
 
-{% block title %} Teams {% endblock %}
+{% block title %} Personals {% endblock %}
 
 {% block subnav %}
     <br><br>
     <div class="container">
-        {% if user.is_superuser %}
-            <div class="row" style="margin-bottom:10px;">
-                <div class="col-xs-2">
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-xs-6">
+                {% if user.is_superuser %}
                     <small>
-                        <a href="{% url 'teams:weekly_metric_new_manually' %}" ><i class="fa fa-pencil fa-fw"></i> New Weekly Team Metric</a>
+                        <a href="{% url 'personals:weekly_personal_stats_new_manually' %}"><i class="fa fa-pencil fa-fw"></i> New Weekly Personal Performance </a>
                     </small>
-                </div>
-                <div class="col-xs-2">
-                    {% if user.username == 'sliu' %}
-                        <small>
-                            <a  href="{% url 'teams:send_email' %}"><i class="fa fa-envelope-o fa-fw"></i> Send Email</a>
-                        </small>
-                    {% endif %}
-                </div>
+                {% endif %}
             </div>
-        {% endif %}
+            <div class="col-xs-6 dropdown">
+                {% if user.is_superuser or user.humanresource.manager %}
+                    <button class="btn btn-primary dropdown-toggle pull-right" type="button" data-toggle="dropdown">Select Week Date <span class="caret"></span></button>
+                    <ul class="dropdown-menu pull-right">
+                        {% for date in dates %}
+                            <li><a href="#">{{ date }}</a></li>
+                        {% endfor %}
+                    </ul>
+{#                    <select class="pull-right">#}
+{#                        {% for date in dates %}#}
+{#                            <option value="{{ date }}">{{ date }}</option>#}
+{#                        {% endfor %}#}
+{#                    </select>#}
+                {% endif %}
+            </div>
+        </div>
+
         <ul id="subnav-tabs" class="nav nav-tabs">
             {% if user.is_superuser %}
                 <li><a href="#product_quality" data-toggle="tab">Product Quality</a> </li>
@@ -29,7 +38,7 @@
                 <li><a href="#requirements_engineering" data-toggle="tab">Requirements Engineering</a> </li>
                 <li><a href="#test_engineering" data-toggle="tab">Test Engineering</a> </li>
                 <li><a href="#test_lab" data-toggle="tab">Test Lab</a> </li>
-            {% elif user.humanresource.manager  %}
+            {% else %}
                 {% if user.humanresource.functional_group.key == 'PQ' %}
                     <li><a href="#product_quality" data-toggle="tab">Product Quality</a> </li>
                 {% elif user.humanresource.functional_group.key == 'QA' %}
@@ -50,39 +59,36 @@
 
 {% block body %}
     <div class="container">
-
-
         <div class="tab-content">
             <div class="tab-pane" id="product_quality">
-                {% include 'teams/product_quality.html' %}
+                {% include 'personals/product_quality.html' %}
             </div>
 
             <div class="tab-pane" id="quality_assurance">
-                {% include 'teams/quality_assurance.html' %}
+                {% include 'personals/quality_assurance.html' %}
             </div>
 
             <div class="tab-pane" id="quality_innovation">
-                {% include 'teams/quality_innovation.html' %}
+                {% include 'personals/quality_innovation.html' %}
             </div>
 
             <div class="tab-pane" id="requirements_engineering">
-                {% include 'teams/requirements_engineering.html' %}
+                {% include 'personals/requirements_engineering.html' %}
             </div>
 
             <div class="tab-pane" id="test_engineering">
-                {% include 'teams/test_engineering.html' %}
+                {% include 'personals/test_engineering.html' %}
             </div>
 
             <div class="tab-pane" id="test_lab">
-                {% include 'teams/test_lab.html' %}
+                {% include 'personals/test_lab.html' %}
             </div>
-
         </div>
     </div>
 {% endblock %}
 
 {% block footer %}
     <script>
-        {% include 'teams/teams.js' %}
+        {% include 'personals/personals.js' %}
     </script>
 {% endblock %}

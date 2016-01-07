@@ -106,10 +106,11 @@
                 <div class="collapse navbar-collapse" id="main-navbar">
                     <ul class="nav navbar-nav">
                         <li><a href="{% url 'users:home' %}"><i class="fa fa-home fa-fw"></i> Home </a></li>
+                        <li><a href="{% url 'projects:projects' %}"><i class="fa fa-sitemap fa-fw"></i> Projects</a> </li>
+                        <li><a href="{% url 'personals:personals' %}"><i class="fa fa-area-chart fa-fw"></i>Personal</a> </li>
                         <li><a href="{% url 'teams:teams' %}"><i class="fa fa-weibo fa-fw"></i>Team</a></li>
-                        <li><a href="{% url 'individuals:individuals' %}"><i class="fa fa-area-chart fa-fw"></i>Individual</a> </li>
-                        <li><a href="{% url 'congregations:congregations' %}"><i class="fa fa-table fa-fw"></i>Congregation</a> </li>
-                        <li><a href="{% url 'exportations:exportations' %}"><i class="fa fa-pie-chart fa-fw"></i>Exportation</a> </li>
+                        <li><a href="{% url 'datas:datas' %}"><i class="fa fa-pie-chart fa-fw"></i>Data</a> </li>
+                        <li><a href="{% url 'automations:automations' %}"><i class="fa fa-table fa-fw"></i>Automation</a> </li>
                         <li><a href="{% url 'help:guide' %}"><i class="fa fa-thumbs-o-up"></i> Help</a> </li>
                     </ul>
 
@@ -132,7 +133,7 @@
                                     <li><a href="{% url 'users:manager_assign' %}"><i class="fa fa-anchor"></i> Manager Assign</a> </li>
                                     <li><a href="{% url 'admin:index' %}" target="_blank"><i class="fa fa-cogs"></i> Django Admin</a> </li>
                                 {% elif user.humanresource.manager %}
-{#                                    <li><a href="{% url 'users:manager_assign' %}"><i class="fa fa-anchor"></i> Manager Assign</a> </li>#}
+                                    <li><a href="{% url 'users:manager_assign' %}"><i class="fa fa-anchor"></i> Manager Assign</a> </li>
                                 {% endif %}
                                 <li><a href="{% url 'users:sign_out' %}"><i class="fa fa-user"></i> Sign Out</a></li>
                             </ul>

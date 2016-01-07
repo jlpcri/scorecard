@@ -6,7 +6,7 @@ from django.conf import settings
 from scorecard.celery_module import app
 from scorecard.apps.users.models import FunctionalGroup
 from models import TestMetrics, InnovationMetrics, RequirementMetrics, LabMetrics
-from scorecard.apps.exportations.utils import get_week_ending_date
+from scorecard.apps.datas.utils import get_week_ending_date
 
 
 @app.task

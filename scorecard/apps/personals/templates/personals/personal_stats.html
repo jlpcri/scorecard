@@ -1,0 +1,29 @@
+{% extends 'core/base.html' %}
+
+{% block title %} Personal Status{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h2>{{ personal_stat.human_resource.user.first_name }} {{ personal_stat.human_resource.user.last_name }}, Personal Status - {{ personal_stat.created|date }}</h2>
+        <br>
+        <form action="{% url 'personals:personal_stats_edit' personal_stat.id %}?key={{ personal_stat.human_resource.functional_group.key }}" method="post">
+            {% for field in form %}
+                <div class="row">
+                    <div class="col-sm-3"><label>{{ field.label_tag }}</label></div>
+                    <div class="col-sm-2">{{ field }}</div>
+                </div>
+            {% endfor %}
+            <br>
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-2">
+                    <input id="personal_stat_edit" class="btn btn-primary" style="width: 100%" type="submit" value="Save Personal Stats">
+                </div>
+                <div class="col-sm-2">
+                    <a href="{% url 'personals:personals' %}" class="btn btn-default" style="width: 100%">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
