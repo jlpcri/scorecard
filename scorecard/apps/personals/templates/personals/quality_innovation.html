@@ -37,8 +37,7 @@
                 <table class="table table-striped table-hover table-condensed table-bordered">
                     <thead>
                         <tr>
-                            <th class="col-xs-3">Date</th>
-                            <th class="col-xs-2">User</th>
+                            <th class="col-xs-2">Date</th>
                             <th class="col-xs-2">Story Points</th>
                             <th class="col-xs-2">Unit Tests Dev</th>
                             <th class="col-xs-2">Analysis Time</th>
@@ -48,7 +47,6 @@
                         {% for item in current_user_personals %}
                             <tr>
                                 <td><a href="{% url 'personals:personal_stats' item.id %}?key={{ item.human_resource.functional_group.key }}">{{ item.created|date }}</a></td>
-                                <td>{{ item.human_resource.user }}</td>
                                 <td>{{ item.story_points_execution }}</td>
                                 <td>{{ item.unit_tests_dev }}</td>
                                 <td>{{ item.elicitation_analysis_time }}</td>
