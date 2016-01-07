@@ -20,6 +20,7 @@ class BaseStats(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ['human_resource__user__first_name']
 
     def __unicode__(self):
         return '{0}: {1}: {2}'.format(self.human_resource.user.username,
