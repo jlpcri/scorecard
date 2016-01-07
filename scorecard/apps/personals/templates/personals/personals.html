@@ -5,15 +5,26 @@
 {% block subnav %}
     <br><br>
     <div class="container">
-        {% if user.is_superuser %}
-            <div class="row" style="margin-bottom: 10px;">
-                <div class="col-xs-6">
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-xs-6">
+                {% if user.is_superuser %}
                     <small>
                         <a href="{% url 'personals:weekly_personal_stats_new_manually' %}"><i class="fa fa-pencil fa-fw"></i> New Weekly Personal Performance </a>
                     </small>
-                </div>
+                {% endif %}
             </div>
-        {% endif %}
+            <div class="col-xs-6 dropdown">
+                {% if user.is_superuser or user.human_resource.manager %}
+                    <button class="btn btn-primary dropdown-toggle pull-right" type="button" data-toggle="dropdown">Select Week Date <span class="caret"></span></button>
+                    <ul class="dropdown-menu pull-right">
+                        {% for date in dates %}
+                            <li><a href="#">{{ date }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+
         <ul id="subnav-tabs" class="nav nav-tabs">
             {% if user.is_superuser %}
                 <li><a href="#product_quality" data-toggle="tab">Product Quality</a> </li>

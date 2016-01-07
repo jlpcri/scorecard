@@ -1,6 +1,13 @@
-/**
- * Created by sliu on 1/4/16.
- */
+// String format custom method
+String.prototype.format = function () {
+    var s = this,
+        i = arguments.length;
+
+    while (i--) {
+        s = s.replace(new RegExp('\\{' + i + '\\}', 'gm'), arguments[i]);
+    }
+    return s;
+};
 
 var active_tab = String(""),
     key = '{{key}}';
@@ -39,3 +46,10 @@ $(document).ready(function(){
     }
 });
 
+$(".dropdown-menu li a").click(function(){
+    //console.log($(this).text());
+    $.getJSON("{% url 'personals:fetch_personals_by_date' %}?date={0}".format($(this).text())).done(function(data){
+        console.log(data);
+        $(".tab-content .date-title").html('<h4>'+data['date'] + '</h4>');
+    })
+});

@@ -1,11 +1,13 @@
+import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import RequestContext
 
 from scorecard.apps.personals.tasks import weekly_personal_stats_new
+from scorecard.apps.personals.utils import get_distinct_dates
 from scorecard.apps.users.models import FunctionalGroup, HumanResource
 from models import InnovationStats, LabStats, RequirementStats, TestStats
 from scorecard.apps.users.views import user_is_superuser, user_is_manager
@@ -72,6 +74,8 @@ def personals(request):
         elif hr.functional_group.key == 'TL':
             current_user_personals = hr.labstats_set.all()
 
+    dates = get_distinct_dates()
+
     context = RequestContext(request, {
         'pq_personals': pq_personals,
         'qa_personals': qa_personals,
@@ -79,7 +83,9 @@ def personals(request):
         'qi_personals': qi_personals,
         're_personals': re_personals,
         'tl_personals': tl_personals,
-        'current_user_personals': current_user_personals
+
+        'current_user_personals': current_user_personals,
+        'dates': dates
     })
 
     return render(request, 'personals/personals.html', context)
@@ -161,3 +167,126 @@ def personal_stats_edit(request, stats_id):
             return render(request, 'personals/personal_stats.html', context)
     else:
         return redirect('personals:personals')
+
+
+def fetch_personals_by_date(request):
+    date = request.GET.get('date', '')
+    # year = date[:4]
+    # month = date[6:7]
+    # day = date[9:10]
+
+    data = {}
+    data['date'] = date
+
+    pq_personals = []
+    qa_personals = []
+    te_personals = []
+    qi_personals = []
+    re_personals = []
+    tl_personals = []
+
+
+    # qis = InnovationStats.objects.filter(created__year=year,
+    #                                      created__month=month,
+    #                                      created__day=day)
+    # for person in qis:
+    #     temp = {}
+    #     temp['staff'] = person.human_resource.user.first_name + '' + person.human_resource.user.last_name
+    #     temp['story_points'] = str(person.story_points_execution)
+    #     temp['unit_tests_dev'] = str(person.unit_tests_dev)
+    #     temp['analysis_time'] = str(person.elicitation_analysis_time)
+    #
+    #     qi_personals.append(temp)
+
+    functional_gruops = FunctionalGroup.objects.all()
+    for functional_gruop in functional_gruops:
+        if functional_gruop.key == 'PQ':
+            pq_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
+        elif functional_gruop.key == 'QA':
+            qa_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
+        elif functional_gruop.key == 'TE':
+            te_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
+        elif functional_gruop.key == 'QI':
+            qi_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
+        elif functional_gruop.key == 'RE':
+            re_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
+        elif functional_gruop.key == 'TL':
+            tl_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
+
+    data['pq_personals'] = pq_personals
+    data['qa_personals'] = qa_personals
+    data['te_personals'] = te_personals
+    data['qi_personals'] = qi_personals
+    data['re_personals'] = re_personals
+    data['tl_personals'] = tl_personals
+
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+def fetch_personals_per_team_per_date(key, date):
+    year = date[:4]
+    month = date[6:7]
+    day = date[9:10]
+    data = []
+
+    if key in ['PQ', 'QA', 'TE']:
+        team_personals = TestStats.objects.filter(human_resource__functional_group__key=key,
+                                                  created__year=year,
+                                                  created__month=month,
+                                                  created__day=day)
+
+        for person in team_personals:
+            temp = {}
+            temp['id'] = person.id
+            temp['staff'] = person.human_resource.user.first_name + '' + person.human_resource.user.last_name
+            temp['tc_manual_dev'] = str(person.tc_manual_dev)
+            temp['tc_manual_exec'] = str(person.tc_manual_execution)
+            temp['tc_auto_dev'] = str(person.tc_auto_dev)
+            temp['tc_auto_exec'] = str(person.tc_auto_execution)
+
+            data.append(temp)
+    elif key == 'QI':
+        team_personals = InnovationStats.objects.filter(created__year=year,
+                                                        created__month=month,
+                                                        created__day=day)
+        for person in team_personals:
+            temp = {}
+            temp['id'] = person.id
+            temp['staff'] = person.human_resource.user.first_name + '' + person.human_resource.user.last_name
+            temp['story_points'] = str(person.story_points_execution)
+            temp['unit_tests_dev'] = str(person.unit_tests_dev)
+            temp['analysis_time'] = str(person.elicitation_analysis_time)
+
+            data.append(temp)
+    elif key == 'RE':
+        team_personals = RequirementStats.objects.filter(created__year=year,
+                                                         created__month=month,
+                                                         created__day=day)
+        for person in team_personals:
+            temp = {}
+            temp['id'] = person.id
+            temp['staff'] = person.human_resource.user.first_name + '' + person.human_resource.user.last_name
+            temp['analysis_time'] = str(person.elicitation_analysis_time)
+            temp['revisions'] = str(person.revisions)
+            temp['rework_internal'] = str(person.rework_time)
+            temp['rework_external'] = str(person.rework_external_time)
+            temp['travel_cost'] = str(person.travel_cost)
+
+            data.append(temp)
+
+    elif key == 'TL':
+        team_personals = LabStats.objects.filter(created__year=year,
+                                                 created__month=month,
+                                                 created__day=day)
+        for person in team_personals:
+            temp = {}
+            temp['id'] = person.id
+            temp['staff'] = person.human_resource.user.first_name + '' + person.human_resource.user.last_name
+            temp['tickets_closed'] = str(person.tickets_closed)
+            temp['rework_time'] = str(person.rework_time)
+            temp['overtime_weekday'] = str(person.overtime_weekday)
+
+            data.append(temp)
+
+
+    return data

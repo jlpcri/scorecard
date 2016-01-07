@@ -1,10 +1,12 @@
 <div class="tab-content" id="te-content">
     {% if user.is_superuser or user.humanresource.manager%}
         {% if te_personals %}
-            <div class="container">
-                {% with te_personals|first as te %}
-                    <h4>{{ te.created|date }}</h4>
-                {% endwith %}
+            <div class="row">
+                <div class="col-xs-3 date-title" >
+                    {% with te_personals|first as te %}
+                        <h4>{{ te.created|date:'Y-m-d' }}</h4>
+                    {% endwith %}
+                </div>
             </div>
             <div class="table-responsive">
                 <table class="table table-striped table-hover table-condensed table-bordered">

@@ -1,10 +1,12 @@
 <div class="tab-content" id="qi-content">
     {% if user.is_superuser or user.humanresource.manager%}
         {% if qi_personals %}
-            <div class="container">
-                {% with qi_personals|first as qi %}
-                    <h4>{{ qi.created|date }}</h4>
-                {% endwith %}
+            <div class="row">
+                <div class="col-xs-3 date-title" >
+                    {% with qi_personals|first as qi %}
+                        <h4>{{ qi.created|date:'Y-m-d' }}</h4>
+                    {% endwith %}
+                </div>
             </div>
             <div class="table-responsive">
                 <table class="table table-striped table-hover table-condensed table-bordered">
