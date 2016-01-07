@@ -238,7 +238,7 @@ def fetch_personals_per_team_per_date(key, date):
         for person in team_personals:
             temp = {}
             temp['id'] = person.id
-            temp['staff'] = person.human_resource.user.first_name + '' + person.human_resource.user.last_name
+            temp['staff'] = person.human_resource.user.first_name + ' ' + person.human_resource.user.last_name
             temp['tc_manual_dev'] = str(person.tc_manual_dev)
             temp['tc_manual_exec'] = str(person.tc_manual_execution)
             temp['tc_auto_dev'] = str(person.tc_auto_dev)
@@ -252,7 +252,7 @@ def fetch_personals_per_team_per_date(key, date):
         for person in team_personals:
             temp = {}
             temp['id'] = person.id
-            temp['staff'] = person.human_resource.user.first_name + '' + person.human_resource.user.last_name
+            temp['staff'] = person.human_resource.user.first_name + ' ' + person.human_resource.user.last_name
             temp['story_points'] = str(person.story_points_execution)
             temp['unit_tests_dev'] = str(person.unit_tests_dev)
             temp['analysis_time'] = str(person.elicitation_analysis_time)
@@ -265,7 +265,7 @@ def fetch_personals_per_team_per_date(key, date):
         for person in team_personals:
             temp = {}
             temp['id'] = person.id
-            temp['staff'] = person.human_resource.user.first_name + '' + person.human_resource.user.last_name
+            temp['staff'] = person.human_resource.user.first_name + ' ' + person.human_resource.user.last_name
             temp['analysis_time'] = str(person.elicitation_analysis_time)
             temp['revisions'] = str(person.revisions)
             temp['rework_internal'] = str(person.rework_time)
@@ -281,12 +281,12 @@ def fetch_personals_per_team_per_date(key, date):
         for person in team_personals:
             temp = {}
             temp['id'] = person.id
-            temp['staff'] = person.human_resource.user.first_name + '' + person.human_resource.user.last_name
+            temp['staff'] = person.human_resource.user.first_name + ' ' + person.human_resource.user.last_name
             temp['tickets_closed'] = str(person.tickets_closed)
             temp['rework_time'] = str(person.rework_time)
             temp['overtime_weekday'] = str(person.overtime_weekday)
 
             data.append(temp)
 
-
     return data
+
