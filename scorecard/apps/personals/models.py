@@ -82,4 +82,39 @@ class TestStats(BaseStats):
     uat_defects_not_prevented = models.PositiveIntegerField(default=0)
     standards_violated = models.PositiveIntegerField(default=0)
 
+    @property
+    def phase_start_delays(self):
+        data = []
+        phases = self.human_resource.projectphase_set.all()
+        for phase in phases:
+            temp = {}
+            temp['phase'] = phase.name
+            temp['start_delay'] = phase.actual_start - phase.estimate_start
+            data.append(temp)
+
+        return data
+
+    @property
+    def phase_diff_duration(self):
+        data = []
+        phases = self.human_resource.projectphase_set.all()
+        for phase in phases:
+            temp = {}
+            temp['phase'] = phase.name
+            temp['diff_duration'] = (phase.actual_end - phase.actual_start) - (phase.estimate_end - phase.estimate_end)
+
+        return data
+
+    @property
+    def phases_lead_count(self):
+        phases = self.human_resource.projectphase_set.all()
+
+        return len(phases)
+
+    @property
+    def tickets_worked(self):
+        tickets = self.human_resource.ticket_set.all()
+
+        return len(tickets)
+
 

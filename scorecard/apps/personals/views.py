@@ -171,9 +171,6 @@ def personal_stats_edit(request, stats_id):
 
 def fetch_personals_by_date(request):
     date = request.GET.get('date', '')
-    # year = date[:4]
-    # month = date[6:7]
-    # day = date[9:10]
 
     data = {}
     data['date'] = date
@@ -184,19 +181,6 @@ def fetch_personals_by_date(request):
     qi_personals = []
     re_personals = []
     tl_personals = []
-
-
-    # qis = InnovationStats.objects.filter(created__year=year,
-    #                                      created__month=month,
-    #                                      created__day=day)
-    # for person in qis:
-    #     temp = {}
-    #     temp['staff'] = person.human_resource.user.first_name + '' + person.human_resource.user.last_name
-    #     temp['story_points'] = str(person.story_points_execution)
-    #     temp['unit_tests_dev'] = str(person.unit_tests_dev)
-    #     temp['analysis_time'] = str(person.elicitation_analysis_time)
-    #
-    #     qi_personals.append(temp)
 
     functional_gruops = FunctionalGroup.objects.all()
     for functional_gruop in functional_gruops:
