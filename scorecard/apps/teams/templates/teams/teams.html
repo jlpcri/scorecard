@@ -3,8 +3,7 @@
 {% block title %} Teams {% endblock %}
 
 {% block subnav %}
-    <br><br>
-    <div class="container">
+    <div class="container" style="margin-top: 10px;">
         {% if user.is_superuser %}
             <div class="row" style="margin-bottom:10px;">
                 <div class="col-xs-2">
@@ -82,7 +81,5 @@
 {% endblock %}
 
 {% block footer %}
-    <script>
-        {% include 'teams/teams.js' %}
-    </script>
+
 {% endblock %}

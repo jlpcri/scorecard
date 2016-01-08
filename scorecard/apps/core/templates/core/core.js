@@ -1,6 +1,19 @@
 /**
- * Created by sliu on 11/17/15.
+ * Created by sliu on 1/8/16.
+ * Used for Sub-Tab selection for Teams
  */
+
+// String format custom method
+String.prototype.format = function () {
+    var s = this,
+        i = arguments.length;
+
+    while (i--) {
+        s = s.replace(new RegExp('\\{' + i + '\\}', 'gm'), arguments[i]);
+    }
+    return s;
+};
+
 var active_tab = String(""),
     key = '{{key}}';
 
