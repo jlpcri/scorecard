@@ -45,5 +45,5 @@ class Ticket(models.Model):
 
     def __unicode__(self):
         return '{0}: {1}: {2}'.format(self.key,
-                                      self.lead,
+                                      self.lead.user,
                                       self.functional_group.key)
