@@ -89,7 +89,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xs-12">
-                            <label for="">Project</label>
+                            <label for="">Project:</label>
                             <select id="editPhaseProject" name="editPhaseProject" class="form-control">
                                 {% for project in projects %}
                                     <option value="{{ project.id }}">{{ project }}</option>
@@ -109,7 +109,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12">
-                            <label for="editPhaseLead">Lead</label>
+                            <label for="editPhaseLead">Lead:</label>
                             <select id="editPhaseLead" name="editPhaseLead" class="form-control">
                                 {% for lead in leads %}
                                     <option value="{{ lead.id }}">{{ lead.user.first_name }} {{ lead.user.last_name }}</option>
@@ -119,7 +119,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12">
-                            <label for="editPhaseName">Key:</label>
+                            <label for="editPhaseName">Name:</label>
                             <input type="text" class="form-control input-sm" name="editPhaseName" id="editPhaseName">
                         </div>
                     </div>
@@ -193,7 +193,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12">
-                            <label for="editTicketLead">Lead</label>
+                            <label for="editTicketLead">Lead:</label>
                             <select id="editTicketLead" name="editTicketLead" class="form-control">
                                 {% for lead in leads %}
                                     <option value="{{ lead.id }}">{{ lead.user.first_name }} {{ lead.user.last_name }}</option>

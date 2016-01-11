@@ -19,7 +19,17 @@
                             <div id="collapse_tl_{{ item.name|slugify }}" class="panel-collapse collapse">
                                 <ul class="list-group">
                                     {% for phase in item.phases_tl %}
-                                        <li class="list-group-item"><a href="#">{{ phase.name }}</a></li>
+                                        <li class="list-group-item">
+                                            <a href="#editPhase" data-toggle="modal"
+                                               data-phase-id="{{ phase.id }}"
+                                               data-phase-project="{{ phase.project.id }}"
+                                               data-phase-fg="{{ phase.functional_group.id }}"
+                                               data-phase-lead="{{ phase.lead.id }}"
+                                               data-phase-name="{{ phase.name }}"
+                                               data-phase-key="{{ phase.key }}">
+                                                {{ phase.name }}
+                                            </a>
+                                        </li>
                                     {% endfor %}
                                 </ul>
                             </div>
