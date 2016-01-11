@@ -1,8 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
 
+from models import Project, ProjectPhase, Ticket
 from scorecard.apps.projects.forms import ProjectForm, TicketNewForm
 from scorecard.apps.projects.utils import get_projects_tickets_from_fg
 from scorecard.apps.users.models import FunctionalGroup
@@ -55,13 +58,18 @@ def projects(request):
 
 
 @login_required
-def project_detail(request, project_id):
-    pass
+def project_edit(request):
+    if request.method == 'POST':
+        project_id = request.POST.get('editProjectId', '')
+        project_name = request.POST.get('editProjectName', '')
+        project = get_object_or_404(Project, pk=project_id)
+        try:
+            project.name = project_name
+            project.save()
+        except (ValidationError, IntegrityError):
+            messages.error(request, 'Edit Project Name Error')
 
-
-@login_required
-def project_edit(request, project_id):
-    pass
+        return redirect('projects:projects')
 
 
 @login_required

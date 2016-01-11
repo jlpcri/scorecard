@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 
 from scorecard.apps.users.models import FunctionalGroup, HumanResource
@@ -47,3 +48,11 @@ class Ticket(models.Model):
         return '{0}: {1}: {2}'.format(self.key,
                                       self.lead.user,
                                       self.functional_group.key)
+
+    def save(self, *args, **kwargs):
+        self.estimate_start = timezone.now()
+        self.estimate_end = timezone.now()
+        self.actual_start = timezone.now()
+        self.actual_end = timezone.now()
+
+        return super(Ticket, self).save(*args, **kwargs)

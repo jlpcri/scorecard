@@ -1,3 +1,4 @@
+<!-- Project New Modal -->
 <div class="modal fade" id="project-new-modal">
     <div class="modal-dialog">
         <form action="{% url 'projects:project_new' %}" method="post">
@@ -12,6 +13,40 @@
                 </div>
                 <div class="modal-footer">
                     <input id="project_new" class="btn btn-primary" type="submit" value="New Project">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Project Edit Modal -->
+<div class="modal fade" id="editProject">
+    <div class="modal-dialog">
+        <form method="post" action="{% url 'projects:project_edit' %}">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Project Name Edit</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label for="editProjectName">Name:</label>
+                            <input type="text" class="form-control input-sm" name="editProjectName" id="editProjectName">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-1">
+                        </div>
+                        <div class="col-xs-10">
+                            <div id="editProjectErrMessage"></div>
+                        </div>
+                    </div>
+                </div>
+                {% csrf_token %}
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary param-save">Save changes</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
