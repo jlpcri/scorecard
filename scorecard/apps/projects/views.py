@@ -8,7 +8,7 @@ from django.template import RequestContext
 from models import Project, ProjectPhase, Ticket
 from scorecard.apps.projects.forms import ProjectNewForm, TicketNewForm, ProjectPhaseNewForm
 from scorecard.apps.projects.utils import get_projects_tickets_from_fg
-from scorecard.apps.users.models import FunctionalGroup
+from scorecard.apps.users.models import FunctionalGroup, HumanResource
 
 
 @login_required
@@ -34,25 +34,23 @@ def projects(request):
     context = RequestContext(request, {
         'pq_projects': pqs['fg_projects'],
         'pq_tickets': pqs['fg_tickets'],
-
         'qa_projects': qas['fg_projects'],
         'qa_tickets': qas['fg_tickets'],
-
         'te_projects': tes['fg_projects'],
         'te_tickets': tes['fg_tickets'],
-
         'qi_projects': qis['fg_projects'],
         'qi_tickets': qis['fg_tickets'],
-
         're_projects': res['fg_projects'],
         're_tickets': res['fg_tickets'],
-
         'tl_projects': tls['fg_projects'],
         'tl_tickets': tls['fg_tickets'],
 
         'project_new_form': ProjectNewForm(),
         'project_phase_new_form': ProjectPhaseNewForm(),
-        'ticket_new_form': TicketNewForm()
+        'ticket_new_form': TicketNewForm(),
+
+        'function_groups': function_groups,
+        'leads': HumanResource.objects.all()
     })
 
     return render(request, 'projects/projects.html', context)
@@ -74,7 +72,6 @@ def project_new(request):
 @login_required
 def project_edit(request):
     if request.method == 'POST':
-        key = request.POST.get('editProjectKey', '')
         project_id = request.POST.get('editProjectId', '')
         project_name = request.POST.get('editProjectName', '')
 
@@ -107,13 +104,24 @@ def project_phase_edit(request):
 
 
 @login_required
-def ticket_detail(request, ticket_id):
-    pass
+def ticket_edit(request):
+    if request.method == 'POST':
+        ticket_id = request.POST.get('editTicketId', '')
+        ticket_fg = request.POST.get('editTicketFunctionalGroup', '')
+        ticket_lead = request.POST.get('editTicketLead', '')
+        ticket_key = request.POST.get('editTicketKey', '')
 
+        ticket = get_object_or_404(Ticket, pk=ticket_id)
+        try:
+            ticket.key = ticket_key
+            ticket.functional_group = get_object_or_404(FunctionalGroup, pk=ticket_fg)
+            ticket.lead = get_object_or_404(HumanResource, pk=ticket_lead)
+            ticket.save()
+            messages.success(request, 'Ticket is updated')
+        except (ValidationError, IntegrityError):
+            messages.error(request, 'Edit Ticket Error')
 
-@login_required
-def ticket_edit(request, ticket_id):
-    pass
+        return redirect('projects:projects')
 
 
 @login_required
