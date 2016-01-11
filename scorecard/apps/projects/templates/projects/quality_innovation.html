@@ -9,7 +9,11 @@
                             <div class="panel-heading">
                                 <h6 class="panel-title">
                                     <a data-toggle="collapse" href="#collapse_{{ item.name }}">{{ item.name }}</a>
-                                    <a href="#"><i class="fa fa-edit fa-fw"></i></a>
+                                    <a href="#editProject" data-toggle="modal"
+                                       data-project-id="{{ item.id }}" data-project-name="{{ item.name }}"
+                                       class="project_edit">
+                                        <i class="fa fa-edit fa-fw"></i>
+                                    </a>
                                 </h6>
                             </div>
                             <div id="collapse_{{ item.name }}" class="panel-collapse collapse">

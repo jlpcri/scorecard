@@ -8,7 +8,7 @@
                     <h4 class="modal-title">Project New Information</h4>
                 </div>
                 <div class="modal-body">
-                    {{ project_form_new }}
+                    {{ project_new_form }}
                     {% csrf_token %}
                 </div>
                 <div class="modal-footer">
@@ -38,6 +38,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-1">
+                            <input type="hidden" name="editProjectId">
                         </div>
                         <div class="col-xs-10">
                             <div id="editProjectErrMessage"></div>
@@ -54,6 +55,29 @@
     </div>
 </div>
 
+<!-- ProjectPhase New Modal -->
+<div class="modal fade" id="phase-new-modal">
+    <div class="modal-dialog">
+        <form action="{% url 'projects:project_phase_new' %}" method="post">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span> </button>
+                    <h4 class="modal-title">Project Phase New Information</h4>
+                </div>
+                <div class="modal-body">
+                    {{ project_phase_new_form }}
+                    {% csrf_token %}
+                </div>
+                <div class="modal-footer">
+                    <input id="project_phase_new" class="btn btn-primary" type="submit" value="New Project Phase">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Ticket New Modal -->
 <div class="modal fade" id="ticket-new-modal">
     <div class="modal-dialog">
         <form action="{% url 'projects:ticket_new' %}" method="post">
@@ -63,7 +87,7 @@
                     <h4 class="modal-title">Ticket New Information</h4>
                 </div>
                 <div class="modal-body">
-                    {{ ticket_form_new }}
+                    {{ ticket_new_form }}
                     {% csrf_token %}
                 </div>
                 <div class="modal-footer">

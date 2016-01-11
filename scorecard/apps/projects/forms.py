@@ -4,12 +4,25 @@ from django.forms import ModelForm
 from models import Project, ProjectPhase, Ticket
 
 
-class ProjectForm(ModelForm):
+class ProjectNewForm(ModelForm):
     class Meta:
         model = Project
         fields = ['name']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'})
+        }
+
+
+class ProjectPhaseNewForm(ModelForm):
+    class Meta:
+        model = ProjectPhase
+        fields = ['project', 'functional_group', 'lead', 'name', 'key']
+        widgets = {
+            'project': forms.Select(attrs={'class': 'form-control'}),
+            'functional_group': forms.Select(attrs={'class': 'form-control'}),
+            'lead': forms.Select(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'key': forms.TextInput(attrs={'class': 'form-control'})
         }
 
 

@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
 
 from models import Project, ProjectPhase, Ticket
-from scorecard.apps.projects.forms import ProjectForm, TicketNewForm
+from scorecard.apps.projects.forms import ProjectNewForm, TicketNewForm, ProjectPhaseNewForm
 from scorecard.apps.projects.utils import get_projects_tickets_from_fg
 from scorecard.apps.users.models import FunctionalGroup
 
@@ -50,18 +50,35 @@ def projects(request):
         'tl_projects': tls['fg_projects'],
         'tl_tickets': tls['fg_tickets'],
 
-        'project_form_new': ProjectForm(),
-        'ticket_form_new': TicketNewForm()
+        'project_new_form': ProjectNewForm(),
+        'project_phase_new_form': ProjectPhaseNewForm(),
+        'ticket_new_form': TicketNewForm()
     })
 
     return render(request, 'projects/projects.html', context)
 
 
 @login_required
+def project_new(request):
+    if request.method == 'POST':
+        form = ProjectNewForm(request.POST)
+        if form.is_valid():
+            project = form.save()
+            messages.success(request, 'Project is added')
+        else:
+            messages.error(request, 'Errors found')
+
+        return redirect('projects:projects')
+
+
+@login_required
 def project_edit(request):
     if request.method == 'POST':
+        key = request.POST.get('editProjectKey', '')
         project_id = request.POST.get('editProjectId', '')
         project_name = request.POST.get('editProjectName', '')
+        print project_id
+        print project_name
         project = get_object_or_404(Project, pk=project_id)
         try:
             project.name = project_name
@@ -73,16 +90,21 @@ def project_edit(request):
 
 
 @login_required
-def project_new(request):
+def project_phase_new(request):
     if request.method == 'POST':
-        form = ProjectForm(request.POST)
+        form = ProjectPhaseNewForm(request.POST)
         if form.is_valid():
-            project = form.save()
-            messages.success(request, 'Project is added')
+            phase = form.save()
+            messages.success(request, 'ProjecPhase is added')
         else:
             messages.error(request, 'Errors found')
 
         return redirect('projects:projects')
+
+
+@login_required
+def project_phase_edit(request):
+    pass
 
 
 @login_required
