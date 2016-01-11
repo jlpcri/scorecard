@@ -10,6 +10,30 @@ class Project(models.Model):
     def __unicode__(self):
         return self.name
 
+    @property
+    def phases_pq(self):
+        return self.projectphase_set.filter(functional_group__key='PQ')
+
+    @property
+    def phases_qa(self):
+        return self.projectphase_set.filter(functional_group__key='QA')
+
+    @property
+    def phases_te(self):
+        return self.projectphase_set.filter(functional_group__key='TE')
+
+    @property
+    def phases_qi(self):
+        return self.projectphase_set.filter(functional_group__key='QI')
+
+    @property
+    def phases_re(self):
+        return self.projectphase_set.filter(functional_group__key='RE')
+
+    @property
+    def phases_tl(self):
+        return self.projectphase_set.filter(functional_group__key='TL')
+
 
 class ProjectPhase(models.Model):
     project = models.ForeignKey(Project)

@@ -77,8 +77,7 @@ def project_edit(request):
         key = request.POST.get('editProjectKey', '')
         project_id = request.POST.get('editProjectId', '')
         project_name = request.POST.get('editProjectName', '')
-        print project_id
-        print project_name
+
         project = get_object_or_404(Project, pk=project_id)
         try:
             project.name = project_name
