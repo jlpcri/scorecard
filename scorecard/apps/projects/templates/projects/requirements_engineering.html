@@ -46,7 +46,13 @@
                         <tbody>
                             {% for item in re_tickets %}
                                 <tr>
-                                    <td><a href="#">{{ item.key }}</a></td>
+                                    <td><a href="#editTicket" data-toggle="modal"
+                                           data-ticket-id="{{ item.id }}"
+                                           data-ticket-fg="{{ item.functional_group.id }}"
+                                           data-ticket-lead="{{ item.lead.id }}"
+                                           data-ticket-key="{{ item.key }}">
+                                        {{ item.key }}</a>
+                                    </td>
                                     <td>{{ item.lead.user.first_name }} {{ item.lead.user.last_name }}</td>
                                     <td>{{ item.functional_group.key }}</td>
                                 </tr>
