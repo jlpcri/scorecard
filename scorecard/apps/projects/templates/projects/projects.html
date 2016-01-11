@@ -7,15 +7,14 @@
         <div class="row" style="margin-bottom: 10px;">
             <div class="col-xs-2">
                 <small>
-                    <a href="#"><i class="fa fa-pencil fa-fw"></i> New Project </a>
+                    <a href="#" data-toggle="modal" data-target="#project-new-modal"><i class="fa fa-pencil fa-fw"></i> New Project </a>
                 </small>
             </div>
             <div class="col-xs-2">
                 <small>
-                    <a href="#"><i class="fa fa-pencil fa-fw"></i> New Ticket </a>
+                    <a href="#" data-toggle="modal" data-target="#ticket-new-modal"><i class="fa fa-pencil fa-fw"></i> New Ticket </a>
                 </small>
             </div>
-
         </div>
 
         <ul id="subnav-tabs" class="nav nav-tabs">
@@ -72,8 +71,13 @@
                 {% include 'projects/test_lab.html' %}
             </div>
         </div>
+
+    {% include 'projects/projects_modal.html' %}
+
     </div>
 {% endblock %}
+
+
 
 {% block footer %}
 
