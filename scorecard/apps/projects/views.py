@@ -50,7 +50,8 @@ def projects(request):
         'ticket_new_form': TicketNewForm(),
 
         'function_groups': function_groups,
-        'leads': HumanResource.objects.all()
+        'leads': HumanResource.objects.all(),
+        'projects': Project.objects.all()
     })
 
     return render(request, 'projects/projects.html', context)
@@ -100,7 +101,27 @@ def project_phase_new(request):
 
 @login_required
 def project_phase_edit(request):
-    pass
+    if request.method == 'POST':
+        phase_id = request.POST.get('editPhaseId', '')
+        phase_project = request.POST.get('editPhaseProject', '')
+        phase_fg = request.POST.get('editPhaseFunctionalGroup', '')
+        phase_lead = request.POST.get('editPhaseLead', '')
+        phase_name = request.POST.get('editPhaseName', '')
+        phase_key = request.POST.get('editPhaseKey', '')
+
+        phase = get_object_or_404(ProjectPhase, pk=phase_id)
+        try:
+            phase.project = get_object_or_404(Project, pk=phase_project)
+            phase.functional_group = get_object_or_404(FunctionalGroup, pk=phase_fg)
+            phase.lead = get_object_or_404(HumanResource, pk=phase_lead)
+            phase.name = phase_name
+            phase.key = phase_key
+            phase.save()
+            messages.success(request, 'Project Phase is updated')
+        except (ValidationError, IntegrityError):
+            messages.error(request, 'Project Phase edit error')
+
+        return redirect('projects:projects')
 
 
 @login_required

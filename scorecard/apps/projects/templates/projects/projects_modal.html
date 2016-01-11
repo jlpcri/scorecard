@@ -77,6 +77,78 @@
     </div>
 </div>
 
+<!-- Phase Edit Modal -->
+<div class="modal fade" id="editPhase">
+    <div class="modal-dialog">
+        <form method="post" action="{% url 'projects:project_phase_edit' %}">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Project Phase Edit</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label for="">Project</label>
+                            <select id="editPhaseProject" name="editPhaseProject" class="form-control">
+                                {% for project in projects %}
+                                    <option value="{{ project.id }}">{{ project }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label for="editPhaseFunctionalGroup">Functional Group:</label>
+                            <select id="editPhaseFunctionalGroup" name="editPhaseFunctionalGroup" class="form-control">
+                                {% for function_group in function_groups %}
+                                    <option value="{{ function_group.id }}">{{ function_group.name }}</option>
+                                {% endfor %}
+                            </select>
+                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label for="editPhaseLead">Lead</label>
+                            <select id="editPhaseLead" name="editPhaseLead" class="form-control">
+                                {% for lead in leads %}
+                                    <option value="{{ lead.id }}">{{ lead.user.first_name }} {{ lead.user.last_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label for="editPhaseName">Key:</label>
+                            <input type="text" class="form-control input-sm" name="editPhaseName" id="editPhaseName">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label for="editPhaseKey">Key:</label>
+                            <input type="text" class="form-control input-sm" name="editPhaseKey" id="editPhaseKey">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <input type="hidden" name="editPhaseId">
+                        </div>
+                        <div class="col-xs-10">
+                            <div id="editPhaseErrMessage"></div>
+                        </div>
+                    </div>
+                </div>
+                {% csrf_token %}
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary param-save">Save changes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 <!-- Ticket New Modal -->
 <div class="modal fade" id="ticket-new-modal">
     <div class="modal-dialog">
@@ -140,7 +212,7 @@
                             <input type="hidden" name="editTicketId">
                         </div>
                         <div class="col-xs-10">
-                            <div id="editProjectErrMessage"></div>
+                            <div id="editTicketErrMessage"></div>
                         </div>
                     </div>
                 </div>
