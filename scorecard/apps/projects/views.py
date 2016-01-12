@@ -111,6 +111,10 @@ def project_phase_edit(request):
         phase_lead = request.POST.get('editPhaseLead', '')
         phase_name = request.POST.get('editPhaseName', '')
         phase_key = request.POST.get('editPhaseKey', '')
+        phase_estimate_start = request.POST.get('editPhaseEstimateStart', '')
+        phase_estimate_end = request.POST.get('editPhaseEstimateEnd', '')
+        phase_actual_start = request.POST.get('editPhaseActualStart', '')
+        phase_actual_end = request.POST.get('editPhaseActualEnd', '')
 
         phase = get_object_or_404(ProjectPhase, pk=phase_id)
         try:
@@ -119,6 +123,15 @@ def project_phase_edit(request):
             phase.lead = get_object_or_404(HumanResource, pk=phase_lead)
             phase.name = phase_name
             phase.key = phase_key
+            if phase_estimate_start:
+                phase.estimate_start = timezone(settings.TIME_ZONE).localize(datetime.strptime(phase_estimate_start, '%m/%d/%Y'))
+            if phase_estimate_end:
+                phase.estimate_end = timezone(settings.TIME_ZONE).localize(datetime.strptime(phase_estimate_end, '%m/%d/%Y'))
+            if phase_actual_start:
+                phase.actual_start = timezone(settings.TIME_ZONE).localize(datetime.strptime(phase_actual_start, '%m/%d/%Y'))
+            if phase_actual_end:
+                phase.actual_end = timezone(settings.TIME_ZONE).localize(datetime.strptime(phase_actual_end, '%m/%d/%Y'))
+
             phase.save()
             messages.success(request, 'Project Phase is updated')
         except (ValidationError, IntegrityError):

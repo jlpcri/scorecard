@@ -26,7 +26,12 @@
                                                data-phase-fg="{{ phase.functional_group.id }}"
                                                data-phase-lead="{{ phase.lead.id }}"
                                                data-phase-name="{{ phase.name }}"
-                                               data-phase-key="{{ phase.key }}">
+                                               data-phase-key="{{ phase.key }}"
+                                               data-phase-estimate-start="{{ phase.estimate_start|date:'m/d/Y' }}"
+                                               data-phase-estimate-end="{{ phase.estimate_end|date:'m/d/Y' }}"
+                                               data-phase-actual-start="{{ phase.actual_start|date:'m/d/Y' }}"
+                                               data-phase-actual-end="{{ phase.actual_end|date:'m/d/Y' }}"
+                                                >
                                                 {{ phase.name }}
                                             </a>
                                         </li>

@@ -22,7 +22,7 @@ class ProjectPhaseNewForm(ModelForm):
             'functional_group': forms.Select(attrs={'class': 'form-control'}),
             'lead': forms.Select(attrs={'class': 'form-control'}),
             'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'key': forms.TextInput(attrs={'class': 'form-control'})
+            'key': forms.TextInput(attrs={'class': 'form-control', 'required': False})
         }
 
 

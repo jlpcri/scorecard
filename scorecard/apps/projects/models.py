@@ -40,8 +40,8 @@ class ProjectPhase(models.Model):
     functional_group = models.ForeignKey(FunctionalGroup)
     lead = models.ForeignKey(HumanResource)
 
-    name = models.CharField(max_length=50, default='')
-    key = models.CharField(max_length=50, default='')
+    name = models.CharField(max_length=50)
+    key = models.CharField(max_length=50, null=True, blank=True)
 
     estimate_start = models.DateTimeField(null=True, blank=True)
     estimate_end = models.DateTimeField(null=True, blank=True)
@@ -61,7 +61,7 @@ class Ticket(models.Model):
     functional_group = models.ForeignKey(FunctionalGroup)
     lead = models.ForeignKey(HumanResource)
 
-    key = models.CharField(max_length=50, default='')
+    key = models.CharField(max_length=50)
 
     estimate_start = models.DateTimeField(null=True, blank=True)
     estimate_end = models.DateTimeField(null=True, blank=True)
