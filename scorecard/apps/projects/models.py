@@ -43,10 +43,10 @@ class ProjectPhase(models.Model):
     name = models.CharField(max_length=50, default='')
     key = models.CharField(max_length=50, default='')
 
-    estimate_start = models.DateTimeField()
-    estimate_end = models.DateTimeField()
-    actual_start = models.DateTimeField()
-    actual_end = models.DateTimeField()
+    estimate_start = models.DateTimeField(null=True, blank=True)
+    estimate_end = models.DateTimeField(null=True, blank=True)
+    actual_start = models.DateTimeField(null=True, blank=True)
+    actual_end = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         unique_together = ('project', 'name')
@@ -56,14 +56,6 @@ class ProjectPhase(models.Model):
                                       self.project.name,
                                       self.functional_group.key)
 
-    def save(self, *args, **kwargs):
-        self.estimate_start = timezone.now()
-        self.estimate_end = timezone.now()
-        self.actual_start = timezone.now()
-        self.actual_end = timezone.now()
-
-        return super(ProjectPhase, self).save(*args, **kwargs)
-
 
 class Ticket(models.Model):
     functional_group = models.ForeignKey(FunctionalGroup)
@@ -71,20 +63,14 @@ class Ticket(models.Model):
 
     key = models.CharField(max_length=50, default='')
 
-    estimate_start = models.DateTimeField()
-    estimate_end = models.DateTimeField()
-    actual_start = models.DateTimeField()
-    actual_end = models.DateTimeField()
+    estimate_start = models.DateTimeField(null=True, blank=True)
+    estimate_end = models.DateTimeField(null=True, blank=True)
+    actual_start = models.DateTimeField(null=True, blank=True)
+    actual_end = models.DateTimeField(null=True, blank=True)
 
     def __unicode__(self):
         return '{0}: {1}: {2}'.format(self.key,
                                       self.lead.user,
                                       self.functional_group.key)
 
-    def save(self, *args, **kwargs):
-        self.estimate_start = timezone.now()
-        self.estimate_end = timezone.now()
-        self.actual_start = timezone.now()
-        self.actual_end = timezone.now()
 
-        return super(Ticket, self).save(*args, **kwargs)

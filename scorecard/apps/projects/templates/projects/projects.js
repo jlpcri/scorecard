@@ -12,12 +12,20 @@ $('#editTicket').on('show.bs.modal', function(e){
     var ticket_id = $(e.relatedTarget).data('ticket-id'),
         ticket_key = $(e.relatedTarget).data('ticket-key'),
         ticket_fg = $(e.relatedTarget).data('ticket-fg'),
-        ticket_lead = $(e.relatedTarget).data('ticket-lead');
+        ticket_lead = $(e.relatedTarget).data('ticket-lead'),
+        ticket_estimate_start = $(e.relatedTarget).data('ticket-estimate-start'),
+        ticket_estimate_end = $(e.relatedTarget).data('ticket-estimate-end'),
+        ticket_actual_start = $(e.relatedTarget).data('ticket-actual-start'),
+        ticket_actual_end = $(e.relatedTarget).data('ticket-actual-end');
 
     $(e.currentTarget).find('input[name="editTicketId"]').val(ticket_id);
     $(e.currentTarget).find('input[name="editTicketKey"]').val(ticket_key);
     $('#editTicketFunctionalGroup').val(ticket_fg);
     $('#editTicketLead').val(ticket_lead);
+    $('#editTicketEstimateStart').val(ticket_estimate_start);
+    $('#editTicketEstimateEnd').val(ticket_estimate_end);
+    $('#editTicketActualStart').val(ticket_actual_start);
+    $('#editTicketActualEnd').val(ticket_actual_end);
 });
 
 $('#editPhase').on('show.bs.modal', function(e) {

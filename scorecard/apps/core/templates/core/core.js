@@ -51,3 +51,6 @@ $(document).ready(function(){
     }
 });
 
+$('.input-date').datepicker();
+
+

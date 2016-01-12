@@ -5,7 +5,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span> </button>
-                    <h4 class="modal-title">Project New Information</h4>
+                    <h4 class="modal-title">Project New</h4>
                 </div>
                 <div class="modal-body">
                     {{ project_new_form }}
@@ -27,7 +27,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Project Name Edit</h4>
+                    <h4 class="modal-title">Project Edit</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -62,7 +62,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span> </button>
-                    <h4 class="modal-title">Project Phase New Information</h4>
+                    <h4 class="modal-title">Project Phase New</h4>
                 </div>
                 <div class="modal-body">
                     {{ project_phase_new_form }}
@@ -156,7 +156,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span> </button>
-                    <h4 class="modal-title">Ticket New Information</h4>
+                    <h4 class="modal-title">Ticket New</h4>
                 </div>
                 <div class="modal-body">
                     {{ ticket_new_form }}
@@ -205,6 +205,26 @@
                         <div class="col-xs-12">
                             <label for="editTicketKey">Key:</label>
                             <input type="text" class="form-control input-sm" name="editTicketKey" id="editTicketKey">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <label for="editTicketEstimateStart">Estimate Start:</label>
+                            <input type="text" class="form-control input-date" name="editTicketEstimateStart" id="editTicketEstimateStart">
+                        </div>
+                        <div class="col-xs-6">
+                            <label for="editTicketEstimateEnd">Estimate End:</label>
+                            <input type="text" class="form-control input-date" name="editTicketEstimateEnd" id="editTicketEstimateEnd">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <label for="editTicketActualStart">Actual Start:</label>
+                            <input type="text" class="form-control input-date" name="editTicketActualStart" id="editTicketActualStart">
+                        </div>
+                        <div class="col-xs-6">
+                            <label for="editTicketActualEnd">Actual End:</label>
+                            <input type="text" class="form-control input-date" name="editTicketActualEnd" id="editTicketActualEnd">
                         </div>
                     </div>
                     <div class="row">

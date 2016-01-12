@@ -1,9 +1,12 @@
+from datetime import datetime
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
+from pytz import timezone
 
 from models import Project, ProjectPhase, Ticket
 from scorecard.apps.projects.forms import ProjectNewForm, TicketNewForm, ProjectPhaseNewForm
@@ -131,12 +134,25 @@ def ticket_edit(request):
         ticket_fg = request.POST.get('editTicketFunctionalGroup', '')
         ticket_lead = request.POST.get('editTicketLead', '')
         ticket_key = request.POST.get('editTicketKey', '')
+        ticket_estimate_start = request.POST.get('editTicketEstimateStart', '')
+        ticket_estimate_end = request.POST.get('editTicketEstimateEnd', '')
+        ticket_actual_start = request.POST.get('editTicketActualStart', '')
+        ticket_actual_end = request.POST.get('editTicketActualEnd', '')
 
         ticket = get_object_or_404(Ticket, pk=ticket_id)
         try:
             ticket.key = ticket_key
             ticket.functional_group = get_object_or_404(FunctionalGroup, pk=ticket_fg)
             ticket.lead = get_object_or_404(HumanResource, pk=ticket_lead)
+            if ticket_estimate_start:
+                ticket.estimate_start = timezone(settings.TIME_ZONE).localize(datetime.strptime(ticket_estimate_start, '%m/%d/%Y'))
+            if ticket_estimate_end:
+                ticket.estimate_end = timezone(settings.TIME_ZONE).localize(datetime.strptime(ticket_estimate_end, '%m/%d/%Y'))
+            if ticket_actual_start:
+                ticket.actual_start = timezone(settings.TIME_ZONE).localize(datetime.strptime(ticket_actual_start, '%m/%d/%Y'))
+            if ticket_actual_end:
+                ticket.actual_end = timezone(settings.TIME_ZONE).localize(datetime.strptime(ticket_actual_end, '%m/%d/%Y'))
+
             ticket.save()
             messages.success(request, 'Ticket is updated')
         except (ValidationError, IntegrityError):

@@ -85,7 +85,12 @@
                                            data-ticket-id="{{ item.id }}"
                                            data-ticket-fg="{{ item.functional_group.id }}"
                                            data-ticket-lead="{{ item.lead.id }}"
-                                           data-ticket-key="{{ item.key }}">
+                                           data-ticket-key="{{ item.key }}"
+                                           data-ticket-estimate-start="{{ item.estimate_start|date:'m/d/Y' }}"
+                                           data-ticket-estimate-end="{{ item.estimate_end|date:'m/d/Y' }}"
+                                           data-ticket-actual-start="{{ item.actual_start|date:'m/d/Y' }}"
+                                           data-ticket-actual-end="{{ item.actual_end|date:'m/d/Y' }}"
+                                            >
                                         {{ item.key }}</a>
                                     </td>
                                     <td>{{ item.lead.user.first_name }} {{ item.lead.user.last_name }}</td>
