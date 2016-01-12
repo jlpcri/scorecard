@@ -12,8 +12,11 @@ $('.newProject form').on('submit', function(event){
 $('.editProject').on('show.bs.modal', function(e){
     var project_id = $(e.relatedTarget).data('project-id'),
         project_name = $(e.relatedTarget).data('project-name');
+
     $(e.currentTarget).find('input[name="editProjectId"]').val(project_id);
     $(e.currentTarget).find('input[name="editProjectName"]').val(project_name);
+
+    $('.editProject .modal-title').html('Project Edit - ' + project_name);
 });
 
 $('.editProject form').on('submit', function(event){
@@ -83,6 +86,8 @@ $('.editTicket').on('show.bs.modal', function(e){
     $('#editTicketEstimateEnd').val(ticket_estimate_end);
     $('#editTicketActualStart').val(ticket_actual_start);
     $('#editTicketActualEnd').val(ticket_actual_end);
+
+    $('.editTicket .modal-title').html('Ticket Edit - ' + ticket_key);
 });
 
 $('.editTicket form').on('submit', function(event){
@@ -115,6 +120,8 @@ $('.editPhase').on('show.bs.modal', function(e) {
     $('#editPhaseEstimateEnd').val(phase_estimate_end);
     $('#editPhaseActualStart').val(phase_actual_start);
     $('#editPhaseActualEnd').val(phase_actual_end);
+
+    $('.editPhase .modal-title').html('Project Phase Edit - ' + phase_name);
 });
 
 $('.editPhase form').on('submit', function(event){
