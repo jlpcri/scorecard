@@ -1,16 +1,10 @@
 {% extends 'core/base.html' %}
 
-{% block title %} Exportations {% endblock %}
+{% block title %} Data Exportations {% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1>Data Exportations</h1>
-{#        <h4>Export data to different formats include:</h4>#}
-{#        <ul>#}
-{#            <li>Graph</li>#}
-{#            <li>Chart</li>#}
-{#            <li>Table</li>#}
-{#        </ul>#}
+    <div class="container" style="margin-top: 10px;">
+
     <div class="row" style="margin-bottom:10px;">
         <div class="col-md-8">
             <i class="fa fa-file-excel-o fa=lg"></i><a href="{% url 'datas:export_excel' %}?key=SU" > Export All</a>

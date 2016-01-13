@@ -1,0 +1,88 @@
+<div class="tab-content" id="re-content">
+    <div class="row">
+        <div class="col-xs-6">
+            <h1>Projects</h1>
+            {% if re_projects %}
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        {% for item in re_projects %}
+                            <div class="panel-heading">
+                                <h6 class="panel-title">
+                                    <a data-toggle="collapse" href="#collapse_re_{{ item.name|slugify }}">{{ item.name }}</a>
+                                    <a href="#editProject" data-toggle="modal"
+                                       data-project-id="{{ item.id }}" data-project-name="{{ item.name }}"
+                                       class="project_edit">
+                                        <i class="fa fa-edit fa-fw"></i>
+                                    </a>
+                                </h6>
+                            </div>
+                            <div id="collapse_re_{{ item.name|slugify }}" class="panel-collapse collapse">
+                                <ul class="list-group">
+                                    {% for phase in item.phases_re %}
+                                        <li class="list-group-item">
+                                            <a href="#editPhase" data-toggle="modal"
+                                               data-phase-id="{{ phase.id }}"
+                                               data-phase-project="{{ phase.project.id }}"
+                                               data-phase-fg="{{ phase.functional_group.id }}"
+                                               data-phase-lead="{{ phase.lead.id }}"
+                                               data-phase-name="{{ phase.name }}"
+                                               data-phase-key="{{ phase.key }}"
+                                               data-phase-estimate-start="{{ phase.estimate_start|date:'m/d/Y' }}"
+                                               data-phase-estimate-end="{{ phase.estimate_end|date:'m/d/Y' }}"
+                                               data-phase-actual-start="{{ phase.actual_start|date:'m/d/Y' }}"
+                                               data-phase-actual-end="{{ phase.actual_end|date:'m/d/Y' }}"
+                                                >
+                                                {{ phase.name }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                No Projects
+            {% endif %}
+        </div>
+
+        <div class="col-xs-6">
+            <h1>Tickets</h1>
+            {% if re_tickets %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-condensed table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="col-xs-2">Key</th>
+                                <th class="col-xs-2">Lead</th>
+                                <th class="col-xs-2">Team</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in re_tickets %}
+                                <tr>
+                                    <td><a href="#editTicket" data-toggle="modal"
+                                           data-ticket-id="{{ item.id }}"
+                                           data-ticket-fg="{{ item.functional_group.id }}"
+                                           data-ticket-lead="{{ item.lead.id }}"
+                                           data-ticket-key="{{ item.key }}"
+                                           data-ticket-estimate-start="{{ item.estimate_start|date:'m/d/Y' }}"
+                                           data-ticket-estimate-end="{{ item.estimate_end|date:'m/d/Y' }}"
+                                           data-ticket-actual-start="{{ item.actual_start|date:'m/d/Y' }}"
+                                           data-ticket-actual-end="{{ item.actual_end|date:'m/d/Y' }}"
+                                            >
+                                        {{ item.key }}</a>
+                                    </td>
+                                    <td>{{ item.lead.user.first_name }} {{ item.lead.user.last_name }}</td>
+                                    <td>{{ item.functional_group.key }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                No Tickets
+            {% endif %}
+        </div>
+    </div>
+</div>

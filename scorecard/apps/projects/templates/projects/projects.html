@@ -1,10 +1,85 @@
 {% extends 'core/base.html' %}
 
-{% block title %} Congregations {% endblock %}
+{% block title %} Projects {% endblock %}
+
+{% block subnav %}
+    <div class="container" style="margin-top: 10px;">
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-xs-12">
+                <small>
+                    <i class="fa fa-pencil fa-fw"></i> Create
+                    <a href="#" data-toggle="modal" data-target="#project-new-modal"> New Project </a> |
+                    <a href="#" data-toggle="modal" data-target="#phase-new-modal"> New Project Phase </a> |
+                    <a href="#" data-toggle="modal" data-target="#ticket-new-modal"> New Ticket </a>
+                </small>
+            </div>
+        </div>
+
+        <ul id="subnav-tabs" class="nav nav-tabs">
+            {% if user.is_superuser %}
+                <li><a href="#product_quality" data-toggle="tab">Product Quality</a> </li>
+                <li><a href="#quality_assurance" data-toggle="tab">Quality Assurance</a> </li>
+                <li><a href="#quality_innovation" data-toggle="tab">Quality Innovation</a> </li>
+                <li><a href="#requirements_engineering" data-toggle="tab">Requirements Engineering</a> </li>
+                <li><a href="#test_engineering" data-toggle="tab">Test Engineering</a> </li>
+                <li><a href="#test_lab" data-toggle="tab">Test Lab</a> </li>
+            {% else %}
+                {% if user.humanresource.functional_group.key == 'PQ' %}
+                    <li><a href="#product_quality" data-toggle="tab">Product Quality</a> </li>
+                {% elif user.humanresource.functional_group.key == 'QA' %}
+                    <li><a href="#quality_assurance" data-toggle="tab">Quality Assurance</a> </li>
+                {% elif user.humanresource.functional_group.key == 'QI' %}
+                    <li><a href="#quality_innovation" data-toggle="tab">Quality Innovation</a> </li>
+                {% elif user.humanresource.functional_group.key == 'RE' %}
+                    <li><a href="#requirements_engineering" data-toggle="tab">Requirements Engineering</a> </li>
+                {% elif user.humanresource.functional_group.key == 'TE' %}
+                    <li><a href="#test_engineering" data-toggle="tab">Test Engineering</a> </li>
+                {% elif user.humanresource.functional_group.key == 'TL' %}
+                    <li><a href="#test_lab" data-toggle="tab">Test Lab</a> </li>
+                {% endif %}
+            {% endif %}
+        </ul>
+    </div>
+{% endblock %}
 
 {% block body %}
     <div class="container">
-        <h1>Projects</h1>
+        <div class="tab-content">
+            <div class="tab-pane" id="product_quality">
+                {% include 'projects/product_quality.html' %}
+            </div>
+
+            <div class="tab-pane" id="quality_assurance">
+                {% include 'projects/quality_assurance.html' %}
+            </div>
+
+            <div class="tab-pane" id="quality_innovation">
+                {% include 'projects/quality_innovation.html' %}
+            </div>
+
+            <div class="tab-pane" id="requirements_engineering">
+                {% include 'projects/requirements_engineering.html' %}
+            </div>
+
+            <div class="tab-pane" id="test_engineering">
+                {% include 'projects/test_engineering.html' %}
+            </div>
+
+            <div class="tab-pane" id="test_lab">
+                {% include 'projects/test_lab.html' %}
+            </div>
+        </div>
+
+    {% include 'projects/projects_modal.html' %}
 
     </div>
+{% endblock %}
+
+
+
+{% block footer %}
+    <script>
+        {% include 'projects/projects.js' %}
+    </script>
+
 {% endblock %}
