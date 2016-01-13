@@ -27,7 +27,7 @@ class InnovationForm(ModelForm):
 class LabForm(ModelForm):
     class Meta:
         model = LabMetrics
-        fields = ['staffs', 'openings', 'contractors',
+        fields = ['staffs', 'openings', 'contractors', 'compliments', 'complaints',
                   'tickets_received', 'tickets_closed', 'virtual_machines', 'physical_machines',
                   'power_consumption_ups_a', 'power_consumption_ups_b', 'license_cost'
                   ]
@@ -51,7 +51,7 @@ class RequirementForm(ModelForm):
 
     class Meta:
         model = RequirementMetrics
-        fields = ['staffs', 'openings', 'contractors',
+        fields = ['staffs', 'openings', 'contractors', 'compliments', 'complaints',
                   'backlog', 'team_initiative', 'active_projects', 'elicitation_analysis_time',
                   'revisions', 'rework_introduced_time', 'slas_met', 'slas_missed', 'delays_introduced_time', 'escalations',
                   'overtime_weekday', 'overtime_weekend', 'rework_external_time',
