@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
@@ -14,7 +15,7 @@ from utils import context_teams
 
 @login_required
 def teams(request):
-    context = RequestContext(request, context_teams())
+    context = RequestContext(request, context_teams(request))
 
     return render(request, 'teams/teams.html', context)
 
@@ -107,7 +108,7 @@ def metric_edit(request, metric_id):
                 metric.updated = True
                 metric.save()
 
-            context = context_teams()
+            context = context_teams(request)
             context['key'] = key
             return render(request, 'teams/teams.html', context)
         else:

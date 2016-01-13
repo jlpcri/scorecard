@@ -87,11 +87,7 @@
 {% endblock %}
 
 {% block footer %}
-{#    <script type='text/javascript' src="{% static 'common/bootstrap-daterangepicker/1.2/moment.min.js' %}"></script>#}
-{#    <script type='text/javascript' src="{% static 'common/momentjs/tz/0.2.4/moment-timezone-with-data-2010-2020.js' %}"></script>#}
-{#    <script type='text/javascript' src="{% static 'common/bootstrap-daterangepicker/1.2/daterangepicker.js' %}"></script>#}
     <!-- Include Required Prerequisites -->
-{#    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>#}
     <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 
     <!-- Include Date Range Picker -->
@@ -101,5 +97,8 @@
 
     <script>
         {% include 'teams/teams.js' %}
+        var start = '{{ start.date }}',
+            end = '{{ end.date }}';
+        attachDateRangePicker();
     </script>
 {% endblock %}
