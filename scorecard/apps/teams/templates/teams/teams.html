@@ -18,6 +18,12 @@
                         </small>
                     {% endif %}
                 </div>
+                <div class="col-xs-8">
+                    <div id="date-range" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+                        <span></span> <b class="caret"></b>
+                    </div>
+                </div>
             </div>
         {% endif %}
         <ul id="subnav-tabs" class="nav nav-tabs">
@@ -81,5 +87,19 @@
 {% endblock %}
 
 {% block footer %}
+{#    <script type='text/javascript' src="{% static 'common/bootstrap-daterangepicker/1.2/moment.min.js' %}"></script>#}
+{#    <script type='text/javascript' src="{% static 'common/momentjs/tz/0.2.4/moment-timezone-with-data-2010-2020.js' %}"></script>#}
+{#    <script type='text/javascript' src="{% static 'common/bootstrap-daterangepicker/1.2/daterangepicker.js' %}"></script>#}
+    <!-- Include Required Prerequisites -->
+{#    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>#}
+    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 
+    <!-- Include Date Range Picker -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+
+
+    <script>
+        {% include 'teams/teams.js' %}
+    </script>
 {% endblock %}
