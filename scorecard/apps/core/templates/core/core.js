@@ -51,6 +51,22 @@ $(document).ready(function(){
     }
 });
 
+// Use jquery date picker for ProjectPhase/Tickets Estimate/Actual Start/End
 $('.input-date').datepicker();
 
+// Use Bootstrap daterangepicker for Teams/Datas data range select
+function setDate(start, end){
+    $('#date-range span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+}
+
+function attachDateRangePicker() {
+    $('#date-range').daterangepicker({
+        ranges: {
+            'Today': [moment(), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'Last 60 Days': [moment().subtract(59, 'days'), moment()],
+            'This Year': [moment().startOf('year'), moment().endOf('year')]
+        }
+    }, setDate(start, end));
+}
 

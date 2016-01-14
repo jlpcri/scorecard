@@ -5,18 +5,9 @@ from scorecard.apps.users.models import FunctionalGroup
 
 
 def context_teams(request):
-    try:
-        end = datetime.strptime(request.GET.get('end'), '%Y-%m-%d')
-    except (TypeError, ValueError):
-        end = datetime.now()
-
-    try:
-        start = datetime.strptime(request.GET.get('start'), '%Y-%m-%d')
-    except (TypeError, ValueError):
-        start = end - timedelta(days=60)
-
-    start = timezone(settings.TIME_ZONE).localize(start)
-    end = timezone(settings.TIME_ZONE).localize(end)
+    start_end = get_start_end_from_request(request)
+    start = start_end['start']
+    end = start_end['end']
 
     functional_groups = FunctionalGroup.objects.all()
     for functional_group in functional_groups:
@@ -46,3 +37,23 @@ def context_teams(request):
     }
 
     return context
+
+
+def get_start_end_from_request(request):
+    try:
+        end = datetime.strptime(request.GET.get('end'), '%Y-%m-%d')
+    except (TypeError, ValueError):
+        end = datetime.now()
+
+    try:
+        start = datetime.strptime(request.GET.get('start'), '%Y-%m-%d')
+    except (TypeError, ValueError):
+        start = end - timedelta(days=60)
+
+    start = timezone(settings.TIME_ZONE).localize(start)
+    end = timezone(settings.TIME_ZONE).localize(end)
+
+    return {
+        'start': start,
+        'end': end
+    }
