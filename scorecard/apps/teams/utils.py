@@ -41,7 +41,7 @@ def context_teams(request):
 
 def get_start_end_from_request(request):
     try:
-        end = datetime.strptime(request.GET.get('end'), '%Y-%m-%d')
+        end = datetime.strptime(request.GET.get('end'), '%Y-%m-%d') + timedelta(seconds=24 * 60 * 60 -1)
     except (TypeError, ValueError):
         end = datetime.now()
 
