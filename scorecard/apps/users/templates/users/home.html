@@ -380,8 +380,6 @@
             if (jQuery().dataTable) {
                 // alert("jQuery Datatables is loaded.");
 
-                initialize_main_table();
-
                 initialize_metrics_table("date_table", "dd");
                 initialize_metrics_table("product_quality_table", "pq");
                 initialize_metrics_table("quality_assurance_table", "qa");
@@ -389,6 +387,8 @@
                 initialize_metrics_table("requirements_engineering_table", "re");
                 initialize_metrics_table("test_engineering_table", "te");
                 initialize_metrics_table("test_lab_table", "tl");
+
+                initialize_main_table();
 
             } else {
                 alert("library is not loaded");
