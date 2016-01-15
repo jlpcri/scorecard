@@ -210,7 +210,7 @@ def fetch_personals_by_date(request):
 def fetch_personals_per_team_per_date(key, date):
     year = date[:4]
     month = date[6:7]
-    day = date[9:10]
+    day = date[8:10]
     data = []
 
     if key in ['PQ', 'QA', 'TE']:
