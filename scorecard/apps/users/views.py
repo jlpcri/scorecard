@@ -9,11 +9,38 @@ from django.template import RequestContext
 
 from models import HumanResource, FunctionalGroup
 
+from scorecard.apps.users.models import FunctionalGroup
+
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
 @login_required
 def home(request):
-    return render(request, 'users/home.html')
 
+    functional_groups = FunctionalGroup.objects.all()
+
+    for functional_group in functional_groups:
+        if functional_group.key == 'PQ':
+            product_quality = functional_group.testmetrics_set.all()
+        elif functional_group.key == 'QA':
+            quality_assurance = functional_group.testmetrics_set.all()
+        elif functional_group.key == 'QI':
+            quality_innovation = functional_group.innovationmetrics_set.all()
+        elif functional_group.key == 'RE':
+            requirements_engineering = functional_group.requirementmetrics_set.all()
+        elif functional_group.key == 'TE':
+            test_engineering = functional_group.testmetrics_set.all()
+        elif functional_group.key == 'TL':
+            test_lab = functional_group.labmetrics_set.all()
+
+    # return render(request, 'users/home.html')
+    return render(request, 'users/home.html',
+                  { 'product_quality': product_quality,
+                    'quality_assurance': quality_assurance,
+                    'quality_innovation': quality_innovation,
+                    'requirements_engineering': requirements_engineering,
+                    'test_engineering': test_engineering,
+                    'test_lab': test_lab } )
 
 def user_is_superuser(user):
     return user.is_superuser
@@ -90,6 +117,14 @@ def user_management(request):
 
         return render(request, 'users/user_management.html', context)
 
+
+@csrf_exempt
+def add_home_chart(request):
+    return HttpResponse('')
+
+@csrf_exempt
+def delete_home_chart(request):
+    return HttpResponse('')
 
 @user_passes_test(user_is_manager)
 def user_manager_assign(request):

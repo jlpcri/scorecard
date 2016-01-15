@@ -1,10 +1,92 @@
 {% extends 'core/base.html' %}
+{% load staticfiles %}
+
+{% block extrahead %}
+
+<!-- not using the bootstrap js or css since the table will be larger that 12 columns -->
+<!-- <script type='text/javascript' src="{% static 'js/bootstrap.min.js' %}"></script> -->
+<!-- <script type='text/javascript' src="{% static 'js/bootstrap-select.js' %}"></script> -->
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'jquery-data-tables/css/jquery.dataTables.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'jquery-data-tables/css/jquery-ui.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'jquery-data-tables/syntax/shCore.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'jquery-data-tables/css/demo.css' %}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'd3charts/d3_west_charts.css' %} ">
+<link rel="stylesheet" type="text/css" href="{% static 'd3charts/main.css' %} ">
+
+
+<!-- <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script> -->
+<!-- <script src="{% static 'js/jquery-ui.js' %}"></script> -->
+
+
+<script type="text/javascript" language="javascript" src="{% static 'common/jquery/1.10.2/jquery.min.js' %}"></script>
+<script type="text/javascript" language="javascript" src="{% static 'jquery-data-tables/js/jquery-ui.min.js' %}"></script>
+
+<script type="text/javascript" language="javascript" src="{% static 'jquery-data-tables/js/jquery.dataTables.js' %}"></script>
+<script type="text/javascript" language="javascript" src="{% static 'jquery-data-tables/syntax/shCore.js' %}"></script>
+<script type="text/javascript" language="javascript" src="{% static 'jquery-data-tables/js/demo.js' %}"></script>
+
+<script type="text/javascript" language="javascript" src="{% static 'd3charts/d3.v3.min.js' %}"></script>
+<script type="text/javascript" language="javascript" src="{% static 'd3charts/colorbrewer.js' %}"></script>
+<script type="text/javascript" language="javascript" src="{% static 'd3charts/date.js' %}"></script>
+
+
+<style>
+
+    #dnd_div {
+        border: 1px solid black;
+        width: 200px;
+        height: 25px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+
+    .metrics_table {
+        border:1px solid lightgray;
+    }
+
+    .metrics_th {
+        border:0px solid lightgray;
+        align:center;
+    }
+
+    .td_title {
+        border:1px solid lightgray;
+        text-align:center;
+    }
+
+    .td_metrics_date_table {
+        border:0px solid lightgray;
+        padding-left: 4px;  /* 4 */
+        padding-right:0px;  /* 2 */
+        margin-left:  0px;
+        margin-right: 0px;
+    }
+
+    .td_metrics_table {
+        border:1px solid lightgray;
+        padding-left: 1px;  /* 2 */
+        padding-right:1px;  /* 4 */
+    }
+
+    .td_metrics_test_lab {
+        border:0px solid lightgray;
+        padding-left: 1px;  /* 2 */
+        padding-right:4px;  /* 4 */
+    }
+
+</style>
+
+{% endblock extrahead %}
 
 {% block title %} Home {% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1>Score Card</h1>
+<div class="container">
+    <h1>Score Card</h1>
         <br>
         <h4> Scorecard, now available with QEI team: </h4>
         <ul>
@@ -14,5 +96,975 @@
             <li>Used by team managers to keep track of execution of activities by the staff within their control</li>
             <li>Monitor the consequences arising from staff actions</li>
         </ul>
+</div>
+
+<form action="." method="POST">
+
+    {% csrf_token %}
+
+    <br><br><br>
+
+    <div class="container">
+        <section>
+            <div class="dataTables_wrapper no-footer">
+            <div class="dataTables_scroll">
+            <table id="all_data_table" class="display nowrap" cellspacing="0" style="border:1px solid lightgray; width:100%;">
+                <thead></thead>
+                <tbody>
+                <tr>
+
+                    <!-- display just the date column -->
+                    <td class="td_metrics_date_table">
+                        <table id="date_table" class="display nowrap metrics_table" cellspacing="0">
+                            <thead>
+                                <tr><th>&nbsp;&nbsp;&nbsp;</th></tr>
+                                <tr>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for pq in product_quality %}
+                            <tr>
+                                <td>{{ pq.created|date }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </td>
+
+                    <td class="td_metrics_table">
+
+                        <table id="product_quality_table" class="display nowrap metrics_table" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th colspan="6" class="metrics_th">Product Quality</th>
+                            </tr>
+                            <tr>
+                                <!-- <th class="col-md-3"><strong>Date</strong></th> -->
+                                <th class="col-md-1"><strong>Staffs</strong></th>
+                                <th class="col-md-2"><strong>Active Projects</strong></th>
+                                <th class="col-md-2"><strong>Active Tickets</strong></th>
+                                <th class="col-md-2"><strong>Avg Throughput</strong></th>
+                                <th class="col-md-2"><strong>Total Costs</strong></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for pq in product_quality %}
+                            <tr>
+                                <!-- <td>{{ pq.created|date }}</td> -->
+                                <td draggable="true" ondragstart="drag_home(event)">{{ pq.staffs }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ pq.active_projects }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ pq.active_tickets }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ pq.avg_throughput|floatformat:2 }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ pq.total_operational_cost }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </td>
+
+                    <td class="td_metrics_table">
+
+                        <table id="quality_assurance_table" class="display nowrap metrics_table" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th colspan="6">Quality Assurance</th>
+                            </tr>
+                            <tr>
+                                <!-- <th class="col-md-3"><strong>Date</strong></th> -->
+                                <th class="col-md-1"><strong>Staffs</strong></th>
+                                <th class="col-md-2"><strong>Active Projects</strong></th>
+                                <th class="col-md-2"><strong>Active Tickets</strong></th>
+                                <th class="col-md-2"><strong>Avg Throughput</strong></th>
+                                <th class="col-md-2"><strong>Total Costs</strong></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for qa in quality_assurance %}
+                            <tr>
+                                <!-- <td>{{ qa.created|date }}</td> -->
+                                <td draggable="true" ondragstart="drag_home(event)">{{ qa.staffs }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ qa.active_projects }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ qa.active_tickets }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ qa.avg_throughput|floatformat:2 }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ qa.total_operational_cost }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </td>
+
+                    <td class="td_metrics_table">
+
+                        <table id="quality_innovation_table" class="display nowrap metrics_table" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th colspan="5">Quality Innovation</th>
+                            </tr>
+                            <tr>
+                                <!-- <th class="col-md-3"><strong>Date</strong></th> -->
+                                <th class="col-md-3"><strong>Staffs</strong></th>
+                                <th class="col-md-2"><strong>Backlog Story</strong></th>
+                                <th class="col-md-2"><strong>Avg Team Size</strong></th>
+                                <th class="col-md-2"><strong>Total Costs</strong></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for qi in quality_innovation %}
+                            <tr>
+                                <!-- <td>{{ qi.created|date }}</td> -->
+                                <td draggable="true" ondragstart="drag_home(event)">{{ qi.staffs }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ qi.story_points_backlog }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ qi.avg_team_size }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ qi.total_operational_cost }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </td>
+
+                    <td class="td_metrics_table">
+
+                        <table id="requirements_engineering_table" class="display nowrap metrics_table" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th colspan="6">Requirements Engineering</th>
+                            </tr>
+                            <tr>
+                                <!-- <th class="col-md-3"><strong>Date</strong></th> -->
+                                <th class="col-md-1"><strong>Staffs</strong></th>
+                                <th class="col-md-2"><strong>Active Projects</strong></th>
+                                <th class="col-md-2"><strong>Elicitation Analysis</strong></th>
+                                <th class="col-md-2"><strong>Avg Throughput</strong></th>
+                                <th class="col-md-2"><strong>Total Costs</strong></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for re in requirements_engineering %}
+                            <tr>
+                                <!-- <td>{{ re.created|date}}</td> -->
+                                <td draggable="true" ondragstart="drag_home(event)">{{ re.staffs }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ re.active_projects }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ re.elicitation_analysis_time }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ re.avg_throughput }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ re.total_operational_cost }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </td>
+
+                    <td class="td_metrics_table">
+
+                        <table id="test_engineering_table" class="display nowrap metrics_table" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th colspan="6">Test Engineering</th>
+                            </tr>
+                            <tr>
+                                <!-- <th class="col-md-3"><strong>Date</strong></th> -->
+                                <th class="col-md-1"><strong>Staffs</strong></th>
+                                <th class="col-md-2"><strong>Active Projects</strong></th>
+                                <th class="col-md-2"><strong>Active Tickets</strong></th>
+                                <th class="col-md-2"><strong>Avg Throughput</strong></th>
+                                <th class="col-md-2"><strong>Total Costs</strong></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for te in test_engineering %}
+                            <tr>
+                                <!-- <td>{{ te.created|date }}</td> -->
+                                <td draggable="true" ondragstart="drag_home(event)">{{ te.staffs }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ te.active_projects }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ te.active_tickets }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ te.avg_throughput|floatformat:2 }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ te.total_operational_cost }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    <td class="td_metrics_test_lab">
+
+                        <table id="test_lab_table" class="display nowrap metrics_table" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th colspan="6">Test Lab</th>
+                            </tr>
+                            <tr>
+                                <!-- <th class="col-md-3"><strong>Date</strong></th> -->
+                                <th class="col-md-1"><strong>Staffs</strong></th>
+                                <th class="col-md-2"><strong>Tickets Received</strong></th>
+                                <th class="col-md-2"><strong>Tickets Closed</strong></th>
+                                <th class="col-md-2"><strong>Virtual Machines</strong></th>
+                                <th class="col-md-2"><strong>Total Costs</strong></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for tl in test_lab %}
+                            <tr>
+                                <!-- <td>{{ tl.created|date }}</td> -->
+                                <td draggable="true" ondragstart="drag_home(event)">{{ tl.staffs }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ tl.tickets_received }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ tl.tickets_closed }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ tl.virtual_machines }}</td>
+                                <td draggable="true" ondragstart="drag_home(event)">{{ tl.total_operational_cost }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </td>
+
+                </tr>
+                </tbody>
+            </table>
+            </div>
+            </div>
+        </section>
     </div>
+
+    <br>
+
+    <div class="container">
+
+        <section>
+            <div id="dnd_div_home" class="dnd_button_div" ondrop="drop_home(event)" ondragover="allow_drop_home(event)">Drop
+                Target
+            </div>
+        </section>
+
+    </div>
+
+    <br>
+
+    <div>
+        <div>
+            <table class="chart_table">
+                <tr id="home_chart_row"></tr>
+            </table>
+        </div>
+    </div>
+
+    <br>
+
+</form>
+
+{% endblock %}
+
+{% block endscript %}
+
+<script type="text/javascript">
+
+    var home_primary_date_time_column = 0;
+    var home_next_chart_id = 0;
+    var home_dnd_charts_list = [];
+    var home_dnd_id = "";
+    var home_chart_svg_prefix = "home_chart_svg_";
+
+
+    (function () {
+
+        if (window.jQuery) {
+            // alert("297 JQuery is loaded.");
+        } else {
+            alert("299 JQuery is not loaded.");
+        }
+
+        $(document).ready(function () {
+
+            if (jQuery().dataTable) {
+                // alert("jQuery Datatables is loaded.");
+
+                initialize_metrics_table("date_table", "dd");
+                initialize_metrics_table("product_quality_table", "pq");
+                initialize_metrics_table("quality_assurance_table", "qa");
+                initialize_metrics_table("quality_innovation_table", "qi");
+                initialize_metrics_table("requirements_engineering_table", "re");
+                initialize_metrics_table("test_engineering_table", "te");
+                initialize_metrics_table("test_lab_table", "tl");
+
+                initialize_main_table();
+
+            } else {
+                alert("library is not loaded");
+            }
+
+        });
+
+    })(jQuery);
+
+    function initialize_main_table() {
+
+        $('#all_data_table').DataTable({
+            "scrollY": 200,
+            "scrollX": true,
+            "scrollCollapse": true,
+            "paging": false,
+            "searching": false,
+            "info": false,
+            "bAutoWidth": false,
+            "order": [],
+            "fnAdjustColumnSizing": true
+        });
+
+    }
+
+    function initialize_metrics_table(table_id, prefix) {
+
+        $("#" + table_id).DataTable({
+            "scrollY": 200,
+            "scrollX": true,
+            "scrollCollapse": true,
+            "paging": false,
+            "searching": false,
+            "info": false,
+            "bAutoWidth": false,
+            "order": [],
+            "fnInitComplete": function () {
+                add_ids_to_metrics_table(table_id, prefix);
+            },
+            "fnAdjustColumnSizing": false
+        });
+    }
+
+    function add_ids_to_metrics_table(table_id, prefix) {
+
+        var row_count = 0;
+
+        $('#' + table_id + ' thead tr').each(function () {
+            var column_count = 0;
+            $('th', this).each(function () {
+                var temp_id = "" + prefix + "_th_" + row_count + "_" + column_count;
+                $(this).attr("id", temp_id);
+                column_count++;
+            });
+            row_count++;
+        });
+
+        row_count = 0;
+
+        $('#' + table_id + ' tbody tr').each(function () {
+            var column_count = 0;
+            $('td', this).each(function () {
+                var temp_id = "" + prefix + "_" + row_count + "_" + column_count;
+                $(this).attr("id", temp_id);
+                column_count++;
+            });
+            row_count++;
+        });
+    }
+
+    // start of dnd section
+    function allow_drop_home(event) {
+        event.preventDefault();
+    }
+
+    function drag_home(event) {
+        var target = event.target || event.srcElement;
+        home_dnd_id = target.id;
+        event.dataTransfer.setData("text", event.target.id);
+    }
+
+    function drop_home(event) {
+        event.preventDefault();
+        var temp_array = home_dnd_id.split("_");
+        var temp_column = temp_array[2];
+        add_chart_to_table_home(event, temp_column);
+    }
+
+    // end of dnd section
+
+    // start of chart section
+    function add_chart_to_table_home(event, dnd_drag_column_number) {
+
+        event.preventDefault();
+
+        home_next_chart_id++;
+        var chart_count = home_next_chart_id;
+
+        var chart_object = new Object();
+        chart_object.table_dnd_id = home_dnd_id;
+        chart_object.chart_count = chart_count;
+        chart_object.dnd_drag_column_number = dnd_drag_column_number;
+        chart_object.chart_type = "bar";
+        chart_object.x_axis = home_primary_date_time_column;
+
+        chart_object.dnd_table_name_id = get_drag_table_source_id(home_dnd_id);
+        chart_object.y_column_name = get_y_column_name(home_dnd_id, dnd_drag_column_number);
+
+        chart_object.chart_title = get_drag_table_friendly_name(home_dnd_id) + " --- " + chart_object.y_column_name;
+
+        home_dnd_charts_list.push(chart_object);
+
+        $.ajax({
+            url: "{% url 'users:add_home_chart' %}",
+            dataType: 'html',
+            data: '',
+            type: 'POST',
+            success: function () {
+                var chart_html = get_chart_html_home(chart_count);
+                $("#home_chart_row").append(chart_html);
+                draw_d3_bar_chart_home(chart_object);
+
+                $("input:radio[name='chart_group_" + chart_count + "'][value='bar']").prop('checked', true);
+                // disable the x-axis dnd table cell
+                // $("#pq_xy_dnd_row_" + chart_count).hide();  // do not allow dnd to change the x or y axis
+                // alert("Success");
+                $("#home_chart_title_" + chart_count).html(chart_object.chart_title);
+            },
+            error: function () {
+                alert("Error Adding Chart");
+            }
+        });
+
+    }
+
+    function get_chart_html_home(chart_count) {  // TODO working here
+
+        var output = "<td id='home_chart_td_" + chart_count + "' class='chart_td'>";
+
+        output = output + "<table class='chart_dnd_table'><tbody>";
+
+        // table name
+        // output = output + "<tr><td colspan='2' id='home_title_" + chart_count + "' class='td_title'>" + "</td></tr>";
+
+        output = output + "<tr><td id='home_chart_title_" + chart_count + "' class='td_title'></td></tr>";
+
+        // row with dnd area for the x and y axis
+        //output = output + "<tr id='home_xy_dnd_row_" + chart_count + "'>";
+        //output = output + "<td id='home_x_dnd_" + chart_count + "' class='td_xy_dnd' ondrop='pq_td_x_drop(event)' ondragover='pq_allow_x_drop(event)'>X-Axis</td>";
+        //output = output + "<td id='home_y_dnd_" + chart_count + "' class='td_xy_dnd' ondrop='pq_td_y_drop(event)' ondragover='pq_allow_y_drop(event)'>Y-Axis</td>";
+        //output = output + "</tr>";
+
+        output = output + "<tr><td id='home_chart_title_" + chart_count + "' class='chart_td'>";
+        output = output + "<div id='" + home_chart_svg_prefix + chart_count + "' class='chart_svg_div'>chart" + chart_count + "</div>";
+        output = output + "</td></tr>";
+
+        output = output + "<tr><td colspan='2'>";
+        output = output + "<div id='home_radio_div_" + chart_count + "' class='chart_radio_div'>";
+
+        output = output + "<table class='radio_table'><tbody><tr>";
+        output = output + "<td><input type='radio' id='home_bar_" + chart_count + "' name='chart_group_" + chart_count + "' value='bar' onchange='process_radio_chart_selection_home(event)'>Bar Chart</td>";
+        output = output + "<td><input type='radio' id='home_line_" + chart_count + "' name='chart_group_" + chart_count + "' value='line' onchange='process_radio_chart_selection_home(event)'>Line Chart</td>";
+        output = output + "<td><input type='radio' id='home_pie_" + chart_count + "' name='chart_group_" + chart_count + "' value='pie' onchange='process_radio_chart_selection_home(event)'>Pie Chart</td>";
+
+        output = output + "<td class='td_delete_btn'><input type='button' id='home_delete_chart_button_" + chart_count + "' value='Delete Chart' onclick='on_click_delete_chart_home(event)'></td>";
+        output = output + "</table></div>";
+        output = output + "</td></tr>";
+
+        output = output + "</tbody></table></td>";
+
+        return output;
+    }
+
+    function process_radio_chart_selection_home(event) {
+
+        var target = event.target || event.srcElement;
+        var target_id = target.id;
+
+        var details_list = target_id.split("_");
+        var chart_type = details_list[1];
+        var chart_count = details_list[2];
+
+        var chart_object = get_chart_object_from_list_home(chart_count);
+
+        if (chart_type === 'bar') {
+            chart_object.chart_type = "bar";
+            draw_d3_bar_chart_home(chart_object);
+            // $("#home_xy_dnd_row_" + chart_count).hide();
+        } else if (chart_type === 'line') {
+            chart_object.chart_type = "line";
+            draw_d3_line_chart_home(chart_object);
+            // $("#pq_xy_dnd_row_" + chart_count).hide();
+        } else if (chart_type === 'pie') {
+            chart_object.chart_type = "pie";
+            draw_d3_pie_chart_home(chart_object);
+            // $("#pq_xy_dnd_row_" + chart_count).hide();
+        }
+    }
+
+    function draw_d3_pie_chart_home(chart_object) {  // TODO pie chart
+
+        var svg_id = chart_object.chart_count;
+
+        $("#home_chart_svg_" + svg_id).html("");
+
+        // the user can drag form any of the smaller tables so I need the drag source
+        var table_id = chart_object.dnd_table_name_id;
+
+        var chart_width = 400;
+        var chart_height = 400;
+        var radius = chart_height / 2;
+
+        var color = d3.scale.category20c();
+
+        var data = [];
+
+        var chart_data = get_column_data(chart_object.dnd_drag_column_number, table_id);
+
+        for (var index = 0; index < chart_data.length; index++) {
+            var temp_value = chart_data[index];
+            data.push({"label": "Week " + (index + 1), "value": temp_value});
+        }
+
+        var vis = d3.select('#home_chart_svg_' + svg_id).append("svg:svg").data([data]).attr("width", chart_width).attr("height", chart_height).append("svg:g").attr("transform", "translate(" + radius + "," + radius + ")");
+        var pie = d3.layout.pie().value(function (d) {
+            return d.value;
+        });
+
+        pie.sort(null);
+
+        // declare an arc generator function
+        var arc = d3.svg.arc().outerRadius(radius);
+
+        // select paths, use arc generator to draw
+        var arcs = vis.selectAll("g.slice").data(pie).enter().append("svg:g").attr("class", "slice");
+        arcs.append("svg:path")
+                .attr("fill", function (d, i) {
+                    return color(i);
+                })
+                .attr("d", function (d) {
+                    return arc(d);
+                });
+
+        // add the text
+        arcs.append("svg:text").attr("transform", function (d) {
+            d.innerRadius = 0;
+            d.outerRadius = radius;
+            return "translate(" + arc.centroid(d) + ")";
+        }).attr("text-anchor", "middle").text(function (d, i) {
+                    return data[i].label;
+                }
+        );
+
+    }
+
+    function draw_d3_bar_chart_home(chart_object) {  // TODO bar chart
+
+        // displayObject(chart_object, "582 bar chart");
+
+        var svg_id = chart_object.chart_count;
+
+        $("#home_chart_svg_" + svg_id).html("");
+
+        // the user can drag form any of the smaller tables so I need the drag source
+        var table_id = chart_object.dnd_table_name_id;
+
+        var chart_width = 400;
+        var chart_height = 400;
+
+        var margin = {top: 20, right: 20, bottom: 30, left: 40};
+        var width = chart_width - margin.left - margin.right;
+        var height = chart_height - margin.top - margin.bottom;
+
+        var x = d3.scale.ordinal().rangeRoundBands([0, width], .1);
+
+        var y = d3.scale.linear().range([height, 0]);
+
+        var xAxis = d3.svg.axis().scale(x).orient("bottom");
+
+        var yAxis = d3.svg.axis().scale(y).orient("left");  //.ticks(10, "%");
+
+        var y_column = chart_object.dnd_drag_column_number;
+
+        var y_data = get_column_data(y_column, table_id);
+
+        // parse the date information for the x-axis
+        var x_data = get_column_data(0, "date_table");
+        var x_date_time = [];
+
+        for (var index01 = 0; index01 < x_data.length; index01++) {
+            x_date_time.push(getParsedDate(x_data[index01]));  // string  Oct 5, 2015, 4:36p.m.
+        }
+
+        var data = [];
+        for (var index02 = 0; index02 < y_data.length; index02++) {
+            data.push({'x': x_date_time[index02], 'y': parseFloat(y_data[index02])});
+        }
+
+        //for (var index03 = 0; index03 < data.length; index03++) {
+        //    displayObject(data[index03]);
+        //}
+
+        // if the y value is zero, display a thin line instead of empty space
+        var ymax = d3.max(data, function (d) {
+            return d.y;
+        });
+
+        var min_unit = ymax / chart_height;
+
+        var xScale = d3.scale.ordinal()
+                .domain(d3.range(data.length))
+                .rangeRoundBands([0, chart_width], 0.05);
+
+        var yScale = d3.scale.linear()
+                .domain([0, d3.max(data) + 1.0])
+                .range([0, chart_height]);
+
+        x.domain(data.map(function (d) {
+            return d.x;
+        }));
+
+        y.domain([0, d3.max(data, function (d) {
+            return d.y;
+        })]);
+
+        var svg = d3.select("#home_chart_svg_" + svg_id).append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis)
+                .attr("font-family", "sans-serif")
+                .attr("font-size", "10px");
+
+        svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis)
+                .append("text")
+                .attr("transform", "rotate(-90)");
+
+        for (var index = 0; index < data.length; index++) {
+
+            svg.selectAll("rect")
+                    .data(data)
+                    .enter()
+                    .append("rect")
+                    .attr("class", "bar")
+                    .attr("x", function (d) {
+                        return x(d.x);
+                    })
+                    .attr("width", x.rangeBand())
+                    .attr("y", function (d) {
+                        return y(d.y);
+                    })
+                    .attr("height", function (d) {
+                        var temp_height = parseFloat(height - y(d.y));
+                        if (temp_height < min_unit) {
+                            temp_height = min_unit;
+                        }
+                        return temp_height;
+                    })
+                    .attr("fill", "blue")
+                    .on("mouseover", function (d) {
+
+                        // get this bar's x/y values, then augment for the tooltip
+                        var xPosition = parseFloat(d3.select(this).attr("x")) + (xScale.rangeBand() / 2) - 4;
+                        var yPosition = parseFloat(d3.select(this).attr("y")) + 50;
+
+                        // create the tooltip label
+                        svg.append("text")
+                                .attr("id", "tooltip")
+                                .attr("x", xPosition)
+                                .attr("y", yPosition)
+                                .attr("text-anchor", "middle")
+                                .attr("font-family", "sans-serif")
+                                .attr("font-size", "11px")
+                                .attr("font-weight", "bold")
+                                .attr("fill", "white")
+                                .text(d.y);
+                    })
+                    .on("mouseout", function () {  // remove the tooltip
+                        d3.select("#tooltip").remove();
+                    });
+
+        }
+
+    }
+
+    function draw_d3_line_chart_home(chart_object) {  // TODO line chart
+
+        var svg_id = chart_object.chart_count;
+
+        $("#home_chart_svg_" + svg_id).html("");
+
+        // the user can drag form any of the smaller tables so I need the drag source
+        var table_id = chart_object.dnd_table_name_id;
+
+        var data = [];
+
+        // each of the data objects is attached to a date
+        var x_axis = chart_object.x_axis;  // date_time_column
+
+        var x_data = get_line_chart_dates_home(0, "date_table");
+
+        //var x_data = get_column_data(0, "date_table");
+        //var x_date_time = [];
+
+        //for (var index01 = 0; index01 < x_data.length; index01++) {
+        //    x_date_time.push(getParsedDate(x_data[index01]));  // string  Oct 5, 2015, 4:36p.m.
+        //}
+        // alert("582  " + x_data);
+        var y_data = get_column_data(chart_object.dnd_drag_column_number, table_id);
+
+        var y_column_name = "";  // get_y_column_name(chart_object.table_dnd_id);\\"";  // TODO getColumnNameFromColumnDetailsList(chart_object.dnd_drag_column_number, product_quality_column_details_list);
+
+        for (var index = 0; index < y_data.length; index++) {
+            data.push({'x': x_data[index], 'y': y_data[index]});
+        }
+
+        var chart_width = 400, chart_height = 400;  // 350;
+        var margin = {
+            top: 20,
+            right: 50,
+            bottom: 40,
+            left: 30
+        };
+
+        // these are graph size settings
+        var width = chart_width - margin.left - margin.right;
+        var height = chart_height - margin.top - margin.bottom;
+
+        var x_min = x_data[0];
+        var x_max = x_data[x_data.length - 1];
+
+        var minObjectValue = parseFloat(d3.min(data, function (d) {
+            return d.y;
+        }));
+        var maxObjectValue = parseFloat(d3.max(data, function (d) {
+            return d.y;
+        }));
+
+        // create the graph object
+        var vis = d3.select("#home_chart_svg_" + svg_id).append("svg")
+                .data(data)
+                .attr("class", "metrics-container")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var y = d3.scale.linear().domain([minObjectValue - (.1 * minObjectValue), maxObjectValue + (.1 * maxObjectValue)]).range([height, 0]);
+        var x = d3.time.scale().domain([x_min, x_max]).range([0, width]);
+
+        var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient("left")
+                .ticks(5);
+
+        var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("bottom")
+                .ticks(x_data.length)
+                .tickFormat(d3.time.format("%m-%d"));
+
+        vis.append("g")
+                .attr("class", "axis")
+                .attr("font-family", "sans-serif")
+                .attr("font-size", "12px")
+                .call(yAxis);
+
+        vis.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(0," + height + ")")
+                .attr("font-family", "sans-serif")
+                .attr("font-size", "12px")
+                .call(xAxis);
+
+        // add the axes labels
+        vis.append("text")
+                .attr("class", "axis-label")
+                .attr("text-anchor", "end")
+                .attr("x", width / 2)
+                .attr("y", height + 40);
+        //.text('Date');
+
+        vis.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0 - margin.left)
+                .attr("x", 0 - (height / 2))
+                .attr("dy", "1.5em")
+                .style("text-anchor", "start")
+                .text(y_column_name);
+
+        var line = d3.svg.line()
+                .x(function (d) {
+                    return x(d["x"]);
+                })
+                .y(function (d) {
+                    return y(d["y"]);
+                });
+
+        vis.append("svg:path")
+                .attr("d", line(data))
+                .style("stroke", function () {
+                    return "#000000";
+                })
+                .style("fill", "none")
+                .style("stroke-width", "2.5");
+
+        var dataCirclesGroup = vis.append('svg:g');
+
+        var circles = dataCirclesGroup.selectAll('.data-point').data(data);
+
+        circles.enter()
+                .append('svg:circle')
+                .attr('class', 'dot')
+                .attr('fill', function () {
+                    return "red";
+                })
+                .attr('cx', function (d) {
+                    return x(d["x"]);
+                })
+                .attr('cy', function (d) {
+                    return y(d["y"]);
+                })
+                .attr('r', function () {
+                    return 3;
+                })
+                .on("mouseover", function (d) {
+                    d3.select(this)
+                            .attr("r", 8)
+                            .attr("class", "dot-selected")
+                            .transition()
+                            .duration(750);
+                })
+                .on("mouseout", function (d) {
+                    d3.select(this)
+                            .attr("r", 3)
+                            .attr("class", "dot")
+                            .transition()
+                            .duration(750);
+                });
+
+    }
+
+
+    function get_chart_object_from_list_home(temp_number) {
+
+        var chart_object = null;
+
+        for (var index = 0; index < home_dnd_charts_list.length; index++) {
+            var temp_object = home_dnd_charts_list[index];
+            if (temp_object.chart_count == temp_number) {
+                chart_object = temp_object;
+                break;
+            }
+        }
+        return chart_object;
+    }
+
+    function remove_chart_from_list_home(temp_number) {
+
+        for (var index = 0; index < home_dnd_charts_list.length; index++) {
+            var temp_object = home_dnd_charts_list[index];
+            if (temp_object.chart_count == temp_number) {
+                home_dnd_charts_list.splice(index, 1);
+                break;
+            }
+        }
+    }
+
+    function on_click_delete_chart_home(event) {
+
+        var target = event.target || event.srcElement;
+        var id = target.id;
+
+        var final_id = id.substring("home_delete_chart_button_".length);
+
+        $.ajax({
+            url: "{% url 'users:delete_home_chart' %}",
+            dataType: 'html',
+            data: '',
+            type: 'POST',
+            success: function (data) {
+                $("#home_chart_td_" + final_id).remove();
+                remove_chart_from_list_home(final_id);
+            },
+            error: function (data, status, error) {
+                alert("Error Deleting Chart " + status);
+            }
+        });
+    }
+
+    function get_drag_table_source_id(temp_table_dnd_id) {
+
+        var temp_array = temp_table_dnd_id.split("_");
+        var prefix = temp_array[0];
+
+        var table_id = "";
+
+        if (prefix === "pq") {
+            table_id = "product_quality_table";
+        } else if (prefix === "qa") {
+            table_id = "quality_assurance_table";
+        } else if (prefix === "qi") {
+            table_id = "quality_innovation_table";
+        } else if (prefix === "re") {
+            table_id = "requirements_engineering_table";
+        } else if (prefix === "te") {
+            table_id = "test_engineering_table";
+        } else if (prefix === "tl") {
+            table_id = "test_lab_table";
+        }
+        return table_id;
+    }
+
+    function get_drag_table_friendly_name(temp_table_dnd_id) {
+
+        var temp_array = temp_table_dnd_id.split("_");
+        var prefix = temp_array[0];
+
+        var table_name = "";
+
+        if (prefix === "pq") {
+            table_name = "Product Quality";
+        } else if (prefix === "qa") {
+            table_name = "Quality Assurance";
+        } else if (prefix === "qi") {
+            table_name = "Quality Innovation";
+        } else if (prefix === "re") {
+            table_name = "Requirements Engineering";
+        } else if (prefix === "te") {
+            table_name = "Test Engineering";
+        } else if (prefix === "tl") {
+            table_name = "Test Lab";
+        }
+        return table_name;
+    }
+
+    function get_y_column_name(temp_dnd_id, temp_dnd_drag_column_number) {
+
+        var table_id = get_drag_table_source_id(temp_dnd_id);
+
+        var temp_array = temp_dnd_id.split("_");
+        var prefix = temp_array[0];
+        var column = temp_array[2];
+
+        // header id will look like 'pq_th_1_column   (header table has two rows)
+        var temp_id = prefix + "_th_1_" + column;
+
+        var header_text = $("#" + temp_id).text();
+
+        return header_text;
+    }
+
+    function get_date_time_data_home(date_time_column_number) {
+
+        var date_time_data = [];
+
+        $('#date_table tbody tr').each(function () {
+            var date_time_value = $(this).children("td:eq(" + date_time_column_number + ")").text();
+            var temp_date = new Date.parse(date_time_value);
+            date_time_data.push(temp_date);
+        });
+
+        return date_time_data;
+    }
+
+    function get_line_chart_dates_home() {
+        return get_date_time_data_home(0);
+    }
+
+</script>
+
 {% endblock %}

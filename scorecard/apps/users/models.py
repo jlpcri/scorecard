@@ -22,6 +22,10 @@ class FunctionalGroup(models.Model):
         return '{0}: {1}'.format(self.name, self.key)
 
 
+    class Meta:
+        verbose_name_plural = "Functional Groups"
+
+
 class HumanResource(models.Model):
     """
     Link to auth user
@@ -39,4 +43,3 @@ class HumanResource(models.Model):
                                           self.manager)
         else:
             return '{0}: {1}: {2}'.format(self.user.username, 'No Team',  self.manager)
-
