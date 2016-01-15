@@ -53,8 +53,8 @@
                                         <div class="col-sm-1"></div>
                                         <div class="col-sm-3">{{ item.project }}</div>
                                         <div class="col-sm-3">{{ item.phase }}</div>
-                                        <div {% if item.start_delay >= 0 %} class="col-sm-2" {% else %} class="col-sm-2 text-danger" {% endif %}>{{ item.start_delay }}</div>
-                                        <div {% if item.diff_duration >= 0 %} class="col-sm-2" {% else %} class="col-sm-2 text-danger" {% endif %}>{{ item.diff_duration }}</div>
+                                        <div {% if item.start_delay >= 0 %} class="col-sm-2" {% else %} class="col-sm-2 text-success" {% endif %}>{{ item.start_delay }}</div>
+                                        <div {% if item.diff_duration >= 0 %} class="col-sm-2" {% else %} class="col-sm-2 text-success" {% endif %}>{{ item.diff_duration }}</div>
                                     </div>
                                 {% endfor %}
                             {% endif %}
