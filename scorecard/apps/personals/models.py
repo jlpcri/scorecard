@@ -1,3 +1,4 @@
+from operator import itemgetter
 from django.db import models
 from django.utils.timezone import localtime
 
@@ -83,34 +84,28 @@ class TestStats(BaseStats):
     standards_violated = models.PositiveIntegerField(default=0)
 
     @property
-    def phase_start_delays(self):
+    def phase_delay_and_duration(self):
         data = []
         phases = self.human_resource.projectphase_set.all()
         for phase in phases:
             temp = {}
             temp['project'] = phase.project.name
             temp['phase'] = phase.name
+
             if phase.actual_start and phase.estimate_start:
                 temp['start_delay'] = str((phase.actual_start - phase.estimate_start).days)
             else:
                 temp['start_delay'] = 'Null'
-            data.append(temp)
 
-        return data
-
-    @property
-    def phase_diff_duration(self):
-        data = []
-        phases = self.human_resource.projectphase_set.all()
-        for phase in phases:
-            temp = {}
-            temp['project'] = phase.project.name
-            temp['phase'] = phase.name
             if phase.estimate_start and phase.estimate_end and phase.actual_start and phase.actual_end:
                 temp['diff_duration'] = ((phase.actual_end - phase.actual_start) - (phase.estimate_end - phase.estimate_end)).days
             else:
                 temp['diff_duration'] = 'Null'
+
             data.append(temp)
+
+        data.sort(key=itemgetter('project'))
+        data.sort(key=itemgetter('phase'))
 
         return data
 
