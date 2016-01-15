@@ -91,16 +91,8 @@ class TestStats(BaseStats):
             temp = {}
             temp['project'] = phase.project.name
             temp['phase'] = phase.name
-
-            if phase.actual_start and phase.estimate_start:
-                temp['start_delay'] = str((phase.actual_start - phase.estimate_start).days)
-            else:
-                temp['start_delay'] = 'Null'
-
-            if phase.estimate_start and phase.estimate_end and phase.actual_start and phase.actual_end:
-                temp['diff_duration'] = ((phase.actual_end - phase.actual_start) - (phase.estimate_end - phase.estimate_end)).days
-            else:
-                temp['diff_duration'] = 'Null'
+            temp['start_delay'] = phase.start_delays
+            temp['diff_duration'] = phase.diff_durations
 
             data.append(temp)
 

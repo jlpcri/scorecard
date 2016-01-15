@@ -28,34 +28,36 @@
                     </div>
                 </div>
                 <div class="col-sm-6">
-                    {% with key=personal_stat.human_resource.functional_group.key %}
+                    {% with key=personal_stat.human_resource.functional_group.key phase_count=personal_stat.phases_lead_count %}
                         {% if key in 'QA, PQ, TE' %}
                             <div class="row">
                                 <div class="col-sm-6">
                                     <label>Phases Lead:</label>
                                 </div>
                                 <div class="col-sm-6">
-                                    <input class="gentle" value="{{ personal_stat.phases_lead_count }}" disabled/>
+                                    <input class="gentle" value="{{ phase_count }}" disabled/>
                                 </div>
                             </div>
 
-                            <h5>Start Delays and Diff Durations (Days)</h5>
-                            <div class="row">
-                                <div class="col-sm-1"></div>
-                                <div class="col-sm-3"><label>Project</label></div>
-                                <div class="col-sm-3"><label>Phase</label></div>
-                                <div class="col-sm-2"><label>Start Delay</label></div>
-                                <div class="col-sm-2"><label>Diff Duration</label></div>
-                            </div>
-                            {%  for item in personal_stat.phase_delay_and_duration %}
+                            {% if phase_count > 0 %}
+                                <h5>Start Delays and Diff Durations (Days)</h5>
                                 <div class="row">
                                     <div class="col-sm-1"></div>
-                                    <div class="col-sm-3">{{ item.project }}</div>
-                                    <div class="col-sm-3">{{ item.phase }}</div>
-                                    <div class="col-sm-2">{{ item.start_delay }}</div>
-                                    <div class="col-sm-2>">{{ item.diff_duration }}</div>
+                                    <div class="col-sm-3"><label>Project</label></div>
+                                    <div class="col-sm-3"><label>Phase</label></div>
+                                    <div class="col-sm-2"><label>Start Delay</label></div>
+                                    <div class="col-sm-2"><label>Diff Duration</label></div>
                                 </div>
-                            {% endfor %}
+                                {%  for item in personal_stat.phase_delay_and_duration %}
+                                    <div class="row">
+                                        <div class="col-sm-1"></div>
+                                        <div class="col-sm-3">{{ item.project }}</div>
+                                        <div class="col-sm-3">{{ item.phase }}</div>
+                                        <div class="col-sm-2">{{ item.start_delay }}</div>
+                                        <div class="col-sm-2>">{{ item.diff_duration }}</div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
 
                             <br>
                             <div class="row">
