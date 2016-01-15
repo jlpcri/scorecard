@@ -1,4 +1,3 @@
-from datetime import datetime, timedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse

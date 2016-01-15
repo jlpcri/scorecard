@@ -10,7 +10,7 @@ from scorecard.apps.personals.tasks import weekly_personal_stats_new
 from scorecard.apps.personals.utils import get_distinct_dates
 from scorecard.apps.users.models import FunctionalGroup, HumanResource
 from models import InnovationStats, LabStats, RequirementStats, TestStats
-from scorecard.apps.users.views import user_is_superuser, user_is_manager
+from scorecard.apps.users.views import user_is_superuser
 from forms import InnovationForm, LabForm, RequirementForm, TestForm
 
 

@@ -7,12 +7,73 @@
         <h2>{{ personal_stat.human_resource.user.first_name }} {{ personal_stat.human_resource.user.last_name }}, Personal Status - {{ personal_stat.created|date }}</h2>
         <br>
         <form action="{% url 'personals:personal_stats_edit' personal_stat.id %}?key={{ personal_stat.human_resource.functional_group.key }}" method="post">
-            {% for field in form %}
-                <div class="row">
-                    <div class="col-sm-3"><label>{{ field.label_tag }}</label></div>
-                    <div class="col-sm-2">{{ field }}</div>
+            <div class="row">
+                <div class="col-sm-6">
+                    {% for field in form %}
+                        <div class="row">
+                            <div class="col-sm-6"><label>{{ field.label_tag }}</label></div>
+                            <div class="col-sm-6">{{ field }}</div>
+                        </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
+                <div class="col-sm-6">
+                    {% with key=personal_stat.human_resource.functional_group.key %}
+                        {% if key in 'QA, PQ, TE' %}
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Phases Lead:</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="gentle" value="{{ personal_stat.phases_lead_count }}" disabled/>
+                                </div>
+                            </div>
+
+                            <h5>Start Delay (Days)</h5>
+                            <div class="row">
+                                <div class="col-sm-1"></div>
+                                <div class="col-sm-4"><label>Project</label></div>
+                                <div class="col-sm-4"><label>Phase</label></div>
+                                <div class="col-sm-3"><label>Start Delay</label></div>
+                            </div>
+                            {%  for item in personal_stat.phase_start_delays %}
+                                <div class="row">
+                                    <div class="col-sm-1"></div>
+                                    <div class="col-sm-4">{{ item.project }}</div>
+                                    <div class="col-sm-4">{{ item.phase }}</div>
+                                    <div class="col-sm-3">{{ item.start_delay }}</div>
+                                </div>
+                            {% endfor %}
+
+                            <h5>Difference of Duration (Days)</h5>
+                            <div class="row">
+                                <div class="col-sm-1"></div>
+                                <div class="col-sm-4"><label>Project</label></div>
+                                <div class="col-sm-4"><label>Phase</label></div>
+                                <div class="col-sm-3"><label>Diff Duration</label></div>
+                            </div>
+                            {%  for item in personal_stat.phase_diff_duration %}
+                                <div class="row">
+                                    <div class="col-sm-1"></div>
+                                    <div class="col-sm-4">{{ item.project }}</div>
+                                    <div class="col-sm-4">{{ item.phase }}</div>
+                                    <div class="col-sm-3">{{ item.diff_duration }}</div>
+                                </div>
+                            {% endfor %}
+
+                            <br>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Tickets Worked:</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="gentle" value="{{ personal_stat.tickets_worked }}" disabled/>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+
             <br>
             {% csrf_token %}
             <div class="row">

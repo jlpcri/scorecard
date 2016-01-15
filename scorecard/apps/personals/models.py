@@ -88,8 +88,12 @@ class TestStats(BaseStats):
         phases = self.human_resource.projectphase_set.all()
         for phase in phases:
             temp = {}
+            temp['project'] = phase.project.name
             temp['phase'] = phase.name
-            temp['start_delay'] = phase.actual_start - phase.estimate_start
+            if phase.actual_start and phase.estimate_start:
+                temp['start_delay'] = str((phase.actual_start - phase.estimate_start).days)
+            else:
+                temp['start_delay'] = 'Null'
             data.append(temp)
 
         return data
@@ -100,8 +104,13 @@ class TestStats(BaseStats):
         phases = self.human_resource.projectphase_set.all()
         for phase in phases:
             temp = {}
+            temp['project'] = phase.project.name
             temp['phase'] = phase.name
-            temp['diff_duration'] = (phase.actual_end - phase.actual_start) - (phase.estimate_end - phase.estimate_end)
+            if phase.estimate_start and phase.estimate_end and phase.actual_start and phase.actual_end:
+                temp['diff_duration'] = ((phase.actual_end - phase.actual_start) - (phase.estimate_end - phase.estimate_end)).days
+            else:
+                temp['diff_duration'] = 'Null'
+            data.append(temp)
 
         return data
 
