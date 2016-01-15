@@ -40,7 +40,7 @@
                             </div>
 
                             {% if phase_count > 0 %}
-                                <h5>Start Delays and Diff Durations (Days)</h5>
+                                <h5>Start Delays and Diff Durations (Business Days)</h5>
                                 <div class="row">
                                     <div class="col-sm-1"></div>
                                     <div class="col-sm-3"><label>Project</label></div>
@@ -54,7 +54,7 @@
                                         <div class="col-sm-3">{{ item.project }}</div>
                                         <div class="col-sm-3">{{ item.phase }}</div>
                                         <div class="col-sm-2">{{ item.start_delay }}</div>
-                                        <div class="col-sm-2>">{{ item.diff_duration }}</div>
+                                        <div class="col-sm-2">{{ item.diff_duration }}</div>
                                     </div>
                                 {% endfor %}
                             {% endif %}
