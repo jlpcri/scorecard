@@ -26,27 +26,22 @@ switch (key) {
         efficiencyCal();
         break;
     case 'PQ':
-        hours = 30;
-        hourly_rate = 60;
-        hourly_rate_auto = 40;
         bundleTestMetricCal();
         break;
     case 'QA':
-        hours = 40;
-        hourly_rate = 40;
-        hourly_rate_contractor = 100;
-        hourly_rate_auto = 40;
         bundleTestMetricCal();
         break;
     case 'TE':
-        hours = 40;
-        hourly_rate = 50;
-        hourly_rate_auto = 50;
         bundleTestMetricCal();
 }
 
 // put TestMetric calculation together
 function bundleTestMetricCal() {
+    hours = '{{test_metric_config.hours_per_week}}';
+    hourly_rate = '{{test_metric_config.costs_per_hour_staff}}';
+    hourly_rate_contractor = '{{test_metric_config.costs_per_hour_contractor}}';
+    hourly_rate_auto = '{{test_metric_config.costs_per_hour_staff}}';
+
     costCal();
     autoCal();
     avgThroughputCal();
@@ -58,6 +53,8 @@ function bundleTestMetricCal() {
 function costCal() {
     switch (key) {
         case 'QA':
+        case 'PQ':
+        case 'TE':
             staff.on('input', function(){
                 operational_cost.val(operationalCal(this.value, hours, hourly_rate)
                     + operationalCal($('#id_contractors').val(), hours, hourly_rate_contractor));
@@ -101,16 +98,14 @@ function autoCal() {
 }
 
 // Cost of operational calculation
-function operationalCal(staffs, hours, hourly_rate) {
-    return staffs * hours * hourly_rate;
+function operationalCal(staffs_or_contractors, hours, hourly_rate) {
+    return staffs_or_contractors * hours * hourly_rate;
 }
 
 // Cost of automation calculation for PQ, QA, TE
 function autoSavingsCal(tc_auto_time, hourly_rate_auto) {
     switch (key) {
         case 'TE':
-            return (parseFloat(tc_auto_time) + 37) * hourly_rate_auto;
-            break;
         case 'PQ':
         case 'QA':
             return tc_auto_time * hourly_rate_auto;

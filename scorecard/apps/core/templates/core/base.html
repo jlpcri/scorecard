@@ -12,7 +12,10 @@
 
         <link href="{% static 'common/font-awesome/4.4.0/css/font-awesome.min.css' %}" rel="stylesheet">
         <link href="{% static 'common/bootswatch/3.3.5/spacelab/bootstrap.min.css' %}" rel="stylesheet">
-        <link href="{% static 'ceeq/jqueryui/css/jquery-ui-1.9.2.custom.min.css' %}" rel="stylesheet">
+
+        <link rel="stylesheet" href="{% static 'scorecard/jquery/jquery-ui-themes-1.11.4/themes/smoothness/jquery-ui.css' %}">
+        <script src="{% static 'scorecard/jquery/jquery-1.12.0.js' %}"></script>
+        <script src="{% static 'scorecard/jquery/jquery-ui-1.11.4/jquery-ui.js' %}"></script>
 
         <!--[if lt IE 9]>
             <script src="http://apps.qaci01.wic.west.com/static/common/bootstrap/3.0.0/assets/js/html5shiv.js"></script>
@@ -110,10 +113,11 @@
                 <div class="collapse navbar-collapse" id="main-navbar">
                     <ul class="nav navbar-nav">
                         <li><a href="{% url 'users:home' %}"><i class="fa fa-home fa-fw"></i> Home </a></li>
+                        <li><a href="{% url 'projects:projects' %}"><i class="fa fa-sitemap fa-fw"></i> Projects</a> </li>
+                        <li><a href="{% url 'personals:personals' %}"><i class="fa fa-area-chart fa-fw"></i>Personal</a> </li>
                         <li><a href="{% url 'teams:teams' %}"><i class="fa fa-weibo fa-fw"></i>Team</a></li>
-                        <li><a href="{% url 'individuals:individuals' %}"><i class="fa fa-area-chart fa-fw"></i>Individual</a> </li>
-                        <li><a href="{% url 'congregations:congregations' %}"><i class="fa fa-table fa-fw"></i>Congregation</a> </li>
-                        <li><a href="{% url 'exportations:exportations' %}"><i class="fa fa-pie-chart fa-fw"></i>Exportation</a> </li>
+                        <li><a href="{% url 'datas:datas' %}"><i class="fa fa-pie-chart fa-fw"></i>Data</a> </li>
+                        <li><a href="{% url 'automations:automations' %}"><i class="fa fa-table fa-fw"></i>Automation</a> </li>
                         <li><a href="{% url 'help:guide' %}"><i class="fa fa-thumbs-o-up"></i> Help</a> </li>
                     </ul>
 
@@ -133,15 +137,14 @@
 
                                 {% if user.is_superuser %}
                                     <li><a href="{% url 'users:management' %}"><i class="fa fa-wrench"></i> User Management</a> </li>
+                                    <li><a href="{% url 'users:manager_assign' %}"><i class="fa fa-anchor"></i> Manager Assign</a> </li>
                                     <li><a href="{% url 'admin:index' %}" target="_blank"><i class="fa fa-cogs"></i> Django Admin</a> </li>
+                                {% elif user.humanresource.manager %}
+                                    <li><a href="{% url 'users:manager_assign' %}"><i class="fa fa-anchor"></i> Manager Assign</a> </li>
                                 {% endif %}
                                 <li><a href="{% url 'users:sign_out' %}"><i class="fa fa-user"></i> Sign Out</a></li>
                             </ul>
-
-
-
                         </li>
-
                     </ul>
                 </div>
             {% else %}
@@ -193,14 +196,12 @@
 
         <!-- <script src="{% static 'common/jquery/1.10.2/jquery.min.js' %}"></script> -->
         <script src="{% static 'common/bootstrap/3.3.5/dist/js/bootstrap.min.js' %}"></script>
-        <script src="{% static 'ceeq/jqueryui/js/jquery-ui-1.10.4.js' %}"></script>
         <script src="{% static 'common/placeholders/3.0.0/placeholders.min.js' %}"></script>
         <script src="{% static 'common/highcharts/4.0.4/js/highcharts.js' %}"></script>
         <script src="{% static 'common/highcharts/4.0.4/js/modules/exporting.js' %}"></script>
 
         {% block endscript %}
         {% endblock %}
-
         {% block footer %}
             <script>
                 {% include 'teams/d3_west.js' %}

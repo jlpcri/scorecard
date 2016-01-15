@@ -1,0 +1,82 @@
+{% extends 'core/base.html' %}
+
+{% block title %} Manager Assign{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <br>
+        <div class="row">
+            <legend>Manager Assign User to Team</legend>
+        </div>
+        <form method="post" action="{% url 'users:manager_assign' %}">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="col-xs-2">User</th>
+                        <th class="col-xs-2">Team</th>
+                        <th class="col-xs-2">Manager</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <select id="user_select" name='user_select' class="form-control">
+                                {% for user in users %}
+                                    <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <select id="group_select" name="group_select" class="form-control">
+                                {% for group in groups %}
+                                    <option value="{{ group.id }}">{{ group.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input type="checkbox" id="is_manager" name="is_manager" {% if first_check %} checked {% endif %}>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            {% csrf_token %}
+            <div class="row" style="margin-top: 30px; margin-bottom: 50px;">
+                <div class="col-xs-2"></div>
+                <div class="col-xs-2">
+                    <input id="manager_assign_edit" class="btn btn-primary" style="width: 100%;" type="submit" value="Save Changes">
+                </div>
+                <div class="col-xs-2">
+                    <a href="{% url 'users:home' %}" class="btn btn-default" style="width: 100%;">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+    <script>
+        String.prototype.format = function () {
+            var s = this,
+                i = arguments.length;
+
+            while (i--) {
+                s = s.replace(new RegExp('\\{' + i + '\\}', 'gm'), arguments[i]);
+            }
+            return s;
+        };
+
+        $('#user_select').change(function(){
+            var user_id = $(this).val();
+            $.getJSON("{% url 'users:user_manager_check' %}?user_id={0}".format(user_id)).done(function(data){
+                if (data['manager'] == true) {
+                    $('#is_manager').prop('checked', true);
+                } else {
+                    $('#is_manager').prop('checked', false);
+                }
+                $('#group_select').val(data['group']);
+            })
+        })
+    </script>
+{% endblock %}

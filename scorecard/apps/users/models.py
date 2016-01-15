@@ -37,7 +37,9 @@ class HumanResource(models.Model):
     contractor = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return '{0}: {1}'.format(self.user.username, self.manager)
-
-    class Meta:
-        verbose_name_plural = "Human Resources"
+        if self.functional_group:
+            return '{0}: {1}: {2}'.format(self.user.username,
+                                          self.functional_group.key,
+                                          self.manager)
+        else:
+            return '{0}: {1}: {2}'.format(self.user.username, 'No Team',  self.manager)

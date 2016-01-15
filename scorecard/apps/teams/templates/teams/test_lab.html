@@ -39,7 +39,7 @@
                 <th class="col-md-2"><strong>Tickets Received</strong></th>
                 <th class="col-md-2"><strong>Tickets Closed</strong></th>
                 <th class="col-md-2"><strong>Virtual Machines</strong></th>
-                <th class="col-md-2"><strong>Total Costs</strong></th>
+                    <td class="col-md-2"><strong>License Costs</strong></td>
             </tr>
             </thead>
             <tbody>
@@ -50,7 +50,7 @@
                 <td draggable="true" ondragstart="dragTL(event)">{{ item.tickets_received }}</td>
                 <td draggable="true" ondragstart="dragTL(event)">{{ item.tickets_closed }}</td>
                 <td draggable="true" ondragstart="dragTL(event)">{{ item.virtual_machines }}</td>
-                <td draggable="true" ondragstart="dragTL(event)">{{ item.total_operational_cost }}</td>
+                        <td>{{ item.license_cost }}</td>
             </tr>
             {% endfor %}
             </tbody>

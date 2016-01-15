@@ -1,3 +1,4 @@
+import socket
 from datetime import date, datetime
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
@@ -5,7 +6,7 @@ from django.conf import settings
 from scorecard.celery_module import app
 from scorecard.apps.users.models import FunctionalGroup
 from models import TestMetrics, InnovationMetrics, RequirementMetrics, LabMetrics
-from scorecard.apps.exportations.utils import get_week_ending_date
+from scorecard.apps.datas.utils import get_week_ending_date
 
 
 @app.task
@@ -15,9 +16,12 @@ def weekly_metric_new():
         try:
             qi = InnovationMetrics.objects.latest('created')
             if qi.created.date() == today:
+                err_message = 'Metric is already exist'
+                err_message_send_email(err_message)
+
                 return {
                     'valid': False,
-                    'message': 'Metric is already exist'
+                    'message': err_message
                 }
             else:
                 metric_new()
@@ -30,10 +34,12 @@ def weekly_metric_new():
                 'valid': True
             }
     else:
-        weekly_send_email()
+        err_message = 'Today is not Friday'
+        err_message_send_email(err_message)
+
         return {
             'valid': False,
-            'message': 'Today is not Friday'
+            'message': err_message
         }
 
 
@@ -49,6 +55,8 @@ def metric_new():
         elif functional_group.key == 'TL':
             LabMetrics.objects.create(functional_group=functional_group)
 
+    weekly_send_email()
+
 
 def weekly_send_email():
 
@@ -57,6 +65,18 @@ def weekly_send_email():
 
     subject = 'Weekly ScoreCard Data'
     from_email = 'QEIInnovation@west.com'
+    managers_email = [
+        'gaahl3@west.com',  # Requirements: Greg Ahl
+        'sdpratt@west.com',  # Product Quality: Steven Pratt
+        'jmlammers@west.com',  # Test Engineering: Jon Lammers
+        'pshegberg@west.com',  # QA: Peggy Hegberg
+        'sdeckhart@west.com',  # QA Lead: Steve Eckhart
+        'pbdalton@west.com',   # QA Lead: Phil Dalton
+        'rasmith@west.com',    # TL: Richard Smith
+        'pjneuberger@west.com',  # TL: Paul Neuberger
+        'CAHeyden@west.com'  # QI
+    ]
+    # to_email = ['sliu@west.com', 'QEIInnovation@west.com']
     to_email = ['sliu@west.com']
     content = '<p>Following are the links to access the week <strong>{0}</strong> Scorecard manager input:</p>'.format(get_week_ending_date(today))
     content += '<ul>'
@@ -77,4 +97,20 @@ def weekly_send_email():
 
     msg = EmailMultiAlternatives(subject, content, from_email, to_email)
     msg.content_subtype = 'html'
-    msg.send()
+
+    if socket.gethostname() == 'sliu-OptiPlex-GX520':
+        msg.send()
+
+
+def err_message_send_email(err_message):
+    subject = 'Add New Metric Error'
+    from_email = 'QEIInnovation@west.com'
+
+    to_email = ['sliu@west.com']
+    content = '<h4>{0}</h4>'.format(err_message)
+
+    msg = EmailMultiAlternatives(subject, content, from_email, to_email)
+    msg.content_subtype = 'html'
+
+    if socket.gethostname() == 'sliu-OptiPlex-GX520':
+        msg.send()

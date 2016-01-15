@@ -8,7 +8,7 @@ urlpatterns = patterns('scorecard.apps.teams.views',
     url(r'^metric_edit/(?P<metric_id>\d+)/$', 'metric_edit', name='metric_edit'),
 
     url(r'^weekly_metric_new_manually/$', 'weekly_metric_new_manually', name='weekly_metric_new_manually'),
-
+    url(r'^send_email/$', 'send_email', name='send_email'),
     url(r'^add_product_quality_chart?$', 'add_product_quality_chart', name='add_product_quality_chart'),
     url(r'^delete_product_quality_chart?$', 'delete_product_quality_chart', name='delete_product_quality_chart'),
 
@@ -26,7 +26,6 @@ urlpatterns = patterns('scorecard.apps.teams.views',
 
     url(r'^add_test_lab_chart?$', 'add_test_lab_chart', name='add_test_lab_chart'),
     url(r'^delete_test_lab_chart?$', 'delete_test_lab_chart', name='delete_test_lab_chart'),
-
 )
 
 

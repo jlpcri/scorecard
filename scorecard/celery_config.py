@@ -17,6 +17,11 @@ CELERYBEAT_SCHEDULE = {
         'task': 'scorecard.apps.teams.tasks.weekly_metric_new',
         'schedule': crontab(0, 0, day_of_week='fri'),
         'options': {'queue': 'scorecard_queue'}
+    },
+    'weekly-add-new-personal-stats': {
+        'task': 'scorecard.apps.personals.tasks.weekly_personal_stats_new',
+        'schedule': crontab(0, 0, day_of_week='fri'),
+        'options': {'queue': 'scorecard_queue'}
     }
 }
 

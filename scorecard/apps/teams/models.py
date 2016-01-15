@@ -1,5 +1,4 @@
 from django.db import models
-from django.core.validators import MaxValueValidator
 from django.utils.timezone import localtime
 
 from scorecard.apps.users.models import FunctionalGroup
@@ -15,17 +14,20 @@ class BaseMetrics(models.Model):
     updated = models.BooleanField(default=False)
 
     # Human Resource
-    staffs = models.IntegerField(default=0)
-    contractors = models.IntegerField(default=0)
-    openings = models.IntegerField(default=0)
+    staffs = models.PositiveIntegerField(default=0)
+    contractors = models.PositiveIntegerField(default=0)
+    openings = models.PositiveIntegerField(default=0)
+
+    # Awards and Punish
+    compliments = models.PositiveIntegerField(default=0)
+    complaints = models.PositiveIntegerField(default=0)
+    escalations = models.PositiveIntegerField(default=0)
 
     # Quality
-    slas_met = models.DecimalField(max_digits=3, decimal_places=2, default=0,
-                                   validators=[MaxValueValidator(1)])
+    slas_met = models.DecimalField(max_digits=3, decimal_places=2, default=0)
     delays_introduced_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    sdis_not_prevented = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    resource_swap = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    escalations = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    sdis_not_prevented = models.PositiveIntegerField(default=0)
+    resource_swap = models.PositiveIntegerField(default=0)
     rework_introduced_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
 
     # Efficiency
@@ -42,44 +44,44 @@ class BaseMetrics(models.Model):
     class Meta:
         abstract = True
 
+    def __unicode__(self):
+        return '{0}: {1}: {2}'.format(self.functional_group.name,
+                                      localtime(self.confirmed),
+                                      localtime(self.created))
+
 
 class TestMetrics(BaseMetrics):
     """
     Metrics for groups: Quality Assurance, Test Engineering, Product Quality
     """
     # Throughput
-    team_initiative = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    ticket_backlog = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    ticket_prep = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    ticket_execution = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    ticket_closed = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    project_backlog = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    project_prep = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    project_execution = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    project_closed = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    tc_manual_dev = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    team_initiative = models.PositiveIntegerField(default=0)
+    ticket_backlog = models.PositiveIntegerField(default=0)
+    ticket_prep = models.PositiveIntegerField(default=0)
+    ticket_execution = models.PositiveIntegerField(default=0)
+    ticket_closed = models.PositiveIntegerField(default=0)
+    project_backlog = models.PositiveIntegerField(default=0)
+    project_prep = models.PositiveIntegerField(default=0)
+    project_execution = models.PositiveIntegerField(default=0)
+    project_closed = models.PositiveIntegerField(default=0)
+    tc_manual_dev = models.PositiveIntegerField(default=0)
     tc_manual_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    tc_manual_execution = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    tc_manual_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    tc_auto_dev = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    tc_manual_execution = models.PositiveIntegerField(default=0)
+    tc_manual_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,)  # in hours
+    tc_auto_dev = models.PositiveIntegerField(default=0)
     tc_auto_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    tc_auto_execution = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    tc_auto_execution = models.PositiveIntegerField(default=0)
     tc_auto_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
 
     # Quality
-    defect_caught = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    uat_defects_not_prevented = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    standards_violated = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    defect_caught = models.PositiveIntegerField(default=0)
+    uat_defects_not_prevented = models.PositiveIntegerField(default=0)
+    standards_violated = models.PositiveIntegerField(default=0)
 
     # Efficiency
     avg_time_frame = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     # Costs
-
-    def __unicode__(self):
-        return '{0}: {1}: {2}'.format(self.functional_group.name,
-                                      localtime(self.confirmed),
-                                      localtime(self.created))
 
     @property
     def auto_footprint_dev_age(self):
@@ -134,16 +136,25 @@ class TestMetrics(BaseMetrics):
     @property
     def operational_cost(self):
         """
-        Different computer formula for Product Quality, Quality Assrance, and Test Engineering
+        Different computer formula for Product Quality, Quality Assurance, and Test Engineering
         """
-        if self.functional_group.key == 'PQ':
-            return (self.staffs + self.contractors) * 30 * 60
-        elif self.functional_group.key == 'QA':
-            return self.staffs * 40 * 40 + self.contractors * 100 * 40
-        elif self.functional_group.key == 'TE':
-            return self.staffs * 40 * 50
-        else:
-            return 0
+        # if self.functional_group.key == 'PQ':
+        #     return self.staffs * 40 * 60 + self.contractors * 40 * 100
+        # elif self.functional_group.key == 'QA':
+        #     return self.staffs * 40 * 40 + self.contractors * 40 * 100
+        # elif self.functional_group.key == 'TE':
+        #     return self.staffs * 40 * 50 + self.contractors * 40 * 100
+        # else:
+        #     return 0
+        try:
+            test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=self.functional_group.key)
+            hours = test_metric_config.hours_per_week
+            costs_staff = test_metric_config.costs_per_hour_staff
+            costs_contractor = test_metric_config.costs_per_hour_contractor
+        except TestMetricsConfiguration.DoesNotExist:
+            hours, costs_staff, costs_contractor = 0, 0, 0
+
+        return self.staffs * hours * costs_staff + self.contractors * hours * costs_contractor
 
     @property
     def total_operational_cost(self):
@@ -154,14 +165,21 @@ class TestMetrics(BaseMetrics):
         """
         Cost Saved by Automation
         """
-        if self.functional_group.key == 'PQ':
-            return self.tc_auto_execution_time * 40
-        elif self.functional_group.key == 'QA':
-            return self.tc_auto_execution_time * 40
-        elif self.functional_group.key == 'TE':
-            return (self.tc_auto_execution_time + 37) * 50
-        else:
-            return 0
+        # if self.functional_group.key == 'PQ':
+        #     return self.tc_auto_execution_time * 60
+        # elif self.functional_group.key == 'QA':
+        #     return self.tc_auto_execution_time * 40
+        # elif self.functional_group.key == 'TE':
+        #     return self.tc_auto_execution_time * 50
+        # else:
+        #     return 0
+        try:
+            test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=self.functional_group.key)
+            costs_staff = test_metric_config.costs_per_hour_staff
+        except TestMetricsConfiguration.DoesNotExist:
+            costs_staff = 0
+
+        return self.tc_auto_execution_time * costs_staff
 
     class Meta:
         verbose_name_plural = "Test Metrics"
@@ -172,32 +190,25 @@ class InnovationMetrics(BaseMetrics):
     """
 
     # Throughput
-    story_points_backlog = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    story_points_prep = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    story_points_execution = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    unit_tests_dev = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    unit_tests_coverage = models.DecimalField(max_digits=3, decimal_places=2, default=0,
-                                              validators=[MaxValueValidator(1)])
-    documentation_coverage = models.DecimalField(max_digits=3, decimal_places=2, default=0,
-                                                 validators=[MaxValueValidator(1)])
-    defects_in_dev = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    story_points_backlog = models.PositiveIntegerField(default=0)
+    story_points_prep = models.PositiveIntegerField(default=0)
+    story_points_execution = models.PositiveIntegerField(default=0)
+    unit_tests_dev = models.PositiveIntegerField(default=0)
+    unit_tests_coverage = models.DecimalField(max_digits=3, decimal_places=2, default=0)
+    documentation_coverage = models.DecimalField(max_digits=3, decimal_places=2, default=0)
+    defects_in_dev = models.PositiveIntegerField(default=0)
     elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    revisions = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    active_projects = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    revisions = models.PositiveIntegerField(default=0)
+    active_projects = models.PositiveIntegerField(default=0)
 
     # Quality
-    uat_defects_not_prevented = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    uat_defects_not_prevented = models.PositiveIntegerField(default=0)
 
     # Usage
-    pheme_manual_tests = models.DecimalField(max_digits=19, decimal_places=2, default=0)
-    pheme_auto_tests = models.DecimalField(max_digits=19, decimal_places=2, default=0)
-    visilog_txl_parsed = models.DecimalField(max_digits=19, decimal_places=2, default=0)
-    visilog_txl_schema_violation = models.DecimalField(max_digits=19, decimal_places=2, default=0)
-
-    def __unicode__(self):
-        return '{0}: {1}: {2}'.format(self.functional_group.name,
-                                      localtime(self.confirmed),
-                                      localtime(self.created))
+    pheme_manual_tests = models.PositiveIntegerField(default=0)
+    pheme_auto_tests = models.PositiveIntegerField(default=0)
+    visilog_txl_parsed = models.PositiveIntegerField(default=0)
+    visilog_txl_schema_violation = models.PositiveIntegerField(default=0)
 
     @property
     def avg_throughput(self):
@@ -226,26 +237,20 @@ class RequirementMetrics(BaseMetrics):
     """
 
     # Throughput
-    backlog = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    team_initiative = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    active_projects = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    backlog = models.PositiveIntegerField(default=0)
+    team_initiative = models.PositiveIntegerField(default=0)
+    active_projects = models.PositiveIntegerField(default=0)
     elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
 
     # Quality
-    revisions = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    slas_missed = models.DecimalField(max_digits=3, decimal_places=2, default=0,
-                                      validators=[MaxValueValidator(1)])
+    revisions = models.PositiveIntegerField(default=0)
+    slas_missed = models.DecimalField(max_digits=3, decimal_places=2, default=0)
 
     # Efficiency
     rework_external_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     # Costs
     travel_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-
-    def __unicode__(self):
-        return '{0}: {1}: {2}'.format(self.functional_group.name,
-                                      localtime(self.confirmed),
-                                      localtime(self.created))
 
     @property
     def avg_throughput(self):
@@ -287,24 +292,27 @@ class LabMetrics(BaseMetrics):
     Metrics for group: Test Lab
     """
     # Throughput
-    tickets_received = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    tickets_closed = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    virtual_machines = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    physical_machines = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    tickets_received = models.PositiveIntegerField(default=0)
+    tickets_closed = models.PositiveIntegerField(default=0)
+    virtual_machines = models.PositiveIntegerField(default=0)
+    physical_machines = models.PositiveIntegerField(default=0)
 
     # Costs
-    power_consumption_ups_a = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in kw
-    power_consumption_ups_b = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in kw
+    power_consumption_ups_a = models.PositiveIntegerField(default=0)  # in kw
+    power_consumption_ups_b = models.PositiveIntegerField(default=0)  # in kw
+
+
+class TestMetricsConfiguration(models.Model):
+    """
+    Configuration of Test Metric costs
+    """
+    functional_group = models.ForeignKey(FunctionalGroup)
+    hours_per_week = models.PositiveSmallIntegerField(default=0)
+    costs_per_hour_staff = models.PositiveSmallIntegerField(default=0)
+    costs_per_hour_contractor = models.PositiveSmallIntegerField(default=0)
 
     def __unicode__(self):
-        return '{0}: {1}: {2}'.format(self.functional_group.name,
-                                      localtime(self.confirmed),
-                                      localtime(self.created))
-
-    @property
-    def total_operational_cost(self):
-        return self.power_consumption_ups_a + self.power_consumption_ups_b + self.license_cost
-
-
-    class Meta:
-        verbose_name_plural = "Lab Metrics"
+        return '{0}: {1}: {2}: {3}'.format(self.functional_group.key,
+                                           self.hours_per_week,
+                                           self.costs_per_hour_staff,
+                                           self.costs_per_hour_contractor)

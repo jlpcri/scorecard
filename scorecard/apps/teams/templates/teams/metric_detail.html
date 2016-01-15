@@ -12,13 +12,15 @@
                     <div class="col-sm-2"><label>Staffs</label></div>
                     <div class="col-sm-2"><label>Openings</label></div>
                     <div class="col-sm-2"><label>Contractors</label></div>
-                    <div class="col-sm-3"><label>Functional Group</label></div>
+                    <div class="col-sm-2"><label>Compliments</label></div>
+                    <div class="col-sm-2"><label>Complains</label></div>
                 </div>
                 <div class="row">
                     <div class="col-sm-2">{{ form.staffs }}</div>
                     <div class="col-sm-2">{{ form.openings }}</div>
                     <div class="col-sm-2">{{ form.contractors }}</div>
-                    <div class="col-sm-3">{{ form.functional_group }}</div>
+                    <div class="col-sm-2">{{ form.compliments }}</div>
+                    <div class="col-sm-2">{{ form.complaints }}</div>
                 </div>
                 <legend style="margin-top: 30px;">Throughput</legend>
                 <div class="row">
@@ -50,13 +52,15 @@
                     <div class="col-sm-2"><label>Staffs</label></div>
                     <div class="col-sm-2"><label>Openings</label></div>
                     <div class="col-sm-2"><label>Contractors</label></div>
-                    <div class="col-sm-3"><label>Functional Group</label></div>
+                    <div class="col-sm-2"><label>Compliments</label></div>
+                    <div class="col-sm-2"><label>Complains</label></div>
                 </div>
                 <div class="row">
                     <div class="col-sm-2">{{ form.staffs }}</div>
                     <div class="col-sm-2">{{ form.openings }}</div>
                     <div class="col-sm-2">{{ form.contractors }}</div>
-                    <div class="col-sm-3">{{ form.functional_group }}</div>
+                    <div class="col-sm-2">{{ form.compliments }}</div>
+                    <div class="col-sm-2">{{ form.complaints }}</div>
                 </div>
 
                 <legend style="margin-top: 30px;">Throughput</legend>
@@ -171,7 +175,7 @@
                 {% if metric.functional_group.key == 'QI' %}  <!-- Quality -->
                     <div class="row">
                         <div class="col-sm-2"><label>SLAs Met</label></div>
-                        <div class="col-sm-2"><label>Delays Introduced</label></div>
+                        <div class="col-sm-2"><label>Delays Intro Time</label></div>
                         <div class="col-sm-2"><label>SDIs not Prevented</label></div>
                         <div class="col-sm-4"><label>UAT Defects not Prevented</label></div>
                     </div>
@@ -184,7 +188,7 @@
                     <div class="row">
                         <div class="col-sm-2"><label>Resource Swap</label></div>
                         <div class="col-sm-2"><label>Escalations</label></div>
-                        <div class="col-sm-2"><label>Rework Introduced</label></div>
+                        <div class="col-sm-2"><label>Rework Intro Time</label></div>
                     </div>
                     <div class="row">
                         <div class="col-sm-2">{{ form.resource_swap }}</div>
@@ -194,10 +198,10 @@
                 {% elif metric.functional_group.key == 'RE' %}
                     <div class="row">
                         <div class="col-sm-2"><label>Revisions</label></div>
-                        <div class="col-sm-2"><label>Rework Introduced</label></div>
+                        <div class="col-sm-2"><label>Rework Intro Time</label></div>
                         <div class="col-sm-2"><label>SLAs Met</label></div>
                         <div class="col-sm-2"><label>SLAs Missed</label></div>
-                        <div class="col-sm-2"><label>Delays Introduced</label></div>
+                        <div class="col-sm-2"><label>Delays Intro Time</label></div>
                         <div class="col-sm-2"><label>Escalations</label></div>
                     </div>
                     <div class="row">
@@ -219,7 +223,7 @@
                 {% else %}
                     <div class="row">
                         <div class="col-sm-2"><label>SLAs Met</label></div>
-                        <div class="col-sm-2"><label>Delays Introduced</label></div>
+                        <div class="col-sm-2"><label>Delays Intro Time</label></div>
                         <div class="col-sm-2"><label>Defects Caught</label></div>
                         <div class="col-sm-3"><label>UAT defects not prevented</label></div>
                     </div>
@@ -234,15 +238,13 @@
                         <div class="col-sm-2"><label>Resource Swap</label></div>
                         <div class="col-sm-2"><label>Escalations</label></div>
                         <div class="col-sm-2"><label>Standards Violated</label></div>
-                        <div class="col-sm-2"><label>Escalations</label></div>
-                        <div class="col-sm-2"><label>Rework Introduced</label></div>
+                        <div class="col-sm-2"><label>Rework Intro Time</label></div>
                     </div>
                     <div class="row">
                         <div class="col-sm-2">{{ form.sdis_not_prevented }}</div>
                         <div class="col-sm-2">{{ form.resource_swap }}</div>
                         <div class="col-sm-2">{{ form.escalations }}</div>
                         <div class="col-sm-2">{{ form.standards_violated }}</div>
-                        <div class="col-sm-2">{{ form.escalations }}</div>
                         <div class="col-sm-2">{{ form.rework_introduced_time }}</div>
                     </div>
                 {% endif %}
