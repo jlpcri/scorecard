@@ -27,3 +27,5 @@ urlpatterns = [
 
     url(r'^scorecard/admin/', include(admin.site.urls)),
 ]
+
+admin.site.site_header = 'Score Card Administration'

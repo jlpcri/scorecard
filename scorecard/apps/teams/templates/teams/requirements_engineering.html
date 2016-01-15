@@ -1,30 +1,988 @@
+{% load staticfiles %}
+
+{% block headscript %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'd3charts/main.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'd3charts/d3_west_charts.css' %}"/>
+
+<script type='text/javascript' language="javascript" src="{% static 'common/jquery/2.0.3/jquery.min.js' %}"></script>
+
+<script type="text/javascript" language="javascript" src="{% static 'd3charts/d3.v3.min.js' %}"></script>
+<script type="text/javascript" language="javascript" src="{% static 'd3charts/colorbrewer.js' %}"></script>
+
+<script type="text/javascript" language="javascript" src="{% static 'd3charts/date.js' %}"></script>
+
+
+<style>
+
+    #requirements_engineering_dnd_div {
+        width: 200px;
+        height: 25px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+
+</style>
+
+
+{% endblock headscript %}
+
 <div class="tab-content" id="re-content">
 
     <div class="table-responsive">
-        <table class="table table-striped table-hover table-condensed table-bordered">
+        <table id="requirements_engineering_table" class="table table-striped table-hover table-condensed table-bordered">
             <thead>
-                <tr>
-                    <td class="col-md-3"><strong>Date</strong></td>
-                    <td class="col-md-1"><strong>Staffs</strong></td>
-                    <td class="col-md-2"><strong>Active Projects</strong></td>
-                    <td class="col-md-2"><strong>Elicitation Analysis</strong></td>
-                    <td class="col-md-2"><strong>Avg Throughput</strong></td>
-                    <td class="col-md-2"><strong>Total Costs</strong></td>
-                </tr>
+            <tr>
+                <th class="col-md-3"><strong>Date</strong></th>
+                <th class="col-md-1"><strong>Staffs</strong></th>
+                <th class="col-md-2"><strong>Active Projects</strong></th>
+                <th class="col-md-2"><strong>Elicitation Analysis</strong></th>
+                <th class="col-md-2"><strong>Avg Throughput</strong></th>
+                <th class="col-md-2"><strong>Total Costs</strong></th>
+            </tr>
             </thead>
             <tbody>
-                {% for item in res %}
-                    <tr>
-                        <td><a href="{% url 'teams:metric_detail' item.id %}?key={{ item.functional_group.key }}">{{ item.created|date }}</a></td>
-                        <td>{{ item.staffs }}</td>
-                        <td>{{ item.active_projects }}</td>
-                        <td>{{ item.elicitation_analysis_time }}</td>
-                        <td>{{ item.avg_throughput }}</td>
-                        <td>{{ item.total_operational_cost }}</td>
-                    </tr>
-                {% endfor %}
+            {% for item in res %}
+            <tr>
+                <td><a href="{% url 'teams:metric_detail' item.id %}?key={{ item.functional_group.key }}">{{item.created|date}}</a></td>
+                <td draggable="true" ondragstart="dragRE(event)">{{ item.staffs }}</td>
+                <td draggable="true" ondragstart="dragRE(event)">{{ item.active_projects }}</td>
+                <td draggable="true" ondragstart="dragRE(event)">{{ item.elicitation_analysis_time }}</td>
+                <td draggable="true" ondragstart="dragRE(event)">{{ item.avg_throughput }}</td>
+                <td draggable="true" ondragstart="dragRE(event)">{{ item.total_operational_cost }}</td>
+            </tr>
+            {% endfor %}
             </tbody>
         </table>
     </div>
+
+    <div class="container">
+        <section>
+            <div id="requirements_engineering_dnd_div" class="dnd_button_div" ondrop="dropRE(event)" ondragover="allowDropRE(event)">
+                Drag a Table Cell Here
+            </div>
+        </section>
+    </div>
+
+    <br>
+
+    <div>
+        <div>
+            <table class="chart_table">
+                <tr id="re_chart_row"></tr>
+            </table>
+        </div>
+    </div>
+
 </div>
 
+
+{% block endscript %}
+
+<script type="text/javascript">
+
+    var requirements_engineering_table_id = "requirements_engineering_table";
+    var requirements_engineering_chart_svg_prefix = "re_chart_svg_";
+
+    var requirements_engineering_primary_date_time_column = 0;
+    var requirements_engineering_next_chart_id = 0;
+
+    var requirements_engineering_dnd_charts_list = [];
+    var requirements_engineering_dnd_id = "";
+
+    var requirements_engineering_all_column_names_list = [];
+    var requirements_engineering_column_details_list = [];
+
+    var requirements_engineering_hide_column_list = [];
+    var requirements_engineering_column_data_list_json = '{{ column_data_list | safe }}';
+
+    (function () {
+
+        $(document).ready(function () {
+            addIdsToMainTable(requirements_engineering_table_id);
+            buildColumnNamesList(requirements_engineering_table_id, requirements_engineering_all_column_names_list, requirements_engineering_column_data_list_json, requirements_engineering_column_details_list);
+        });
+
+    })(jQuery);
+
+    // start of dnd section
+    function allowDropRE(event) {
+        event.preventDefault();
+    }
+
+    function dragRE(event) {
+        var target = event.target || event.srcElement;
+        requirements_engineering_dnd_id = target.id;
+        event.dataTransfer.setData("text", event.target.id);
+    }
+
+    function dropRE(event) {
+        event.preventDefault();
+        var temp_array = requirements_engineering_dnd_id.split("_");
+        var temp_column = temp_array[2];
+        addChartToTableRE(event, temp_column);
+    }
+
+    function re_td_x_drop(event) {
+
+        event.preventDefault();
+
+        var target = event.target || event.srcElement;
+        var dnd_id = target.id;
+
+        var dnd_array = dnd_id.split("_");
+        var chart_number = dnd_array[3];
+
+        // get the column number from the table cell id
+        var td_id = event.dataTransfer.getData("text");
+        var temp_array = td_id.split("_");
+        var dnd_column = temp_array[2];
+        var chart_object = null;
+
+        for (var index = 0; index < requirements_engineering_dnd_charts_list.length; index++) {
+            var temp_object = requirements_engineering_dnd_charts_list[index];
+
+            if (parseInt(temp_object.chart_count, 10) === parseInt(chart_number, 10)) {
+                temp_object.x_axis = dnd_column;
+                temp_object.update_axis = "x";
+                chart_object = temp_object;
+                break;
+            }
+        }
+
+        if (chart_object === null || chart_object === undefined) {
+            alert("Unable to Find Chart.");
+        } else {
+
+            if (chart_object.chart_type === "bar") {
+                //addXAxisColumnDataToBarChart(chart_object);
+            } else if (chart_object.chart_type === "line") {
+                // put here until the bar and pie dnd are fully supported
+                // chart_object.data_columns = chart_object.data_columns + "," + dnd_column;
+                createScatterPlotChartRE(chart_object);
+            } else if (chart_object.chart_type === "pie") {
+                //addXAxisColumnDataToPieChart(chart_object);
+            }
+        }
+    }
+
+    function re_allow_x_drop(event) {
+        event.preventDefault();
+    }
+
+    function re_td_y_drop(event) {
+
+        event.preventDefault();
+
+        var target = event.target || event.srcElement;
+        var dnd_id = target.id;
+
+        var dnd_array = dnd_id.split("_");  // x_dnd_1
+        var chart_number = dnd_array[3];
+
+        // get the column number from the table cell id
+        var td_id = event.dataTransfer.getData("text");
+        var temp_array = td_id.split("_");
+        var dnd_column = temp_array[2];
+        var chart_object = null;
+
+        for (var index = 0; index < requirements_engineering_dnd_charts_list.length; index++) {
+            var temp_object = requirements_engineering_dnd_charts_list[index];
+
+            if (parseInt(temp_object.chart_count, 10) === parseInt(chart_number, 10)) {
+                temp_object.y_axis = dnd_column;
+                temp_object.update_axis = "y";
+                chart_object = temp_object;
+                break;
+            }
+        }
+
+        if (chart_object === null || chart_object === undefined) {
+            alert("Unable to Find Chart.");
+        } else {
+            // displayObject(chart_object);
+            if (chart_object.chart_type === "bar") {
+                //addXAxisColumnDataToBarChart(chart_object);
+            } else if (chart_object.chart_type === "line") {
+                // put here until the bar and pie dnd are fully supported
+                // chart_object.data_columns = chart_object.data_columns + "," + dnd_column;
+                createScatterPlotChartRE(chart_object);
+            } else if (chart_object.chart_type === "pie") {
+                //addXAxisColumnDataToPieChart(chart_object);
+            }
+            //}
+        }
+    }
+
+    function re_allow_y_drop(event) {
+        event.preventDefault();
+    }
+
+    // end of dnd section
+
+    // start of chart section
+    function getChartHtmlRE(chart_count) {
+
+        var output = "<td id='re_chart_td_" + chart_count + "' class='chart_td'>";
+
+        output = output + "<table class='chart_dnd_table'><tbody>";
+
+        // row with dnd area for the x and y axis
+        output = output + "<tr id='re_xy_dnd_row_" + chart_count + "'>";
+        output = output + "<td id='re_x_dnd_" + chart_count + "' class='td_xy_dnd' ondrop='re_td_x_drop(event)' ondragover='re_allow_x_drop(event)'>X-Axis</td>";
+        output = output + "<td id='re_y_dnd_" + chart_count + "' class='td_xy_dnd' ondrop='re_td_y_drop(event)' ondragover='re_allow_y_drop(event)'>Y-Axis</td>";
+        output = output + "</tr>";
+
+        output = output + "<tr><td colspan='2' id='re_chart_td_" + chart_count + "' class='chart_td'>";
+        output = output + "<div id='" + requirements_engineering_chart_svg_prefix + chart_count + "' class='chart_svg_div'>chart" + chart_count + "</div>";
+        output = output + "</td></tr>";
+
+        output = output + "<tr><td colspan='2'>";
+        output = output + "<div id='re_radio_div_" + chart_count + "' class='chart_radio_div'>";
+
+        output = output + "<table class='radio_table'><tbody><tr>";
+        output = output + "<td><input type='radio' id='re_bar_" + chart_count + "' name='chart_group_" + chart_count + "' value='bar' onchange='process_radio_chart_selectionRE(event)'>Bar Chart</td>";
+        output = output + "<td><input type='radio' id='re_line_" + chart_count + "' name='chart_group_" + chart_count + "' value='line' onchange='process_radio_chart_selectionRE(event)'>Line Chart</td>";
+        output = output + "<td><input type='radio' id='re_pie_" + chart_count + "' name='chart_group_" + chart_count + "' value='pie' onchange='process_radio_chart_selectionRE(event)'>Pie Chart</td>";
+
+        output = output + "<td class='td_delete_btn'><input type='button' id='re_delete_chart_button_" + chart_count + "' value='Delete Chart' onclick='onClickDeleteChartRE(event)'></td>";
+        output = output + "</table></div>";
+        output = output + "</td></tr>";
+
+        output = output + "</tbody></table></td>";
+
+        return output;
+    }
+
+    function process_radio_chart_selectionRE(event) {
+
+        var target = event.target || event.srcElement;
+        var target_id = target.id;
+
+        var details_list = target_id.split("_");
+        var chart_type = details_list[1];
+        var chart_count = details_list[2];
+
+        var chart_object = getChartObjectFromListRE(chart_count);
+
+        if (chart_type === 'bar') {
+            chart_object.chart_type = "bar";
+            drawD3BarChartRE(chart_object);
+            $("#re_xy_dnd_row_" + chart_count).hide();
+        } else if (chart_type === 'line') {
+            chart_object.chart_type = "line";
+            drawD3LineChartRE(chart_object);
+            $("#re_xy_dnd_row_" + chart_count).hide();
+        } else if (chart_type === 'pie') {
+            chart_object.chart_type = "pie";
+            drawD3PieChartRE(chart_object);
+            $("#re_xy_dnd_row_" + chart_count).hide();
+        }
+    }
+
+    function drawD3PieChartRE(chart_object) {
+
+        var svg_id = chart_object.chart_count;
+
+        $("#re_chart_svg_" + svg_id).html("");
+
+        var chart_width = 400;
+        var chart_height = 400;
+        var radius = chart_height / 2;
+
+        var color = d3.scale.category20c();
+
+        var data = [];
+
+        var chart_data = get_column_data(chart_object.dnd_drag_column_number, requirements_engineering_table_id);
+
+        for (var index = 0; index < chart_data.length; index++) {
+            var temp_value = chart_data[index];
+            data.push({"label": "Week " + (index + 1), "value": temp_value});
+        }
+
+        var vis = d3.select('#re_chart_svg_' + svg_id).append("svg:svg").data([data]).attr("width", chart_width).attr("height", chart_height).append("svg:g").attr("transform", "translate(" + radius + "," + radius + ")");
+        var pie = d3.layout.pie().value(function (d) {
+            return d.value;
+        });
+
+        pie.sort(null);
+
+        // declare an arc generator function
+        var arc = d3.svg.arc().outerRadius(radius);
+
+        // select paths, use arc generator to draw
+        var arcs = vis.selectAll("g.slice").data(pie).enter().append("svg:g").attr("class", "slice");
+        arcs.append("svg:path")
+                .attr("fill", function (d, i) {
+                    return color(i);
+                })
+                .attr("d", function (d) {
+                    return arc(d);
+                });
+
+        // add the text
+        arcs.append("svg:text").attr("transform", function (d) {
+            d.innerRadius = 0;
+            d.outerRadius = radius;
+            return "translate(" + arc.centroid(d) + ")";
+        }).attr("text-anchor", "middle").text(function (d, i) {
+                    return data[i].label;
+                }
+        );
+    }
+
+    function drawD3BarChartRE(chart_object) {
+
+        var svg_id = chart_object.chart_count;
+
+        $("#re_chart_svg_" + svg_id).html("");
+
+        var chart_width = 400;
+        var chart_height = 400;
+
+        var margin = {top: 20, right: 20, bottom: 30, left: 40};
+        var width = chart_width - margin.left - margin.right;
+        var height = chart_height - margin.top - margin.bottom;
+
+        var x = d3.scale.ordinal().rangeRoundBands([0, width], .1);
+
+        var y = d3.scale.linear().range([height, 0]);
+
+        var xAxis = d3.svg.axis().scale(x).orient("bottom");
+
+        var yAxis = d3.svg.axis().scale(y).orient("left");  //.ticks(10, "%");
+
+        var y_column = chart_object.dnd_drag_column_number;
+        var y_data = get_column_data(y_column, requirements_engineering_table_id);
+
+        // parse the date information for the x-axis
+        var x_data = get_column_data(requirements_engineering_primary_date_time_column, requirements_engineering_table_id);
+        var x_date_time = [];
+
+        for (var index01 = 0; index01 < x_data.length; index01++) {
+            x_date_time.push(getParsedDate(x_data[index01]));  // string  Oct 5, 2015, 4:36p.m.
+        }
+
+        var data = [];
+        for (var index02 = 0; index02 < y_data.length; index02++) {
+            data.push({'x': x_date_time[index02], 'y': parseFloat(y_data[index02])});
+        }
+
+        // if the y value is zero, display a thin line instead of empty space
+        var ymax = d3.max(data, function (d) {
+            return d.y;
+        });
+
+        var min_unit = ymax / chart_height;
+
+        var xScale = d3.scale.ordinal()
+                .domain(d3.range(data.length))
+                .rangeRoundBands([0, chart_width], 0.05);
+
+        var yScale = d3.scale.linear()
+                .domain([0, d3.max(data) + 1.0])
+                .range([0, chart_height]);
+
+        x.domain(data.map(function (d) {
+            return d.x;
+        }));
+
+        y.domain([0, d3.max(data, function (d) {
+            return d.y;
+        })]);
+
+        var svg = d3.select("#re_chart_svg_" + svg_id).append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis)
+                .attr("font-family", "sans-serif")
+                .attr("font-size", "10px");
+
+        svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis)
+                .append("text")
+                .attr("transform", "rotate(-90)");
+
+        for (var index = 0; index < data.length; index++) {
+
+            svg.selectAll("rect")
+                    .data(data)
+                    .enter()
+                    .append("rect")
+                    .attr("class", "bar")
+                    .attr("x", function (d) {
+                        return x(d.x);
+                    })
+                    .attr("width", x.rangeBand())
+                    .attr("y", function (d) {
+                        return y(d.y);
+                    })
+                    .attr("height", function (d) {
+                        var temp_height = parseFloat(height - y(d.y));
+                        if (temp_height < min_unit) {
+                            temp_height = min_unit;
+                        }
+                        return temp_height;
+                    })
+                    .attr("fill", "blue")
+                    .on("mouseover", function (d) {
+
+                        // get this bar's x/y values, then augment for the tooltip
+                        var xPosition = parseFloat(d3.select(this).attr("x")) + (xScale.rangeBand() / 2) - 4;
+                        var yPosition = parseFloat(d3.select(this).attr("y")) + 50;
+
+                        // create the tooltip label
+                        svg.append("text")
+                                .attr("id", "tooltip")
+                                .attr("x", xPosition)
+                                .attr("y", yPosition)
+                                .attr("text-anchor", "middle")
+                                .attr("font-family", "sans-serif")
+                                .attr("font-size", "11px")
+                                .attr("font-weight", "bold")
+                                .attr("fill", "white")
+                                .text(d.y);
+                    })
+                    .on("mouseout", function () {  // remove the tooltip
+                        d3.select("#tooltip").remove();
+                    });
+
+        }
+    }
+
+    function drawD3LineChartRE(chart_object) {
+
+        var svg_id = chart_object.chart_count;
+
+        $("#re_chart_svg_" + svg_id).html("");
+
+        var data = [];
+
+        // each of the data objects is attached to a date
+        var x_axis = chart_object.x_axis;  // date_time_column
+
+        var x_data = getLineChartDatesRE(x_axis, requirements_engineering_table_id);
+        // alert("582  " + x_data);
+        var y_data = get_column_data(chart_object.dnd_drag_column_number, requirements_engineering_table_id);
+
+        var y_column_name = getColumnNameFromColumnDetailsList(chart_object.dnd_drag_column_number, requirements_engineering_column_details_list);
+
+        for (var index = 0; index < y_data.length; index++) {
+            data.push({'x': x_data[index], 'y': y_data[index]});
+        }
+
+        var chart_width = 400, chart_height = 400;  // 350;
+        var margin = {
+            top: 20,
+            right: 50,
+            bottom: 40,
+            left: 30
+        };
+
+        // these are graph size settings
+        var width = chart_width - margin.left - margin.right;
+        var height = chart_height - margin.top - margin.bottom;
+
+        var x_min = x_data[0];
+        var x_max = x_data[x_data.length - 1];
+
+        var minObjectValue = parseFloat(d3.min(data, function (d) {
+            return d.y;
+        }));
+        var maxObjectValue = parseFloat(d3.max(data, function (d) {
+            return d.y;
+        }));
+
+        // create the graph object
+        var vis = d3.select("#re_chart_svg_" + svg_id).append("svg")
+                .data(data)
+                .attr("class", "metrics-container")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var y = d3.scale.linear().domain([minObjectValue - (.1 * minObjectValue), maxObjectValue + (.1 * maxObjectValue)]).range([height, 0]);
+        var x = d3.time.scale().domain([x_min, x_max]).range([0, width]);
+
+        var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient("left")
+                .ticks(5);
+
+        var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("bottom")
+                .ticks(x_data.length)
+                .tickFormat(d3.time.format("%m-%d"));
+
+        vis.append("g")
+                .attr("class", "axis")
+                .attr("font-family", "sans-serif")
+                .attr("font-size", "12px")
+                .call(yAxis);
+
+        vis.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(0," + height + ")")
+                .attr("font-family", "sans-serif")
+                .attr("font-size", "12px")
+                .call(xAxis);
+
+        // add the axes labels
+        vis.append("text")
+                .attr("class", "axis-label")
+                .attr("text-anchor", "end")
+                .attr("x", width / 2)
+                .attr("y", height + 40);
+        //.text('Date');
+
+        vis.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0 - margin.left)
+                .attr("x", 0 - (height / 2))
+                .attr("dy", "1.5em")
+                .style("text-anchor", "start")
+                .text(y_column_name);
+
+        var line = d3.svg.line()
+                .x(function (d) {
+                    return x(d["x"]);
+                })
+                .y(function (d) {
+                    return y(d["y"]);
+                });
+
+        vis.append("svg:path")
+                .attr("d", line(data))
+                .style("stroke", function () {
+                    return "#000000";
+                })
+                .style("fill", "none")
+                .style("stroke-width", "2.5");
+
+        var dataCirclesGroup = vis.append('svg:g');
+
+        var circles = dataCirclesGroup.selectAll('.data-point').data(data);
+
+        circles.enter()
+                .append('svg:circle')
+                .attr('class', 'dot')
+                .attr('fill', function () {
+                    return "red";
+                })
+                .attr('cx', function (d) {
+                    return x(d["x"]);
+                })
+                .attr('cy', function (d) {
+                    return y(d["y"]);
+                })
+                .attr('r', function () {
+                    return 3;
+                })
+                .on("mouseover", function (d) {
+                    d3.select(this)
+                            .attr("r", 8)
+                            .attr("class", "dot-selected")
+                            .transition()
+                            .duration(750);
+                })
+                .on("mouseout", function (d) {
+                    d3.select(this)
+                            .attr("r", 3)
+                            .attr("class", "dot")
+                            .transition()
+                            .duration(750);
+                });
+
+    }
+
+    function getLineChartDates(x_axis, temp_table_id) {
+        return get_date_time_data(parseInt(x_axis, 10), temp_table_id);
+    }
+
+    function get_column_dataRE(column_number) {
+
+        var column_data = [];
+
+        $('#requirements_engineering_table tbody tr').each(function () {
+            var temp_data = $(this).children("td:eq(" + Number(column_number) + ") ").text();
+            column_data.push(temp_data);
+        });
+
+        return column_data;
+    }
+
+    function get_column_data(temp_column_number, temp_table_id) {
+
+        var column_data = [];
+
+        $('#' + temp_table_id + ' tbody tr').each(function () {
+            var temp_data = $(this).children(" td:eq(" + Number(temp_column_number) + ") ").text();
+            column_data.push(temp_data);
+        });
+
+        return column_data;
+    }
+
+    function get_date_time_dataRE(date_time_column_number) {
+
+        var date_time_data = [];
+
+        $('#requirements_engineering_table tbody tr').each(function () {
+            var date_time_value = $(this).children("td:eq(" + date_time_column_number + ")").text();
+            var temp_date = new Date.parse(date_time_value);
+            date_time_data.push(temp_date);
+        });
+
+        return date_time_data;
+    }
+
+    function getLineChartDatesRE() {
+        return get_date_time_dataRE(0);
+    }
+
+    function addChartToTableRE(event, dnd_drag_column_number) {
+
+        event.preventDefault();
+
+        requirements_engineering_next_chart_id++;
+        var chart_count = requirements_engineering_next_chart_id;
+
+        var chart_object = new Object();
+        chart_object.chart_count = chart_count;
+        chart_object.dnd_drag_column_number = dnd_drag_column_number;
+        chart_object.chart_type = "bar";
+        chart_object.x_axis = requirements_engineering_primary_date_time_column;  // default column with dates
+
+        requirements_engineering_dnd_charts_list.push(chart_object);
+
+        $.ajax({
+            url: "{% url 'teams:add_requirements_engineering_chart' %}",
+            dataType: 'html',
+            data: '',
+            type: 'POST',
+            success: function (data) {
+                var chart_html = getChartHtmlRE(chart_count);
+                $("#re_chart_row").append(chart_html);
+                drawD3BarChartRE(chart_object);
+
+                $("input:radio[name='chart_group_" + chart_count + "'][value='bar']").prop('checked', true);
+                // disable the x-axis dnd table cell
+                $("#re_xy_dnd_row_" + chart_count).hide();  // do not allow dnd to change the x or y axis
+            },
+            error: function (data) {
+                alert("Error Adding Chart");
+            }
+        });
+
+    }
+
+    function getChartObjectFromListRE(temp_number) {
+
+        var chart_object = null;
+
+        for (var index = 0; index < requirements_engineering_dnd_charts_list.length; index++) {
+            var temp_object = requirements_engineering_dnd_charts_list[index];
+            if (temp_object.chart_count == temp_number) {
+                chart_object = temp_object;
+                break;
+            }
+        }
+        return chart_object;
+    }
+
+    function removeChartFromListRE(temp_number) {
+
+        for (var index = 0; index < requirements_engineering_dnd_charts_list.length; index++) {
+            var temp_object = requirements_engineering_dnd_charts_list[index];
+            if (temp_object.chart_count == temp_number) {
+                requirements_engineering_dnd_charts_list.splice(index, 1);
+                break;
+            }
+        }
+    }
+
+    function onClickDeleteChartRE(event) {
+
+        var target = event.target || event.srcElement;
+        var id = target.id;
+
+        var final_id = id.substring("re_delete_chart_button_".length);
+
+        $.ajax({
+            url: "{% url 'teams:delete_requirements_engineering_chart' %}",
+            dataType: 'html',
+            data: '',
+            type: 'POST',
+            success: function (data) {
+                $("#re_chart_td_" + final_id).remove();
+                removeChartFromListRE(final_id);
+            },
+            error: function (data, status, error) {
+                alert("Error Deleting Chart " + status);
+            }
+        });
+    }
+
+    function createScatterPlotChartRE(chart_object) {
+
+        // alert("1186 createScatterPlotChart");
+        // displayObject(chart_object, "scatter plot");
+
+        var svg_id = chart_object.chart_count;
+        // var temp_chart_svg_prefix = chart_object.chart_svg_prefix;
+        // var temp_table_id = chart_object.table_id;
+
+        $("#re_chart_svg_" + svg_id).html("");
+
+        var chart_width = 400, chart_height = 400;
+
+        var margin = {top: 20, right: 20, bottom: 20, left: 30};
+        var width = chart_width - margin.left - margin.right;
+        var height = chart_height - margin.top - margin.bottom;
+
+        var update_axis = chart_object.update_axis;
+
+        var x_axis_column = "";
+        var x_data_type = "";
+        var x_axis_is_date_time_field = false;
+
+        var y_axis_column = "";
+        var y_data_type = "";
+        var y_axis_is_date_time_field = false;
+
+        var x_data;
+        var y_data;
+
+        var x_column_name = "";
+        var y_column_name = "";
+
+        if (update_axis === "x") {
+
+            // get the field type so I can format the x and y axis
+            x_axis_column = chart_object.x_axis;
+
+            x_data_type = getFieldTypeByColumnNumber(x_axis_column, requirements_engineering_column_details_list);
+
+            // CharField, IntegerField, DateTimeField
+            if (x_data_type === "DateTimeField") {
+                x_axis_is_date_time_field = true;
+            }
+            // x_data_type = getFieldTypeByColumnNumber(x_axis_column, column_details_list);
+
+            y_axis_column = chart_object.dnd_drag_column_number;
+            y_data_type = getFieldTypeByColumnNumber(y_axis_column, requirements_engineering_column_details_list);
+
+            if (y_data_type === "DateTimeField") {
+                y_axis_is_date_time_field = true;
+            }
+
+        } else if (update_axis === "y") {
+
+            // displayObject(chart_object);
+
+            // get the field type so I can format the x and y axis
+            x_axis_column = chart_object.dnd_drag_column_number;
+            x_data_type = getFieldTypeByColumnNumber(x_axis_column, requirements_engineering_column_details_list);
+
+            // CharField, IntegerField, DateTimeField
+            if (x_data_type === "DateTimeField") {
+                x_axis_is_date_time_field = true;
+            }
+            // x_data_type = getFieldTypeByColumnNumber(x_axis_column, column_details_list);
+
+            y_axis_column = chart_object.y_axis;
+            y_data_type = getFieldTypeByColumnNumber(y_axis_column, requirements_engineering_column_details_list);
+
+            if (y_data_type === "DateTimeField") {
+                y_axis_is_date_time_field = true;
+            }
+
+        } else {
+            alert("Fatal Error");
+        }
+
+        x_column_name = getColumnNameFromColumnDetailsList(x_axis_column, requirements_engineering_column_details_list);
+        y_column_name = getColumnNameFromColumnDetailsList(y_axis_column, requirements_engineering_column_details_list);
+
+        x_data = get_column_data(x_axis_column, requirements_engineering_table_id);
+        y_data = get_column_data(y_axis_column, requirements_engineering_table_id);
+
+        var data = [];
+
+        for (var index01 = 0; index01 < y_data.length; index01++) {
+
+            var tempx = x_data[index01];
+            if (x_axis_is_date_time_field) {
+            } else {
+                tempx = parseFloat(tempx);
+            }
+
+            var tempy = y_data[index01];
+            if (y_axis_is_date_time_field) {
+            } else {
+                tempy = parseFloat(tempy);
+            }
+
+            data.push({'x': tempx, 'y': tempy});
+        }
+
+        //for (var index02 = 0; index02 < data.length; index02++) {
+        //    displayObject(data[index02]);
+        //}
+
+        // setup x
+        var xValue = function (d) {
+            return d.x;
+        };
+        var xScale = d3.scale.linear().range([0, width]);
+        var xMap = function (d) {
+            return xScale(xValue(d));
+        };
+        var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+
+        // setup y
+        var yValue = function (d) {
+            return d.y;
+        };
+        var yScale = d3.scale.linear().range([height, 0]);
+        var yMap = function (d) {
+            return yScale(yValue(d));
+        };
+        var yAxis = d3.svg.axis().scale(yScale).orient("left");
+
+        // setup fill color
+        var cValue = function (d) {
+                    return d.y;
+                },
+                color = d3.scale.category10();
+
+        // add the graph canvas to the body of the webpage
+        var svg = d3.select("#re_chart_svg_" + svg_id).append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                .attr("font-family", "sans-serif")
+                .attr("font-size", "11px");
+
+        // add the tooltip area to the webpage
+        var tooltip = d3.select("#re_chart_svg_" + svg_id).append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0.0);
+
+        d3.select(".tooltip").classed("hidden", false);
+
+        var xmax = d3.max(data, function (d) {
+            return d.x;
+        });
+        var ymax = d3.max(data, function (d) {
+            return d.y;
+        });
+
+        for (var index = 0; index < data.length; index++) {
+
+            xScale.domain([0.0, xmax]);  // d3.max(data, xValue) + 1]);
+            yScale.domain([0.0, ymax]);  // d3.max(data, yValue) + 1]);
+            //xScale.domain([0.0, d3.max(data, xValue) + 1]);
+            //yScale.domain([0.0, d3.max(data, yValue) + 1]);
+
+            // only need to draw these once
+            if (index === 0) {
+
+                // x-axis
+                svg.append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + height + ")")
+                        .call(xAxis)
+                        .append("text")
+                        .attr("class", "label")
+                        .attr("x", width)
+                        .attr("y", -6)
+                        .style("text-anchor", "end")
+                        .attr("font-family", "sans-serif")
+                        .attr("font-size", "10px")
+                        .attr("fill", "red")
+                        .text(x_column_name);
+
+                // y-axis
+                svg.append("g")
+                        .attr("class", "y axis")
+                        .call(yAxis)
+                        .append("text")
+                        .attr("class", "label")
+                        .attr("transform", "rotate(-90)")
+                        .attr("y", 6)
+                        .attr("dy", ".71em")
+                        .style("text-anchor", "end")
+                        .attr("font-family", "sans-serif")
+                        .attr("font-size", "10px")
+                        .attr("fill", "red")
+                        .text(y_column_name);
+            }
+
+            // draw dots
+            svg.selectAll(".dot")
+                    .data(data)
+                    .enter().append("circle")
+                    .attr("class", "dot")
+                    .attr("r", 3.5)
+                    .attr("cx", xMap)
+                    .attr("cy", yMap)
+                    .style("fill", function (d) {
+                        return color(cValue(d));
+                    })
+                    .on("mouseover", function (d) {
+                        tooltip.transition()
+                                .duration(200)
+                                .style("opacity", 0.9);
+
+                        tooltip.html("Test")  // ( " + x_column_name + " " + d.x + ", " + y_column_name + " " + d.y + " )")
+                                .style("left", (d3.event.pageX + 5) + "px")
+                                .style("top", (d3.event.pageY - 20) + "px");
+
+                        d3.select(".tooltip").classed("hidden", false);
+                    })
+                    .on("mouseout", function (d) {
+                        tooltip.transition()
+                                .duration(500)
+                                .style("opacity", 0.0);
+                        d3.select(".tooltip").classed("hidden", true);
+                    });
+
+            /*
+             .on("mouseover", function (d) {
+             tooltip.transition()
+             .duration(200)
+             .style("opacity", .9);
+             tooltip.html(d["Cereal Name"] + "<br/> (" + xValue(d)
+             + ", " + yValue(d) + ")")
+             .style("left", (d3.event.pageX + 5) + "px")
+             .style("top", (d3.event.pageY - 28) + "px");
+
+             })
+             .on("mouseout", function (d) {
+             tooltip.transition()
+             .duration(500)
+             .style("opacity", 0);
+             });
+
+             */
+        }
+    }
+
+    // end of chart section
+
+</script>
+
+{% endblock %}
