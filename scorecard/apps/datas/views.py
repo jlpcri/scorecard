@@ -11,10 +11,15 @@ from scorecard.apps.datas.utils import write_to_excel, write_to_excel_all, write
 
 from scorecard.apps.users.models import FunctionalGroup
 from scorecard.apps.teams.models import InnovationMetrics, LabMetrics, RequirementMetrics, TestMetrics
+from scorecard.apps.teams.utils import get_start_end_from_request
 
 
 @login_required
 def datas(request):
+    start_end = get_start_end_from_request(request)
+    start = start_end['start']
+    end = start_end['end']
+
     functional_groups = FunctionalGroup.objects.all().order_by('name')
     data = {}
     data_name = []
@@ -23,10 +28,12 @@ def datas(request):
         data_name.append(functional_group.name)
         data_key.append(functional_group.key)
 
-    dates = InnovationMetrics.objects.values_list('created', flat=True).order_by('created')
+    dates = InnovationMetrics.objects.filter(created__range=(start, end)).values_list('created', flat=True).order_by('-created')
     data['name'] = data_name
     data['key'] = data_key
     data['dates'] = dates
+    data['start'] = start
+    data['end'] = end
 
     context = RequestContext(request, {
         'data': data
@@ -48,6 +55,10 @@ def export_excel(request):
 
     update_error = False
     update_error_list = []
+
+    start_end = get_start_end_from_request(request)
+    start = start_end['start']
+    end = start_end['end']
 
     if date:
         date = datetime.strptime(date, '%b. %d, %Y')
@@ -127,7 +138,7 @@ def export_excel(request):
 
     else:
         export_file_name += 'All-' + today
-        dates = InnovationMetrics.objects.values_list('created', flat=True)
+        dates = InnovationMetrics.objects.filter(created__range=(start, end)).values_list('created', flat=True)
 
         # export formula to Testing Summar
         ws = wb.active
@@ -141,13 +152,14 @@ def export_excel(request):
         for functional_group in functional_groups:
             ws = wb.create_sheet(functional_group.name)
             if functional_group.key == 'RE':
-                metrics = RequirementMetrics.objects.all()
+                metrics = RequirementMetrics.objects.filter(created__range=(start, end))
             elif functional_group.key == 'TL':
-                metrics = LabMetrics.objects.all()
+                metrics = LabMetrics.objects.filter(created__range=(start, end))
             elif functional_group.key == 'QI':
-                metrics = InnovationMetrics.objects.all()
+                metrics = InnovationMetrics.objects.filter(created__range=(start, end))
             else:
-                metrics = TestMetrics.objects.filter(functional_group=functional_group)
+                metrics = TestMetrics.objects.filter(functional_group=functional_group,
+                                                     created__range=(start, end))
 
             result = check_metrics_updated(metrics)
 
