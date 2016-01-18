@@ -52,7 +52,7 @@ def metric_detail(request, metric_id):
     except TestMetricsConfiguration.DoesNotExist:
         test_metric_config = ''
 
-    if key in ['PQ', 'QA', 'TE']:
+    if key in ['QA', 'TE']:
         metric = get_object_or_404(TestMetrics, pk=metric_id)
         form = TestForm(instance=metric)
     elif key == 'QI':
@@ -85,7 +85,7 @@ def metric_edit(request, metric_id):
     key = request.GET.get('key', '')
 
     if request.method == 'POST':
-        if key in ['PQ', 'QA', 'TE']:
+        if key in ['QA', 'TE']:
             metric = get_object_or_404(TestMetrics, pk=metric_id)
             form = TestForm(request.POST, instance=metric)
         elif key == 'QI':

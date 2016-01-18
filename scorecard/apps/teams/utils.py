@@ -11,9 +11,7 @@ def context_teams(request):
 
     functional_groups = FunctionalGroup.objects.all()
     for functional_group in functional_groups:
-        if functional_group.key == 'PQ':
-            pqs = functional_group.testmetrics_set.filter(created__range=(start, end)).order_by('-created')
-        elif functional_group.key == 'QA':
+        if functional_group.key == 'QA':
             qas = functional_group.testmetrics_set.filter(created__range=(start, end)).order_by('-created')
         elif functional_group.key == 'QI':
             qis = functional_group.innovationmetrics_set.filter(created__range=(start, end)).order_by('-created')
@@ -25,7 +23,6 @@ def context_teams(request):
             tls = functional_group.labmetrics_set.filter(created__range=(start, end)).order_by('-created')
 
     context = {
-        'pqs': pqs,
         'qas': qas,
         'qis': qis,
         'res': res,
