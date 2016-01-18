@@ -17,7 +17,6 @@ from forms import InnovationForm, LabForm, RequirementForm, TestForm
 @login_required
 def personals(request):
     function_groups = FunctionalGroup.objects.all()
-    pq_personals = []
     qa_personals = []
     te_personals = []
     qi_personals = []
@@ -26,13 +25,7 @@ def personals(request):
     current_user_personals = []
 
     for function_group in function_groups:
-        if function_group.key == 'PQ':
-            pq = TestStats.objects.latest('created')
-            pq_personals = TestStats.objects.filter(human_resource__functional_group__key='PQ',
-                                                    created__year=pq.created.year,
-                                                    created__month=pq.created.month,
-                                                    created__day=pq.created.day)
-        elif function_group.key == 'QA':
+        if function_group.key == 'QA':
             qa = TestStats.objects.latest('created')
             qa_personals = TestStats.objects.filter(human_resource__functional_group__key='QA',
                                                     created__year=qa.created.year,
@@ -65,7 +58,7 @@ def personals(request):
 
     hr = HumanResource.objects.get(user=request.user)
     if hr.functional_group:
-        if hr.functional_group.key in ['PQ', 'QA', 'TE']:
+        if hr.functional_group.key in ['QA', 'TE']:
             current_user_personals = hr.teststats_set.all()
         elif hr.functional_group.key == 'QI':
             current_user_personals = hr.innovationstats_set.all()
@@ -77,7 +70,6 @@ def personals(request):
     dates = get_distinct_dates()
 
     context = RequestContext(request, {
-        'pq_personals': pq_personals,
         'qa_personals': qa_personals,
         'te_personals': te_personals,
         'qi_personals': qi_personals,
@@ -109,7 +101,7 @@ def weekly_personal_stats_new_manually(request):
 def personal_stats(request, stats_id):
     key = request.GET.get('key', '')
 
-    if key in ['PQ', 'QA', 'TE']:
+    if key in ['QA', 'TE']:
         personal_stat = get_object_or_404(TestStats, pk=stats_id)
         form = TestForm(instance=personal_stat)
     elif key == 'QI':
@@ -138,7 +130,7 @@ def personal_stats_edit(request, stats_id):
     key = request.GET.get('key', '')
 
     if request.method == 'POST':
-        if key in ['PQ', 'QA', 'TE']:
+        if key in ['QA', 'TE']:
             personal_stat = get_object_or_404(TestStats, pk=stats_id)
             form = TestForm(request.POST, instance=personal_stat)
         elif key == 'QI':
@@ -175,18 +167,15 @@ def fetch_personals_by_date(request):
     data = {}
     data['date'] = date
 
-    pq_personals = []
     qa_personals = []
     te_personals = []
     qi_personals = []
     re_personals = []
     tl_personals = []
 
-    functional_gruops = FunctionalGroup.objects.all()
-    for functional_gruop in functional_gruops:
-        if functional_gruop.key == 'PQ':
-            pq_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
-        elif functional_gruop.key == 'QA':
+    functional_groups = FunctionalGroup.objects.all()
+    for functional_gruop in functional_groups:
+        if functional_gruop.key == 'QA':
             qa_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
         elif functional_gruop.key == 'TE':
             te_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
@@ -197,7 +186,6 @@ def fetch_personals_by_date(request):
         elif functional_gruop.key == 'TL':
             tl_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
 
-    data['pq_personals'] = pq_personals
     data['qa_personals'] = qa_personals
     data['te_personals'] = te_personals
     data['qi_personals'] = qi_personals
@@ -213,7 +201,7 @@ def fetch_personals_per_team_per_date(key, date):
     day = date[8:10]
     data = []
 
-    if key in ['PQ', 'QA', 'TE']:
+    if key in ['QA', 'TE']:
         team_personals = TestStats.objects.filter(human_resource__functional_group__key=key,
                                                   created__year=year,
                                                   created__month=month,

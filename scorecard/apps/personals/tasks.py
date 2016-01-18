@@ -40,7 +40,7 @@ def weekly_personal_stats_new():
 def personal_stats_new():
     functional_groups = FunctionalGroup.objects.all()
     for functional_group in functional_groups:
-        if functional_group.key in ['PQ', 'QA', 'TE']:
+        if functional_group.key in ['QA', 'TE']:
             hrs = functional_group.humanresource_set.all()
             for hr in hrs:
                 TestStats.objects.create(human_resource=hr)
