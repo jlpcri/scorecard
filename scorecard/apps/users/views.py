@@ -74,14 +74,19 @@ def user_management(request):
             'username',
             '-username',
             'last_login',
-            '-last_login'
+            '-last_login',
+            'humanresource__functional_group__key',
+            '-humanresource__functional_group__key'
         ]
         users = ''
         sort = request.GET.get('sort', '')
         sort = sort if sort else 'username'
 
         if sort in sort_types:
-            users = User.objects.all().order_by(sort)
+            if sort in ['humanresource__functional_group__key', '-humanresource__functional_group__key']:
+                users = User.objects.order_by(sort, 'username')
+            else:
+                users = User.objects.order_by(sort)
 
         context = RequestContext(request, {
             'users': users,
