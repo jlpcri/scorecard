@@ -46,7 +46,7 @@
                     <div class="col-sm-2">{{ form.power_consumption_ups_b }}</div>
                     <div class="col-sm-2">{{ form.license_cost }}</div>
                 </div>
-            {% else %} <!-- For PQ, QA, TE, RE, QI -->
+            {% else %} <!-- For QA, TE, RE, QI -->
                 <legend style="margin-top: 30px;">Human Resource</legend>
                 <div class="row">
                     <div class="col-sm-2"><label>Staffs</label></div>
@@ -106,7 +106,7 @@
                         <div class="col-sm-2">{{ form.team_initiative }}</div>
                         <div class="col-sm-2">{{ form.elicitation_analysis_time }}</div>
                     </div>
-                {% else %}  <!-- For TE, QA, PQ -->
+                {% else %}  <!-- For TE, QA -->
                     <div class="row">
                         <div class="col-sm-2"><label>Team Initiatives</label></div>
                         <div class="col-sm-2"><label>Tickets Backlog</label></div>
@@ -379,7 +379,7 @@
                         <div class="col-sm-2">{{ form.visilog_txl_parsed }}</div>
                         <div class="col-sm-2">{{ form.visilog_txl_schema_violation }}</div>
                     </div>
-                {% else %} <!-- PQ, QA, TE cost -->
+                {% else %} <!-- QA, TE cost -->
                     <div class="row">
                         <div class="col-sm-2"><label>License Cost</label></div>
                         <div class="col-sm-2"><label>Operational Cost</label></div>

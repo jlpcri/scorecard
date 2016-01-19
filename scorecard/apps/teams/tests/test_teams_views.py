@@ -11,10 +11,6 @@ class TeamsViewTest(TestCase):
     def setUp(self):
         self.client = Client()
 
-        self.fg_pq = FunctionalGroup.objects.create(
-            name='Product Quality',
-            key='PQ'
-        )
         self.fg_qa = FunctionalGroup.objects.create(
             name='Quality Assurance',
             key='QA'

@@ -173,10 +173,6 @@ class TestMetricsModelTest(TestCase):
             name='Quality Assurance',
             key='QA'
         )
-        self.functional_group_pq = FunctionalGroup.objects.create(
-            name='Product Quality',
-            key='PQ'
-        )
         self.functional_group_te = FunctionalGroup.objects.create(
             name='Test Engineering',
             key='TE'

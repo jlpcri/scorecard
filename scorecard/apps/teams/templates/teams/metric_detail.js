@@ -25,9 +25,6 @@ switch (key) {
         avgThroughputCal();
         efficiencyCal();
         break;
-    case 'PQ':
-        bundleTestMetricCal();
-        break;
     case 'QA':
         bundleTestMetricCal();
         break;
@@ -53,7 +50,6 @@ function bundleTestMetricCal() {
 function costCal() {
     switch (key) {
         case 'QA':
-        case 'PQ':
         case 'TE':
             staff.on('input', function(){
                 operational_cost.val(operationalCal(this.value, hours, hourly_rate)
@@ -90,7 +86,7 @@ function costReworkCal() {
     });
 }
 
-// Cost of automation calculation for PQ, QA, TE
+// Cost of automation calculation for QA, TE
 function autoCal() {
     $('#id_tc_auto_execution_time').on('input', function(){
         $('#auto_savings').val(autoSavingsCal(this.value, hourly_rate_auto));
@@ -102,17 +98,16 @@ function operationalCal(staffs_or_contractors, hours, hourly_rate) {
     return staffs_or_contractors * hours * hourly_rate;
 }
 
-// Cost of automation calculation for PQ, QA, TE
+// Cost of automation calculation for QA, TE
 function autoSavingsCal(tc_auto_time, hourly_rate_auto) {
     switch (key) {
         case 'TE':
-        case 'PQ':
         case 'QA':
             return tc_auto_time * hourly_rate_auto;
     }
 }
 
-// Calculation of average throughput for RE, 'PQ, QA, TE'
+// Calculation of average throughput for RE, 'QA, TE'
 function avgThroughputCal() {
     switch (key) {
         case 'QI':
@@ -133,7 +128,6 @@ function avgThroughputCal() {
                 $('#avg_throughput').val(parseFloat(this.value) + parseFloat($('#id_active_projects').val()));
             });
             break;
-        case 'PQ':
         case 'QA':
         case 'TE':
             $('#id_staffs').on('input', function(){
@@ -163,7 +157,7 @@ function avgThroughputCal() {
     }
 }
 
-// Calculation of average throughput for PQ, QA, TE
+// Calculation of average throughput for QA, TE
 function avgThroughputTestMetric() {
     var hrs = parseFloat(staff.val()) + parseFloat($('#id_contractors').val()),
         dev = parseFloat($('#id_tc_manual_dev').val()) + parseFloat($('#id_tc_auto_dev').val()),
@@ -171,21 +165,21 @@ function avgThroughputTestMetric() {
     $('#avg_throughput').val(((dev + execution) / hrs).toFixed(2));
 }
 
-// Calculation of auto footprint dev age for PQ, QA, TE
+// Calculation of auto footprint dev age for QA, TE
 function autoFootprintDevAge() {
     var manual = parseFloat($('#id_tc_manual_dev').val()),
         auto = parseFloat($('#id_tc_auto_dev').val());
     $('#auto_footprint_dev').val((auto / (manual + auto) * 100).toFixed(2) + '%');
 }
 
-// Calculation of auto footprint execution age for PQ, QA, TE
+// Calculation of auto footprint execution age for QA, TE
 function autoFootprintExecutionAge(){
     var manual = parseFloat($('#id_tc_manual_execution').val()),
         auto = parseFloat($('#id_tc_auto_execution').val());
     $('#auto_footprint_execution').val((auto / (manual + auto) * 100).toFixed(2) + '%');
 }
 
-// Calculation of efficiency for RE, 'PQ, QA, TE'
+// Calculation of efficiency for RE, 'QA, TE'
 function efficiencyCal() {
     switch (key) {
         case 'RE':
@@ -199,7 +193,6 @@ function efficiencyCal() {
                 $('#id_efficiency').val(efficiency + '%');
             });
             break;
-        case 'PQ':
         case 'QA':
         case 'TE':
             $('#id_ticket_prep').on('input', function(){
