@@ -1,4 +1,5 @@
 import json
+from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -45,8 +46,13 @@ def sign_in(request):
                 login(request, user)
                 try:
                     hr = HumanResource.objects.get(user=user)
-                    if not hr.functional_group and not user.is_superuser:
-                        messages.error(request, 'Please ask your Supervisor to assign you to your team.')
+                    if not hr.functional_group:
+                        if user.is_superuser:
+                            pass
+                        elif hr.manager:
+                            messages.error(request, 'Please <a href=\'{0}user_manager_assign\'>assign yourself </a> to your team.'.format(settings.LOGIN_URL))
+                        else:
+                            messages.error(request, 'Please ask your Supervisor to assign yourself to your team.')
                 except HumanResource.DoesNotExist:
                     HumanResource.objects.create(user=user)
                     messages.error(request, 'Please ask your Supervisor to assign you to your team.')
