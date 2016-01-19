@@ -56,7 +56,6 @@ class TeamsViewTest(TestCase):
     def test_teams_view_with_no_content(self):
         responses = self.client.get(reverse('teams:teams'))
         self.assertContains(responses, 'No Contents')
-        self.assertQuerysetEqual(responses.context['pqs'], []),
         self.assertQuerysetEqual(responses.context['qas'], []),
         self.assertQuerysetEqual(responses.context['tes'], []),
         self.assertQuerysetEqual(responses.context['qis'], []),
