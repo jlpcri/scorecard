@@ -44,9 +44,12 @@ def sign_in(request):
             if user.is_active:
                 login(request, user)
                 try:
-                    HumanResource.objects.get(user=user)
+                    hr = HumanResource.objects.get(user=user)
+                    if not hr.functional_group:
+                        messages.error(request, 'Please ask your Supervisor to assign you to your team.')
                 except HumanResource.DoesNotExist:
                     HumanResource.objects.create(user=user)
+                    messages.error(request, 'Please ask your Supervisor to assign you to your team.')
                 if request.GET.get('next'):
                     return redirect(request.GET['next'])
                 else:
@@ -99,7 +102,10 @@ def user_management(request):
 @user_passes_test(user_is_manager)
 def user_manager_assign(request):
     user = request.user
-    key = request.user.humanresource.functional_group.key
+    try:
+        key = request.user.humanresource.functional_group.key
+    except AttributeError:
+        key = ''
 
     if request.method == 'GET':
         users = User.objects.all().order_by('username')
