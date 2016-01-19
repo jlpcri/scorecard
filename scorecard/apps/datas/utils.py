@@ -96,11 +96,6 @@ HEAD_TL = [
     'Licensing Costs'
 ]
 
-HEAD_PQ = [
-    'Week Ending',
-    'Product Quality',
-]
-
 HEAD_QA = [
     'Week Ending',
     'Quality Assurance',
@@ -290,7 +285,7 @@ ROW_START_INDEX = 4
 COL_EXCLUDE_QI = [2, 6, 17, 25, 32, 36]
 COL_EXCLUDE_RE = [2, 6, 11, 19, 25]
 COL_EXCLUDE_TL = [2, 6, 11]
-COL_EXCLUDE_PQ_QA_TE = [2, 6, 27, 37, 49]
+COL_EXCLUDE_QA_TE = [2, 6, 27, 37, 49]
 COL_EXCLUDE_TEST_SUMMARY = [2, 6, 11]
 COL_EXCLUDE_QI_TL_SUMMARY = [2, 6, 13, 17, 21, 26]
 
@@ -336,9 +331,7 @@ def write_to_excel(metric, ws):
 
     else:
         head = []
-        if metric.functional_group.key == 'PQ':
-            head = HEAD_PQ + HEAD_TESTING
-        elif metric.functional_group.key == 'QA':
+        if metric.functional_group.key == 'QA':
             head = HEAD_QA + HEAD_TESTING
         elif metric.functional_group.key == 'TE':
             head = HEAD_TE + HEAD_TESTING
@@ -349,9 +342,9 @@ def write_to_excel(metric, ws):
 
         apply_border_style(ws, row_start + 1, len(head) + 1)
 
-        write_ytd(ws, len(head) + 1, row_start, row_start, COL_EXCLUDE_PQ_QA_TE)
+        write_ytd(ws, len(head) + 1, row_start, row_start, COL_EXCLUDE_QA_TE)
 
-        write_body_pq_qa_te(ws, row_start, metric)
+        write_body_qa_te(ws, row_start, metric)
 
 
 def write_head_title(ws, title):
@@ -506,7 +499,7 @@ def write_body_re(ws, row, metric):
     ws.cell(row=row, column=30).value = metric.overall_cost
 
 
-def write_body_pq_qa_te(ws, row, metric):
+def write_body_qa_te(ws, row, metric):
     # column 1-6
     write_human_resource(ws, row, metric)
 
@@ -671,9 +664,7 @@ def write_to_excel_all(metrics, ws, key):
 
     else:
         head = []
-        if key == 'PQ':
-            head = HEAD_PQ + HEAD_TESTING
-        elif key == 'QA':
+        if key == 'QA':
             head = HEAD_QA + HEAD_TESTING
         elif key == 'TE':
             head = HEAD_TE + HEAD_TESTING
@@ -684,10 +675,10 @@ def write_to_excel_all(metrics, ws, key):
 
         apply_border_style(ws, row_start + len(metrics), len(head) + 1)
 
-        write_ytd(ws, len(head) + 1, row_start, row_start + len(metrics) - 1, COL_EXCLUDE_PQ_QA_TE)
+        write_ytd(ws, len(head) + 1, row_start, row_start + len(metrics) - 1, COL_EXCLUDE_QA_TE)
 
         for metric in metrics:
-            write_body_pq_qa_te(ws, row_start, metric)
+            write_body_qa_te(ws, row_start, metric)
             row_start += 1
 
 
@@ -737,47 +728,47 @@ def write_to_excel_test_summary(ws, dates):
         ws.column_dimensions[get_column_letter(2)].width = 4
 
         # column 3
-        ws.cell(row=row_start, column=3).value = get_formula_sum_from_pq_qa_te(row_start, 3)  # staff
-        ws.cell(row=row_start, column=4).value = get_formula_sum_from_pq_qa_te(row_start, 4)  # openings
-        ws.cell(row=row_start, column=5).value = get_formula_sum_from_pq_qa_te(row_start, 5)  # contractors
+        ws.cell(row=row_start, column=3).value = get_formula_sum_from_qa_te(row_start, 3)  # staff
+        ws.cell(row=row_start, column=4).value = get_formula_sum_from_qa_te(row_start, 4)  # openings
+        ws.cell(row=row_start, column=5).value = get_formula_sum_from_qa_te(row_start, 5)  # contractors
 
         # column 6
         background_color_fill(ws, row_start, col=6, background_color=cornFlowerBlueFill)
         ws.column_dimensions[get_column_letter(6)].width = 4
 
         # column 7
-        ws.cell(row=row_start, column=7).value = get_formula_sum_from_pq_qa_te(row_start, 7)    # team initiatives
-        ws.cell(row=row_start, column=8).value = get_formula_sum_from_pq_qa_te(row_start, 41)   # active projects
-        ws.cell(row=row_start, column=9).value = get_formula_sum_from_pq_qa_te(row_start, 40)   # active tickets
-        ws.cell(row=row_start, column=10).value = get_formula_avg_from_pq_qa_te(row_start, 26)  # avg throughput
+        ws.cell(row=row_start, column=7).value = get_formula_sum_from_qa_te(row_start, 7)    # team initiatives
+        ws.cell(row=row_start, column=8).value = get_formula_sum_from_qa_te(row_start, 41)   # active projects
+        ws.cell(row=row_start, column=9).value = get_formula_sum_from_qa_te(row_start, 40)   # active tickets
+        ws.cell(row=row_start, column=10).value = get_formula_avg_from_qa_te(row_start, 26)  # avg throughput
 
         # column 11
         background_color_fill(ws, row_start, col=11, background_color=rebeccaPurpleFill)
         ws.column_dimensions[get_column_letter(11)].width = 4
 
         # column 12
-        ws.cell(row=row_start, column=12).value = get_formula_sum_from_pq_qa_te(row_start, 29)  # delays introduced
-        ws.cell(row=row_start, column=13).value = get_formula_sum_from_pq_qa_te(row_start, 30)  # defects identified
-        ws.cell(row=row_start, column=14).value = get_formula_sum_from_pq_qa_te(row_start, 31)  # uat defects not prevented
-        ws.cell(row=row_start, column=15).value = get_formula_sum_from_pq_qa_te(row_start, 32)  # SDIs not prevented
-        ws.cell(row=row_start, column=16).value = get_formula_avg_from_pq_qa_te(row_start, 38)  # Avg team size
-        ws.cell(row=row_start, column=17).value = get_formula_avg_from_pq_qa_te(row_start, 39)  # avg timeframe
+        ws.cell(row=row_start, column=12).value = get_formula_sum_from_qa_te(row_start, 29)  # delays introduced
+        ws.cell(row=row_start, column=13).value = get_formula_sum_from_qa_te(row_start, 30)  # defects identified
+        ws.cell(row=row_start, column=14).value = get_formula_sum_from_qa_te(row_start, 31)  # uat defects not prevented
+        ws.cell(row=row_start, column=15).value = get_formula_sum_from_qa_te(row_start, 32)  # SDIs not prevented
+        ws.cell(row=row_start, column=16).value = get_formula_avg_from_qa_te(row_start, 38)  # Avg team size
+        ws.cell(row=row_start, column=17).value = get_formula_avg_from_qa_te(row_start, 39)  # avg timeframe
 
-        ws.cell(row=row_start, column=18).value = get_formula_sum_from_pq_qa_te(row_start, 20)  # automation footprint
+        ws.cell(row=row_start, column=18).value = get_formula_sum_from_qa_te(row_start, 20)  # automation footprint
         ws.cell(row=row_start, column=18).number_format = '0.00%'
 
-        ws.cell(row=row_start, column=19).value = get_formula_sum_from_pq_qa_te(row_start, 24)  # automation hours
-        ws.cell(row=row_start, column=20).value = get_formula_sum_from_pq_qa_te(row_start, 22)  # test exec hours
-        ws.cell(row=row_start, column=21).value = get_formula_sum_from_pq_qa_te(row_start, 43)  # gross available
-        ws.cell(row=row_start, column=22).value = get_formula_avg_from_pq_qa_te(row_start, 44)  # efficiency
+        ws.cell(row=row_start, column=19).value = get_formula_sum_from_qa_te(row_start, 24)  # automation hours
+        ws.cell(row=row_start, column=20).value = get_formula_sum_from_qa_te(row_start, 22)  # test exec hours
+        ws.cell(row=row_start, column=21).value = get_formula_sum_from_qa_te(row_start, 43)  # gross available
+        ws.cell(row=row_start, column=22).value = get_formula_avg_from_qa_te(row_start, 44)  # efficiency
         ws.cell(row=row_start, column=22).number_format = '0.00%'
-        ws.cell(row=row_start, column=23).value = get_formula_sum_from_pq_qa_te(row_start, 45)  # overtime weekend
-        ws.cell(row=row_start, column=24).value = get_formula_sum_from_pq_qa_te(row_start, 46)  # overtime weekday
-        ws.cell(row=row_start, column=25).value = get_formula_sum_from_pq_qa_te(row_start, 47)  # rework hours
-        ws.cell(row=row_start, column=26).value = get_formula_sum_from_pq_qa_te(row_start, 48)  # resource swap hours
-        ws.cell(row=row_start, column=27).value = get_formula_sum_from_pq_qa_te(row_start, 34)  # escalations
-        ws.cell(row=row_start, column=28).value = get_formula_sum_from_pq_qa_te(row_start, 52)  # overall opening costs
-        ws.cell(row=row_start, column=29).value = get_formula_sum_from_pq_qa_te_total_savings(row_start, [53, 54])  # total savings
+        ws.cell(row=row_start, column=23).value = get_formula_sum_from_qa_te(row_start, 45)  # overtime weekend
+        ws.cell(row=row_start, column=24).value = get_formula_sum_from_qa_te(row_start, 46)  # overtime weekday
+        ws.cell(row=row_start, column=25).value = get_formula_sum_from_qa_te(row_start, 47)  # rework hours
+        ws.cell(row=row_start, column=26).value = get_formula_sum_from_qa_te(row_start, 48)  # resource swap hours
+        ws.cell(row=row_start, column=27).value = get_formula_sum_from_qa_te(row_start, 34)  # escalations
+        ws.cell(row=row_start, column=28).value = get_formula_sum_from_qa_te(row_start, 52)  # overall opening costs
+        ws.cell(row=row_start, column=29).value = get_formula_sum_from_qa_te_total_savings(row_start, [53, 54])  # total savings
 
         row_start += 1
 
@@ -864,25 +855,25 @@ def write_to_excel_qi_tl_summary(ws, dates):
     add_dollar_symbol(ws, row_start, col_start=29, col_end=29)
 
 
-def get_formula_sum_from_pq_qa_te(row, col):
+def get_formula_sum_from_qa_te(row, col):
     row = str(row)
-    return '=SUM(\'Quality Assurance\'!{0}, \'Test Engineering\'!{0}, \'Product Quality\'!{0})'.format(get_column_letter(col) + row)
+    return '=SUM(\'Quality Assurance\'!{0}, \'Test Engineering\'!{0})'.format(get_column_letter(col) + row)
 
 
-def get_formula_sum_from_pq_qa_te_total_savings(row, cols):
+def get_formula_sum_from_qa_te_total_savings(row, cols):
     row = str(row)
     string = ''
     for col in cols:
-        tmp = '\'Quality Assurance\'!{0}, \'Test Engineering\'!{0}, \'Product Quality\'!{0},'.format(get_column_letter(col) + row)
+        tmp = '\'Quality Assurance\'!{0}, \'Test Engineering\'!{0},'.format(get_column_letter(col) + row)
         string += tmp
 
     string = '=SUM(' + string + ')'
     return string
 
 
-def get_formula_avg_from_pq_qa_te(row, col):
+def get_formula_avg_from_qa_te(row, col):
     row = str(row)
-    return '=AVERAGE(\'Quality Assurance\'!{0}, \'Test Engineering\'!{0}, \'Product Quality\'!{0})'.format(get_column_letter(col) + row)
+    return '=AVERAGE(\'Quality Assurance\'!{0}, \'Test Engineering\'!{0})'.format(get_column_letter(col) + row)
 
 
 def get_cell_value_from_qi(row, col):
@@ -924,7 +915,7 @@ def apply_header_style(ws, cols, key):
     elif key == 'RE':
         pale_green = [4, 28]
         corn_silk = [20, 21, 25, 27, 29]
-    elif key in ['PQ', 'QA', 'TE']:
+    elif key in ['QA', 'TE']:
         pale_green = [4, 20, 24, 38, 51, 54]
         corn_silk = [25, 26, 42, 43, 44, 50, 52, 53]
     elif key == 'TEST_SUMMARY':
