@@ -10,7 +10,7 @@ from scorecard.apps.personals.tasks import weekly_personal_stats_new
 from scorecard.apps.personals.utils import get_distinct_dates
 from scorecard.apps.users.models import FunctionalGroup, HumanResource
 from models import InnovationStats, LabStats, RequirementStats, TestStats
-from scorecard.apps.users.views import user_is_superuser, user_is_manager
+from scorecard.apps.users.views import user_is_superuser
 from forms import InnovationForm, LabForm, RequirementForm, TestForm
 
 
@@ -210,7 +210,7 @@ def fetch_personals_by_date(request):
 def fetch_personals_per_team_per_date(key, date):
     year = date[:4]
     month = date[6:7]
-    day = date[9:10]
+    day = date[8:10]
     data = []
 
     if key in ['PQ', 'QA', 'TE']:
