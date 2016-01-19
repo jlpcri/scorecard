@@ -45,7 +45,7 @@ def sign_in(request):
                 login(request, user)
                 try:
                     hr = HumanResource.objects.get(user=user)
-                    if not hr.functional_group:
+                    if not hr.functional_group and not user.is_superuser:
                         messages.error(request, 'Please ask your Supervisor to assign you to your team.')
                 except HumanResource.DoesNotExist:
                     HumanResource.objects.create(user=user)
