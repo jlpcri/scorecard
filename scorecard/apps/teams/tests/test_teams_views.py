@@ -99,7 +99,6 @@ class TeamsViewTest(TestCase):
         self.assertContains(response, '<a href="#test_lab" data-toggle="tab">Test Lab</a>')
 
 
-
 class MetricDetailTest(TestCase):
     def setUp(self):
         self.client = Client()
