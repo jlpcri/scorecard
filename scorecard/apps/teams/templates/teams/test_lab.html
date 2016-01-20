@@ -1,3 +1,4 @@
+{% load team_extras %}
 <div class="tab-content" id="tl-content">
 
     <div class="table-responsive">
@@ -20,7 +21,7 @@
                         <td>{{ item.tickets_received }}</td>
                         <td>{{ item.tickets_closed }}</td>
                         <td>{{ item.virtual_machines }}</td>
-                        <td>{{ item.license_cost }}</td>
+                        <td>{{ item.license_cost|prepend_dollars }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

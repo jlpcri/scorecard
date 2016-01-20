@@ -115,7 +115,7 @@ def user_manager_assign(request):
 
     if request.method == 'GET':
         users = User.objects.all().order_by('username')
-        if user.is_superuser:
+        if user.is_superuser or not key:
             groups = FunctionalGroup.objects.all().order_by('name')
         else:
             groups = FunctionalGroup.objects.filter(key=key)

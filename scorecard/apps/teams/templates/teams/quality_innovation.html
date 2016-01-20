@@ -1,3 +1,4 @@
+{% load team_extras %}
 <div class="tab-content" id="qi-content">
     {% if qis %}
         <div class="table-responsive">
@@ -18,7 +19,7 @@
                             <td>{{ item.staffs }}</td>
                             <td>{{ item.story_points_backlog }}</td>
                             <td>{{ item.avg_team_size }}</td>
-                            <td>{{ item.total_operational_cost }}</td>
+                            <td>{{ item.total_operational_cost|prepend_dollars }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
