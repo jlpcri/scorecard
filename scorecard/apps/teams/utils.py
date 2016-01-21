@@ -8,6 +8,7 @@ def context_teams(request):
     start_end = get_start_end_from_request(request)
     start = start_end['start']
     end = start_end['end']
+    qas = qis = res = tes = tls = []
 
     functional_groups = FunctionalGroup.objects.all()
     for functional_group in functional_groups:

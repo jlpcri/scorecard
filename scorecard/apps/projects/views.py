@@ -18,7 +18,10 @@ from scorecard.apps.users.models import FunctionalGroup, HumanResource
 def projects(request):
     function_groups = FunctionalGroup.objects.all()
 
-    qas = tes = qis = res = tls = {}
+    qas = tes = qis = res = tls = {
+        'fg_projects': [],
+        'fg_tickets': []
+    }
 
     for function_group in function_groups:
         if function_group.key == 'QA':

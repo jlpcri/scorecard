@@ -12,25 +12,9 @@ class PersonalsViewTest(TestCase):
     def setUp(self):
         self.client = Client()
 
-        self.fg_qa = FunctionalGroup.objects.create(
-            name='Quality Assurance',
-            key='QA'
-        )
-        self.fg_te = FunctionalGroup.objects.create(
-            name='Test Engineering',
-            key='TE'
-        )
         self.fg_qi = FunctionalGroup.objects.create(
             name='Quality Innovation',
             key='QI'
-        )
-        self.fg_re = FunctionalGroup.objects.create(
-            name='Requirment Engineering',
-            key='RE'
-        )
-        self.fg_tl = FunctionalGroup.objects.create(
-            name='Test Lab',
-            key='TL'
         )
 
         self.user_account = {

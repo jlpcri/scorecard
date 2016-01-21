@@ -26,35 +26,47 @@ def personals(request):
 
     for function_group in function_groups:
         if function_group.key == 'QA':
-            qa = TestStats.objects.latest('created')
-            qa_personals = TestStats.objects.filter(human_resource__functional_group__key='QA',
-                                                    created__year=qa.created.year,
-                                                    created__month=qa.created.month,
-                                                    created__day=qa.created.day)
+            try:
+                qa = TestStats.objects.latest('created')
+                qa_personals = TestStats.objects.filter(human_resource__functional_group__key='QA',
+                                                        created__year=qa.created.year,
+                                                        created__month=qa.created.month,
+                                                        created__day=qa.created.day)
+            except TestStats.DoesNotExist:
+                pass
         elif function_group.key == 'TE':
-            te = TestStats.objects.latest('created')
-            te_personals = TestStats.objects.filter(human_resource__functional_group__key='TE',
-                                                    created__year=te.created.year,
-                                                    created__month=te.created.month,
-                                                    created__day=te.created.day)
+            try:
+                te = TestStats.objects.latest('created')
+                te_personals = TestStats.objects.filter(human_resource__functional_group__key='TE',
+                                                        created__year=te.created.year,
+                                                        created__month=te.created.month,
+                                                        created__day=te.created.day)
+            except TestStats.DoesNotExist:
+                pass
         elif function_group.key == 'QI':
-            # hrs = function_group.humanresource_set.all()
-            # for hr in hrs:
-            #     qi_personals += hr.innovationstats_set.all()
-            qi = InnovationStats.objects.latest('created')
-            qi_personals = InnovationStats.objects.filter(created__year=qi.created.year,
-                                                          created__month=qi.created.month,
-                                                          created__day=qi.created.day)
+            try:
+                qi = InnovationStats.objects.latest('created')
+                qi_personals = InnovationStats.objects.filter(created__year=qi.created.year,
+                                                              created__month=qi.created.month,
+                                                              created__day=qi.created.day)
+            except InnovationStats.DoesNotExist:
+                pass
         elif function_group.key == 'RE':
-            re = RequirementStats.objects.latest('created')
-            re_personals = RequirementStats.objects.filter(created__year=re.created.year,
-                                                           created__month=re.created.month,
-                                                           created__day=re.created.day)
+            try:
+                re = RequirementStats.objects.latest('created')
+                re_personals = RequirementStats.objects.filter(created__year=re.created.year,
+                                                               created__month=re.created.month,
+                                                               created__day=re.created.day)
+            except RequirementStats.DoesNotExist:
+                pass
         elif function_group.key == 'TL':
-            tl = LabStats.objects.latest('created')
-            tl_personals = LabStats.objects.filter(created__year=tl.created.year,
-                                                   created__month=tl.created.month,
-                                                   created__day=tl.created.day)
+            try:
+                tl = LabStats.objects.latest('created')
+                tl_personals = LabStats.objects.filter(created__year=tl.created.year,
+                                                       created__month=tl.created.month,
+                                                       created__day=tl.created.day)
+            except LabStats.DoesNotExist:
+                pass
 
     hr = HumanResource.objects.get(user=request.user)
     if hr.functional_group:
