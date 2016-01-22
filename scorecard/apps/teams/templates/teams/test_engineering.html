@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load team_extras %}
 
 {% block headscript %}
 
@@ -50,7 +51,7 @@
                         <td draggable="true" ondragstart="dragTE(event)">{{ item.active_projects }}</td>
                         <td draggable="true" ondragstart="dragTE(event)">{{ item.active_tickets }}</td>
                         <td draggable="true" ondragstart="dragTE(event)">{{ item.avg_throughput|floatformat:2 }}</td>
-                        <td>{{ item.total_operational_cost| prepend_dollars }}</td>
+                        <td draggable="true" ondragstart="dragTE(event)">{{ item.total_operational_cost|prepend_dollars }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -67,12 +68,16 @@
 
     <br>
 
-    <div>
-        <div>
-            <table class="chart_table">
-                <tr id="te_chart_row"></tr>
-            </table>
-        </div>
+    <div class="container west_container">
+        <section>
+            <div class="dataTables_wrapper no-footer table-responsive">
+                <div class="dataTables_scroll">
+                    <table class="chart_table">
+                        <tr id="te_chart_row"></tr>
+                    </table>
+                </div>
+            </div>
+        </section>
     </div>
 
 </div>
@@ -241,9 +246,9 @@
         output = output + "<div id='te_radio_div_" + chart_count + "' class='chart_radio_div'>";
 
         output = output + "<table class='radio_table'><tbody><tr>";
-        output = output + "<td><input type='radio' id='te_bar_" + chart_count + "' name='chart_group_" + chart_count + "' value='bar' onchange='process_radio_chart_selectionTE(event)'>Bar Chart</td>";
-        output = output + "<td><input type='radio' id='te_line_" + chart_count + "' name='chart_group_" + chart_count + "' value='line' onchange='process_radio_chart_selectionTE(event)'>Line Chart</td>";
-        output = output + "<td><input type='radio' id='te_pie_" + chart_count + "' name='chart_group_" + chart_count + "' value='pie' onchange='process_radio_chart_selectionTE(event)'>Pie Chart</td>";
+        output = output + "<td><input type='radio' id='te_bar_" + chart_count + "' name='te_chart_group_" + chart_count + "' value='bar' onchange='process_radio_chart_selectionTE(event)'>Bar Chart</td>";
+        output = output + "<td><input type='radio' id='te_line_" + chart_count + "' name='te_chart_group_" + chart_count + "' value='line' onchange='process_radio_chart_selectionTE(event)'>Line Chart</td>";
+        output = output + "<td><input type='radio' id='te_pie_" + chart_count + "' name='te_chart_group_" + chart_count + "' value='pie' onchange='process_radio_chart_selectionTE(event)'>Pie Chart</td>";
 
         output = output + "<td class='td_delete_btn'><input type='button' id='te_delete_chart_button_" + chart_count + "' value='Delete Chart' onclick='onClickDeleteChartTE(event)'></td>";
         output = output + "</table></div>";
@@ -675,7 +680,7 @@
                 $("#te_chart_row").append(chart_html);
                 drawD3BarChartTE(chart_object);
 
-                $("input:radio[name='chart_group_" + chart_count + "'][value='bar']").prop('checked', true);
+                $("input:radio[name='te_chart_group_" + chart_count + "'][value='bar']").prop('checked', true);
                 // disable the x-axis dnd table cell
                 $("#te_xy_dnd_row_" + chart_count).hide();  // do not allow dnd to change the x or y axis
             },

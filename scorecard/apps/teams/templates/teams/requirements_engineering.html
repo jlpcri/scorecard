@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load team_extras %}
 
 {% block headscript %}
 
@@ -50,7 +51,7 @@
                 <td draggable="true" ondragstart="dragRE(event)">{{ item.active_projects }}</td>
                 <td draggable="true" ondragstart="dragRE(event)">{{ item.elicitation_analysis_time }}</td>
                 <td draggable="true" ondragstart="dragRE(event)">{{ item.avg_throughput }}</td>
-                        <td>{{ item.total_operational_cost|prepend_dollars }}</td>
+                <td draggable="true" ondragstart="dragRE(event)">{{ item.total_operational_cost|prepend_dollars }}</td>
             </tr>
             {% endfor %}
             </tbody>
@@ -67,12 +68,16 @@
 
     <br>
 
-    <div>
-        <div>
-            <table class="chart_table">
-                <tr id="re_chart_row"></tr>
-            </table>
-        </div>
+    <div class="container west_container">
+        <section>
+            <div class="dataTables_wrapper no-footer table-responsive">
+                <div class="dataTables_scroll">
+                    <table class="chart_table">
+                        <tr id="re_chart_row"></tr>
+                    </table>
+                </div>
+            </div>
+        </section>
     </div>
 
 </div>
@@ -242,9 +247,9 @@
         output = output + "<div id='re_radio_div_" + chart_count + "' class='chart_radio_div'>";
 
         output = output + "<table class='radio_table'><tbody><tr>";
-        output = output + "<td><input type='radio' id='re_bar_" + chart_count + "' name='chart_group_" + chart_count + "' value='bar' onchange='process_radio_chart_selectionRE(event)'>Bar Chart</td>";
-        output = output + "<td><input type='radio' id='re_line_" + chart_count + "' name='chart_group_" + chart_count + "' value='line' onchange='process_radio_chart_selectionRE(event)'>Line Chart</td>";
-        output = output + "<td><input type='radio' id='re_pie_" + chart_count + "' name='chart_group_" + chart_count + "' value='pie' onchange='process_radio_chart_selectionRE(event)'>Pie Chart</td>";
+        output = output + "<td><input type='radio' id='re_bar_" + chart_count + "' name='re_chart_group_" + chart_count + "' value='bar' onchange='process_radio_chart_selectionRE(event)'>Bar Chart</td>";
+        output = output + "<td><input type='radio' id='re_line_" + chart_count + "' name='re_chart_group_" + chart_count + "' value='line' onchange='process_radio_chart_selectionRE(event)'>Line Chart</td>";
+        output = output + "<td><input type='radio' id='re_pie_" + chart_count + "' name='re_chart_group_" + chart_count + "' value='pie' onchange='process_radio_chart_selectionRE(event)'>Pie Chart</td>";
 
         output = output + "<td class='td_delete_btn'><input type='button' id='re_delete_chart_button_" + chart_count + "' value='Delete Chart' onclick='onClickDeleteChartRE(event)'></td>";
         output = output + "</table></div>";
@@ -676,7 +681,7 @@
                 $("#re_chart_row").append(chart_html);
                 drawD3BarChartRE(chart_object);
 
-                $("input:radio[name='chart_group_" + chart_count + "'][value='bar']").prop('checked', true);
+                $("input:radio[name='re_chart_group_" + chart_count + "'][value='bar']").prop('checked', true);
                 // disable the x-axis dnd table cell
                 $("#re_xy_dnd_row_" + chart_count).hide();  // do not allow dnd to change the x or y axis
             },

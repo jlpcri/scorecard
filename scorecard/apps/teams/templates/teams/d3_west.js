@@ -364,6 +364,7 @@ function getLineChartDates(x_axis, temp_table_id) {
     return get_date_time_data(parseInt(x_axis, 10), temp_table_id);
 }
 
+/*
 function remove_from_list(temp_list, temp_number) {
 
     for (var index = 0; index < temp_list.length; index++) {
@@ -373,9 +374,10 @@ function remove_from_list(temp_list, temp_number) {
         }
     }
 }
-
+*/
 // the user clicked the button to change the columns to show or hide in the table
 // note, not using the right-click functionality since it had problems with the JQuery DataTables
+/*
 function showHideColumn(column_number, show_hide, temp_table_id) {
 
     var oTable = $('#' + temp_table_id).dataTable();
@@ -387,7 +389,8 @@ function showHideColumn(column_number, show_hide, temp_table_id) {
     }
     oTable.fnDraw();
 }
-
+*/
+/*
 function hideUserColumnPreferences(temp_table_id, temp_hide_columns_json) {
 
     var columns = [];
@@ -411,7 +414,7 @@ function hideUserColumnPreferences(temp_table_id, temp_hide_columns_json) {
         oTable.fnDraw();
     }
 }
-
+*/
 function drawD3BarChart(chart_object) {
 
     var svg_id = chart_object.chart_count;
