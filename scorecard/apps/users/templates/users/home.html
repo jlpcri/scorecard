@@ -3,10 +3,6 @@
 
 {% block extrahead %}
 
-<!-- not using the bootstrap js or css since the table will be larger that 12 columns -->
-<!-- <script type='text/javascript' src="{% static 'js/bootstrap.min.js' %}"></script> -->
-<!-- <script type='text/javascript' src="{% static 'js/bootstrap-select.js' %}"></script> -->
-
 
 <link rel="stylesheet" type="text/css" href="{% static 'jquery-data-tables/css/jquery.dataTables.min.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'jquery-data-tables/css/jquery-ui.min.css' %}">
@@ -15,11 +11,6 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'd3charts/d3_west_charts.css' %} ">
 <link rel="stylesheet" type="text/css" href="{% static 'd3charts/main.css' %} ">
-
-
-<!-- <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script> -->
-<!-- <script src="{% static 'js/jquery-ui.js' %}"></script> -->
-
 
 <script type="text/javascript" language="javascript" src="{% static 'common/jquery/1.10.2/jquery.min.js' %}"></script>
 <script type="text/javascript" language="javascript" src="{% static 'jquery-data-tables/js/jquery-ui.min.js' %}"></script>
@@ -35,7 +26,7 @@
 
 <style>
 
-    #dnd_div {
+    #dnd_div_home {
         border: 1px solid black;
         width: 200px;
         height: 25px;
@@ -45,37 +36,96 @@
     }
 
     .metrics_table {
-        border:1px solid lightgray;
+        border: 1px solid lightgray;
+        width: 100%;
     }
 
-    .metrics_th {
-        border:0px solid lightgray;
-        align:center;
+    .metrics_thead {
+        border: 0px solid lightgray;
+        width: 100% !important;
+    }
+
+    .metrics_tbody {
+        border: 0px solid lightgray;
+        width: 100% !important;
     }
 
     .td_title {
-        border:1px solid lightgray;
-        text-align:center;
+        border: 1px solid lightgray;
+        text-align: center;
     }
 
     .td_metrics_date_table {
-        border:0px solid lightgray;
-        padding-left: 4px;  /* 4 */
-        padding-right:0px;  /* 2 */
-        margin-left:  0px;
+        border: 1px solid lightgray;
+        width: 250px !important;
+        padding-left: 4px;
+        padding-right: 1px;
+        margin-left: 0px;
         margin-right: 0px;
     }
 
     .td_metrics_table {
-        border:1px solid lightgray;
-        padding-left: 1px;  /* 2 */
-        padding-right:1px;  /* 4 */
+        border: 1px solid lightgray;
+        width: 100%;
+        padding-left: 1px;
+        padding-right: 1px;
     }
 
     .td_metrics_test_lab {
-        border:0px solid lightgray;
-        padding-left: 1px;  /* 2 */
-        padding-right:4px;  /* 4 */
+        border: 0px solid lightgray;
+        padding-left: 1px;
+        padding-right: 4px;
+    }
+
+    .legend_metrics {
+        font-weight: bold;
+        font-size: 18px;
+        font-family: "Helvetica Neue", HelveticaNeue, Arial, Helvetica, sans-serif;
+        color: #333;
+    }
+
+    .show_hide_table {
+        width:80%;
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    .td_show_hide_sub_table {
+        border:0px solid blue;
+        width: 300px;
+        height: 35px;
+        white-space: nowrap;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .td_show_hide_table {
+        border:1px solid darkgray;
+        white-space: nowrap;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .td1_show_hide_table {
+        border:0px solid black;
+        width:200px;
+        min-width:190px;
+        white-space: nowrap;
+        padding-left:20px;
+        padding-right:20px;
+    }
+
+    .td2_show_hide_table {
+        border:0px solid black;
+        width:200px;
+        min-width:190px;
+        white-space: nowrap;
+        padding-left:20px;
+        padding-right:20px;
+    }
+
+    .west_container {
+        min-width:60%;
     }
 
 </style>
@@ -85,249 +135,362 @@
 {% block title %} Home {% endblock %}
 
 {% block body %}
-<div class="container">
+<div class="container west_container">
     <h1>Score Card</h1>
-        <br>
-        <h4> Scorecard, now available with QEI team: </h4>
-        <ul>
-            <li>A strategy performance management tool</li>
-            <li>A semi-standard structured report</li>
-            <li>Supported by design methods and automation tools</li>
-            <li>Used by team managers to keep track of execution of activities by the staff within their control</li>
-            <li>Monitor the consequences arising from staff actions</li>
-        </ul>
+    <br>
+    <h4> Scorecard, now available with QEI team: </h4>
+    <ul>
+        <li>A strategy performance management tool</li>
+        <li>A semi-standard structured report</li>
+        <li>Supported by design methods and automation tools</li>
+        <li>Used by team managers to keep track of execution of activities by the staff within their control</li>
+        <li>Monitor the consequences arising from staff actions</li>
+    </ul>
 </div>
 
 <form action="." method="POST">
 
     {% csrf_token %}
 
-    <br><br><br>
+    <br><br>
 
-    <div class="container">
+    <div class="container west_container">
         <section>
-            <div class="dataTables_wrapper no-footer">
-            <div class="dataTables_scroll">
-            <table id="all_data_table" class="display nowrap" cellspacing="0" style="border:1px solid lightgray; width:100%;">
-                <thead></thead>
-                <tbody>
-                <tr>
+            <div id="west_table_wrapper_div" class="dataTables_wrapper no-footer table-responsive">
+                <div class="dataTables_scroll">
+                    <table id="all_data_table" class="display nowrap" cellspacing="0" style="border:1px solid lightgray;">
+                        <thead></thead>
+                        <tbody>
+                        <tr>
 
-                    <!-- display just the date column -->
-                    <td class="td_metrics_date_table">
-                        <table id="date_table" class="display nowrap metrics_table" cellspacing="0">
-                            <thead>
-                                <tr><th>&nbsp;&nbsp;&nbsp;</th></tr>
-                                <tr>
-                                    <th>Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {% for pq in product_quality %}
-                            <tr>
-                                <td>{{ pq.created|date }}</td>
-                            </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </td>
+                            <!-- display just the date column -->
+                            <td id="td_date_table" class="td_metrics_date_table">
 
-                    <td class="td_metrics_table">
+                                <fieldset>
+                                    <legend class="legend_metrics">&nbsp;&nbsp;&nbsp;</legend>
 
-                        <table id="product_quality_table" class="display nowrap metrics_table" cellspacing="0">
-                            <thead>
-                            <tr>
-                                <th colspan="6" class="metrics_th">Product Quality</th>
-                            </tr>
-                            <tr>
-                                <!-- <th class="col-md-3"><strong>Date</strong></th> -->
-                                <th class="col-md-1"><strong>Staffs</strong></th>
-                                <th class="col-md-2"><strong>Active Projects</strong></th>
-                                <th class="col-md-2"><strong>Active Tickets</strong></th>
-                                <th class="col-md-2"><strong>Avg Throughput</strong></th>
-                                <th class="col-md-2"><strong>Total Costs</strong></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for pq in product_quality %}
-                            <tr>
-                                <!-- <td>{{ pq.created|date }}</td> -->
-                                <td draggable="true" ondragstart="drag_home(event)">{{ pq.staffs }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ pq.active_projects }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ pq.active_tickets }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ pq.avg_throughput|floatformat:2 }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ pq.total_operational_cost }}</td>
-                            </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                                    <table id="date_table" class="display nowrap metrics_table" cellspacing="0">
+                                        <thead class="metrics_thead">
+                                        <tr>
+                                            <th style="width:400px;">Date</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="metrics_tbody">
+                                        {% for pq in pq_data %}
+                                        <tr>
+                                            <td>{{ pq.created|date }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </fieldset>
 
-                    </td>
+                            </td>
 
-                    <td class="td_metrics_table">
+                            <td id="td_product_quality_table" class="td_metrics_table">
 
-                        <table id="quality_assurance_table" class="display nowrap metrics_table" cellspacing="0">
-                            <thead>
-                            <tr>
-                                <th colspan="6">Quality Assurance</th>
-                            </tr>
-                            <tr>
-                                <!-- <th class="col-md-3"><strong>Date</strong></th> -->
-                                <th class="col-md-1"><strong>Staffs</strong></th>
-                                <th class="col-md-2"><strong>Active Projects</strong></th>
-                                <th class="col-md-2"><strong>Active Tickets</strong></th>
-                                <th class="col-md-2"><strong>Avg Throughput</strong></th>
-                                <th class="col-md-2"><strong>Total Costs</strong></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for qa in quality_assurance %}
-                            <tr>
-                                <!-- <td>{{ qa.created|date }}</td> -->
-                                <td draggable="true" ondragstart="drag_home(event)">{{ qa.staffs }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ qa.active_projects }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ qa.active_tickets }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ qa.avg_throughput|floatformat:2 }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ qa.total_operational_cost }}</td>
-                            </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                                <fieldset>
+                                    <legend id="pq_legend" class="legend_metrics">Product Quality</legend>
 
-                    </td>
+                                    <table id="product_quality_table" class="display nowrap metrics_table" cellspacing="0">
+                                        <thead class="metrics_thead">
+                                        <tr id="pq_th_r1">
+                                            <th id="pq_th_r1_1" class="col-md-1"><strong>Staffs</strong></th>
+                                            <th id="pq_th_r1_2" class="col-md-2"><strong>Active Projects</strong></th>
+                                            <th id="pq_th_r1_3" class="col-md-2"><strong>Active Tickets</strong></th>
+                                            <th id="pq_th_r1_4" class="col-md-2"><strong>Avg Throughput</strong></th>
+                                            <th id="pq_th_r1_5" class="col-md-2"><strong>Total Costs</strong></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="metrics_tbody">
+                                        {% for pq in pq_data %}
+                                        <tr>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ pq.staffs }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ pq.active_projects }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ pq.active_tickets }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ pq.avg_throughput|floatformat:2 }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ pq.total_operational_cost }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
 
-                    <td class="td_metrics_table">
+                                </fieldset>
 
-                        <table id="quality_innovation_table" class="display nowrap metrics_table" cellspacing="0">
-                            <thead>
-                            <tr>
-                                <th colspan="5">Quality Innovation</th>
-                            </tr>
-                            <tr>
-                                <!-- <th class="col-md-3"><strong>Date</strong></th> -->
-                                <th class="col-md-3"><strong>Staffs</strong></th>
-                                <th class="col-md-2"><strong>Backlog Story</strong></th>
-                                <th class="col-md-2"><strong>Avg Team Size</strong></th>
-                                <th class="col-md-2"><strong>Total Costs</strong></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for qi in quality_innovation %}
-                            <tr>
-                                <!-- <td>{{ qi.created|date }}</td> -->
-                                <td draggable="true" ondragstart="drag_home(event)">{{ qi.staffs }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ qi.story_points_backlog }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ qi.avg_team_size }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ qi.total_operational_cost }}</td>
-                            </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                            </td>
 
-                    </td>
+                            <td id="td_quality_assurance_table" class="td_metrics_table">
 
-                    <td class="td_metrics_table">
+                                <fieldset>
+                                    <legend id="qa_legend" class="legend_metrics">Quality Assurance</legend>
 
-                        <table id="requirements_engineering_table" class="display nowrap metrics_table" cellspacing="0">
-                            <thead>
-                            <tr>
-                                <th colspan="6">Requirements Engineering</th>
-                            </tr>
-                            <tr>
-                                <!-- <th class="col-md-3"><strong>Date</strong></th> -->
-                                <th class="col-md-1"><strong>Staffs</strong></th>
-                                <th class="col-md-2"><strong>Active Projects</strong></th>
-                                <th class="col-md-2"><strong>Elicitation Analysis</strong></th>
-                                <th class="col-md-2"><strong>Avg Throughput</strong></th>
-                                <th class="col-md-2"><strong>Total Costs</strong></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for re in requirements_engineering %}
-                            <tr>
-                                <!-- <td>{{ re.created|date}}</td> -->
-                                <td draggable="true" ondragstart="drag_home(event)">{{ re.staffs }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ re.active_projects }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ re.elicitation_analysis_time }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ re.avg_throughput }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ re.total_operational_cost }}</td>
-                            </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                                    <table id="quality_assurance_table" class="display nowrap metrics_table" cellspacing="0">
+                                        <thead class="metrics_thead">
+                                        <tr id="qa_th_r1">
+                                            <th id="qa_th_r1_1" class="col-md-1"><strong>Staffs</strong></th>
+                                            <th id="qa_th_r1_2" class="col-md-2"><strong>Active Projects</strong></th>
+                                            <th id="qa_th_r1_3" class="col-md-2"><strong>Active Tickets</strong></th>
+                                            <th id="qa_th_r1_4" class="col-md-2"><strong>Avg Throughput</strong></th>
+                                            <th id="qa_th_r1_5" class="col-md-2"><strong>Total Costs</strong></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="metrics_tbody">
+                                        {% for qa in qa_data %}
+                                        <tr>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.staffs }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.active_projects }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.active_tickets }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.avg_throughput|floatformat:2 }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.total_operational_cost }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </fieldset>
 
-                    </td>
+                            </td>
 
-                    <td class="td_metrics_table">
+                            <td id="td_quality_innovation_table" class="td_metrics_table">
 
-                        <table id="test_engineering_table" class="display nowrap metrics_table" cellspacing="0">
-                            <thead>
-                            <tr>
-                                <th colspan="6">Test Engineering</th>
-                            </tr>
-                            <tr>
-                                <!-- <th class="col-md-3"><strong>Date</strong></th> -->
-                                <th class="col-md-1"><strong>Staffs</strong></th>
-                                <th class="col-md-2"><strong>Active Projects</strong></th>
-                                <th class="col-md-2"><strong>Active Tickets</strong></th>
-                                <th class="col-md-2"><strong>Avg Throughput</strong></th>
-                                <th class="col-md-2"><strong>Total Costs</strong></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for te in test_engineering %}
-                            <tr>
-                                <!-- <td>{{ te.created|date }}</td> -->
-                                <td draggable="true" ondragstart="drag_home(event)">{{ te.staffs }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ te.active_projects }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ te.active_tickets }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ te.avg_throughput|floatformat:2 }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ te.total_operational_cost }}</td>
-                            </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                                <fieldset>
+                                    <legend id="qi_legend" class="legend_metrics">Quality Innovation</legend>
 
-                    <td class="td_metrics_test_lab">
+                                    <table id="quality_innovation_table" class="display nowrap metrics_table" cellspacing="0">
+                                        <thead class="metrics_thead">
+                                        <tr id="qi_th_r1">
+                                            <th id="qi_th_r1_1" class="col-md-3"><strong>Staffs</strong></th>
+                                            <th id="qi_th_r1_2" class="col-md-2"><strong>Backlog Story</strong></th>
+                                            <th id="qi_th_r1_3" class="col-md-2"><strong>Avg Team Size</strong></th>
+                                            <th id="qi_th_r1_4" class="col-md-2"><strong>Total Costs</strong></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="metrics_tbody">
+                                        {% for qi in qi_data %}
+                                        <tr>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qi.staffs }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qi.story_points_backlog }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qi.avg_team_size }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qi.total_operational_cost }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </fieldset>
 
-                        <table id="test_lab_table" class="display nowrap metrics_table" cellspacing="0">
-                            <thead>
-                            <tr>
-                                <th colspan="6">Test Lab</th>
-                            </tr>
-                            <tr>
-                                <!-- <th class="col-md-3"><strong>Date</strong></th> -->
-                                <th class="col-md-1"><strong>Staffs</strong></th>
-                                <th class="col-md-2"><strong>Tickets Received</strong></th>
-                                <th class="col-md-2"><strong>Tickets Closed</strong></th>
-                                <th class="col-md-2"><strong>Virtual Machines</strong></th>
-                                <th class="col-md-2"><strong>Total Costs</strong></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for tl in test_lab %}
-                            <tr>
-                                <!-- <td>{{ tl.created|date }}</td> -->
-                                <td draggable="true" ondragstart="drag_home(event)">{{ tl.staffs }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ tl.tickets_received }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ tl.tickets_closed }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ tl.virtual_machines }}</td>
-                                <td draggable="true" ondragstart="drag_home(event)">{{ tl.total_operational_cost }}</td>
-                            </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                            </td>
 
-                    </td>
+                            <td id="td_requirements_engineering_table" class="td_metrics_table">
 
-                </tr>
-                </tbody>
-            </table>
-            </div>
+                                <fieldset>
+                                    <legend id="re_legend" class="legend_metrics">Requirements Engineering</legend>
+
+                                    <table id="requirements_engineering_table" class="display nowrap metrics_table" cellspacing="0">
+                                        <thead class="metrics_thead">
+                                        <tr id="re_th_r1">
+                                            <th id="re_th_r1_1" class="col-md-1"><strong>Staffs</strong></th>
+                                            <th id="re_th_r1_2" class="col-md-2"><strong>Active Projects</strong></th>
+                                            <th id="re_th_r1_3" class="col-md-2"><strong>Elicitation Analysis</strong></th>
+                                            <th id="re_th_r1_4" class="col-md-2"><strong>Avg Throughput</strong></th>
+                                            <th id="re_th_r1_5" class="col-md-2"><strong>Total Costs</strong></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="metrics_tbody">
+                                        {% for re in re_data %}
+                                        <tr>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ re.staffs }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ re.active_projects }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ re.elicitation_analysis_time }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ re.avg_throughput }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ re.total_operational_cost }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </fieldset>
+
+                            </td>
+
+                            <td id="td_test_engineering_table" class="td_metrics_table">
+
+                                <fieldset>
+                                    <legend id="te_legend" class="legend_metrics">Test Engineering</legend>
+
+                                    <table id="test_engineering_table" class="display nowrap metrics_table" cellspacing="0">
+                                        <thead class="metrics_thead">
+                                        <tr id="te_th_r1">
+                                            <th id="te_th_r1_1" class="col-md-1"><strong>Staffs</strong></th>
+                                            <th id="te_th_r1_2" class="col-md-2"><strong>Active Projects</strong></th>
+                                            <th id="te_th_r1_3" class="col-md-2"><strong>Active Tickets</strong></th>
+                                            <th id="te_th_r1_4" class="col-md-2"><strong>Avg Throughput</strong></th>
+                                            <th id="te_th_r1_5" class="col-md-2"><strong>License Costs</strong></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="metrics_tbody">
+                                        {% for te in te_data %}
+                                        <tr>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.staffs }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.active_projects }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.active_tickets }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.avg_throughput|floatformat:2 }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.total_operational_cost }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </fieldset>
+
+                            </td>
+
+                            <td id="td_test_lab_table" class="td_metrics_test_lab">
+
+                                <fieldset>
+                                    <legend id="tl_legend" class="legend_metrics">Test Lab</legend>
+
+                                    <table id="test_lab_table" class="display nowrap metrics_table" cellspacing="0">
+                                        <thead class="metrics_thead">
+                                        <tr id="tl_th_r1">
+                                            <th id="tl_th_r1_1" class="col-md-1"><strong>Staffs</strong></th>
+                                            <th id="tl_th_r1_2" class="col-md-2"><strong>Tickets Received</strong></th>
+                                            <th id="tl_th_r1_3" class="col-md-2"><strong>Tickets Closed</strong></th>
+                                            <th id="tl_th_r1_4" class="col-md-2"><strong>Virtual Machines</strong></th>
+                                            <th id="tl_th_r1_5" class="col-md-2"><strong>License Costs</strong></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="metrics_tbody">
+                                        {% for tl in tl_data %}
+                                        <tr>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ tl.staffs }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ tl.tickets_received }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ tl.tickets_closed }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ tl.virtual_machines }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ tl.license_cost }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </fieldset>
+
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
     </div>
 
+    <div class="container west_container">
+
+        <section>
+            <div class="dataTables_wrapper no-footer table-responsive">
+            <div class="dataTables_scroll">
+                <table class="display nowrap show_hide_table" cellspacing="0">
+                    <thead></thead>
+                    <tbody>
+
+                    <tr>
+                        <td class="td_show_hide_table">
+                            <table class="td_show_hide_sub_table">
+                                <tbody>
+                                <tr>
+                                    <td class="td1_show_hide_table">
+                                        <input id="pq_show_hide_checkbox" type="checkbox" onchange="on_change_show_hide_metrics_table(event)" checked/>Product Quality
+                                    </td>
+                                    <td class="td2_show_hide_table">
+                                        <input id="pq_show_hide_dialog_button" type="button" id="pq_show_hide_columns_button" value="Show/Hide Columns" onclick="on_click_show_hide_columns_dialog(event)">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+
+                        <td class="td_show_hide_table">
+                            <table class="td_show_hide_sub_table">
+                                <tbody>
+                                <tr>
+                                    <td class="td1_show_hide_table">
+                                        <input id="qa_show_hide_checkbox" type="checkbox" onchange="on_change_show_hide_metrics_table(event)" checked/>Quality Assurance
+                                    </td>
+                                    <td class="td2_show_hide_table">
+                                        <input id="qa_show_hide_dialog_button" type="button" id="qa_show_hide_columns_button" value="Show/Hide Columns" onclick="on_click_show_hide_columns_dialog(event)">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+
+                        <td class="td_show_hide_table">
+                            <table class="td_show_hide_sub_table">
+                                <tbody>
+                                <tr>
+                                    <td class="td1_show_hide_table">
+                                        <input id="qi_show_hide_checkbox" type="checkbox" onchange="on_change_show_hide_metrics_table(event)" checked/>Quality Innovation
+                                    </td>
+                                    <td class="td2_show_hide_table">
+                                        <input id="qi_show_hide_dialog_button" type="button" id="qi_show_hide_columns_button" value="Show/Hide Columns" onclick="on_click_show_hide_columns_dialog(event)">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+
+                        <td class="td_show_hide_table">
+                            <table class="td_show_hide_sub_table">
+                                <tbody>
+                                <tr>
+                                    <td class="td1_show_hide_table">
+                                        <input id="re_show_hide_checkbox" type="checkbox" onchange="on_change_show_hide_metrics_table(event)" checked/>Requirements Engineering
+                                    </td>
+                                    <td class="td2_show_hide_table">
+                                        <input id="re_show_hide_dialog_button" type="button" id="re_show_hide_columns_button" value="Show/Hide Columns" onclick="on_click_show_hide_columns_dialog(event)">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+
+                        <td class="td_show_hide_table">
+                            <table class="td_show_hide_sub_table">
+                                <tbody>
+                                <tr>
+                                    <td class="td1_show_hide_table">
+                                        <input id="te_show_hide_checkbox" type="checkbox" onchange="on_change_show_hide_metrics_table(event)" checked/>Test Engineering
+                                    </td>
+                                    <td class="td2_show_hide_table">
+                                        <input id="te_show_hide_dialog_button" type="button" id="te_show_hide_columns_button" value="Show/Hide Columns" onclick="on_click_show_hide_columns_dialog(event)">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+
+                        <td class="td_show_hide_table">
+                            <table class="td_show_hide_sub_table">
+                                <tbody>
+                                <tr>
+                                    <td class="td1_show_hide_table">
+                                        <input id="tl_show_hide_checkbox" type="checkbox" onchange="on_change_show_hide_metrics_table(event)" checked/>Test Lab
+                                    </td>
+                                    <td class="td2_show_hide_table">
+                                        <input id="tl_show_hide_dialog_button" type="button" id="tl_show_hide_columns_button" value="Show/Hide Columns" onclick="on_click_show_hide_columns_dialog(event)">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </section>
+
+    </div>
+
+    <br>
+
+    <div id="dialog" style="display:none;"></div>
     <br>
 
     <div class="container">
@@ -342,12 +505,16 @@
 
     <br>
 
-    <div>
-        <div>
-            <table class="chart_table">
-                <tr id="home_chart_row"></tr>
-            </table>
-        </div>
+    <div class="container west_container">
+        <section>
+            <div class="dataTables_wrapper no-footer table-responsive">
+                <div class="dataTables_scroll">
+                    <table class="chart_table">
+                        <tr id="home_chart_row"></tr>
+                    </table>
+                </div>
+            </div>
+        </section>
     </div>
 
     <br>
@@ -366,6 +533,39 @@
     var home_dnd_id = "";
     var home_chart_svg_prefix = "home_chart_svg_";
 
+    var home_pq_all_column_names_list = [];
+    var home_qa_all_column_names_list = [];
+    var home_qi_all_column_names_list = [];
+    var home_re_all_column_names_list = [];
+    var home_te_all_column_names_list = [];
+    var home_tl_all_column_names_list = [];
+
+    // save the original number of columns since I need this information when hiding the last column in the table
+    var home_pq_number_of_columns;
+    var home_qa_number_of_columns;
+    var home_qi_number_of_columns;
+    var home_re_number_of_columns;
+    var home_te_number_of_columns;
+    var home_tl_number_of_columns;
+
+    // list of columns numbers the user has selected to hide
+    var home_pq_hide_column_list = [];
+    var home_qa_hide_column_list = [];
+    var home_qi_hide_column_list = [];
+    var home_re_hide_column_list = [];
+    var home_te_hide_column_list = [];
+    var home_tl_hide_column_list = [];
+
+    // comma separated list of columns to hide
+    var home_pq_hide_columns_json = '{{ pq_user_hide_list | safe }}';
+    var home_qa_hide_columns_json = '{{ qa_user_hide_list | safe }}';
+    var home_qi_hide_columns_json = '{{ qi_user_hide_list | safe }}';
+    var home_re_hide_columns_json = '{{ re_user_hide_list | safe }}';
+    var home_te_hide_columns_json = '{{ te_user_hide_list | safe }}';
+    var home_tl_hide_columns_json = '{{ tl_user_hide_list | safe }}';
+
+    // var table_id = "work_week_table";
+    var selected_show_hide_table = "";
 
     (function () {
 
@@ -379,6 +579,8 @@
 
             if (jQuery().dataTable) {
                 // alert("jQuery Datatables is loaded.");
+
+                build_column_names_lists();
 
                 initialize_metrics_table("date_table", "dd");
                 initialize_metrics_table("product_quality_table", "pq");
@@ -407,9 +609,10 @@
             "paging": false,
             "searching": false,
             "info": false,
-            "bAutoWidth": false,
+            "bAutoWidth": true,
             "order": [],
-            "fnAdjustColumnSizing": true
+            "fnAdjustColumnSizing": true,
+            "fnInitComplete": adjust_db_column_preferences()
         });
 
     }
@@ -423,33 +626,83 @@
             "paging": false,
             "searching": false,
             "info": false,
-            "bAutoWidth": false,
+            "bAutoWidth": true,
+            "bSort": false,
             "order": [],
-            "fnInitComplete": function () {
-                add_ids_to_metrics_table(table_id, prefix);
-            },
+            "fnInitComplete": adjust_tables_after_loading(table_id, prefix),
             "fnAdjustColumnSizing": false
         });
+    }
+
+    function adjust_tables_after_loading(table_id, prefix) {
+        add_ids_to_metrics_table(table_id, prefix);
+    }
+
+    function adjust_db_column_preferences() {
+
+        // hide_user_column_preferences_by_id("product_quality_table", "pq");
+
+        hide_user_column_preferences_by_column_name("product_quality_table", "pq");
+        hide_user_column_preferences_by_column_name("quality_assurance_table", "qa");
+        hide_user_column_preferences_by_column_name("quality_innovation_table", "qi");
+        hide_user_column_preferences_by_column_name("requirements_engineering_table", "re");
+        hide_user_column_preferences_by_column_name("test_engineering_table", "te");
+        hide_user_column_preferences_by_column_name("test_lab_table", "tl");
+    }
+
+    function build_column_names_lists() {
+
+        // list of the default column names for each table
+
+        home_pq_all_column_names_list.push("Staffs");
+        home_pq_all_column_names_list.push("Active Projects");
+        home_pq_all_column_names_list.push("Active Tickets");
+        home_pq_all_column_names_list.push("Avg Throughput");
+        home_pq_all_column_names_list.push("Total Costs");
+
+        home_qa_all_column_names_list.push("Staffs");
+        home_qa_all_column_names_list.push("Active Projects");
+        home_qa_all_column_names_list.push("Active Tickets");
+        home_qa_all_column_names_list.push("Avg Throughput");
+        home_qa_all_column_names_list.push("Total Costs");
+
+        home_qi_all_column_names_list.push("Staffs");
+        home_qi_all_column_names_list.push("Backlog Story");
+        home_qi_all_column_names_list.push("Avg Team Size");
+        home_qi_all_column_names_list.push("Total Costs");
+
+        home_re_all_column_names_list.push("Staffs");
+        home_re_all_column_names_list.push("Active Projects");
+        home_re_all_column_names_list.push("Elicitation Analysis");
+        home_re_all_column_names_list.push("Avg Throughput");
+        home_re_all_column_names_list.push("Total Costs");
+
+        home_te_all_column_names_list.push("Staffs");
+        home_te_all_column_names_list.push("Active Projects");
+        home_te_all_column_names_list.push("Active Tickets");
+        home_te_all_column_names_list.push("Avg Throughput");
+        home_te_all_column_names_list.push("Total Costs");
+
+        home_tl_all_column_names_list.push("Staffs");
+        home_tl_all_column_names_list.push("Tickets Received");
+        home_tl_all_column_names_list.push("Tickets Closed");
+        home_tl_all_column_names_list.push("Virtual Machines");
+        home_tl_all_column_names_list.push("License Costs");
+
+        home_pq_number_of_columns = home_pq_all_column_names_list.length;
+        home_qa_number_of_columns = home_qa_all_column_names_list.length;
+        home_qi_number_of_columns = home_qi_all_column_names_list.length;
+        home_re_number_of_columns = home_re_all_column_names_list.length;
+        home_te_number_of_columns = home_te_all_column_names_list.length;
+        home_tl_number_of_columns = home_tl_all_column_names_list.length;
     }
 
     function add_ids_to_metrics_table(table_id, prefix) {
 
         var row_count = 0;
 
-        $('#' + table_id + ' thead tr').each(function () {
-            var column_count = 0;
-            $('th', this).each(function () {
-                var temp_id = "" + prefix + "_th_" + row_count + "_" + column_count;
-                $(this).attr("id", temp_id);
-                column_count++;
-            });
-            row_count++;
-        });
-
-        row_count = 0;
-
         $('#' + table_id + ' tbody tr').each(function () {
-            var column_count = 0;
+            var column_count = 1;
             $('td', this).each(function () {
                 var temp_id = "" + prefix + "_" + row_count + "_" + column_count;
                 $(this).attr("id", temp_id);
@@ -497,6 +750,8 @@
         chart_object.dnd_table_name_id = get_drag_table_source_id(home_dnd_id);
         chart_object.y_column_name = get_y_column_name(home_dnd_id, dnd_drag_column_number);
 
+        // alert("662  " + chart_object.y_column_name);
+
         chart_object.chart_title = get_drag_table_friendly_name(home_dnd_id) + " --- " + chart_object.y_column_name;
 
         home_dnd_charts_list.push(chart_object);
@@ -524,7 +779,7 @@
 
     }
 
-    function get_chart_html_home(chart_count) {  // TODO working here
+    function get_chart_html_home(chart_count) {
 
         var output = "<td id='home_chart_td_" + chart_count + "' class='chart_td'>";
 
@@ -588,7 +843,7 @@
         }
     }
 
-    function draw_d3_pie_chart_home(chart_object) {  // TODO pie chart
+    function draw_d3_pie_chart_home(chart_object) {
 
         var svg_id = chart_object.chart_count;
 
@@ -644,7 +899,7 @@
 
     }
 
-    function draw_d3_bar_chart_home(chart_object) {  // TODO bar chart
+    function draw_d3_bar_chart_home(chart_object) {
 
         // displayObject(chart_object, "582 bar chart");
 
@@ -781,7 +1036,7 @@
 
     }
 
-    function draw_d3_line_chart_home(chart_object) {  // TODO line chart
+    function draw_d3_line_chart_home(chart_object) {
 
         var svg_id = chart_object.chart_count;
 
@@ -806,7 +1061,8 @@
         // alert("582  " + x_data);
         var y_data = get_column_data(chart_object.dnd_drag_column_number, table_id);
 
-        var y_column_name = "";  // get_y_column_name(chart_object.table_dnd_id);\\"";  // TODO getColumnNameFromColumnDetailsList(chart_object.dnd_drag_column_number, product_quality_column_details_list);
+        var y_column_name = "";  // get_y_column_name(chart_object.table_dnd_id);\\"";
+        // getColumnNameFromColumnDetailsList(chart_object.dnd_drag_column_number, product_quality_column_details_list);
 
         for (var index = 0; index < y_data.length; index++) {
             data.push({'x': x_data[index], 'y': y_data[index]});
@@ -1034,14 +1290,11 @@
 
     function get_y_column_name(temp_dnd_id, temp_dnd_drag_column_number) {
 
-        var table_id = get_drag_table_source_id(temp_dnd_id);
-
         var temp_array = temp_dnd_id.split("_");
         var prefix = temp_array[0];
-        var column = temp_array[2];
 
-        // header id will look like 'pq_th_1_column   (header table has two rows)
-        var temp_id = prefix + "_th_1_" + column;
+        // header id will look like 'pq_th_r1__column
+        var temp_id = prefix + "_th_r1_" + temp_dnd_drag_column_number;
 
         var header_text = $("#" + temp_id).text();
 
@@ -1064,6 +1317,863 @@
     function get_line_chart_dates_home() {
         return get_date_time_data_home(0);
     }
+
+    // show or hide the tables or columns
+    function on_change_show_hide_metrics_table(event) {
+
+        var target = event.target || event.srcElement;
+        var target_id = target.id;  // column_XX
+
+        var temp_array = target_id.split("_");
+        var prefix = temp_array[0];
+
+        // if the user is hiding a table, add all the column indexes to the hide column list and update the database
+
+        if (prefix === "pq") {
+
+            var checked = $('#pq_show_hide_checkbox').prop('checked');
+
+            if (checked) {
+
+                $("#td_product_quality_table").show();
+                $("#pq_show_hide_columns_button").prop("disabled", false);
+                home_pq_hide_column_list = [];
+                $("#pq_show_hide_dialog_button").prop("disabled",false).css('opacity', 1.0);
+
+            } else {
+
+                $("#td_product_quality_table").hide();
+                add_all_columns_to_hide_list(home_pq_hide_column_list, home_pq_number_of_columns);
+                update_hidden_columns_list_db_by_column_name("product_quality_table", home_pq_hide_column_list);
+                $("#pq_show_hide_dialog_button").prop("disabled",true).css('opacity', 0.5);
+            }
+
+        } else if (prefix === "qa") {
+
+            var checked = $('#qa_show_hide_checkbox').prop('checked');
+
+            if (checked) {
+
+                $("#td_quality_assurance_table").show();
+                $("#qa_show_hide_columns_button").prop("disabled", false);
+                home_qa_hide_column_list = [];
+                $("#qa_show_hide_dialog_button").prop("disabled",false).css('opacity', 1.0);
+
+            } else {
+
+                $("#td_quality_assurance_table").hide();
+                add_all_columns_to_hide_list(home_qa_hide_column_list, home_qa_number_of_columns);
+                update_hidden_columns_list_db_by_column_name("quality_assurance_table", home_qa_hide_column_list);
+                $("#qa_show_hide_dialog_button").prop("disabled",true).css('opacity', 0.5);
+            }
+
+        } else if (prefix === "qi") {
+
+            var checked = $('#qi_show_hide_checkbox').prop('checked');
+
+            if (checked) {
+
+                $("#td_quality_innovation_table").show();
+                $("#qi_show_hide_columns_button").prop("disabled", false);
+                home_qi_hide_column_list = [];
+                $("#qi_show_hide_dialog_button").prop("disabled",false).css('opacity', 1.0);
+
+            } else {
+
+                $("#td_quality_innovation_table").hide();
+                add_all_columns_to_hide_list(home_qi_hide_column_list, home_qi_number_of_columns);
+                update_hidden_columns_list_db_by_column_name("quality_innovation_table", home_qi_hide_column_list);
+                $("#qi_show_hide_dialog_button").prop("disabled",true).css('opacity', 0.5);
+
+            }
+
+        } else if (prefix === "re") {
+
+            var checked = $('#re_show_hide_checkbox').prop('checked');
+
+            if (checked) {
+
+                $("#td_requirements_engineering_table").show();
+                $("#re_show_hide_columns_button").prop("disabled", false);
+                home_re_hide_column_list = [];
+                $("#re_show_hide_dialog_button").prop("disabled",false).css('opacity', 1.0);
+
+            } else {
+
+                $("#td_requirements_engineering_table").hide();
+                add_all_columns_to_hide_list(home_re_hide_column_list, home_re_number_of_columns);
+                update_hidden_columns_list_db_by_column_name("requirements_engineering_table", home_re_hide_column_list);
+                $("#re_show_hide_dialog_button").prop("disabled",true).css('opacity', 0.5);
+
+            }
+
+        } else if (prefix === "te") {
+
+            var checked = $('#te_show_hide_checkbox').prop('checked');
+
+            if (checked) {
+
+                $("#td_test_engineering_table").show();
+                $("#te_show_hide_columns_button").prop("disabled", false);
+                home_te_hide_column_list = [];
+                $("#te_show_hide_dialog_button").prop("disabled",false).css('opacity', 1.0);
+
+            } else {
+
+                $("#td_test_engineering_table").hide();
+                add_all_columns_to_hide_list(home_te_hide_column_list, home_te_number_of_columns);
+                update_hidden_columns_list_db_by_column_name("test_engineering_table", home_te_hide_column_list);
+                $("#te_show_hide_dialog_button").prop("disabled",true).css('opacity', 0.5);
+
+            }
+
+        } else if (prefix === "tl") {
+
+            var checked = $('#tl_show_hide_checkbox').prop('checked');
+
+            if (checked) {
+
+                $("#td_test_lab_table").show();
+                $("#tl_show_hide_columns_button").prop("disabled", false);
+                home_tl_hide_column_list = [];
+                $("#tl_show_hide_dialog_button").prop("disabled",false).css('opacity', 1.0);
+
+            } else {
+
+                $("#td_test_lab_table").hide();
+                add_all_columns_to_hide_list(home_tl_hide_column_list, home_tl_number_of_columns);
+                update_hidden_columns_list_db_by_column_name("test_lab_table", home_tl_hide_column_list);
+                $("#tl_show_hide_dialog_button").prop("disabled",true).css('opacity', 0.5);
+
+            }
+
+        }
+
+        show_hide_date_table();
+
+    }
+
+    function on_click_show_hide_columns_dialog(event) {
+
+        var target = event.target || event.srcElement;
+        var target_id = target.id;
+
+        var temp_array = target_id.split("_");  // e.g.  pq_show_hide_dialog_button"
+
+        var prefix = temp_array[0];
+
+        var table_id = "";
+        var all_column_names_list = [];
+        var hide_column_list = [];
+        var table_visible = true;
+        var table_title = "";
+
+        if (prefix === "pq") {
+
+            table_id = "product_quality_table";
+            all_column_names_list = home_pq_all_column_names_list;
+            hide_column_list = home_pq_hide_column_list;
+            table_visible = $('#product_quality_table').is(':visible');
+            table_title = "Product Quality Columns";
+
+        } else if (prefix == "qa") {
+
+            table_id = "quality_assurance_table";
+            all_column_names_list = home_qa_all_column_names_list;
+            hide_column_list = home_qa_hide_column_list;
+            table_visible = $('#quality_assurance_table').is(':visible');
+            table_title = "Quality Assurance Columns";
+
+        } else if (prefix == "qi") {
+
+            table_id = "quality_innovation_table";
+            all_column_names_list = home_qi_all_column_names_list;
+            hide_column_list = home_qi_hide_column_list;
+            table_visible = $('#quality_innovation_table').is(':visible');
+            table_title = "Quality Innovation Columns";
+
+        } else if (prefix == "re") {
+
+            table_id = "requirements_engineering_table";
+            all_column_names_list = home_re_all_column_names_list;
+            hide_column_list = home_re_hide_column_list;
+            table_visible = $('#requirements_engineering_table').is(':visible');
+            table_title = "Requirements Engineering Columns";
+
+        } else if (prefix == "te") {
+
+            table_id = "test_engineering_table";
+            all_column_names_list = home_te_all_column_names_list;
+            hide_column_list = home_te_hide_column_list;
+            table_visible = $('#test_engineering_table').is(':visible');
+            table_title = "Test Engineering Columns";
+
+        } else if (prefix == "tl") {
+
+            table_id = "test_lab_table";
+            all_column_names_list = home_tl_all_column_names_list;
+            hide_column_list = home_tl_hide_column_list;
+            table_visible = $('#test_lab_table').is(':visible');
+            table_title = "Test Lab Columns";
+        }
+
+        selected_show_hide_table = table_id;
+
+        var output = "";
+        var header_count = 1;
+
+        for (var index = 0; index < all_column_names_list.length; index++) {
+
+            var checkbox_id = "column_" + header_count.toString();
+            var checkbox_str = "";
+
+            checkbox_str = "<input type='checkbox' id='" + checkbox_id + "' + onchange='checkbox_change(event)' />&nbsp;&nbsp;" + all_column_names_list[index];
+
+            output = output + checkbox_str + "<br>";
+            header_count++;
+        }
+
+        $("#dialog").html(output);
+        $("#dialog").dialog({
+            title: table_title,  // "Table Columns",
+            resizable: false,
+            // height: 400,
+            width: 400,
+            modal: false,
+            buttons: {
+                Close: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        var current_column_names_list = [];
+
+        var column_count = 0;
+
+        $('#' + prefix + '_th_r1 th').each(function () {
+
+            var name = $(this).text().trim();
+
+            if ($.inArray(name, current_column_names_list) == -1) {
+                current_column_names_list.push(name);
+            }
+
+            column_count++;
+        });
+
+        for (var index = 0; index < all_column_names_list.length; index++) {
+
+            var in_current = $.inArray(all_column_names_list[index].trim(), current_column_names_list);
+            // var in_hide_list = $.inArray(index, hide_column_list);
+
+            var column_id = "column_" + Number(index + 1);
+
+            //if (table_visible) {
+
+                if (in_current > -1) {
+                    $("#" + column_id).prop('checked', true);
+                } else {
+                    $("#" + column_id).prop('checked', false);
+
+                    if ($.inArray(Number(index + 1), hide_column_list) == -1) {
+                        hide_column_list.push(Number(index + 1));
+                    }
+                }
+
+            //} else {
+                // all the checkboxes should be unchecked
+            //    $("#" + column_id).prop('checked', false);
+            //    hide_column_list.length = 0;
+            //}
+
+        }
+
+    }
+
+    function checkbox_change(event) {
+
+        var target = event.target || event.srcElement;
+        var target_id = target.id;  // column_XX
+
+        var index = target_id.indexOf("_");
+        var checkbox_number = Number(target_id.substring(index + 1));
+
+        var checked = $("#" + target_id).prop('checked');
+
+        var hide_column_list = [];
+        var max_columns = 0;
+
+        if (selected_show_hide_table === "product_quality_table") {
+
+            hide_column_list = home_pq_hide_column_list;
+            max_columns = home_pq_number_of_columns;
+
+        } else if (selected_show_hide_table == "quality_assurance_table") {
+
+            hide_column_list = home_qa_hide_column_list;
+            max_columns = home_qa_number_of_columns;
+
+        } else if (selected_show_hide_table == "quality_innovation_table") {
+
+            hide_column_list = home_qi_hide_column_list;
+            max_columns = home_qi_number_of_columns;
+
+        } else if (selected_show_hide_table == "requirements_engineering_table") {
+
+            hide_column_list = home_re_hide_column_list;
+            max_columns = home_re_number_of_columns;
+
+        } else if (selected_show_hide_table == "test_engineering_table") {
+
+            hide_column_list = home_te_hide_column_list;
+            max_columns = home_te_number_of_columns;
+
+        } else if (selected_show_hide_table == "test_lab_table") {
+
+            hide_column_list = home_tl_hide_column_list;
+            max_columns = home_tl_number_of_columns;
+
+        }
+
+        if (checked) {
+
+            // if the user has checked one of the checkboxes, make sure the checkbox to show/hide the table is correct
+            remove_from_hide_list(hide_column_list, checkbox_number);
+
+            show_hide_column(selected_show_hide_table, checkbox_number, "show", false, true);
+
+        } else {
+
+            if ($.inArray(checkbox_number, hide_column_list) == -1) {
+                hide_column_list.push(checkbox_number);
+            }
+
+            var force_table_hide = false;
+
+            if (hide_column_list.length == max_columns) {
+                force_table_hide = true;
+            }
+
+            show_hide_column(selected_show_hide_table, checkbox_number, "hide", force_table_hide, false);
+        }
+
+        // update_hidden_columns_list_db_by_column_index(selected_show_hide_table, hide_column_list);
+        update_hidden_columns_list_db_by_column_name(selected_show_hide_table, hide_column_list);
+    }
+
+    function remove_from_hide_list(temp_list, temp_number) {
+
+        for (var index = 0; index < temp_list.length; index++) {
+
+            if (Number(temp_list[index] == Number(temp_number))) {
+                temp_list.splice(index, 1);
+                break;
+            }
+        }
+
+    }
+
+    function show_hide_column(temp_table_id, column_number, show_hide, force_table_hide, force_table_show) {
+
+        // console.log("show_hide_column " + column_number + "  " + force_table_hide + "  " + force_table_show);
+
+        var oTable = $('#' + temp_table_id).dataTable();
+
+        var prefix = "";
+        var max_columns = 0;
+
+        if (temp_table_id === "product_quality_table") {
+
+            prefix = "pq";
+            max_columns = home_pq_number_of_columns;
+
+        } else if (temp_table_id === "quality_assurance_table") {
+
+            prefix = "qa";
+            max_columns = home_qa_number_of_columns;
+
+        } else if (temp_table_id === "quality_innovation_table") {
+
+            prefix = "qi";
+            max_columns = home_qi_number_of_columns;
+
+        } else if (temp_table_id === "requirements_engineering_table") {
+
+            prefix = "re";
+            max_columns = home_re_number_of_columns;
+
+        } else if (temp_table_id === "test_engineering_table") {
+
+            prefix = "te";
+            max_columns = home_te_number_of_columns;
+
+        } else if (temp_table_id === "test_lab_table") {
+
+            prefix = "tl";
+            max_columns = home_tl_number_of_columns;
+
+        }
+
+        if (show_hide === "hide") {
+
+            if (force_table_hide) {
+
+                // all of the columns have been hidden so uncheck the checkbox for the table
+                if (prefix === "pq") {
+                    $("#pq_show_hide_checkbox").prop('checked', false);
+                } else if (prefix === "qa") {
+                    $("#qa_show_hide_checkbox").prop('checked', false);
+                } else if (prefix === "qi") {
+                    $("#qi_show_hide_checkbox").prop('checked', false);
+                } else if (prefix === "re") {
+                    $("#re_show_hide_checkbox").prop('checked', false);
+                } else if (prefix === "te") {
+                    $("#te_show_hide_checkbox").prop('checked', false);
+                } else if (prefix === "tl") {
+                    $("#tl_show_hide_checkbox").prop('checked', false);
+                }
+
+                // hide the header for the column
+                $('#' + prefix + "_th_r1_" + column_number).hide();
+
+                // the fnSetColumnVis call does not remove the whole table if the last column is removed
+                $('#td_' + temp_table_id).hide();
+
+                $('#' + prefix + '_th_r1').hide();  // eg.  pq_th_r1
+
+                $('#' + prefix + '_legend').hide();
+
+            }
+
+            oTable.fnSetColumnVis(Number(column_number) - 1, false, false);
+
+        } else if (show_hide === "show") {  // working here
+
+            // alert("1573  " + force_table_show);
+
+            if (force_table_show) {
+
+                if (prefix === "pq") {
+                    $("#pq_show_hide_checkbox").prop('checked', true);
+                } else if (prefix === "qa") {
+                    $("#qa_show_hide_checkbox").prop('checked', true);
+                } else if (prefix === "qi") {
+                    $("#qi_show_hide_checkbox").prop('checked', true);
+                } else if (prefix === "re") {
+                    $("#re_show_hide_checkbox").prop('checked', true);
+                } else if (prefix === "te") {
+                    $("#te_show_hide_checkbox").prop('checked', true);
+                } else if (prefix === "tl") {
+                    $("#tl_show_hide_checkbox").prop('checked', true);
+                }
+
+                // show the header for the column
+                $('#' + prefix + "_th_r1_" + column_number).show();
+
+                $('#td_' + temp_table_id).show();
+
+                $('#' + prefix + '_th_r1').show();  // eg.  pq_th_r1
+
+                $('#' + prefix + '_legend').show();
+
+                // columns in the table body are fine, missing a table header
+                oTable.fnSetColumnVis(Number(column_number) - 1, true, true);
+
+            }
+
+            // columns in the table body are fine, missing a table header
+            for (var index = 0; index < max_columns; index++) {
+                $('#' + prefix + "_th_r1_" + (index + 1)).show();
+            }
+
+            oTable.fnSetColumnVis(Number(column_number) - 1, true, false);
+
+        }
+
+        oTable.fnDraw();
+
+    }
+
+    function add_all_columns_to_hide_list(temp_hide_column_list, temp_number_of_columns) {
+
+        temp_hide_column_list.length = 0;
+
+        for (var index = 0; index < temp_number_of_columns; index++) {
+            temp_hide_column_list.push(index);
+        }
+
+    }
+
+    // saves the hidden columns by column index
+    function update_hidden_columns_list_db_by_column_index(temp_table_id, temp_hide_column_list) {
+
+        var column_str = temp_hide_column_list.toString();
+
+        $.ajax({
+            url: "{% url 'users:update_user_chart_preferences' %}",
+            dataType: 'text',
+            data: {
+                'table_name': temp_table_id,
+                'column_list': column_str
+            },
+            type: 'POST',
+            success: function () {
+                // alert("Success");
+            },
+            error: function () {
+                alert("Error Adding Chart");
+            }
+        });
+
+    }
+
+    function update_hidden_columns_list_db_by_column_name(temp_table_id, temp_id_hide_column_list) {
+
+        var temp_all_column_names_list;
+
+        if (temp_table_id === "product_quality_table") {
+            temp_all_column_names_list = home_pq_all_column_names_list;
+        } else if (temp_table_id === "quality_assurance_table") {
+            temp_all_column_names_list = home_qa_all_column_names_list;
+        } else if (temp_table_id === "quality_innovation_table") {
+            temp_all_column_names_list = home_qi_all_column_names_list;
+        } else if (temp_table_id === "requirements_engineering_table") {
+            temp_all_column_names_list = home_re_all_column_names_list;
+        } else if (temp_table_id === "test_engineering_table") {
+            temp_all_column_names_list = home_te_all_column_names_list;
+        } else if (temp_table_id === "test_lab_table") {
+            temp_all_column_names_list = home_tl_all_column_names_list;
+        }
+
+        var temp_hidden_names_list = [];
+
+        for (var index = 0; index < temp_id_hide_column_list.length; index++) {
+
+            var temp_value = temp_id_hide_column_list[index];
+            var column_name = temp_all_column_names_list[temp_value];
+
+            if ($.inArray(column_name, temp_hidden_names_list) == -1) {
+                temp_hidden_names_list.push(column_name);
+            }
+        }
+
+        var column_str = temp_hidden_names_list.toString();
+
+        $.ajax({
+            url: "{% url 'users:update_user_chart_preferences' %}",
+            dataType: 'text',
+            data: {
+                'table_name': temp_table_id,
+                'column_list': column_str
+            },
+            type: 'POST',
+            success: function () {
+                // alert("Success");
+            },
+            error: function () {
+                alert("Error Adding Chart");
+            }
+        });
+
+    }
+
+    // hide columns by the id
+    function hide_user_column_preferences_by_id(temp_table_id, prefix) {
+
+        var hide_columns_json;
+        // var hide_column_list;
+
+        var max_columns = 0;
+        // var temp_button;
+
+        if (prefix === "pq") {
+
+            // hide_column_list = home_pq_hide_column_list;
+            hide_columns_json = home_pq_hide_columns_json;
+            max_columns = home_pq_number_of_columns;
+            // temp_button = "pq_show_hide_columns_button";
+
+        } else if (prefix === "qa") {
+
+            // hide_column_list = home_qa_hide_column_list;
+            hide_columns_json = home_qa_hide_columns_json;
+            max_columns = home_qa_number_of_columns;
+            // temp_button = "qa_show_hide_columns_button";
+
+        } else if (prefix === "qi") {
+
+            // hide_column_list = home_qi_hide_column_list;
+            hide_columns_json = home_qi_hide_columns_json;
+            max_columns = home_qi_number_of_columns;
+            // temp_button = "qi_show_hide_columns_button";
+
+        } else if (prefix === "re") {
+
+            // hide_column_list = home_re_hide_column_list;
+            hide_columns_json = home_re_hide_columns_json;
+            max_columns = home_re_number_of_columns;
+            // temp_button = "re_show_hide_columns_button";
+
+        } else if (prefix === "te") {
+
+            // hide_column_list = home_te_hide_column_list;
+            hide_columns_json = home_te_hide_columns_json;
+            max_columns = home_te_number_of_columns;
+            // temp_button = "te_show_hide_columns_button";
+
+        } else if (prefix === "tl") {
+
+            // hide_column_list = home_tl_hide_column_list;
+            hide_columns_json = home_tl_hide_columns_json;
+            max_columns = home_tl_number_of_columns;
+            // temp_button = "tl_show_hide_columns_button";
+
+        }
+
+        if (hide_columns_json === undefined) {
+            // this will be undefined for the date_table if the user has not entered any column preferences for the table
+        } else {
+
+            if (hide_columns_json === '[]' || hide_columns_json === '' || hide_columns_json === "") {
+                // alert("1604 empty json");
+            } else {
+
+                var temp_json_str = $.parseJSON(hide_columns_json);  // comma separated list of strings
+
+                var temp_array = temp_json_str.split(",");
+
+                if (Number(max_columns) == temp_array.length) {
+                    // hide the whole table
+
+                    // $('#' + temp_button).prop("disabled", true);
+
+                    $('#td_' + temp_table_id).hide();
+
+                    if (prefix === "pq") {
+                        $("#pq_show_hide_checkbox").prop('checked', false);
+                    } else if (prefix === "qa") {
+                        $("#qa_show_hide_checkbox").prop('checked', false);
+                    } else if (prefix === "qi") {
+                        $("#qi_show_hide_checkbox").prop('checked', false);
+                    } else if (prefix === "re") {
+                        $("#re_show_hide_checkbox").prop('checked', false);
+                    } else if (prefix === "te") {
+                        $("#te_show_hide_checkbox").prop('checked', false);
+                    } else if (prefix === "tl") {
+                        $("#tl_show_hide_checkbox").prop('checked', false);
+                    }
+
+                } else {
+
+                    var oTable = $('#' + temp_table_id).dataTable();
+
+                    for (var index = 0; index < temp_array.length; index++) {
+
+                        var column_number = temp_array[index].trim();
+                        oTable.fnSetColumnVis(Number(column_number) - 1, false, false);
+
+                    }
+                    oTable.fnDraw();
+                }
+            }
+        }
+
+    }
+
+    // the column names to hide are entered in the column preferences table
+    function hide_user_column_preferences_by_column_name(temp_table_id, prefix) {
+
+        var hide_columns_json;
+        // var hide_column_list;
+
+        var max_columns = 0;
+        // var temp_button;
+
+        if (prefix === "pq") {
+
+            // hide_column_list = home_pq_hide_column_list;
+            hide_columns_json = home_pq_hide_columns_json;
+            max_columns = home_pq_number_of_columns;
+            // temp_button = "pq_show_hide_columns_button";
+
+        } else if (prefix === "qa") {
+
+            // hide_column_list = home_qa_hide_column_list;
+            hide_columns_json = home_qa_hide_columns_json;
+            max_columns = home_qa_number_of_columns;
+            // temp_button = "qa_show_hide_columns_button";
+
+        } else if (prefix === "qi") {
+
+            // hide_column_list = home_qi_hide_column_list;
+            hide_columns_json = home_qi_hide_columns_json;
+            max_columns = home_qi_number_of_columns;
+            // temp_button = "qi_show_hide_columns_button";
+
+        } else if (prefix === "re") {
+
+            // hide_column_list = home_re_hide_column_list;
+            hide_columns_json = home_re_hide_columns_json;
+            max_columns = home_re_number_of_columns;
+            // temp_button = "re_show_hide_columns_button";
+
+        } else if (prefix === "te") {
+
+            // hide_column_list = home_te_hide_column_list;
+            hide_columns_json = home_te_hide_columns_json;
+            max_columns = home_te_number_of_columns;
+            // temp_button = "te_show_hide_columns_button";
+
+        } else if (prefix === "tl") {
+
+            // hide_column_list = home_tl_hide_column_list;
+            hide_columns_json = home_tl_hide_columns_json;
+            max_columns = home_tl_number_of_columns;
+            // temp_button = "tl_show_hide_columns_button";
+
+        }
+
+        if (hide_columns_json === undefined) {
+            // this will be undefined for the date_table if the user has not entered any column preferences for the table
+        } else {
+
+            if (hide_columns_json === '[]' || hide_columns_json === '' || hide_columns_json === "") {
+                // alert("1604 empty json " + temp_table_id);
+            } else {
+
+                var temp_json_str = $.parseJSON(hide_columns_json);  // comma separated list of strings
+
+                var temp_array = temp_json_str.split(",");
+
+                if (Number(max_columns) == temp_array.length) {
+                    // hide the whole table
+
+                    // $('#' + temp_button).prop("disabled", true);
+
+                    $('#td_' + temp_table_id).hide();
+
+                    if (prefix === "pq") {
+                        $("#pq_show_hide_checkbox").prop('checked', false);
+                    } else if (prefix === "qa") {
+                        $("#qa_show_hide_checkbox").prop('checked', false);
+                    } else if (prefix === "qi") {
+                        $("#qi_show_hide_checkbox").prop('checked', false);
+                    } else if (prefix === "re") {
+                        $("#re_show_hide_checkbox").prop('checked', false);
+                    } else if (prefix === "te") {
+                        $("#te_show_hide_checkbox").prop('checked', false);
+                    } else if (prefix === "tl") {
+                        $("#tl_show_hide_checkbox").prop('checked', false);
+                    }
+
+                } else {
+
+                    // create a list of column_numbers to hide then call the fnSetColumnVis
+                    var column_number_list = [];
+
+                    for (var index01 = 0; index01 < temp_array.length; index01++) {
+
+                        var column_name = temp_array[index01].trim();
+                        var column_number = get_column_number_by_name(temp_table_id, prefix, column_name);
+
+                        // if the user has entered a column name that cannot be found in the table, the column_number will be -1
+                        if (column_number > -1) {
+
+                            if ($.inArray(column_number, column_number_list) == -1) {
+                                column_number_list.push(column_number);
+                            }
+
+                        }
+                    }
+
+                    var oTable = $('#' + temp_table_id).dataTable();
+
+                    for (var index02 = 0; index02 < column_number_list.length; index02++) {
+
+                        var hide_column_number = column_number_list[index02];
+                        oTable.fnSetColumnVis(Number(hide_column_number), false, false);
+
+                    }
+                    oTable.fnDraw();
+                }
+            }
+        }
+    }
+
+    function get_column_number_by_name(temp_table_id, prefix, column_name) {
+
+        var column_number = -1;
+
+        $('#' + temp_table_id).find('th').each(function($index) {
+            var temp_name = $(this).text().trim();
+
+            if (temp_name === column_name) {
+                column_number = $index;
+            }
+        });
+
+        return column_number;
+    }
+
+    // if the number of visible tables equals zero, hide the date table
+    function show_hide_date_table() {
+
+        var visible_tables = 0;
+
+        if ($('#product_quality_table').is(':visible')) {
+            visible_tables++;
+        }
+        if ($('#quality_assurance_table').is(':visible')) {
+            visible_tables++;
+        }
+        if ($('#quality_innovation_table').is(':visible')) {
+             visible_tables++;
+        }
+        if ($('#requirements_engineering_table').is(':visible')) {
+            visible_tables++;
+        }
+        if ($('#test_engineering_table').is(':visible')) {
+            visible_tables++;
+        }
+        if ($('#test_lab_table').is(':visible')) {
+            visible_tables++;
+        }
+
+        // this works but I need the number of visible tables to adjust the table sizing
+        /*
+        if ($('#product_quality_table').is(':visible') || $('#quality_assurance_table').is(':visible') ||
+            $('#quality_innovation_table').is(':visible') || ($('#requirements_engineering_table').is(':visible') ||
+            $('#test_engineering_table').is(':visible') || $('#test_lab_table').is(':visible'))) {
+
+            $("#td_date_table").show();
+        } else {
+            $("#td_date_table").hide();
+        }
+        */
+
+        if (visible_tables == 0) {
+
+            $("#td_date_table").hide();
+
+            $("#west_table_wrapper_div.table-responsive").css('overflow-x', 'hidden');
+
+            // hide the div for the drop target
+            $("#dnd_div_home").hide();
+
+        } else {
+
+            $("#td_date_table").show();
+
+            $("#west_table_wrapper_div.table-responsive").css('overflow-x', 'auto');
+
+            $("#dnd_div_home").show();
+
+        }
+
+    }
+
+    // end of show or hide section
 
 </script>
 

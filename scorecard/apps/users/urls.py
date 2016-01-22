@@ -16,5 +16,6 @@ urlpatterns = patterns('scorecard.apps.users.views',
 
     url(r'^add_home_chart?$', 'add_home_chart', name='add_home_chart'),
     url(r'^delete_home_chart?$', 'delete_home_chart', name='delete_home_chart'),
+    url(r'^update_user_chart_preferences?$', 'update_user_chart_preferences', name='update_user_chart_preferences'),
 )
 
