@@ -29,7 +29,7 @@ class InnovationMetricsModelTest(TestCase):
                                                                       localtime(self.innovation.created)))
 
     def test_verbose_name_plural(self):
-        self.assertEqual(str(InnovationMetrics._meta.verbose_name_plural), 'innovation metricss')
+        self.assertEqual(str(InnovationMetrics._meta.verbose_name_plural), 'Innovation Metrics')
 
     def test_avg_throughput_no_staffs(self):
         self.assertEqual(self.innovation.avg_throughput, 0)
@@ -85,7 +85,7 @@ class RequirementMetricsModelTest(TestCase):
                                                                        localtime(self.requirement.created)))
 
     def test_verbose_name_plural(self):
-        self.assertEqual(str(RequirementMetrics._meta.verbose_name_plural), 'requirement metricss')
+        self.assertEqual(str(RequirementMetrics._meta.verbose_name_plural), 'Requirement Metrics')
 
     def test_avg_throughput(self):
         self.requirement.active_projects = self.active_projects
@@ -164,7 +164,7 @@ class LabMetricsModelTest(TestCase):
                                                                localtime(self.lab.created)))
 
     def test_verbose_name_plural(self):
-        self.assertEqual(str(LabMetrics._meta.verbose_name_plural), 'lab metricss')
+        self.assertEqual(str(LabMetrics._meta.verbose_name_plural), 'Lab Metrics')
 
 
 class TestMetricsModelTest(TestCase):
@@ -227,7 +227,7 @@ class TestMetricsModelTest(TestCase):
                                                                        localtime(self.test_metric.created)))
 
     def test_verbose_name_plural(self):
-        self.assertEqual(str(TestMetrics._meta.verbose_name_plural), 'test metricss')
+        self.assertEqual(str(TestMetrics._meta.verbose_name_plural), 'Test Metrics')
 
     def test_auto_footprint_dev_age_none_of_both(self):
         self.assertEqual(self.test_metric.auto_footprint_dev_age, 0)

@@ -286,6 +286,9 @@ class LabMetrics(BaseMetrics):
     power_consumption_ups_a = models.PositiveIntegerField(default=0)  # in kw
     power_consumption_ups_b = models.PositiveIntegerField(default=0)  # in kw
 
+    class Meta:
+        verbose_name_plural = "Lab Metrics"
+
 
 class TestMetricsConfiguration(models.Model):
     """

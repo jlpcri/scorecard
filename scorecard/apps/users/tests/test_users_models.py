@@ -13,7 +13,7 @@ class FunctionalGroupModelTest(TestCase):
         self.assertEqual(str(functional_group), '{0}: {1}'.format(functional_group.name, functional_group.key))
 
     def test_verbose_name_plural(self):
-        self.assertEqual(str(FunctionalGroup._meta.verbose_name_plural), 'functional groups')
+        self.assertEqual(str(FunctionalGroup._meta.verbose_name_plural), 'Functional Groups')
 
 
 class HumanResourceModelTest(TestCase):
