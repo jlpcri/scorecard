@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load team_extras %}
 
 {% block headscript %}
 
@@ -50,7 +51,7 @@
                 <td draggable="true" ondragstart="dragRE(event)">{{ item.active_projects }}</td>
                 <td draggable="true" ondragstart="dragRE(event)">{{ item.elicitation_analysis_time }}</td>
                 <td draggable="true" ondragstart="dragRE(event)">{{ item.avg_throughput }}</td>
-                <td draggable="true" ondragstart="dragRE(event)">{{ item.total_operational_cost }}</td>
+                <td draggable="true" ondragstart="dragRE(event)">{{ item.total_operational_cost|prepend_dollars }}</td>
             </tr>
             {% endfor %}
             </tbody>
@@ -487,8 +488,8 @@
         var chart_width = 400, chart_height = 400;  // 350;
         var margin = {
             top: 20,
-            right: 40,
-            bottom: 30,
+            right: 50,
+            bottom: 40,
             left: 30
         };
 
@@ -547,12 +548,12 @@
                 .attr("class", "axis-label")
                 .attr("text-anchor", "end")
                 .attr("x", width / 2)
-                .attr("y", height + 40)
-                .text('Date');
+                .attr("y", height + 40);
+        //.text('Date');
 
         vis.append("text")
                 .attr("transform", "rotate(-90)")
-                .attr("y", 10)
+                .attr("y", 0 - margin.left)
                 .attr("x", 0 - (height / 2))
                 .attr("dy", "1.5em")
                 .style("text-anchor", "start")

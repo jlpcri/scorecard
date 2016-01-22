@@ -4,10 +4,9 @@ from django.db import models
 
 class FunctionalGroup(models.Model):
     """
-    Functional Group, such as RE, QA, QI, PQ, TL
+    Functional Group, such as RE, QA, QI, TL
     """
     KEY_CHOICES = (
-        ('PQ', 'Product Quality'),
         ('QA', 'Quality Assurance'),
         ('QI', 'Quality Innovation'),
         ('RE', 'Requirement Engineering'),
@@ -60,3 +59,5 @@ class ColumnPreference(models.Model):
     class Meta:
         ordering = ('user',)
         verbose_name = "Column Preference"
+
+

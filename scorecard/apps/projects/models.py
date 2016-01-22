@@ -12,10 +12,6 @@ class Project(models.Model):
         return self.name
 
     @property
-    def phases_pq(self):
-        return self.projectphase_set.filter(functional_group__key='PQ')
-
-    @property
     def phases_qa(self):
         return self.projectphase_set.filter(functional_group__key='QA')
 

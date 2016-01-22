@@ -66,7 +66,7 @@ class RequirementStats(BaseStats):
 
 class TestStats(BaseStats):
     """
-    Personal Performance status for PQ, QA, TE team
+    Personal Performance status for QA, TE team
     """
     # Throughput
     tc_manual_dev = models.PositiveIntegerField(default=0)

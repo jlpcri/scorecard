@@ -17,16 +17,13 @@
 
         <ul id="subnav-tabs" class="nav nav-tabs">
             {% if user.is_superuser %}
-                <li><a href="#product_quality" data-toggle="tab">Product Quality</a> </li>
                 <li><a href="#quality_assurance" data-toggle="tab">Quality Assurance</a> </li>
                 <li><a href="#quality_innovation" data-toggle="tab">Quality Innovation</a> </li>
                 <li><a href="#requirements_engineering" data-toggle="tab">Requirements Engineering</a> </li>
                 <li><a href="#test_engineering" data-toggle="tab">Test Engineering</a> </li>
                 <li><a href="#test_lab" data-toggle="tab">Test Lab</a> </li>
             {% else %}
-                {% if user.humanresource.functional_group.key == 'PQ' %}
-                    <li><a href="#product_quality" data-toggle="tab">Product Quality</a> </li>
-                {% elif user.humanresource.functional_group.key == 'QA' %}
+                {% if user.humanresource.functional_group.key == 'QA' %}
                     <li><a href="#quality_assurance" data-toggle="tab">Quality Assurance</a> </li>
                 {% elif user.humanresource.functional_group.key == 'QI' %}
                     <li><a href="#quality_innovation" data-toggle="tab">Quality Innovation</a> </li>
@@ -45,10 +42,6 @@
 {% block body %}
     <div class="container">
         <div class="tab-content">
-            <div class="tab-pane" id="product_quality">
-                {% include 'projects/product_quality.html' %}
-            </div>
-
             <div class="tab-pane" id="quality_assurance">
                 {% include 'projects/quality_assurance.html' %}
             </div>

@@ -28,9 +28,6 @@ $('#subnav-tabs').find('a[data-toggle="tab"]').on('show.bs.tab', function(e){
 
 $(document).ready(function(){
     switch (key) {
-        case 'PQ':
-            $('#subnav-tabs').find('a[href="#product_quality"]').tab('show');
-            break;
         case 'QA':
             $('#subnav-tabs').find('a[href="#quality_assurance"]').tab('show');
             break;

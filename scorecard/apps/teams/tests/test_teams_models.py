@@ -29,7 +29,7 @@ class InnovationMetricsModelTest(TestCase):
                                                                       localtime(self.innovation.created)))
 
     def test_verbose_name_plural(self):
-        self.assertEqual(str(InnovationMetrics._meta.verbose_name_plural), 'innovation metricss')
+        self.assertEqual(str(InnovationMetrics._meta.verbose_name_plural), 'Innovation Metrics')
 
     def test_avg_throughput_no_staffs(self):
         self.assertEqual(self.innovation.avg_throughput, 0)
@@ -85,7 +85,7 @@ class RequirementMetricsModelTest(TestCase):
                                                                        localtime(self.requirement.created)))
 
     def test_verbose_name_plural(self):
-        self.assertEqual(str(RequirementMetrics._meta.verbose_name_plural), 'requirement metricss')
+        self.assertEqual(str(RequirementMetrics._meta.verbose_name_plural), 'Requirement Metrics')
 
     def test_avg_throughput(self):
         self.requirement.active_projects = self.active_projects
@@ -164,7 +164,7 @@ class LabMetricsModelTest(TestCase):
                                                                localtime(self.lab.created)))
 
     def test_verbose_name_plural(self):
-        self.assertEqual(str(LabMetrics._meta.verbose_name_plural), 'lab metricss')
+        self.assertEqual(str(LabMetrics._meta.verbose_name_plural), 'Lab Metrics')
 
 
 class TestMetricsModelTest(TestCase):
@@ -173,10 +173,6 @@ class TestMetricsModelTest(TestCase):
             name='Quality Assurance',
             key='QA'
         )
-        self.functional_group_pq = FunctionalGroup.objects.create(
-            name='Product Quality',
-            key='PQ'
-        )
         self.functional_group_te = FunctionalGroup.objects.create(
             name='Test Engineering',
             key='TE'
@@ -184,12 +180,6 @@ class TestMetricsModelTest(TestCase):
         self.functional_group_others = FunctionalGroup.objects.create(
             name='Other Group',
             key='OG'
-        )
-        self.test_metric_config_pq = TestMetricsConfiguration.objects.create(
-            functional_group=self.functional_group_pq,
-            hours_per_week=random.randint(1, 100),
-            costs_per_hour_staff=random.randint(1, 100),
-            costs_per_hour_contractor=random.randint(1, 100)
         )
         self.test_metric_config_qa = TestMetricsConfiguration.objects.create(
             functional_group=self.functional_group,
@@ -237,7 +227,7 @@ class TestMetricsModelTest(TestCase):
                                                                        localtime(self.test_metric.created)))
 
     def test_verbose_name_plural(self):
-        self.assertEqual(str(TestMetrics._meta.verbose_name_plural), 'test metricss')
+        self.assertEqual(str(TestMetrics._meta.verbose_name_plural), 'Test Metrics')
 
     def test_auto_footprint_dev_age_none_of_both(self):
         self.assertEqual(self.test_metric.auto_footprint_dev_age, 0)
@@ -368,23 +358,6 @@ class TestMetricsModelTest(TestCase):
         self.assertEqual(self.test_metric.operational_cost,
                          self.staffs * hours * rate_staff + self.contractors * hours * rate_contractor)
 
-    def test_operational_cost_pq(self):
-        self.test_metric.functional_group = self.functional_group_pq
-        self.test_metric.staffs = self.staffs
-        self.test_metric.contractors = self.contractors
-        self.test_metric.save()
-
-        test_configs = self.functional_group_pq.testmetricsconfiguration_set.all()
-        if len(test_configs) > 0:
-            hours = test_configs[0].hours_per_week
-            rate_staff = test_configs[0].costs_per_hour_staff
-            rate_contractor = test_configs[0].costs_per_hour_contractor
-        else:
-            hours, rate_staff, rate_contractor = 0, 0, 0
-
-        self.assertEqual(self.test_metric.operational_cost,
-                         self.staffs * hours * rate_staff + self.contractors * hours * rate_contractor)
-
     def test_operational_cost_te(self):
         self.test_metric.functional_group = self.functional_group_te
         self.test_metric.staffs = self.staffs
@@ -411,16 +384,6 @@ class TestMetricsModelTest(TestCase):
         self.assertEqual(self.test_metric.total_operational_cost,
                          self.test_metric.operational_cost + self.license_cost)
 
-    def test_total_operational_cost_pq(self):
-        self.test_metric.functional_group = self.functional_group_pq
-        self.test_metric.staffs = self.staffs
-        self.test_metric.contractors = self.contractors
-        self.test_metric.license_cost = self.license_cost
-        self.test_metric.save()
-
-        self.assertEqual(self.test_metric.total_operational_cost,
-                         self.test_metric.operational_cost + self.license_cost)
-
     def test_total_operational_cost_te(self):
         self.test_metric.functional_group = self.functional_group_te
         self.test_metric.staffs = self.staffs
@@ -436,20 +399,6 @@ class TestMetricsModelTest(TestCase):
         self.test_metric.save()
 
         test_configs = self.functional_group.testmetricsconfiguration_set.all()
-        if len(test_configs) > 0:
-            rate = test_configs[0].costs_per_hour_staff
-        else:
-            rate = 0
-
-        self.assertEqual(self.test_metric.auto_savings,
-                         self.tc_auto_execution_time * rate)
-
-    def test_auto_savings_pq(self):
-        self.test_metric.functional_group = self.functional_group_pq
-        self.test_metric.tc_auto_execution_time = self.tc_auto_execution_time
-        self.test_metric.save()
-
-        test_configs = self.functional_group_pq.testmetricsconfiguration_set.all()
         if len(test_configs) > 0:
             rate = test_configs[0].costs_per_hour_staff
         else:

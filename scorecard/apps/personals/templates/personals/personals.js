@@ -11,16 +11,6 @@ $(".dropdown-menu li a").click(function(){
             re_content = '',
             tl_content = '';
 
-        $.each(data['pq_personals'], function(index, person){
-            pq_content += '<tr>'
-                + '<td><a href=\"personal_stats\/{0}\/?key=PQ\">'.format(person['id']) + person['staff'] +'</a></td>'
-                + '<td>' + person['tc_manual_dev'] + '</td>'
-                + '<td>' + person['tc_manual_exec'] + '</td>'
-                + '<td>' + person['tc_auto_dev'] + '</td>'
-                + '<td>' + person['tc_auto_exec'] + '</td>'
-                + '</tr>'
-        });
-
         $.each(data['qa_personals'], function(index, person){
             qa_content += '<tr>'
                 + '<td><a href=\"personal_stats\/{0}\/?key=QA\">'.format(person['id']) + person['staff'] +'</a></td>'

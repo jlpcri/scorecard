@@ -138,14 +138,6 @@ class TestMetrics(BaseMetrics):
         """
         Different computer formula for Product Quality, Quality Assurance, and Test Engineering
         """
-        # if self.functional_group.key == 'PQ':
-        #     return self.staffs * 40 * 60 + self.contractors * 40 * 100
-        # elif self.functional_group.key == 'QA':
-        #     return self.staffs * 40 * 40 + self.contractors * 40 * 100
-        # elif self.functional_group.key == 'TE':
-        #     return self.staffs * 40 * 50 + self.contractors * 40 * 100
-        # else:
-        #     return 0
         try:
             test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=self.functional_group.key)
             hours = test_metric_config.hours_per_week
@@ -165,14 +157,7 @@ class TestMetrics(BaseMetrics):
         """
         Cost Saved by Automation
         """
-        # if self.functional_group.key == 'PQ':
-        #     return self.tc_auto_execution_time * 60
-        # elif self.functional_group.key == 'QA':
-        #     return self.tc_auto_execution_time * 40
-        # elif self.functional_group.key == 'TE':
-        #     return self.tc_auto_execution_time * 50
-        # else:
-        #     return 0
+
         try:
             test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=self.functional_group.key)
             costs_staff = test_metric_config.costs_per_hour_staff
@@ -300,6 +285,9 @@ class LabMetrics(BaseMetrics):
     # Costs
     power_consumption_ups_a = models.PositiveIntegerField(default=0)  # in kw
     power_consumption_ups_b = models.PositiveIntegerField(default=0)  # in kw
+
+    class Meta:
+        verbose_name_plural = "Lab Metrics"
 
 
 class TestMetricsConfiguration(models.Model):

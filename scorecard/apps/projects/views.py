@@ -18,12 +18,13 @@ from scorecard.apps.users.models import FunctionalGroup, HumanResource
 def projects(request):
     function_groups = FunctionalGroup.objects.all()
 
-    pqs = qas = tes = qis = res = tls = {}
+    qas = tes = qis = res = tls = {
+        'fg_projects': [],
+        'fg_tickets': []
+    }
 
     for function_group in function_groups:
-        if function_group.key == 'PQ':
-            pqs = get_projects_tickets_from_fg(function_group)
-        elif function_group.key == 'QA':
+        if function_group.key == 'QA':
             qas = get_projects_tickets_from_fg(function_group)
         elif function_group.key == 'TE':
             tes = get_projects_tickets_from_fg(function_group)
@@ -35,8 +36,6 @@ def projects(request):
             tls = get_projects_tickets_from_fg(function_group)
 
     context = RequestContext(request, {
-        'pq_projects': pqs['fg_projects'],
-        'pq_tickets': pqs['fg_tickets'],
         'qa_projects': qas['fg_projects'],
         'qa_tickets': qas['fg_tickets'],
         'te_projects': tes['fg_projects'],
