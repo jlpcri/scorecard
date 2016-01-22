@@ -71,13 +71,13 @@ def personals(request):
     hr = HumanResource.objects.get(user=request.user)
     if hr.functional_group:
         if hr.functional_group.key in ['QA', 'TE']:
-            current_user_personals = hr.teststats_set.all()
+            current_user_personals = hr.teststats_set.order_by('-created')
         elif hr.functional_group.key == 'QI':
-            current_user_personals = hr.innovationstats_set.all()
+            current_user_personals = hr.innovationstats_set.order_by('-created')
         elif hr.functional_group.key == 'RE':
-            current_user_personals = hr.requirementstats_set.all()
+            current_user_personals = hr.requirementstats_set.order_by('-created')
         elif hr.functional_group.key == 'TL':
-            current_user_personals = hr.labstats_set.all()
+            current_user_personals = hr.labstats_set.order_by('-created')
 
     dates = get_distinct_dates()
 
