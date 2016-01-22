@@ -7,3 +7,4 @@ for m in [FunctionalGroup, HumanResource]:
     admin.site.register(m)
 
 admin.site.register(ColumnPreference)
+admin.site.register(ColumnPreference)

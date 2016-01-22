@@ -17,6 +17,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 import simplejson
 
+import simplejson
 
 @login_required
 def home(request):
@@ -95,6 +96,79 @@ def home(request):
                       'tl_user_hide_list': tl_user_hide_list,
                   })
 
+    functional_groups = FunctionalGroup.objects.all()
+
+    for functional_group in functional_groups:
+        if functional_group.key == 'PQ':
+            pq_metrics = functional_group.testmetrics_set.all()
+        elif functional_group.key == 'QA':
+            qa_metrics = functional_group.testmetrics_set.all()
+        elif functional_group.key == 'QI':
+            qi_metrics = functional_group.innovationmetrics_set.all()
+        elif functional_group.key == 'RE':
+            re_metrics = functional_group.requirementmetrics_set.all()
+        elif functional_group.key == 'TE':
+            te_metrics = functional_group.testmetrics_set.all()
+        elif functional_group.key == 'TL':
+            tl_metrics = functional_group.labmetrics_set.all()
+
+    # build a list of the user column preferences on a per table basis
+    pq_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Product Quality'))
+    qa_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Quality Assurance'))
+    qi_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Quality Innovation'))
+    re_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Requirements Engineering'))
+    te_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Test Engineering'))
+    tl_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Test Lab'))
+
+    pq_hide_list = []
+    qa_hide_list = []
+    qi_hide_list = []
+    re_hide_list = []
+    te_hide_list = []
+    tl_hide_list = []
+
+    # the user might have created a ColumnPreferences but the hide list might be empty
+    # this also covers the case where a ColumnPreferences has not been created
+    for e in pq_column_preferences:
+        pq_hide_list = e.hide_list
+
+    for e in qa_column_preferences:
+        qa_hide_list = e.hide_list
+
+    for e in qi_column_preferences:
+        qi_hide_list = e.hide_list
+
+    for e in re_column_preferences:
+        re_hide_list = e.hide_list
+
+    for e in te_column_preferences:
+        te_hide_list = e.hide_list
+
+    for e in tl_column_preferences:
+        tl_hide_list = e.hide_list
+
+    pq_user_hide_list = simplejson.dumps(pq_hide_list)
+    qa_user_hide_list = simplejson.dumps(qa_hide_list)
+    qi_user_hide_list = simplejson.dumps(qi_hide_list)
+    re_user_hide_list = simplejson.dumps(re_hide_list)
+    tl_user_hide_list = simplejson.dumps(te_hide_list)
+    te_user_hide_list = simplejson.dumps(tl_hide_list)
+
+    return render(request, 'users/home.html',
+                  {
+                    'pq_data': pq_metrics,
+                    'qa_data': qa_metrics,
+                    'qi_data': qi_metrics,
+                    're_data': re_metrics,
+                    'te_data': te_metrics,
+                    'tl_data': tl_metrics,
+                    'pq_user_hide_list': pq_user_hide_list,
+                    'qa_user_hide_list': qa_user_hide_list,
+                    'qi_user_hide_list': qi_user_hide_list,
+                    're_user_hide_list': re_user_hide_list,
+                    'te_user_hide_list': te_user_hide_list,
+                    'tl_user_hide_list': tl_user_hide_list,
+                  })
 
 def user_is_superuser(user):
     return user.is_superuser
@@ -184,6 +258,43 @@ def user_management(request):
 
         return render(request, 'users/user_management.html', context)
 
+
+@csrf_exempt
+def add_home_chart(request):
+    return HttpResponse('')
+
+@csrf_exempt
+def delete_home_chart(request):
+    return HttpResponse('')
+
+@csrf_exempt
+def update_user_chart_preferences(request):
+
+    if request.method == 'POST':
+        if request.is_ajax():
+
+            table_name = request.POST.get('table_name')
+            column_list_str = request.POST.get('column_list')
+
+            db_table_name = ''
+
+            if table_name == 'product_quality':
+                db_table_name = 'Product Quality'
+            elif table_name == 'quality_assurance':
+                db_table_name = 'Quality Assurance'
+            elif table_name == 'quality_innovation':
+                db_table_name = 'Quality Innovation'
+            elif table_name == 'requirements_engineering':
+                db_table_name = 'Requirements Engineering'
+            elif table_name == 'test_engineering':
+                db_table_name = 'Test Engineering'
+            elif table_name == 'test_lab':
+                db_table_name = 'Test Lab'
+
+            column_preferences = ColumnPreference.objects.all().filter(user = request.user, table_name=db_table_name)
+            column_preferences.update(hide_list=column_list_str)
+
+    return HttpResponse('made it here')
 
 @csrf_exempt
 def add_home_chart(request):
