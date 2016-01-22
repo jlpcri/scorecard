@@ -176,9 +176,9 @@
                                         </tr>
                                         </thead>
                                         <tbody class="metrics_tbody">
-                                        {% for pq in pq_data %}
+                                        {% for pq in qa_data %}
                                         <tr>
-                                            <td>{{ pq.created|date }}</td>
+                                            <td>{{ qa.created|date }}</td>
                                         </tr>
                                         {% endfor %}
                                         </tbody>
@@ -390,7 +390,9 @@
                     <tbody>
 
                     <tr>
+                        <!--
                         <td class="td_show_hide_table">
+
                             <table class="td_show_hide_sub_table">
                                 <tbody>
                                 <tr>
@@ -404,7 +406,7 @@
                                 </tbody>
                             </table>
                         </td>
-
+                        -->
                         <td class="td_show_hide_table">
                             <table class="td_show_hide_sub_table">
                                 <tbody>
