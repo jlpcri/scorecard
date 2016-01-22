@@ -50,7 +50,7 @@
                         <td draggable="true" ondragstart="dragTE(event)">{{ item.active_projects }}</td>
                         <td draggable="true" ondragstart="dragTE(event)">{{ item.active_tickets }}</td>
                         <td draggable="true" ondragstart="dragTE(event)">{{ item.avg_throughput|floatformat:2 }}</td>
-                        <td draggable="true" ondragstart="dragTE(event)">{{ item.total_operational_cost }}</td>
+                        <td>{{ item.total_operational_cost| prepend_dollars }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

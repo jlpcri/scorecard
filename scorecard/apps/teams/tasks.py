@@ -46,7 +46,7 @@ def weekly_metric_new():
 def metric_new():
     functional_groups = FunctionalGroup.objects.all()
     for functional_group in functional_groups:
-        if functional_group.key in ['PQ', 'QA', 'TE']:
+        if functional_group.key in ['QA', 'TE']:
             TestMetrics.objects.create(functional_group=functional_group)
         elif functional_group.key == 'QI':
             InnovationMetrics.objects.create(functional_group=functional_group)
@@ -76,7 +76,7 @@ def weekly_send_email():
         'pjneuberger@west.com',  # TL: Paul Neuberger
         'CAHeyden@west.com'  # QI
     ]
-    # to_email = ['sliu@west.com', 'QEIInnovation@west.com']
+    # to_email = ['sliu@west.com', 'QEIInnovation@west.com'] + managers_email
     to_email = ['sliu@west.com']
     content = '<p>Following are the links to access the week <strong>{0}</strong> Scorecard manager input:</p>'.format(get_week_ending_date(today))
     content += '<ul>'

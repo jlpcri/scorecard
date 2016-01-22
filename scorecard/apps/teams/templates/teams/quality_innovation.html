@@ -48,7 +48,7 @@
                             <td draggable="true" ondragstart="dragQI(event)">{{ item.staffs }}</td>
                             <td draggable="true" ondragstart="dragQI(event)">{{ item.story_points_backlog }}</td>
                             <td draggable="true" ondragstart="dragQI(event)">{{ item.avg_team_size }}</td>
-                            <td draggable="true" ondragstart="dragQI(event)">{{ item.total_operational_cost }}</td>
+                            <td>{{ item.total_operational_cost|prepend_dollars }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

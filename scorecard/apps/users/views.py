@@ -1,4 +1,5 @@
 import json
+from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -71,9 +72,17 @@ def sign_in(request):
             if user.is_active:
                 login(request, user)
                 try:
-                    HumanResource.objects.get(user=user)
+                    hr = HumanResource.objects.get(user=user)
+                    if not hr.functional_group:
+                        if user.is_superuser:
+                            pass
+                        elif hr.manager:
+                            messages.error(request, 'Please <a href=\'{0}user_manager_assign\'>assign yourself </a> to your team.'.format(settings.LOGIN_URL))
+                        else:
+                            messages.error(request, 'Please ask your Supervisor to assign yourself to your team.')
                 except HumanResource.DoesNotExist:
                     HumanResource.objects.create(user=user)
+                    messages.error(request, 'Please ask your Supervisor to assign you to your team.')
                 if request.GET.get('next'):
                     return redirect(request.GET['next'])
                 else:
@@ -101,14 +110,19 @@ def user_management(request):
             'username',
             '-username',
             'last_login',
-            '-last_login'
+            '-last_login',
+            'humanresource__functional_group__key',
+            '-humanresource__functional_group__key'
         ]
         users = ''
         sort = request.GET.get('sort', '')
         sort = sort if sort else 'username'
 
         if sort in sort_types:
-            users = User.objects.all().order_by(sort)
+            if sort in ['humanresource__functional_group__key', '-humanresource__functional_group__key']:
+                users = User.objects.order_by(sort, 'username')
+            else:
+                users = User.objects.order_by(sort)
 
         context = RequestContext(request, {
             'users': users,
@@ -129,11 +143,14 @@ def delete_home_chart(request):
 @user_passes_test(user_is_manager)
 def user_manager_assign(request):
     user = request.user
-    key = request.user.humanresource.functional_group.key
+    try:
+        key = request.user.humanresource.functional_group.key
+    except AttributeError:
+        key = ''
 
     if request.method == 'GET':
         users = User.objects.all().order_by('username')
-        if user.is_superuser:
+        if user.is_superuser or not key:
             groups = FunctionalGroup.objects.all().order_by('name')
         else:
             groups = FunctionalGroup.objects.filter(key=key)

@@ -50,7 +50,7 @@
                 <td draggable="true" ondragstart="dragTL(event)">{{ item.tickets_received }}</td>
                 <td draggable="true" ondragstart="dragTL(event)">{{ item.tickets_closed }}</td>
                 <td draggable="true" ondragstart="dragTL(event)">{{ item.virtual_machines }}</td>
-                        <td>{{ item.license_cost }}</td>
+                        <td>{{ item.license_cost|prepend_dollars }}</td>
             </tr>
             {% endfor %}
             </tbody>

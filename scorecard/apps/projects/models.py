@@ -2,6 +2,7 @@ from django.utils import timezone
 from django.db import models
 
 from scorecard.apps.users.models import FunctionalGroup, HumanResource
+from utils import calculate_business_day
 
 
 class Project(models.Model):
@@ -9,10 +10,6 @@ class Project(models.Model):
 
     def __unicode__(self):
         return self.name
-
-    @property
-    def phases_pq(self):
-        return self.projectphase_set.filter(functional_group__key='PQ')
 
     @property
     def phases_qa(self):
@@ -55,6 +52,25 @@ class ProjectPhase(models.Model):
         return '{0}: {1}: {2}'.format(self.name,
                                       self.project.name,
                                       self.functional_group.key)
+
+    @property
+    def start_delays(self):
+        if self.estimate_start and self.actual_start:
+            data = calculate_business_day(self.estimate_start, self.actual_start)
+        else:
+            data = 'Null'
+
+        return data
+
+    @property
+    def diff_durations(self):
+        if self.estimate_start and self.estimate_end and self.actual_start and self.actual_end:
+            data = calculate_business_day(self.actual_start, self.actual_end)\
+                   - calculate_business_day(self.estimate_start, self.estimate_end)
+        else:
+            data = 'Null'
+
+        return data
 
 
 class Ticket(models.Model):

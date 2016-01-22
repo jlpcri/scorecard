@@ -125,9 +125,21 @@ $('.editPhase').on('show.bs.modal', function(e) {
 });
 
 $('.editPhase form').on('submit', function(event){
-    var name = $('#editPhaseName').val();
+    var name = $('#editPhaseName').val(),
+        estimate_start = new Date($('#editPhaseEstimateStart').val()),
+        estimate_end = new Date($('#editPhaseEstimateEnd').val()),
+        actual_start = new Date($('#editPhaseActualStart').val()),
+        actual_end = new Date($('#editPhaseActualEnd').val());
     if (name == ''){
         showErrMsg('#editPhaseErrMessage', 'Name is Empty');
+        return false;
+    }
+    if (estimate_start > estimate_end) {
+        showErrMsg('#editPhaseErrMessage', 'Estimate End cannot be earlier than Estimate Start');
+        return false;
+    }
+    if (actual_start > actual_end) {
+        showErrMsg('#editPhaseErrMessage', 'Actual End cannot be earlier than Actual Start');
         return false;
     }
 });
