@@ -11,6 +11,9 @@ from scorecard.apps.users.views import user_is_superuser, user_is_manager
 from tasks import weekly_metric_new, weekly_send_email
 from utils import context_teams
 
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+
 
 @login_required
 def teams(request):
@@ -119,3 +122,52 @@ def metric_edit(request, metric_id):
             return render(request, 'teams/metric_detail.html', context)
     else:
         return redirect('teams:teams')
+
+
+@csrf_exempt
+def add_product_quality_chart(request):
+    return HttpResponse('')
+
+@csrf_exempt
+def delete_product_quality_chart(request):
+    return HttpResponse('')
+
+@csrf_exempt
+def add_quality_assurance_chart(request):
+    return HttpResponse('')
+
+@csrf_exempt
+def delete_quality_assurance_chart(request):
+    return HttpResponse('')
+
+@csrf_exempt
+def add_quality_innovation_chart(request):
+    return HttpResponse('')
+
+@csrf_exempt
+def delete_quality_innovation_chart(request):
+    return HttpResponse('')
+
+@csrf_exempt
+def add_requirements_engineering_chart(request):
+    return HttpResponse('')
+
+@csrf_exempt
+def delete_requirements_engineering_chart(request):
+    return HttpResponse('')
+
+@csrf_exempt
+def add_test_engineering_chart(request):
+    return HttpResponse('')
+
+@csrf_exempt
+def delete_test_engineering_chart(request):
+    return HttpResponse('')
+
+@csrf_exempt
+def add_test_lab_chart(request):
+    return HttpResponse('')
+
+@csrf_exempt
+def delete_test_lab_chart(request):
+    return HttpResponse('')

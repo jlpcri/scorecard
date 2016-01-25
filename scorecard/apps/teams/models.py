@@ -166,6 +166,8 @@ class TestMetrics(BaseMetrics):
 
         return self.tc_auto_execution_time * costs_staff
 
+    class Meta:
+        verbose_name_plural = "Test Metrics"
 
 class InnovationMetrics(BaseMetrics):
     """
@@ -208,6 +210,10 @@ class InnovationMetrics(BaseMetrics):
     @property
     def total_operational_cost(self):
         return self.operational_cost + self.license_cost
+
+
+    class Meta:
+        verbose_name_plural = "Innovation Metrics"
 
 
 class RequirementMetrics(BaseMetrics):
@@ -262,6 +268,9 @@ class RequirementMetrics(BaseMetrics):
     def overall_cost(self):
         return self.total_operational_cost + self.travel_cost
 
+    class Meta:
+        verbose_name_plural = "Requirement Metrics"
+
 
 class LabMetrics(BaseMetrics):
     """
@@ -276,6 +285,9 @@ class LabMetrics(BaseMetrics):
     # Costs
     power_consumption_ups_a = models.PositiveIntegerField(default=0)  # in kw
     power_consumption_ups_b = models.PositiveIntegerField(default=0)  # in kw
+
+    class Meta:
+        verbose_name_plural = "Lab Metrics"
 
 
 class TestMetricsConfiguration(models.Model):
