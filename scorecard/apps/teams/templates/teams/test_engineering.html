@@ -297,13 +297,20 @@
 
         var color = d3.scale.category20c();
 
+        var weekly_data = get_column_data(test_engineering_primary_date_time_column, test_engineering_table_id);
+        var parsed_date_list = [];
+
+        for (var index01 = 0; index01 < weekly_data.length; index01++) {
+            parsed_date_list.push(getParsedMonthDayYear(weekly_data[index01]));  // string  Oct 5, 2015, 4:36p.m.
+        }
+
         var data = [];
 
         var chart_data = get_column_data(chart_object.dnd_drag_column_number, test_engineering_table_id);
 
         for (var index = 0; index < chart_data.length; index++) {
             var temp_value = chart_data[index];
-            data.push({"label": "Week " + (index + 1), "value": temp_value});
+            data.push({"label": parsed_date_list[index], "value": chart_data[index]});
         }
 
         var vis = d3.select('#te_chart_svg_' + svg_id).append("svg:svg").data([data]).attr("width", chart_width).attr("height", chart_height).append("svg:g").attr("transform", "translate(" + radius + "," + radius + ")");
