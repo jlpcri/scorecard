@@ -89,18 +89,6 @@ var randomColor = (function () {
     };
 })();
 
-function get_column_data(temp_column_number, temp_table_id) {
-
-    var column_data = [];
-
-    $('#' + temp_table_id + ' tbody tr').each(function () {
-        var temp_data = $(this).children(" td:eq(" + Number(temp_column_number) + ") ").text();
-        column_data.push(temp_data);
-    });
-
-    return column_data;
-}
-
 function getParsedDate(temp_date) {
 
     // Oct 5, 2015, 4:36p.m., only need the month and day
@@ -117,6 +105,28 @@ function getParsedDate(temp_date) {
     day = day.replace(/\,/g, '').trim();
 
     return month + " " + day;
+}
+
+// returns a friendly month day, year string for the pie chart
+function getParsedMonthDayYear(temp_date) {
+
+    // Oct 5, 2015, 4:36p.m., only need the month and day
+    var temp_array = temp_date.split(" ");
+
+    var month = temp_array[0];
+    var day = temp_array[1];
+    var year = temp_array[2];
+
+    // clean up the month (if present, remove the trailing period)
+    month = month.replace(/\./g, '').trim();
+
+    // clean up the day (if present, remove the trailing comma)
+    day = day.replace(/\,/g, '').trim();
+
+    // clean up the year (if present, remove the trailing comma)
+    year = year.replace(/\,/g, '').trim();
+
+    return month + " " + day + ", " + year;
 }
 
 // given the column number, find the column name
@@ -254,6 +264,9 @@ function get_column_data(temp_column_number, temp_table_id) {
 
     $('#' + temp_table_id + ' tbody tr').each(function () {
         var temp_data = $(this).children(" td:eq(" + Number(temp_column_number) + ") ").text();
+        temp_data = temp_data.replace(/\$/g, '').trim();
+        temp_data = temp_data.replace(/\,/g, '').trim();
+
         column_data.push(temp_data);
     });
 

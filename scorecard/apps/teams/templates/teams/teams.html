@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load staticfiles %}
 
 {% block title %} Teams {% endblock %}
 
@@ -80,17 +81,22 @@
 {% endblock %}
 
 {% block footer %}
-    <!-- Include Required Prerequisites -->
-    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+{#    <!-- Include Required Prerequisites -->#}
+{#    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>#}
+{##}
+{#    <!-- Include Date Range Picker -->#}
+{#    <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>#}
+{#    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />#}
 
-    <!-- Include Date Range Picker -->
-    <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
-    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+    <script src="{% static 'common/bootstrap-daterangepicker/2.1.17/moment.min.js' %}"></script>
+    <link href="{% static 'common/bootstrap-daterangepicker/2.1.17/daterangepicker.css' %}" rel="stylesheet">
+    <script src="{% static 'common/bootstrap-daterangepicker/2.1.17/daterangepicker.js' %}"></script>
+
 
 
     <script>
         {% include 'teams/teams.js' %}
-        {% include 'teams/d3_west.js' %}
+{#        {% include 'teams/d3_west.js' %}#}
 
         var start = '{{ start.date }}',
             end = '{{ end.date }}';

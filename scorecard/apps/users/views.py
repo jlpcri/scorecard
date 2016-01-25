@@ -25,9 +25,9 @@ def home(request):
     functional_groups = FunctionalGroup.objects.all()
 
     for functional_group in functional_groups:
-        if functional_group.key == 'PQ':
-            pq_metrics = functional_group.testmetrics_set.all()
-        elif functional_group.key == 'QA':
+        # if functional_group.key == 'PQ':
+        #     pq_metrics = functional_group.testmetrics_set.all()
+        if functional_group.key == 'QA':
             qa_metrics = functional_group.testmetrics_set.all()
         elif functional_group.key == 'QI':
             qi_metrics = functional_group.innovationmetrics_set.all()
@@ -39,14 +39,14 @@ def home(request):
             tl_metrics = functional_group.labmetrics_set.all()
 
     # build a list of the user column preferences on a per table basis
-    pq_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Product Quality'))
+    # pq_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Product Quality'))
     qa_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Quality Assurance'))
     qi_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Quality Innovation'))
     re_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Requirements Engineering'))
     te_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Test Engineering'))
     tl_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Test Lab'))
 
-    pq_hide_list = []
+    # pq_hide_list = []
     qa_hide_list = []
     qi_hide_list = []
     re_hide_list = []
@@ -55,8 +55,8 @@ def home(request):
 
     # the user might have created a ColumnPreferences but the hide list might be empty
     # this also covers the case where a ColumnPreferences has not been created
-    for e in pq_column_preferences:
-        pq_hide_list = e.hide_list
+    # for e in pq_column_preferences:
+    #     pq_hide_list = e.hide_list
 
     for e in qa_column_preferences:
         qa_hide_list = e.hide_list
@@ -73,7 +73,7 @@ def home(request):
     for e in tl_column_preferences:
         tl_hide_list = e.hide_list
 
-    pq_user_hide_list = simplejson.dumps(pq_hide_list)
+    # pq_user_hide_list = simplejson.dumps(pq_hide_list)
     qa_user_hide_list = simplejson.dumps(qa_hide_list)
     qi_user_hide_list = simplejson.dumps(qi_hide_list)
     re_user_hide_list = simplejson.dumps(re_hide_list)
@@ -82,13 +82,13 @@ def home(request):
 
     return render(request, 'users/home.html',
                   {
-                      'pq_data': pq_metrics,
+                      # 'pq_data': pq_metrics,
                       'qa_data': qa_metrics,
                       'qi_data': qi_metrics,
                       're_data': re_metrics,
                       'te_data': te_metrics,
                       'tl_data': tl_metrics,
-                      'pq_user_hide_list': pq_user_hide_list,
+                      # 'pq_user_hide_list': pq_user_hide_list,
                       'qa_user_hide_list': qa_user_hide_list,
                       'qi_user_hide_list': qi_user_hide_list,
                       're_user_hide_list': re_user_hide_list,
