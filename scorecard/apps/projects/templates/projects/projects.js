@@ -1,6 +1,10 @@
 /**
  * Created by sliu on 1/11/16.
  */
+
+// Use jquery date picker for ProjectPhase/Tickets Estimate/Actual Start/End
+$('.input-date').datepicker();
+
 $('.newProject form').on('submit', function(event){
     var name = $('.newProject form #id_name').val();
     if (name == ''){

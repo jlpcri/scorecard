@@ -48,9 +48,6 @@ $(document).ready(function(){
     }
 });
 
-// Use jquery date picker for ProjectPhase/Tickets Estimate/Actual Start/End
-$('.input-date').datepicker();
-
 // Use Bootstrap daterangepicker for Teams/Datas data range select
 function setDate(start, end){
     $('#date-range span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
