@@ -89,18 +89,6 @@ var randomColor = (function () {
     };
 })();
 
-function get_column_data(temp_column_number, temp_table_id) {
-
-    var column_data = [];
-
-    $('#' + temp_table_id + ' tbody tr').each(function () {
-        var temp_data = $(this).children(" td:eq(" + Number(temp_column_number) + ") ").text();
-        column_data.push(temp_data);
-    });
-
-    return column_data;
-}
-
 function getParsedDate(temp_date) {
 
     // Oct 5, 2015, 4:36p.m., only need the month and day
@@ -276,6 +264,8 @@ function get_column_data(temp_column_number, temp_table_id) {
 
     $('#' + temp_table_id + ' tbody tr').each(function () {
         var temp_data = $(this).children(" td:eq(" + Number(temp_column_number) + ") ").text();
+        temp_data = temp_data.replace(/\$/g, '').trim();
+
         column_data.push(temp_data);
     });
 

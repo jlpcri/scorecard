@@ -309,7 +309,6 @@
         var chart_data = get_column_data(chart_object.dnd_drag_column_number, test_lab_table_id);
 
         for (var index = 0; index < chart_data.length; index++) {
-            var temp_value = chart_data[index];
             data.push({"label": parsed_date_list[index], "value": chart_data[index]});
         }
 
