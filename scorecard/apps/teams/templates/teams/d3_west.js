@@ -265,6 +265,7 @@ function get_column_data(temp_column_number, temp_table_id) {
     $('#' + temp_table_id + ' tbody tr').each(function () {
         var temp_data = $(this).children(" td:eq(" + Number(temp_column_number) + ") ").text();
         temp_data = temp_data.replace(/\$/g, '').trim();
+        temp_data = temp_data.replace(/\,/g, '').trim();
 
         column_data.push(temp_data);
     });
