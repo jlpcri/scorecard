@@ -399,7 +399,7 @@
             return d.y;
         });
 
-        var min_unit = ymax / chart_height;
+        var min_unit = 0.0;  // ymax / chart_height;
 
         var xScale = d3.scale.ordinal()
                 .domain(d3.range(data.length))
@@ -640,6 +640,8 @@
 
         $('#product_quality_table tbody tr').each(function () {
             var temp_data = $(this).children("td:eq(" + Number(column_number) + ") ").text();
+            temp_data = temp_data.replace(/\$/g, '').trim();
+            temp_data = temp_data.replace(/\,/g, '').trim();
             column_data.push(temp_data);
         });
 
@@ -652,6 +654,8 @@
 
         $('#' + temp_table_id + ' tbody tr').each(function () {
             var temp_data = $(this).children(" td:eq(" + Number(temp_column_number) + ") ").text();
+            temp_data = temp_data.replace(/\$/g, '').trim();
+            temp_data = temp_data.replace(/\,/g, '').trim();
             column_data.push(temp_data);
         });
 
