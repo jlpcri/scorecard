@@ -138,7 +138,7 @@
 {% block body %}
 <div class="container west_container">
     <h1>Score Card</h1>
-    <br>
+    <!--
     <h4> Scorecard, now available with QEI team: </h4>
     <ul>
         <li>A strategy performance management tool</li>
@@ -147,6 +147,7 @@
         <li>Used by team managers to keep track of execution of activities by the staff within their control</li>
         <li>Monitor the consequences arising from staff actions</li>
     </ul>
+    -->
 </div>
 
 <form action="." method="POST">
@@ -165,6 +166,7 @@
                         <tr>
 
                             <!-- display just the date column -->
+                            {% comment %}
                             <td id="td_date_table" class="td_metrics_date_table">
 
                                 <fieldset>
@@ -187,7 +189,8 @@
                                 </fieldset>
 
                             </td>
-                            <!--
+                            {% endcomment %}
+                            {% comment %}
                             <td id="td_product_quality_table" class="td_metrics_table">
 
                                 <fieldset>
@@ -219,7 +222,8 @@
                                 </fieldset>
 
                             </td>
-                            -->
+                            {% endcomment %}
+
                             <td id="td_quality_assurance_table" class="td_metrics_table">
 
                                 <fieldset>
@@ -228,21 +232,65 @@
                                     <table id="quality_assurance_table" class="display nowrap metrics_table" cellspacing="0">
                                         <thead class="metrics_thead">
                                         <tr id="qa_th_r1">
-                                            <th id="qa_th_r1_1" class="col-md-1"><strong>Staffs</strong></th>
-                                            <th id="qa_th_r1_2" class="col-md-2"><strong>Active Projects</strong></th>
-                                            <th id="qa_th_r1_3" class="col-md-2"><strong>Active Tickets</strong></th>
-                                            <th id="qa_th_r1_4" class="col-md-2"><strong>Avg Throughput</strong></th>
-                                            <th id="qa_th_r1_5" class="col-md-2"><strong>Total Costs</strong></th>
+                                            <th id="qa_th_r1_0"  class="col-md-3"><strong>Date</strong></th>
+                                            <th id="qa_th_r1_1"  class="col-md-1"><strong>Staffs</strong></th>
+                                            <th id="qa_th_r1_2"  class="col-md-2"><strong>Active Projects</strong></th>
+                                            <th id="qa_th_r1_3"  class="col-md-2"><strong>Active Tickets</strong></th>
+                                            <th id="qa_th_r1_4"  class="col-md-2"><strong>Avg Throughput</strong></th>
+                                            <th id="qa_th_r1_5"  class="col-md-2"><strong>Total Costs</strong></th>
+                                            <th id="qa_th_r1_6"  class="col-md-2"><strong>Team Initiative</strong></th>
+                                            <th id="qa_th_r1_7"  class="col-md-2"><strong>Ticket Backlog</strong></th>
+                                            <th id="qa_th_r1_8"  class="col-md-2"><strong>Ticket Prep</strong></th>
+                                            <th id="qa_th_r1_9"  class="col-md-2"><strong>Ticket Execution</strong></th>
+                                            <th id="qa_th_r1_10" class="col-md-2"><strong>Tickets Closed</strong></th>
+                                            <th id="qa_th_r1_11" class="col-md-2"><strong>Project Backlog</strong></th>
+                                            <th id="qa_th_r1_12" class="col-md-2"><strong>Project Prep</strong></th>
+                                            <th id="qa_th_r1_13" class="col-md-2"><strong>Project Execution</strong></th>
+                                            <th id="qa_th_r1_14" class="col-md-2"><strong>Project Closed</strong></th>
+                                            <th id="qa_th_r1_15" class="col-md-2"><strong>TC Manual Dev</strong></th>
+                                            <th id="qa_th_r1_16" class="col-md-2"><strong>TC Manual Dev Time</strong></th>
+                                            <th id="qa_th_r1_17" class="col-md-2"><strong>TC Manual Execution</strong></th>
+                                            <th id="qa_th_r1_18" class="col-md-2"><strong>TC Manual Execution Time</strong></th>
+                                            <th id="qa_th_r1_19" class="col-md-2"><strong>TC Auto Dev</strong></th>
+                                            <th id="qa_th_r1_20" class="col-md-2"><strong>TC Auto Dev Time</strong></th>
+                                            <th id="qa_th_r1_21" class="col-md-2"><strong>TC Auto Execution</strong></th>
+                                            <th id="qa_th_r1_22" class="col-md-2"><strong>TC Auto Execution Time</strong></th>
+                                            <th id="qa_th_r1_23" class="col-md-2"><strong>Defects Caught</strong></th>
+                                            <th id="qa_th_r1_24" class="col-md-2"><strong>UAT Defects Not Prevented</strong></th>
+                                            <th id="qa_th_r1_25" class="col-md-2"><strong>Standard Violated</strong></th>
+                                            <th id="qa_th_r1_26" class="col-md-2"><strong>Average Time Frame</strong></th>
                                         </tr>
                                         </thead>
                                         <tbody class="metrics_tbody">
                                         {% for qa in qa_data %}
                                         <tr>
+                                            <td>{{ qa.created|date }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ qa.staffs }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ qa.active_projects }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ qa.active_tickets }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ qa.avg_throughput|floatformat:2 }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ qa.total_operational_cost }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.team_initiative }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.ticket_backlog }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.ticket_prep }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.ticket_execution }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.ticket_closed }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.project_backlog }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.project_prep }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.project_execution }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.project_closed }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.tc_manual_dev }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.tc_manual_dev_time }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.tc_manual_execution }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.tc_manual_execution_time }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.tc_auto_dev }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.tc_auto_dev_time }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.tc_auto_execution }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.tc_auto_execution_time }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.defect_caught }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.uat_defects_not_prevented }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.standards_violated }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qa.avg_time_frame }}</td>
                                         </tr>
                                         {% endfor %}
                                         </tbody>
@@ -259,19 +307,51 @@
                                     <table id="quality_innovation_table" class="display nowrap metrics_table" cellspacing="0">
                                         <thead class="metrics_thead">
                                         <tr id="qi_th_r1">
-                                            <th id="qi_th_r1_1" class="col-md-3"><strong>Staffs</strong></th>
-                                            <th id="qi_th_r1_2" class="col-md-2"><strong>Backlog Story</strong></th>
-                                            <th id="qi_th_r1_3" class="col-md-2"><strong>Avg Team Size</strong></th>
-                                            <th id="qi_th_r1_4" class="col-md-2"><strong>Total Costs</strong></th>
+                                            <th id="qi_th_r1_0"  class="col-md-3"><strong>Date</strong></th>
+                                            <th id="qi_th_r1_1"  class="col-md-3"><strong>Staffs</strong></th>
+                                            <th id="qi_th_r1_2"  class="col-md-2"><strong>Story Points Backlog</strong></th>
+                                            <th id="qi_th_r1_3"  class="col-md-2"><strong>Story Points Prep</strong></th>
+                                            <th id="qi_th_r1_4"  class="col-md-2"><strong>Story Points Execution</strong></th>
+                                            <th id="qi_th_r1_5"  class="col-md-2"><strong>Avg Team Size</strong></th>
+                                            <th id="qi_th_r1_6"  class="col-md-2"><strong>Total Costs</strong></th>
+                                            <th id="qi_th_r1_7"  class="col-md-2"><strong>Unit Tests Dev</strong></th>
+                                            <th id="qi_th_r1_8"  class="col-md-2"><strong>Unit Tests Coverage</strong></th>
+                                            <th id="qi_th_r1_9"  class="col-md-2"><strong>Documentation Coverage</strong></th>
+                                            <th id="qi_th_r1_10" class="col-md-2"><strong>Defects in Dev</strong></th>
+                                            <th id="qi_th_r1_11" class="col-md-2"><strong>Elicitation Analysis Time</strong></th>
+                                            <th id="qi_th_r1_12" class="col-md-2"><strong>Revisions</strong></th>
+                                            <th id="qi_th_r1_13" class="col-md-2"><strong>Acvtive Projects</strong></th>
+                                            <th id="qi_th_r1_14" class="col-md-2"><strong>UAT Defects Not Prevented</strong></th>
+                                            <th id="qi_th_r1_15" class="col-md-2"><strong>Pheme Manual Tests</strong></th>
+                                            <th id="qi_th_r1_16" class="col-md-2"><strong>Pheme Auto Tests</strong></th>
+                                            <th id="qi_th_r1_17" class="col-md-2"><strong>Visilog TXL Parsed</strong></th>
+                                            <th id="qi_th_r1_18" class="col-md-2"><strong>Visilog TXL Schema Violation</strong></th>
+                                            <th id="qi_th_r1_19" class="col-md-2"><strong>Average Throughput</strong></th>
                                         </tr>
                                         </thead>
                                         <tbody class="metrics_tbody">
                                         {% for qi in qi_data %}
                                         <tr>
+                                            <td>{{ qi.created|date }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ qi.staffs }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ qi.story_points_backlog }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qi.story_points_prep }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qi.story_points_execution }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ qi.avg_team_size }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ qi.total_operational_cost }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qi.unit_tests_dev }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qi.unit_tests_coverage }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qi.documentation_coverage }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qi.defects_in_dev }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qi.elicitation_analysis_time }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qi.revisions }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qi.active_projects }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qi.uat_defects_not_prevented }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qi.pheme_manual_tests }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qi.pheme_auto_tests }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qi.visilog_txl_parsed }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qi.visilog_txl_schema_violation }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ qi.avg_throughput }}</td>
                                         </tr>
                                         {% endfor %}
                                         </tbody>
@@ -288,21 +368,41 @@
                                     <table id="requirements_engineering_table" class="display nowrap metrics_table" cellspacing="0">
                                         <thead class="metrics_thead">
                                         <tr id="re_th_r1">
-                                            <th id="re_th_r1_1" class="col-md-1"><strong>Staffs</strong></th>
-                                            <th id="re_th_r1_2" class="col-md-2"><strong>Active Projects</strong></th>
-                                            <th id="re_th_r1_3" class="col-md-2"><strong>Elicitation Analysis</strong></th>
-                                            <th id="re_th_r1_4" class="col-md-2"><strong>Avg Throughput</strong></th>
-                                            <th id="re_th_r1_5" class="col-md-2"><strong>Total Costs</strong></th>
+                                            <th id="re_th_r1_0"  class="col-md-3"><strong>Date</strong></th>
+                                            <th id="re_th_r1_1"  class="col-md-1"><strong>Staffs</strong></th>
+                                            <th id="re_th_r1_2"  class="col-md-2"><strong>Active Projects</strong></th>
+                                            <th id="re_th_r1_3"  class="col-md-2"><strong>Elicitation Analysis</strong></th>
+                                            <th id="re_th_r1_4"  class="col-md-2"><strong>Avg Throughput</strong></th>
+                                            <th id="re_th_r1_5"  class="col-md-2"><strong>Total Costs</strong></th>
+                                            <th id="re_th_r1_6"  class="col-md-2"><strong>Backlog</strong></th>
+                                            <th id="re_th_r1_7"  class="col-md-2"><strong>Team Initiative</strong></th>
+                                            <th id="re_th_r1_8"  class="col-md-2"><strong>Revisions</strong></th>
+                                            <th id="re_th_r1_9"  class="col-md-2"><strong>SLAS Missed</strong></th>
+                                            <th id="re_th_r1_10" class="col-md-2"><strong>Rework External Time</strong></th>
+                                            <th id="re_th_r1_11" class="col-md-2"><strong>Travel Costs</strong></th>
+                                            <th id="re_th_r1_12" class="col-md-2"><strong>Gross Available Time</strong></th>
+                                            <th id="re_th_r1_13" class="col-md-2"><strong>Efficiency</strong></th>
+                                            <th id="re_th_r1_14" class="col-md-2"><strong>Rework External Costs</strong></th>
                                         </tr>
                                         </thead>
                                         <tbody class="metrics_tbody">
                                         {% for re in re_data %}
                                         <tr>
+                                            <td>{{ re.created|date }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ re.staffs }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ re.active_projects }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ re.elicitation_analysis_time }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ re.avg_throughput }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ re.total_operational_cost }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ re.backlog }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ re.team_initiative }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ re.revisions }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ re.slas_missed }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ re.rework_external_time }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ re.travel_cost }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ re.gross_available_time }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ re.efficiency }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ re.rework_external_cost }}</td>
                                         </tr>
                                         {% endfor %}
                                         </tbody>
@@ -319,21 +419,65 @@
                                     <table id="test_engineering_table" class="display nowrap metrics_table" cellspacing="0">
                                         <thead class="metrics_thead">
                                         <tr id="te_th_r1">
-                                            <th id="te_th_r1_1" class="col-md-1"><strong>Staffs</strong></th>
-                                            <th id="te_th_r1_2" class="col-md-2"><strong>Active Projects</strong></th>
-                                            <th id="te_th_r1_3" class="col-md-2"><strong>Active Tickets</strong></th>
-                                            <th id="te_th_r1_4" class="col-md-2"><strong>Avg Throughput</strong></th>
-                                            <th id="te_th_r1_5" class="col-md-2"><strong>License Costs</strong></th>
+                                            <th id="te_th_r1_0"  class="col-md-3"><strong>Date</strong></th>
+                                            <th id="te_th_r1_1"  class="col-md-1"><strong>Staffs</strong></th>
+                                            <th id="te_th_r1_2"  class="col-md-2"><strong>Active Projects</strong></th>
+                                            <th id="te_th_r1_3"  class="col-md-2"><strong>Active Tickets</strong></th>
+                                            <th id="te_th_r1_4"  class="col-md-2"><strong>Avg Throughput</strong></th>
+                                            <th id="te_th_r1_5"  class="col-md-2"><strong>License Costs</strong></th>
+                                            <th id="te_th_r1_6"  class="col-md-2"><strong>Team Initiative</strong></th>
+                                            <th id="te_th_r1_7"  class="col-md-2"><strong>Ticket Backlog</strong></th>
+                                            <th id="te_th_r1_8"  class="col-md-2"><strong>Ticket Prep</strong></th>
+                                            <th id="te_th_r1_9"  class="col-md-2"><strong>Ticket Execution</strong></th>
+                                            <th id="te_th_r1_10" class="col-md-2"><strong>Tickets Closed</strong></th>
+                                            <th id="te_th_r1_11" class="col-md-2"><strong>Project Backlog</strong></th>
+                                            <th id="te_th_r1_12" class="col-md-2"><strong>Project Prep</strong></th>
+                                            <th id="te_th_r1_13" class="col-md-2"><strong>Project Execution</strong></th>
+                                            <th id="te_th_r1_14" class="col-md-2"><strong>Project Closed</strong></th>
+                                            <th id="te_th_r1_15" class="col-md-2"><strong>TC Manual Dev</strong></th>
+                                            <th id="te_th_r1_16" class="col-md-2"><strong>TC Manual Dev Time</strong></th>
+                                            <th id="te_th_r1_17" class="col-md-2"><strong>TC Manual Execution</strong></th>
+                                            <th id="te_th_r1_18" class="col-md-2"><strong>TC Manual Execution Time</strong></th>
+                                            <th id="te_th_r1_19" class="col-md-2"><strong>TC Auto Dev</strong></th>
+                                            <th id="te_th_r1_20" class="col-md-2"><strong>TC Auto Dev Time</strong></th>
+                                            <th id="te_th_r1_21" class="col-md-2"><strong>TC Auto Execution</strong></th>
+                                            <th id="te_th_r1_22" class="col-md-2"><strong>TC Auto Execution Time</strong></th>
+                                            <th id="te_th_r1_23" class="col-md-2"><strong>Defects Caught</strong></th>
+                                            <th id="te_th_r1_24" class="col-md-2"><strong>UAT Defects Not Prevented</strong></th>
+                                            <th id="te_th_r1_25" class="col-md-2"><strong>Standard Violated</strong></th>
+                                            <th id="te_th_r1_26" class="col-md-2"><strong>Average Time Frame</strong></th>
                                         </tr>
                                         </thead>
                                         <tbody class="metrics_tbody">
                                         {% for te in te_data %}
                                         <tr>
+                                            <td>{{ te.created|date }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ te.staffs }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ te.active_projects }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ te.active_tickets }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ te.avg_throughput|floatformat:2 }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ te.total_operational_cost }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.team_initiative }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.ticket_backlog }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.ticket_prep }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.ticket_execution }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.ticket_closed }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.project_backlog }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.project_prep }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.project_execution }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.project_closed }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.tc_manual_dev }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.tc_manual_dev_time }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.tc_manual_execution }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.tc_manual_execution_time }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.tc_auto_dev }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.tc_auto_dev_time }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.tc_auto_execution }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.tc_auto_execution_time }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.defect_caught }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.uat_defects_not_prevented }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.standards_violated }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ te.avg_time_frame }}</td>
                                         </tr>
                                         {% endfor %}
                                         </tbody>
@@ -350,20 +494,28 @@
                                     <table id="test_lab_table" class="display nowrap metrics_table" cellspacing="0">
                                         <thead class="metrics_thead">
                                         <tr id="tl_th_r1">
+                                            <th id="tl_th_r1_0" class="col-md-3"><strong>Date</strong></th>
                                             <th id="tl_th_r1_1" class="col-md-1"><strong>Staffs</strong></th>
                                             <th id="tl_th_r1_2" class="col-md-2"><strong>Tickets Received</strong></th>
                                             <th id="tl_th_r1_3" class="col-md-2"><strong>Tickets Closed</strong></th>
                                             <th id="tl_th_r1_4" class="col-md-2"><strong>Virtual Machines</strong></th>
-                                            <th id="tl_th_r1_5" class="col-md-2"><strong>License Costs</strong></th>
+                                            <th id="tl_th_r1_5" class="col-md-2"><strong>Physical Machines</strong></th>
+                                            <th id="tl_th_r1_6" class="col-md-2"><strong>Power UPS A</strong></th>
+                                            <th id="tl_th_r1_7" class="col-md-2"><strong>Power UPS B</strong></th>
+                                            <th id="tl_th_r1_8" class="col-md-2"><strong>License Costs</strong></th>
                                         </tr>
                                         </thead>
                                         <tbody class="metrics_tbody">
                                         {% for tl in tl_data %}
                                         <tr>
+                                            <td>{{ tl.created|date }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ tl.staffs }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ tl.tickets_received }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ tl.tickets_closed }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ tl.virtual_machines }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ tl.physical_machines }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ tl.power_consumption_ups_a }}</td>
+                                            <td draggable="true" ondragstart="drag_home(event)">{{ tl.power_consumption_ups_b }}</td>
                                             <td draggable="true" ondragstart="drag_home(event)">{{ tl.license_cost }}</td>
                                         </tr>
                                         {% endfor %}
@@ -585,7 +737,7 @@
 
                 build_column_names_lists();
 
-                initialize_metrics_table("date_table", "dd");
+                // initialize_metrics_table("date_table", "dd");
                 //initialize_metrics_table("product_quality_table", "pq");
                 initialize_metrics_table("quality_assurance_table", "qa");
                 initialize_metrics_table("quality_innovation_table", "qi");
@@ -657,40 +809,35 @@
 
         // list of the default column names for each table
 
-        home_pq_all_column_names_list.push("Staffs");
-        home_pq_all_column_names_list.push("Active Projects");
-        home_pq_all_column_names_list.push("Active Tickets");
-        home_pq_all_column_names_list.push("Avg Throughput");
-        home_pq_all_column_names_list.push("Total Costs");
+        $("#product_quality_table tr th").each(function () {
+            var header_text = $(this).text();
+            home_pq_all_column_names_list.push(header_text);
+        });
 
-        home_qa_all_column_names_list.push("Staffs");
-        home_qa_all_column_names_list.push("Active Projects");
-        home_qa_all_column_names_list.push("Active Tickets");
-        home_qa_all_column_names_list.push("Avg Throughput");
-        home_qa_all_column_names_list.push("Total Costs");
+        $("#quality_assurance_table tr th").each(function () {
+            var header_text = $(this).text();
+            home_qa_all_column_names_list.push(header_text);
+        });
 
-        home_qi_all_column_names_list.push("Staffs");
-        home_qi_all_column_names_list.push("Backlog Story");
-        home_qi_all_column_names_list.push("Avg Team Size");
-        home_qi_all_column_names_list.push("Total Costs");
+        $("#quality_innovation_table tr th").each(function () {
+            var header_text = $(this).text();
+            home_qi_all_column_names_list.push(header_text);
+        });
 
-        home_re_all_column_names_list.push("Staffs");
-        home_re_all_column_names_list.push("Active Projects");
-        home_re_all_column_names_list.push("Elicitation Analysis");
-        home_re_all_column_names_list.push("Avg Throughput");
-        home_re_all_column_names_list.push("Total Costs");
+        $("#requirements_engineering_table tr th").each(function () {
+            var header_text = $(this).text();
+            home_re_all_column_names_list.push(header_text);
+        });
 
-        home_te_all_column_names_list.push("Staffs");
-        home_te_all_column_names_list.push("Active Projects");
-        home_te_all_column_names_list.push("Active Tickets");
-        home_te_all_column_names_list.push("Avg Throughput");
-        home_te_all_column_names_list.push("Total Costs");
+        $("#test_engineering_table tr th").each(function () {
+            var header_text = $(this).text();
+            home_te_all_column_names_list.push(header_text);
+        });
 
-        home_tl_all_column_names_list.push("Staffs");
-        home_tl_all_column_names_list.push("Tickets Received");
-        home_tl_all_column_names_list.push("Tickets Closed");
-        home_tl_all_column_names_list.push("Virtual Machines");
-        home_tl_all_column_names_list.push("License Costs");
+        $("#test_lab_table tr th").each(function () {
+            var header_text = $(this).text();
+            home_tl_all_column_names_list.push(header_text);
+        });
 
         home_pq_number_of_columns = home_pq_all_column_names_list.length;
         home_qa_number_of_columns = home_qa_all_column_names_list.length;
@@ -799,7 +946,7 @@
         //output = output + "<td id='home_y_dnd_" + chart_count + "' class='td_xy_dnd' ondrop='pq_td_y_drop(event)' ondragover='pq_allow_y_drop(event)'>Y-Axis</td>";
         //output = output + "</tr>";
 
-        output = output + "<tr><td id='home_chart_title_" + chart_count + "' class='chart_td'>";
+        output = output + "<tr><td class='chart_td'>";
         output = output + "<div id='" + home_chart_svg_prefix + chart_count + "' class='chart_svg_div'>chart" + chart_count + "</div>";
         output = output + "</td></tr>";
 
@@ -861,7 +1008,7 @@
 
         var color = d3.scale.category20c();
 
-        var weekly_data = get_column_data(0, "date_table");
+        var weekly_data = get_column_data(0, table_id);
 
         var parsed_date_list = [];
 
@@ -913,8 +1060,6 @@
 
     function draw_d3_bar_chart_home(chart_object) {
 
-        // displayObject(chart_object, "582 bar chart");
-
         var svg_id = chart_object.chart_count;
 
         $("#home_chart_svg_" + svg_id).html("");
@@ -942,7 +1087,7 @@
         var y_data = get_column_data(y_column - 1, table_id);
 
         // parse the date information for the x-axis
-        var x_data = get_column_data(0, "date_table");
+        var x_data = get_column_data(0, table_id);
         var x_date_time = [];
 
         for (var index01 = 0; index01 < x_data.length; index01++) {
@@ -1050,6 +1195,8 @@
 
     function draw_d3_line_chart_home(chart_object) {
 
+        // displayObject(chart_object, "1234 home bar chart");  // TODO working here
+
         var svg_id = chart_object.chart_count;
 
         $("#home_chart_svg_" + svg_id).html("");
@@ -1060,10 +1207,10 @@
         var data = [];
 
         // each of the data objects is attached to a date
-        var x_axis = chart_object.x_axis;  // date_time_column
+        // var x_axis = chart_object.x_axis;  // date_time_column
 
-        var x_data = get_line_chart_dates_home(0, "date_table");
-
+        var x_data = get_line_chart_dates_home(0, table_id);
+        // alert("1249  " + x_data);
         //var x_data = get_column_data(0, "date_table");
         //var x_date_time = [];
 
@@ -1306,18 +1453,18 @@
         var prefix = temp_array[0];
 
         // header id will look like 'pq_th_r1__column
-        var temp_id = prefix + "_th_r1_" + temp_dnd_drag_column_number;
+        var temp_id = prefix + "_th_r1_" + (temp_dnd_drag_column_number - 1);
 
         var header_text = $("#" + temp_id).text();
 
         return header_text;
     }
 
-    function get_date_time_data_home(date_time_column_number) {
+    function get_line_chart_dates_home(date_time_column_number, temp_table_id) {  // working here
 
         var date_time_data = [];
 
-        $('#date_table tbody tr').each(function () {
+        $('#' + temp_table_id + ' tbody tr').each(function () {
             var date_time_value = $(this).children("td:eq(" + date_time_column_number + ")").text();
             var temp_date = new Date.parse(date_time_value);
             date_time_data.push(temp_date);
@@ -1326,9 +1473,9 @@
         return date_time_data;
     }
 
-    function get_line_chart_dates_home() {
-        return get_date_time_data_home(0);
-    }
+    //function get_line_chart_dates_home(table_id) {
+    //    return get_date_time_data_home(0, table_id);
+    //}
 
     // show or hide the tables or columns
     function on_change_show_hide_metrics_table(event) {
@@ -1534,12 +1681,16 @@
         var output = "";
         var header_count = 1;
 
-        for (var index = 0; index < all_column_names_list.length; index++) {
+        for (var index = 0; index < all_column_names_list.length; index++) {  // TODO working here
 
             var checkbox_id = "column_" + header_count.toString();
             var checkbox_str = "";
 
-            checkbox_str = "<input type='checkbox' id='" + checkbox_id + "' + onchange='checkbox_change(event)' />&nbsp;&nbsp;" + all_column_names_list[index];
+            if (index == 0) {
+                checkbox_str = "<input type='checkbox' id='" + checkbox_id + "'" + " checked disabled />&nbsp;&nbsp;" + all_column_names_list[index];
+            } else {
+                checkbox_str = "<input type='checkbox' id='" + checkbox_id + "' + onchange='checkbox_change(event)' />&nbsp;&nbsp;" + all_column_names_list[index];
+            }
 
             output = output + checkbox_str + "<br>";
             header_count++;
@@ -1549,7 +1700,7 @@
         $("#dialog").dialog({
             title: table_title,  // "Table Columns",
             resizable: false,
-            // height: 400,
+            height: 400,
             width: 400,
             modal: false,
             buttons: {
@@ -2166,7 +2317,7 @@
 
         if (visible_tables == 0) {
 
-            $("#td_date_table").hide();
+            // $("#td_date_table").hide();
 
             $("#west_table_wrapper_div.table-responsive").css('overflow-x', 'hidden');
 
@@ -2175,7 +2326,7 @@
 
         } else {
 
-            $("#td_date_table").show();
+            // $("#td_date_table").show();
 
             $("#west_table_wrapper_div.table-responsive").css('overflow-x', 'auto');
 

@@ -3,17 +3,6 @@
 
 {% block headscript %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'd3charts/main.css' %}"/>
-<link rel="stylesheet" type="text/css" href="{% static 'd3charts/d3_west_charts.css' %}"/>
-
-<script type='text/javascript' language="javascript" src="{% static 'common/jquery/2.0.3/jquery.min.js' %}"></script>
-
-<script type="text/javascript" language="javascript" src="{% static 'd3charts/d3.v3.min.js' %}"></script>
-<script type="text/javascript" language="javascript" src="{% static 'd3charts/colorbrewer.js' %}"></script>
-
-<script type="text/javascript" language="javascript" src="{% static 'd3charts/date.js' %}"></script>
-
-
 <style>
 
     #test_engineering_dnd_div {
@@ -24,12 +13,19 @@
         text-align: center;
     }
 
+    .td_title {
+        border: 1px solid lightgray;
+        text-align: center;
+    }
+
 </style>
 
 
 {% endblock headscript %}
 
 <div class="tab-content" id="te-content">
+
+    {% if tes %}
 
     <div class="table-responsive">
         <table id="test_engineering_table" class="table table-striped table-hover table-condensed table-bordered">
@@ -79,6 +75,10 @@
             </div>
         </section>
     </div>
+
+    {% else %}
+        No Contents
+    {% endif %}
 
 </div>
 
@@ -232,13 +232,16 @@
 
         output = output + "<table class='chart_dnd_table'><tbody>";
 
-        // row with dnd area for the x and y axis
-        output = output + "<tr id='te_xy_dnd_row_" + chart_count + "'>";
-        output = output + "<td id='te_x_dnd_" + chart_count + "' class='td_xy_dnd' ondrop='te_td_x_drop(event)' ondragover='te_allow_x_drop(event)'>X-Axis</td>";
-        output = output + "<td id='te_y_dnd_" + chart_count + "' class='td_xy_dnd' ondrop='te_td_y_drop(event)' ondragover='te_allow_y_drop(event)'>Y-Axis</td>";
-        output = output + "</tr>";
+        output = output + "<tr><td id='te_chart_title_" + chart_count + "' class='td_title'></td></tr>";
 
-        output = output + "<tr><td colspan='2' id='te_chart_td_" + chart_count + "' class='chart_td'>";
+        // row with dnd area for the x and y axis
+        //output = output + "<tr id='te_xy_dnd_row_" + chart_count + "'>";
+        //output = output + "<td id='te_x_dnd_" + chart_count + "' class='td_xy_dnd' ondrop='te_td_x_drop(event)' ondragover='te_allow_x_drop(event)'>X-Axis</td>";
+        //output = output + "<td id='te_y_dnd_" + chart_count + "' class='td_xy_dnd' ondrop='te_td_y_drop(event)' ondragover='te_allow_y_drop(event)'>Y-Axis</td>";
+        //output = output + "</tr>";
+
+        //output = output + "<tr><td colspan='2' id='te_chart_td_" + chart_count + "' class='chart_td'>";
+        output = output + "<tr><td class='chart_td'>";
         output = output + "<div id='" + test_engineering_chart_svg_prefix + chart_count + "' class='chart_svg_div'>chart" + chart_count + "</div>";
         output = output + "</td></tr>";
 
@@ -678,6 +681,9 @@
         chart_object.chart_type = "bar";
         chart_object.x_axis = test_engineering_primary_date_time_column;  // default column with dates
 
+        chart_object.y_column_name = get_y_column_name_TE(dnd_drag_column_number);
+        chart_object.chart_title = "Test Engineering --- " + chart_object.y_column_name;
+
         test_engineering_dnd_charts_list.push(chart_object);
 
         $.ajax({
@@ -693,6 +699,7 @@
                 $("input:radio[name='te_chart_group_" + chart_count + "'][value='bar']").prop('checked', true);
                 // disable the x-axis dnd table cell
                 $("#te_xy_dnd_row_" + chart_count).hide();  // do not allow dnd to change the x or y axis
+                $("#te_chart_title_" + chart_count).html(chart_object.chart_title);
             },
             error: function (data) {
                 alert("Error Adding Chart");
@@ -992,6 +999,10 @@
 
              */
         }
+    }
+
+    function get_y_column_name_TE(dnd_drag_column_number) {
+        return $("#te_0_" + dnd_drag_column_number).text();
     }
 
     // end of chart section
