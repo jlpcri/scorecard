@@ -23,15 +23,15 @@ def home(request):
         # if functional_group.key == 'PQ':
         #     pq_metrics = functional_group.testmetrics_set.all()
         if functional_group.key == 'QA':
-            qa_metrics = functional_group.testmetrics_set.all()
+            qa_metrics = functional_group.testmetrics_set.all().order_by('created')
         elif functional_group.key == 'QI':
-            qi_metrics = functional_group.innovationmetrics_set.all()
+            qi_metrics = functional_group.innovationmetrics_set.all().order_by('created')
         elif functional_group.key == 'RE':
-            re_metrics = functional_group.requirementmetrics_set.all()
+            re_metrics = functional_group.requirementmetrics_set.all().order_by('created')
         elif functional_group.key == 'TE':
-            te_metrics = functional_group.testmetrics_set.all()
+            te_metrics = functional_group.testmetrics_set.all().order_by('created')
         elif functional_group.key == 'TL':
-            tl_metrics = functional_group.labmetrics_set.all()
+            tl_metrics = functional_group.labmetrics_set.all().order_by('created')
 
     # build a list of the user column preferences on a per table basis
     # pq_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Product Quality'))
