@@ -2,16 +2,6 @@
 
 {% block headscript %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'd3charts/main.css' %}"/>
-<link rel="stylesheet" type="text/css" href="{% static 'd3charts/d3_west_charts.css' %}"/>
-
-<script type='text/javascript' language="javascript" src="{% static 'common/jquery/2.0.3/jquery.min.js' %}"></script>
-
-<script type="text/javascript" language="javascript" src="{% static 'd3charts/d3.v3.min.js' %}"></script>
-<script type="text/javascript" language="javascript" src="{% static 'd3charts/colorbrewer.js' %}"></script>
-
-<script type="text/javascript" language="javascript" src="{% static 'd3charts/date.js' %}"></script>
-
 <style>
 
     #product_quality_dnd_div {
@@ -27,6 +17,8 @@
 {% endblock headscript %}
 
 <div class="tab-content" id="pq-content">
+
+    {% if pqs %}
 
     <div class="table-responsive">
         <table id="product_quality_table" class="table table-striped table-hover table-condensed table-bordered">
@@ -91,6 +83,10 @@
             </table>
         </div>
     </div>
+
+    {% else %}
+        No Contents
+    {% endif %}
 
 </div>
 
@@ -1007,6 +1003,11 @@
              */
         }
     }
+
+    function get_y_column_name_PQ(dnd_drag_column_number) {
+        return $("#pq_0_" + dnd_drag_column_number).text();
+    }
+
 
     // end of chart section
 
