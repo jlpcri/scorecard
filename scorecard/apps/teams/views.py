@@ -7,6 +7,7 @@ from django.template import RequestContext
 
 from models import TestMetrics, RequirementMetrics, InnovationMetrics, LabMetrics, TestMetricsConfiguration
 from forms import InnovationForm, LabForm, RequirementForm, TestForm
+from scorecard.apps.core.views import check_user_team
 from scorecard.apps.users.views import user_is_superuser, user_is_manager
 from tasks import weekly_metric_new, weekly_send_email
 from utils import context_teams
@@ -17,6 +18,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 @login_required
 def teams(request):
+    check_user_team(request)
+
     context = RequestContext(request, context_teams(request))
 
     return render(request, 'teams/teams.html', context)

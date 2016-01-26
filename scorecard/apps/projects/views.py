@@ -9,6 +9,7 @@ from django.template import RequestContext
 from pytz import timezone
 
 from models import Project, ProjectPhase, Ticket
+from scorecard.apps.core.views import check_user_team
 from scorecard.apps.projects.forms import ProjectNewForm, TicketNewForm, ProjectPhaseNewForm
 from scorecard.apps.projects.utils import get_projects_tickets_from_fg
 from scorecard.apps.users.models import FunctionalGroup, HumanResource
@@ -16,6 +17,8 @@ from scorecard.apps.users.models import FunctionalGroup, HumanResource
 
 @login_required
 def projects(request):
+    check_user_team(request)
+
     function_groups = FunctionalGroup.objects.all()
 
     qas = tes = qis = res = tls = {
