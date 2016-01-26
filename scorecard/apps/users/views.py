@@ -209,7 +209,8 @@ def sign_in(request):
                             messages.error(request, 'Please ask your Supervisor to assign yourself to your team.')
                 except HumanResource.DoesNotExist:
                     HumanResource.objects.create(user=user)
-                    messages.error(request, 'Please ask your Supervisor to assign you to your team.')
+                    user_team_assign(request)
+
                 if request.GET.get('next'):
                     return redirect(request.GET['next'])
                 else:
@@ -367,6 +368,29 @@ def user_manager_assign(request):
             user.humanresource.manager = True
         else:
             user.humanresource.manager = False
+
+        user.humanresource.save()
+
+        return redirect('users:home')
+
+
+@login_required
+def user_team_assign(request):
+    user = request.user
+
+    if request.method == 'GET':
+        groups = FunctionalGroup.objects.all().order_by('name')
+
+        context = RequestContext(request, {
+            'users': [user],
+            'groups': groups
+        })
+
+        return render(request, 'users/user_team_assign.html', context)
+    elif request.method == 'POST':
+        group_id = request.POST.get('group_select', '')
+
+        user.humanresource.functional_group = FunctionalGroup.objects.get(pk=group_id)
 
         user.humanresource.save()
 
