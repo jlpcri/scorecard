@@ -13,10 +13,12 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 import simplejson
+from scorecard.apps.core.views import check_user_team
 
 
 @login_required
 def home(request):
+    check_user_team(request)
 
     functional_groups = FunctionalGroup.objects.all()
 
@@ -95,7 +97,10 @@ def user_manager_check(request):
     data = {}
     user_id = request.GET.get('user_id', '')
     user = User.objects.get(pk=user_id)
-    data['group'] = user.humanresource.functional_group.id
+    try:
+        data['group'] = user.humanresource.functional_group.id
+    except AttributeError:
+        data['group'] = None
 
     if user.humanresource.manager:
         data['manager'] = True
@@ -113,13 +118,13 @@ def sign_in(request):
                 login(request, user)
                 try:
                     hr = HumanResource.objects.get(user=user)
-                    if not hr.functional_group:
-                        if user.is_superuser:
-                            pass
-                        elif hr.manager:
-                            messages.error(request, 'Please <a href=\'{0}user_manager_assign\'>assign yourself </a> to your team.'.format(settings.LOGIN_URL))
-                        else:
-                            messages.error(request, 'Please ask your Supervisor to assign yourself to your team.')
+                    # if not hr.functional_group:
+                    #     if user.is_superuser:
+                    #         pass
+                    #     elif hr.manager:
+                    #         messages.error(request, 'Please <a href=\'{0}user_manager_assign\'>assign yourself </a> to your team.'.format(settings.LOGIN_URL))
+                    #     else:
+                    #         messages.error(request, 'Please ask your Supervisor to assign yourself to your team.')
                 except HumanResource.DoesNotExist:
                     HumanResource.objects.create(user=user)
                     request.session['first_log'] = True

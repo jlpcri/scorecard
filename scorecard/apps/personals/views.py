@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import RequestContext
+from scorecard.apps.core.views import check_user_team
 
 from scorecard.apps.personals.tasks import weekly_personal_stats_new
 from scorecard.apps.personals.utils import get_distinct_dates
@@ -16,6 +17,8 @@ from forms import InnovationForm, LabForm, RequirementForm, TestForm
 
 @login_required
 def personals(request):
+    check_user_team(request)
+
     function_groups = FunctionalGroup.objects.all()
     qa_personals = []
     te_personals = []
