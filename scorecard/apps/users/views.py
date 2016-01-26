@@ -97,7 +97,10 @@ def user_manager_check(request):
     data = {}
     user_id = request.GET.get('user_id', '')
     user = User.objects.get(pk=user_id)
-    data['group'] = user.humanresource.functional_group.id
+    try:
+        data['group'] = user.humanresource.functional_group.id
+    except AttributeError:
+        data['group'] = None
 
     if user.humanresource.manager:
         data['manager'] = True
