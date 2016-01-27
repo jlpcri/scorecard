@@ -129,6 +129,14 @@
         min-width:60%;
     }
 
+    .ui-dialog-titlebar {
+        border: 0;
+        padding: .5em 1em;
+        background: darkgray;
+        overflow: auto;
+        zoom: 1;
+    }
+
 </style>
 
 {% endblock extrahead %}
@@ -645,7 +653,7 @@
 
     <br>
 
-    <div id="dialog" style="display:none;"></div>
+    <div id="west_dialog" style="display:none;"></div>
     <br>
 
     <div class="container">
@@ -1195,7 +1203,7 @@
 
     function draw_d3_line_chart_home(chart_object) {
 
-        // displayObject(chart_object, "1234 home bar chart");  // TODO working here
+        // displayObject(chart_object, "1234 home bar chart");
 
         var svg_id = chart_object.chart_count;
 
@@ -1624,7 +1632,7 @@
         var table_id = "";
         var all_column_names_list = [];
         var hide_column_list = [];
-        var table_visible = true;
+        // var table_visible = true;
         var table_title = "";
 
         if (prefix === "pq") {
@@ -1632,7 +1640,7 @@
             table_id = "product_quality_table";
             all_column_names_list = home_pq_all_column_names_list;
             hide_column_list = home_pq_hide_column_list;
-            table_visible = $('#product_quality_table').is(':visible');
+            // table_visible = $('#product_quality_table').is(':visible');
             table_title = "Product Quality Columns";
 
         } else if (prefix == "qa") {
@@ -1640,7 +1648,7 @@
             table_id = "quality_assurance_table";
             all_column_names_list = home_qa_all_column_names_list;
             hide_column_list = home_qa_hide_column_list;
-            table_visible = $('#quality_assurance_table').is(':visible');
+            // table_visible = $('#quality_assurance_table').is(':visible');
             table_title = "Quality Assurance Columns";
 
         } else if (prefix == "qi") {
@@ -1648,7 +1656,7 @@
             table_id = "quality_innovation_table";
             all_column_names_list = home_qi_all_column_names_list;
             hide_column_list = home_qi_hide_column_list;
-            table_visible = $('#quality_innovation_table').is(':visible');
+            // table_visible = $('#quality_innovation_table').is(':visible');
             table_title = "Quality Innovation Columns";
 
         } else if (prefix == "re") {
@@ -1656,7 +1664,7 @@
             table_id = "requirements_engineering_table";
             all_column_names_list = home_re_all_column_names_list;
             hide_column_list = home_re_hide_column_list;
-            table_visible = $('#requirements_engineering_table').is(':visible');
+            // table_visible = $('#requirements_engineering_table').is(':visible');
             table_title = "Requirements Engineering Columns";
 
         } else if (prefix == "te") {
@@ -1664,7 +1672,7 @@
             table_id = "test_engineering_table";
             all_column_names_list = home_te_all_column_names_list;
             hide_column_list = home_te_hide_column_list;
-            table_visible = $('#test_engineering_table').is(':visible');
+            // table_visible = $('#test_engineering_table').is(':visible');
             table_title = "Test Engineering Columns";
 
         } else if (prefix == "tl") {
@@ -1672,7 +1680,7 @@
             table_id = "test_lab_table";
             all_column_names_list = home_tl_all_column_names_list;
             hide_column_list = home_tl_hide_column_list;
-            table_visible = $('#test_lab_table').is(':visible');
+            // table_visible = $('#test_lab_table').is(':visible');
             table_title = "Test Lab Columns";
         }
 
@@ -1681,7 +1689,7 @@
         var output = "";
         var header_count = 1;
 
-        for (var index = 0; index < all_column_names_list.length; index++) {  // TODO working here
+        for (var index = 0; index < all_column_names_list.length; index++) {
 
             var checkbox_id = "column_" + header_count.toString();
             var checkbox_str = "";
@@ -1696,9 +1704,8 @@
             header_count++;
         }
 
-        $("#dialog").html(output);
-        $("#dialog").dialog({
-            title: table_title,  // "Table Columns",
+        $("#west_dialog").dialog({
+            title: table_title,
             resizable: false,
             height: 400,
             width: 400,
@@ -1709,6 +1716,7 @@
                 }
             }
         });
+        $("#west_dialog").html(output);
 
         var current_column_names_list = [];
 
@@ -1760,7 +1768,7 @@
         var target_id = target.id;  // column_XX
 
         var index = target_id.indexOf("_");
-        var checkbox_number = Number(target_id.substring(index + 1));
+        var checkbox_number = Number(target_id.substring(index + 1)) - 1;
 
         var checked = $("#" + target_id).prop('checked');
 
@@ -1909,7 +1917,7 @@
 
             }
 
-            oTable.fnSetColumnVis(Number(column_number) - 1, false, false);
+            oTable.fnSetColumnVis(Number(column_number), false, false);
 
         } else if (show_hide === "show") {  // working here
 
@@ -1941,7 +1949,7 @@
                 $('#' + prefix + '_legend').show();
 
                 // columns in the table body are fine, missing a table header
-                oTable.fnSetColumnVis(Number(column_number) - 1, true, true);
+                oTable.fnSetColumnVis(Number(column_number), true, true);
 
             }
 
@@ -1950,7 +1958,7 @@
                 $('#' + prefix + "_th_r1_" + (index + 1)).show();
             }
 
-            oTable.fnSetColumnVis(Number(column_number) - 1, true, false);
+            oTable.fnSetColumnVis(Number(column_number), true, false);
 
         }
 

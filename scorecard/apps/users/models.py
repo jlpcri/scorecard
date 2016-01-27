@@ -48,10 +48,10 @@ class ColumnPreference(models.Model):
     user = models.ForeignKey(User)
 
     # this is name of the table that will have rows that can be shown or hidden
-    table_name = models.CharField(default='change me', max_length=250, blank=False)
+    table_name = models.CharField(default='', max_length=50, blank=False)
 
     # this is a comma delimited list of columns the user wants to hide
-    hide_list = models.CharField(default='', max_length=50, blank=True)
+    hide_list = models.CharField(default='', max_length=750, blank=True)
 
     def __unicode__(self):
         return str(self.user.username) + "  " + self.table_name + "  " + str(self.hide_list)

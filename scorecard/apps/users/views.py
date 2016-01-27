@@ -193,63 +193,23 @@ def update_user_chart_preferences(request):
 
             db_table_name = ''
 
-            if table_name == 'product_quality':
+            if table_name == 'product_quality_table':
                 db_table_name = 'Product Quality'
-            elif table_name == 'quality_assurance':
+            elif table_name == 'quality_assurance_table':
                 db_table_name = 'Quality Assurance'
-            elif table_name == 'quality_innovation':
+            elif table_name == 'quality_innovation_table':
                 db_table_name = 'Quality Innovation'
-            elif table_name == 'requirements_engineering':
+            elif table_name == 'requirements_engineering_table':
                 db_table_name = 'Requirements Engineering'
-            elif table_name == 'test_engineering':
+            elif table_name == 'test_engineering_table':
                 db_table_name = 'Test Engineering'
-            elif table_name == 'test_lab':
+            elif table_name == 'test_lab_table':
                 db_table_name = 'Test Lab'
 
             column_preferences = ColumnPreference.objects.all().filter(user=request.user, table_name=db_table_name)
             column_preferences.update(hide_list=column_list_str)
 
-    return HttpResponse('made it here')
-
-
-@csrf_exempt
-def add_home_chart(request):
     return HttpResponse('')
-
-
-@csrf_exempt
-def delete_home_chart(request):
-    return HttpResponse('')
-
-
-@csrf_exempt
-def update_user_chart_preferences(request):
-
-    if request.method == 'POST':
-        if request.is_ajax():
-
-            table_name = request.POST.get('table_name')
-            column_list_str = request.POST.get('column_list')
-
-            db_table_name = ''
-
-            if table_name == 'product_quality':
-                db_table_name = 'Product Quality'
-            elif table_name == 'quality_assurance':
-                db_table_name = 'Quality Assurance'
-            elif table_name == 'quality_innovation':
-                db_table_name = 'Quality Innovation'
-            elif table_name == 'requirements_engineering':
-                db_table_name = 'Requirements Engineering'
-            elif table_name == 'test_engineering':
-                db_table_name = 'Test Engineering'
-            elif table_name == 'test_lab':
-                db_table_name = 'Test Lab'
-
-            column_preferences = ColumnPreference.objects.all().filter(user=request.user, table_name=db_table_name)
-            column_preferences.update(hide_list=column_list_str)
-
-    return HttpResponse('made it here')
 
 
 @user_passes_test(user_is_manager)
