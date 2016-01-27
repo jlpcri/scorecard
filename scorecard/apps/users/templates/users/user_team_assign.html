@@ -1,0 +1,62 @@
+{% extends 'core/base.html' %}
+
+{% block title %} User Team Assign{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <br>
+        <div class="row">
+            <legend>Assign Yourself to Team</legend>
+        </div>
+
+        <li>Ignore this option, you will need ask your supervisor to assign yourself to team.</li>
+        <br>
+
+        <form method="post" action="{% url 'users:team_assign' %}">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="col-xs-3">User</th>
+                        <th class="col-xs-3">Team</th>
+                        <th class="col-xs-6"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <select id="user_select" name='user_select' class="form-control">
+                                {% for user in users %}
+                                    <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <select id="group_select" name="group_select" class="form-control">
+                                {% for group in groups %}
+                                    <option value="{{ group.id }}">{{ group.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            {% csrf_token %}
+            <div class="row" style="margin-top: 30px; margin-bottom: 50px;">
+                <div class="col-xs-2"></div>
+                <div class="col-xs-2">
+                    <input id="team_assign_edit" class="btn btn-primary" style="width: 100%;" type="submit" value="Save Changes">
+                </div>
+                <div class="col-xs-2">
+                    <a href="{% url 'users:home' %}" class="btn btn-default" style="width: 100%;">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}

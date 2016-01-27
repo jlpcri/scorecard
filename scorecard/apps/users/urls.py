@@ -8,11 +8,8 @@ urlpatterns = patterns('scorecard.apps.users.views',
     url(r'^user_management/$', 'user_management', name='management'),
     url(r'^user_manager_assign/$', 'user_manager_assign', name='manager_assign'),
     url(r'^user_manager_check/$', 'user_manager_check', name='user_manager_check'),
-    # url(r'^user_update/(?P<user_id>\d+)/$', 'user_update', name='user_update'),
-    # url(r'^user_delete/(?P<user_id>\d+)/$', 'user_delete', name='user_delete'),
-    #
-    # url(r'^user_settings/$', 'user_settings', name='user_settings'),
-    # url(r'^user_settings_update/$', 'user_settings_update', name='user_settings_update'),
+
+    url(r'^user_team_assign/$', 'user_team_assign', name='team_assign'),
 
     url(r'^add_home_chart?$', 'add_home_chart', name='add_home_chart'),
     url(r'^delete_home_chart?$', 'delete_home_chart', name='delete_home_chart'),

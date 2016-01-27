@@ -59,6 +59,10 @@ class ProjectViewTest(TestCase):
             user=self.user,
             manager=True
         )
+        self.hr_superuser = HumanResource.objects.create(
+            functional_group=self.fg_qi,
+            user=self.user_superuser
+        )
 
     def test_projects_url_resolve_to_view(self):
         found = resolve(reverse('projects:projects'))
@@ -149,6 +153,11 @@ class ProjectNewTest(TestCase):
         self.client.login(
             username=self.user_account['username'],
             password=self.user_account['password']
+        )
+        self.hr = HumanResource.objects.create(
+            functional_group=self.fg_qi,
+            user=self.user,
+            manager=True
         )
 
     def test_project_new_url_resolve_to_view(self):
