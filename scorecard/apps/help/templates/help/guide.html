@@ -4,13 +4,123 @@
 
 {% block body %}
     <div class="container">
-        <h4> Scorecard, now available with QEI team: </h4>
-        <ul>
-            <li>A strategy performance management tool</li>
-            <li>A semi-standard structured report</li>
-            <li>Supported by design methods and automation tools</li>
-            <li>Used by team managers to keep track of execution of activities by the staff within their control</li>
-            <li>Monitor the consequences arising from staff actions</li>
-        </ul>
+        <div class="row" style="text-align: justify;">
+            <div class="col-xs-3">
+                <div id="index">
+                    <ul class="nav nav-pills nav-stacked affix" data-spy="affix" data-offset-top="60">
+                        <li><a href="#contact">Contact Information</a></li>
+                        <li><a href="#introduction">Introduction</a> </li>
+                        <li><a href="#design">Design</a> </li>
+                        <li><a href="#usage">Usage</a> </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xs-9">
+                <div id="contact">
+                    <h4 style="padding-top: 75px; margin-top: -75px;">Contact Information</h4>
+                    <ul>
+                        <li>Name: Quality Engineering & Innovation</li>
+                        <li>Email: <a href="mailto:QEIInnovation@west.com">QEIInnovation@west.com</a></li>
+                        <li>Phone: 402-716-1960</li>
+                        <li>Department: Interactive Services</li>
+                        <li>Location: West 100 4th Floor West</li>
+                    </ul>
+                </div>
+
+                <div id="introduction">
+                    <h4 style="padding-top: 75px; margin-top: -75px;">Introduction&nbsp;&nbsp;<a href="#index"><i class="fa fa-arrow-circle-up"></i></a></h4>
+                    <ul>
+                        <div id="introduction_about">
+                            <li><strong>About this user guide</strong></li>
+                            <p>This document is an introduction to the ScoreCard - A strategy performance management tool.</p>
+                        </div>
+                        <div id="introduction_what">
+                            <li><strong>What is ScoreCard?</strong></li>
+                            <ul>
+                                <li>A semi-standard structured report</li>
+                                <li>Supported by design methods and automation tools</li>
+                                <li>Used by team managers to keep track of execution of activities by the staff within their control</li>
+                                <li>Monitor the consequences arising from staff actions</li>
+                            </ul>
+                        </div>
+                    </ul>
+                </div>
+
+                <div id="design">
+                    <h4 style="padding-top: 75px; margin-top: -75px;">Design&nbsp;&nbsp;<a href="#index"><i class="fa fa-arrow-circle-up"></i></a></h4>
+                    <ul>
+                        <div id="design_weekly">
+                            <li><strong>Weekly Data Input</strong></li>
+                            <p>The performance data of Person and Team is collected weekly. The entry of data input is added every Friday midnight
+                            (include Person and Team). Performance data update need to be finished at the end of next Monday.</p>
+                        </div>
+                        <div id="design_data_collect">
+                            <li><strong>Data Collection</strong></li>
+                            <ul>
+                                <li>Team member is responsible to him/herself Person performance data input.</li>
+                                <li>The performance data of Person will be collected to related Team data.</li>
+                                <li>Related data from followed service will be automatically collected to Team Data.</li>
+                                    <ul>
+                                        <li><a href="http://jira.west.com" target="_blank">jira.west.com</a></li>
+                                        <li><a href="http://isr.west.com" target="_blank">isr.west.com</a></li>
+                                        <li><a href="https://wiki.westalerts.com" target="_blank">West Confluence</a></li>
+                                        <li><a href="http://linux6436.wic.west.com/pheme/" target="_blank">Pheme</a></li>
+                                    </ul>
+                                <li>Run automation scripts on creation of Person/Team data</li>
+                                <li>Team Manager is responsible to Team performance data edit.</li>
+                                <li>Team member (not manager) cannot access Team Performance Data</li>
+                            </ul>
+                        </div>
+                    </ul>
+                </div>
+
+                <div id="usage">
+                    <h4 style="padding-top: 75px; margin-top: -75px;">Usage&nbsp;&nbsp;<a href="#index"><i class="fa fa-arrow-circle-up"></i></a></h4>
+                    <div id="usage_input_data">
+                        <li><strong>Input Performance Data</strong></li>
+                        <ul>
+                            <li>Each one is responsible for him/herself personal performance data input.</li>
+                            <li>Team Manager (include Team Lead) is responsible for team performance data input.</li>
+                        </ul>
+                    </div>
+                    <div id="usage_team_assign">
+                        <li><strong>Assign User to Team</strong></li>
+                            <ul>
+                                <li>Team Member</li>
+                                    <p>On first login, each user has the permission to assign him/herself to a team. If the user ignore this option,
+                                    then him/her should ask his/her supervisor to assign him/her to a team.</p>
+                                <li>Team Manager (include team lead)</li>
+                                    <p>Team manager has the permission to assign team member to your team. And team manager has the permission
+                                        to assign team member as manager to access team performance data. </p>
+                            </ul>
+                    </div>
+                    <div id="usage_export_data">
+                        <li><strong>Export Team Performance Data</strong></li>
+                            <ul>
+                                <li>The format of export file is Excel</li>
+                                <li>ScoreCard only export Team Data</li>
+                                <li>User can export data per team, per week</li>
+                                <li>The data cannot be exported until it is updated by team manager.</li>
+                            </ul>
+                    </div>
+                    <div id="">
+                        <li><strong>Number of Phase Lead and Tickets Worked</strong></li>
+                        <ul>
+                            <li>This number is calculated for team Quality Assurance and Test Engineering</li>
+                            <li>The number of Phase Lead of person is the counts of phases
+                                which lead of that phase is this person.</li>
+                                <ul>
+                                    <li>Start delay is the number of business day of difference between the Estimate Start and Actual Start</li>
+                                    <li>Diff Duration is the number of business days of the difference between
+                                        the duration of estimate and duration of actual.</li>
+                                </ul>
+                            <li>The number of Tickets Worked of person is the count of tickets which lead is this person </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 {% endblock %}
