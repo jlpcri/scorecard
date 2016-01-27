@@ -43,7 +43,7 @@
             <tbody>
             {% for item in tls %}
             <tr>
-                <td><a href="{% url 'teams:metric_detail' item.id %}?key={{ item.functional_group.key }}">{{ item.created|date }}</a></td>
+                <td><a href="{% url 'teams:metric_detail' item.id %}?key={{ item.functional_group.key }}">{{ item.created|date:'Y-m-d' }}</a></td>
                 <td draggable="true" ondragstart="dragTL(event)">{{ item.staffs }}</td>
                 <td draggable="true" ondragstart="dragTL(event)">{{ item.tickets_received }}</td>
                 <td draggable="true" ondragstart="dragTL(event)">{{ item.tickets_closed }}</td>
