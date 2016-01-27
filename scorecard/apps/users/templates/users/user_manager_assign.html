@@ -70,7 +70,6 @@
         $('#user_select').change(function(){
             var user_id = $(this).val();
             $.getJSON("{% url 'users:user_manager_check' %}?user_id={0}".format(user_id)).done(function(data){
-                console.log(data);
                 if (data['manager'] == true) {
                     $('#is_manager').prop('checked', true);
                 } else {
