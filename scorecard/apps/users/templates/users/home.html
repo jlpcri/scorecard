@@ -162,7 +162,7 @@
 
     {% csrf_token %}
 
-    <br><br><br>
+    <br>
 
     <div class="container west_container">
         <section>
@@ -766,7 +766,7 @@
     function initialize_main_table() {
 
         $('#all_data_table').DataTable({
-            "scrollY": 200,
+            "scrollY": 300,
             "scrollX": true,
             "scrollCollapse": true,
             "paging": false,
@@ -783,7 +783,7 @@
     function initialize_metrics_table(table_id, prefix) {
 
         $("#" + table_id).DataTable({
-            "scrollY": 200,  // 200
+            "scrollY": 300,
             "scrollX": true,
             "scrollCollapse": true,
             "paging": false,
