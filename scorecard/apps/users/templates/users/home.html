@@ -891,14 +891,12 @@
         var chart_object = new Object();
         chart_object.table_dnd_id = home_dnd_id;
         chart_object.chart_count = chart_count;
-        chart_object.dnd_drag_column_number = dnd_drag_column_number;
         chart_object.chart_type = "bar";
         chart_object.x_axis = home_primary_date_time_column;
 
         chart_object.dnd_table_name_id = get_drag_table_source_id(home_dnd_id);
         chart_object.y_column_name = get_y_column_name(home_dnd_id, dnd_drag_column_number);
-
-        // alert("662  " + chart_object.y_column_name);
+        chart_object.dnd_drag_column_number = get_y_column_number(home_dnd_id, chart_object.y_column_name);
 
         chart_object.chart_title = get_drag_table_friendly_name(home_dnd_id) + " --- " + chart_object.y_column_name;
 
@@ -1016,7 +1014,7 @@
 
         var data = [];
 
-        var chart_data = get_column_data(chart_object.dnd_drag_column_number - 1, table_id);
+        var chart_data = get_column_data(chart_object.dnd_drag_column_number, table_id);
 
         for (var index = 0; index < chart_data.length; index++) {
             var temp_value = chart_data[index];
@@ -1058,6 +1056,8 @@
 
     function draw_d3_bar_chart_home(chart_object) {
 
+        // displayObject(chart_object);
+
         var svg_id = chart_object.chart_count;
 
         $("#home_chart_svg_" + svg_id).html("");
@@ -1082,7 +1082,7 @@
 
         var y_column = chart_object.dnd_drag_column_number;
 
-        var y_data = get_column_data(y_column - 1, table_id);
+        var y_data = get_column_data(y_column, table_id);
 
         // parse the date information for the x-axis
         var x_data = get_column_data(0, table_id);
@@ -1105,6 +1105,15 @@
         var ymax = d3.max(data, function (d) {
             return d.y;
         });
+
+        if (ymax >= 1000) {
+            margin.left = margin.left + 10;
+            width = width - 10;
+        }
+        if (ymax >= 10000) {
+            margin.left = margin.left + 10;
+            width = width - 10;
+        }
 
         var min_unit = 0.0;  // ymax / chart_height;
 
@@ -1216,7 +1225,7 @@
         //    x_date_time.push(getParsedDate(x_data[index01]));  // string  Oct 5, 2015, 4:36p.m.
         //}
         // alert("582  " + x_data);
-        var y_data = get_column_data(chart_object.dnd_drag_column_number - 1, table_id);
+        var y_data = get_column_data(chart_object.dnd_drag_column_number, table_id);
 
         var y_column_name = "";  // get_y_column_name(chart_object.table_dnd_id);\\"";
         // getColumnNameFromColumnDetailsList(chart_object.dnd_drag_column_number, product_quality_column_details_list);
@@ -2332,6 +2341,58 @@
 
         }
 
+    }
+
+    // if the user has hidden some columns, the visible column index and the drag column index will not match
+    function get_y_column_number(temp_home_dnd_id, temp_column_name) {
+
+        var temp_array = temp_home_dnd_id.split("_");
+        var prefix = temp_array[0];
+
+        var temp_all_column_names_list = [];
+
+        if (prefix === "pq") {
+            temp_all_column_names_list = home_pq_all_column_names_list;
+        } else if (prefix === "qa") {
+            temp_all_column_names_list = home_qa_all_column_names_list;
+        } else if (prefix === "qi") {
+            temp_all_column_names_list = home_qi_all_column_names_list;
+        } else if (prefix === "re") {
+            temp_all_column_names_list = home_re_all_column_names_list;
+        } else if (prefix === "te") {
+            temp_all_column_names_list = home_tl_all_column_names_list;
+        } else if (prefix === "tl") {
+            temp_all_column_names_list = home_te_all_column_names_list;
+        }
+
+        var column_number = -1;
+
+        var visible_column_names_list = [];
+
+        $('#' + prefix + '_th_r1 th').each(function () {
+
+            if ($(this).is(':visible')) {
+                var name = $(this).text().trim();
+
+                if ($.inArray(name, visible_column_names_list) == -1) {
+                    visible_column_names_list.push(name);
+                }
+            }
+        });
+
+        temp_column_name = temp_column_name.trim();
+
+        for (var index = 0; index < visible_column_names_list.length; index++) {
+
+            var temp_value = visible_column_names_list[index].trim();
+
+            if (temp_value === temp_column_name) {
+                column_number = index;
+                break;
+            }
+        }
+
+        return column_number;
     }
 
     // end of show or hide section
