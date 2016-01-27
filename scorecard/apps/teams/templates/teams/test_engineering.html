@@ -42,7 +42,7 @@
             <tbody>
                 {% for item in tes %}
                     <tr>
-                        <td><a href="{% url 'teams:metric_detail' item.id %}?key={{ item.functional_group.key }}">{{ item.created|date }}</a></td>
+                        <td><a href="{% url 'teams:metric_detail' item.id %}?key={{ item.functional_group.key }}">{{ item.created|date:'Y-m-d' }}</a></td>
                         <td draggable="true" ondragstart="dragTE(event)">{{ item.staffs }}</td>
                         <td draggable="true" ondragstart="dragTE(event)">{{ item.active_projects }}</td>
                         <td draggable="true" ondragstart="dragTE(event)">{{ item.active_tickets }}</td>
