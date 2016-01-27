@@ -209,12 +209,7 @@ def update_user_chart_preferences(request):
             column_preferences = ColumnPreference.objects.all().filter(user=request.user, table_name=db_table_name)
             column_preferences.update(hide_list=column_list_str)
 
-
-
     return HttpResponse('')
-
-
-            column_preferences = ColumnPreference.objects.all().filter(user=request.user, table_name=db_table_name)
 
 
 @user_passes_test(user_is_manager)
