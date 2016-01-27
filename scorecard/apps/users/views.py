@@ -24,15 +24,15 @@ def home(request):
 
     for functional_group in functional_groups:
         if functional_group.key == 'QA':
-            qa_metrics = functional_group.testmetrics_set.order_by('created')
+            qa_metrics = functional_group.testmetrics_set.order_by('-created')
         elif functional_group.key == 'QI':
-            qi_metrics = functional_group.innovationmetrics_set.order_by('created')
+            qi_metrics = functional_group.innovationmetrics_set.order_by('-created')
         elif functional_group.key == 'RE':
-            re_metrics = functional_group.requirementmetrics_set.order_by('created')
+            re_metrics = functional_group.requirementmetrics_set.order_by('-created')
         elif functional_group.key == 'TE':
-            te_metrics = functional_group.testmetrics_set.order_by('created')
+            te_metrics = functional_group.testmetrics_set.order_by('-created')
         elif functional_group.key == 'TL':
-            tl_metrics = functional_group.labmetrics_set.order_by('created')
+            tl_metrics = functional_group.labmetrics_set.order_by('-created')
 
     # build a list of the user column preferences on a per table basis
     qa_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Quality Assurance'))
@@ -118,13 +118,6 @@ def sign_in(request):
                 login(request, user)
                 try:
                     hr = HumanResource.objects.get(user=user)
-                    # if not hr.functional_group:
-                    #     if user.is_superuser:
-                    #         pass
-                    #     elif hr.manager:
-                    #         messages.error(request, 'Please <a href=\'{0}user_manager_assign\'>assign yourself </a> to your team.'.format(settings.LOGIN_URL))
-                    #     else:
-                    #         messages.error(request, 'Please ask your Supervisor to assign yourself to your team.')
                 except HumanResource.DoesNotExist:
                     HumanResource.objects.create(user=user)
                     request.session['first_log'] = True
