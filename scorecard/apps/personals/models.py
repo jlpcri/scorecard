@@ -83,6 +83,9 @@ class TestStats(BaseStats):
     uat_defects_not_prevented = models.PositiveIntegerField(default=0)
     standards_violated = models.PositiveIntegerField(default=0)
 
+    #Efficiency
+    resource_swap_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+
     @property
     def phase_delay_and_duration(self):
         data = []
