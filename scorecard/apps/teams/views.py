@@ -9,10 +9,9 @@ from django.template import RequestContext
 from models import TestMetrics, RequirementMetrics, InnovationMetrics, LabMetrics, TestMetricsConfiguration
 from forms import InnovationForm, LabForm, RequirementForm, TestForm
 from scorecard.apps.core.views import check_user_team
-from scorecard.apps.personals.models import TestStats, InnovationStats, RequirementStats, LabStats
 from scorecard.apps.users.views import user_is_superuser, user_is_manager
 from tasks import weekly_metric_new, weekly_send_email
-from utils import context_teams
+from utils import context_teams, fetch_team_members_per_team_per_date, fetch_collect_data_per_team_per_date
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -134,31 +133,8 @@ def fetch_team_members_by_date(request):
     date = request.GET.get('date', '')
     # print key, date
 
-    data = team_personals = []
-    year = date[:4]
-    month = date[6:7]
-    day = date[8:10]
-
-    if key in ['QA', 'TE']:
-        team_personals = TestStats.objects.filter(human_resource__functional_group__key=key,
-                                                  created__year=year,
-                                                  created__month=month,
-                                                  created__day=day)
-    elif key == 'QI':
-        team_personals = InnovationStats.objects.filter(human_resource__functional_group__key=key,
-                                                        created__year=year,
-                                                        created__month=month,
-                                                        created__day=day)
-    elif key == 'RE':
-        team_personals = RequirementStats.objects.filter(human_resource__functional_group__key=key,
-                                                         created__year=year,
-                                                         created__month=month,
-                                                         created__day=day)
-    elif key == 'TL':
-        team_personals = LabStats.objects.filter(human_resource__functional_group__key=key,
-                                                 created__year=year,
-                                                 created__month=month,
-                                                 created__day=day)
+    data = []
+    team_personals = fetch_team_members_per_team_per_date(key, date)
 
     for person in team_personals:
         temp = {}
@@ -178,6 +154,8 @@ def collect_data(request):
     key = request.GET.get('key', '')
     date = request.GET.get('date', '')
 
+    collect_data = fetch_collect_data_per_team_per_date(key, date)
+
     try:
         test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=key)
     except TestMetricsConfiguration.DoesNotExist:
@@ -185,7 +163,7 @@ def collect_data(request):
 
     if key in ['QA', 'TE']:
         metric = get_object_or_404(TestMetrics, pk=metric_id)
-        form = TestForm(instance=metric, initial={'complaints': 10})
+        form = TestForm(instance=metric, initial=collect_data)
     elif key == 'QI':
         metric = get_object_or_404(InnovationMetrics, pk=metric_id)
         form = InnovationForm(instance=metric)
