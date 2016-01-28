@@ -173,6 +173,41 @@ def fetch_team_members_by_date(request):
     return HttpResponse(json.dumps(data), content_type="application/json")
 
 
+def collect_data(request):
+    metric_id = request.GET.get('metric_id', '')
+    key = request.GET.get('key', '')
+    date = request.GET.get('date', '')
+
+    try:
+        test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=key)
+    except TestMetricsConfiguration.DoesNotExist:
+        test_metric_config = ''
+
+    if key in ['QA', 'TE']:
+        metric = get_object_or_404(TestMetrics, pk=metric_id)
+        form = TestForm(instance=metric, initial={'complaints': 10})
+    elif key == 'QI':
+        metric = get_object_or_404(InnovationMetrics, pk=metric_id)
+        form = InnovationForm(instance=metric)
+    elif key == 'RE':
+        metric = get_object_or_404(RequirementMetrics, pk=metric_id)
+        form = RequirementForm(instance=metric)
+    elif key == 'TL':
+        metric = get_object_or_404(LabMetrics, pk=metric_id)
+        form = LabForm(instance=metric)
+    else:
+        messages.error(request, 'No key to Functional Group found')
+        return redirect('teams:teams')
+
+    context = RequestContext(request, {
+        'metric': metric,
+        'form': form,
+        'test_metric_config': test_metric_config
+    })
+
+    return render(request, 'teams/metric_detail.html', context)
+
+
 @csrf_exempt
 def add_product_quality_chart(request):
     return HttpResponse('')
