@@ -9,6 +9,9 @@ urlpatterns = patterns('scorecard.apps.teams.views',
 
     url(r'^weekly_metric_new_manually/$', 'weekly_metric_new_manually', name='weekly_metric_new_manually'),
     url(r'^send_email/$', 'send_email', name='send_email'),
+
+    url(r'^fetch_team_members_by_date/$', 'fetch_team_members_by_date', name='fetch_team_members_by_date'),
+
     url(r'^add_product_quality_chart?$', 'add_product_quality_chart', name='add_product_quality_chart'),
     url(r'^delete_product_quality_chart?$', 'delete_product_quality_chart', name='delete_product_quality_chart'),
 

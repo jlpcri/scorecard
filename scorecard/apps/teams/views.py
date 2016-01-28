@@ -1,3 +1,4 @@
+import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
@@ -8,6 +9,7 @@ from django.template import RequestContext
 from models import TestMetrics, RequirementMetrics, InnovationMetrics, LabMetrics, TestMetricsConfiguration
 from forms import InnovationForm, LabForm, RequirementForm, TestForm
 from scorecard.apps.core.views import check_user_team
+from scorecard.apps.personals.models import TestStats, InnovationStats, RequirementStats, LabStats
 from scorecard.apps.users.views import user_is_superuser, user_is_manager
 from tasks import weekly_metric_new, weekly_send_email
 from utils import context_teams
@@ -125,6 +127,50 @@ def metric_edit(request, metric_id):
             return render(request, 'teams/metric_detail.html', context)
     else:
         return redirect('teams:teams')
+
+
+def fetch_team_members_by_date(request):
+    key = request.GET.get('key', '')
+    date = request.GET.get('date', '')
+    # print key, date
+
+    data = team_personals = []
+    year = date[:4]
+    month = date[6:7]
+    day = date[8:10]
+
+    if key in ['QA', 'TE']:
+        team_personals = TestStats.objects.filter(human_resource__functional_group__key=key,
+                                                  created__year=year,
+                                                  created__month=month,
+                                                  created__day=day)
+    elif key == 'QI':
+        team_personals = InnovationStats.objects.filter(human_resource__functional_group__key=key,
+                                                        created__year=year,
+                                                        created__month=month,
+                                                        created__day=day)
+    elif key == 'RE':
+        team_personals = RequirementStats.objects.filter(human_resource__functional_group__key=key,
+                                                         created__year=year,
+                                                         created__month=month,
+                                                         created__day=day)
+    elif key == 'TL':
+        team_personals = LabStats.objects.filter(human_resource__functional_group__key=key,
+                                                 created__year=year,
+                                                 created__month=month,
+                                                 created__day=day)
+
+    for person in team_personals:
+        temp = {}
+        temp['staff'] = person.human_resource.user.first_name + ' ' + person.human_resource.user.last_name
+        if person.updated:
+            temp['updated'] = person.confirmed.strftime('%Y-%m-%d')
+        else:
+            temp['updated'] = 'Not Updated'
+
+        data.append(temp)
+
+    return HttpResponse(json.dumps(data), content_type="application/json")
 
 
 @csrf_exempt

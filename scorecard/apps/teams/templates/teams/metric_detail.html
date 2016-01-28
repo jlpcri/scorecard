@@ -4,7 +4,17 @@
 
 {% block body %}
     <div class="container">
-        <h2>{{ metric.functional_group.name }} Metric Detail - {{ metric.created|date }}</h2>
+        <div class="row">
+            <div class="col-sm-8">
+                <h2>{{ metric.functional_group.name }} Metric Detail - {{ metric.created|date }}</h2>
+            </div>
+            <div class="col-sm-2">
+                <br>
+                <input id="collect_data_key" value="{{ metric.functional_group.key }}" hidden>
+                <input id="collect_data_date" value="{{ metric.created|date:'Y-m-d' }}" hidden>
+                <input id="collect_data_button" class="btn btn-primary" style="width:100%;" type="button" value="Collect Data">
+            </div>
+        </div>
         <form action="{% url 'teams:metric_edit' metric.id %}?key={{ metric.functional_group.key }}" method="post">
             {% if metric.functional_group.key == 'TL' %}  <!-- Test Lab separate-->
                 <legend style="margin-top: 30px;">Human Resource</legend>
@@ -416,6 +426,7 @@
             </div>
         </form>
     </div>
+    {% include 'teams/teams_modal.html' %}
 {% endblock %}
 
 {% block footer %}
