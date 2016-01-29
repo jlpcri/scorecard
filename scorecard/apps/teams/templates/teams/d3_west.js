@@ -92,11 +92,32 @@ var randomColor = (function () {
 function getParsedDate(temp_date) {
 
     // Oct 5, 2015, 4:36p.m., only need the month and day
-    var temp_array = temp_date.split(" ");
+    // or 2015-12-11
+    var hyphen_index = temp_date.indexOf("-");
+
+    var temp_array;
+    var month;
+    var day;
+
+    if (hyphen_index > -1) {
+        // parsing the 2015-12-11 format
+
+        temp_array = temp_date.split("-");
+
+        month = temp_array[1];
+        day = temp_array[2];
+
+    } else {
+        // parsing the old format, Oct 5, 2015
+
+        temp_array = temp_date.split(" ");
+
+        month = temp_array[0];
+        day = temp_array[1];
+
+    }
 
     // hide_columns = hide_columns.replace(/\[/g, '');
-    var month = temp_array[0];
-    var day = temp_array[1];
 
     // clean up the month (if present, remove the trailing period)
     month = month.replace(/\./g, '').trim();
@@ -104,18 +125,41 @@ function getParsedDate(temp_date) {
     // clean up the day (if present, remove the trailing comma)
     day = day.replace(/\,/g, '').trim();
 
-    return month + " " + day;
+    return month + "-" + day;
 }
 
 // returns a friendly month day, year string for the pie chart
 function getParsedMonthDayYear(temp_date) {
 
     // Oct 5, 2015, 4:36p.m., only need the month and day
-    var temp_array = temp_date.split(" ");
+    // or 2015-12-11
 
-    var month = temp_array[0];
-    var day = temp_array[1];
-    var year = temp_array[2];
+    var hyphen_index = temp_date.indexOf("-");
+
+    var temp_array;
+    var month;
+    var day;
+    var year;
+
+    if (hyphen_index > -1) {
+        // parsing the 2015-12-11 format
+
+        temp_array = temp_date.split("-");
+
+        year = temp_array[0];
+        month = temp_array[1];
+        day = temp_array[2];
+
+    } else {
+        // parsing the old format, Oct 5, 2015
+
+        temp_array = temp_date.split(" ");
+
+        month = temp_array[0];
+        day = temp_array[1];
+        year = temp_array[2];
+
+    }
 
     // clean up the month (if present, remove the trailing period)
     month = month.replace(/\./g, '').trim();
@@ -126,7 +170,7 @@ function getParsedMonthDayYear(temp_date) {
     // clean up the year (if present, remove the trailing comma)
     year = year.replace(/\,/g, '').trim();
 
-    return month + " " + day + ", " + year;
+    return month + "/" + day + "/" + year;
 }
 
 // given the column number, find the column name
