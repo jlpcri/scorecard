@@ -1,3 +1,4 @@
+import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
@@ -10,7 +11,7 @@ from forms import InnovationForm, LabForm, RequirementForm, TestForm
 from scorecard.apps.core.views import check_user_team
 from scorecard.apps.users.views import user_is_superuser, user_is_manager
 from tasks import weekly_metric_new, weekly_send_email
-from utils import context_teams
+from utils import context_teams, fetch_team_members_per_team_per_date, fetch_collect_data_per_team_per_date
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -125,6 +126,64 @@ def metric_edit(request, metric_id):
             return render(request, 'teams/metric_detail.html', context)
     else:
         return redirect('teams:teams')
+
+
+def fetch_team_members_by_date(request):
+    key = request.GET.get('key', '')
+    date = request.GET.get('date', '')
+    # print key, date
+
+    data = []
+    team_personals = fetch_team_members_per_team_per_date(key, date)
+
+    for person in team_personals:
+        temp = {}
+        temp['staff'] = person.human_resource.user.first_name + ' ' + person.human_resource.user.last_name
+        if person.updated:
+            temp['updated'] = person.confirmed.strftime('%Y-%m-%d')
+        else:
+            temp['updated'] = 'Not Updated'
+
+        data.append(temp)
+
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+def collect_data(request):
+    metric_id = request.GET.get('metric_id', '')
+    key = request.GET.get('key', '')
+    date = request.GET.get('date', '')
+
+    collect_data = fetch_collect_data_per_team_per_date(key, date)
+
+    try:
+        test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=key)
+    except TestMetricsConfiguration.DoesNotExist:
+        test_metric_config = ''
+
+    if key in ['QA', 'TE']:
+        metric = get_object_or_404(TestMetrics, pk=metric_id)
+        form = TestForm(instance=metric, initial=collect_data)
+    elif key == 'QI':
+        metric = get_object_or_404(InnovationMetrics, pk=metric_id)
+        form = InnovationForm(instance=metric, initial=collect_data)
+    elif key == 'RE':
+        metric = get_object_or_404(RequirementMetrics, pk=metric_id)
+        form = RequirementForm(instance=metric, initial=collect_data)
+    elif key == 'TL':
+        metric = get_object_or_404(LabMetrics, pk=metric_id)
+        form = LabForm(instance=metric, initial=collect_data)
+    else:
+        messages.error(request, 'No key to Functional Group found')
+        return redirect('teams:teams')
+
+    context = RequestContext(request, {
+        'metric': metric,
+        'form': form,
+        'test_metric_config': test_metric_config
+    })
+
+    return render(request, 'teams/metric_detail.html', context)
 
 
 @csrf_exempt
