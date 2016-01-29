@@ -251,3 +251,24 @@ function efficiencyTestMetricCal(){
     var effi = parseFloat($('#auto_and_execution_time').val()) / parseFloat($('#gross_available_time').val()) * 100;
     $('#id_test_efficiency').val(effi.toFixed(2) + '%');
 }
+
+$('#collect_data_button').click(function(){
+    var key = $('#collect_data_key').val(),
+        date = $('#collect_data_date').val();
+    //console.log(key, date);
+    $.getJSON("{% url 'teams:fetch_team_members_by_date'%}?key={0}&date={1}".format(key, date)).done(function(data){
+        //console.log(data);
+        var contents_head = '<tr><th>Name</th><th>Updated</th></tr>',
+            contents_body = '';
+        $.each(data, function(index, value){
+            contents_body += '<tr><td>' +value['staff'] + '</td><td>' + value['updated'] + '</td></tr>';
+        });
+
+        var contents = "<table id='tableData' class='table table-bordered'>"
+            + "<thead>" + contents_head + "</thead>"
+            + "<tbody>" +contents_body + "</tbody>"
+            + "</table>";
+        $('#collect-data-body').html(contents);
+    });
+    $('#collect-data-modal').modal('show');
+});
