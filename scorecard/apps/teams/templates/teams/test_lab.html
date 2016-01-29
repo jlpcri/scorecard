@@ -43,7 +43,7 @@
             <tbody>
             {% for item in tls %}
             <tr>
-                <td><a href="{% url 'teams:metric_detail' item.id %}?key={{ item.functional_group.key }}">{{ item.created|date }}</a></td>
+                <td><a href="{% url 'teams:metric_detail' item.id %}?key={{ item.functional_group.key }}">{{ item.created|date:'Y-m-d' }}</a></td>
                 <td draggable="true" ondragstart="dragTL(event)">{{ item.staffs }}</td>
                 <td draggable="true" ondragstart="dragTL(event)">{{ item.tickets_received }}</td>
                 <td draggable="true" ondragstart="dragTL(event)">{{ item.tickets_closed }}</td>
@@ -317,6 +317,8 @@
             data.push({"label": parsed_date_list[index], "value": chart_data[index]});
         }
 
+        data = data.reverse();
+
         var vis = d3.select('#tl_chart_svg_' + svg_id).append("svg:svg").data([data]).attr("width", chart_width).attr("height", chart_height).append("svg:g").attr("transform", "translate(" + radius + "," + radius + ")");
         var pie = d3.layout.pie().value(function (d) {
             return d.value;
@@ -398,6 +400,8 @@
             margin.left = margin.left + 10;
             width = width - 10;
         }
+
+        data = data.reverse();
 
         var min_unit = 0.0;  // ymax / chart_height;
 
@@ -516,8 +520,8 @@
         var width = chart_width - margin.left - margin.right;
         var height = chart_height - margin.top - margin.bottom;
 
-        var x_min = x_data[0];
-        var x_max = x_data[x_data.length - 1];
+        var x_min = x_data[x_data.length - 1];
+        var x_max = x_data[0];
 
         var minObjectValue = d3.min(y_data, function (d) {
             return parseFloat(d);
@@ -655,7 +659,7 @@
             column_data.push(temp_data);
         });
 
-        return column_data;
+        return column_data.reverse();
     }
 
     /* function get_column_data(temp_column_number, temp_table_id) {

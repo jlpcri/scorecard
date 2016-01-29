@@ -48,7 +48,7 @@
                     <tbody>
                         {% for item in current_user_personals %}
                             <tr>
-                                <td><a href="{% url 'personals:personal_stats' item.id %}?key={{ item.human_resource.functional_group.key }}">{{ item.created|date }}</a></td>
+                                <td><a href="{% url 'personals:personal_stats' item.id %}?key={{ item.human_resource.functional_group.key }}">{{ item.created|date:'Y-m-d' }}</a></td>
                                 <td>{{ item.tickets_closed }}</td>
                                 <td>{{ item.rework_time }}</td>
                                 <td>{{ item.overtime_weekday }}</td>

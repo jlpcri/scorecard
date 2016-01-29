@@ -20,7 +20,6 @@ class FunctionalGroup(models.Model):
     def __unicode__(self):
         return '{0}: {1}'.format(self.name, self.key)
 
-
     class Meta:
         verbose_name_plural = "Functional Groups"
 

@@ -96,8 +96,25 @@ $('.editTicket').on('show.bs.modal', function(e){
 
 $('.editTicket form').on('submit', function(event){
     var key = $('#editTicketKey').val();
+    var estimate_start = $('#editTicketEstimateStart').val(),
+        estimate_end = $('#editTicketEstimateEnd').val(),
+        actual_start = $('#editTicketActualStart').val(),
+        actual_end = $('#editTicketActualEnd').val();
+
     if (key == ''){
         showErrMsg('#editTicketErrMessage', 'Key is Empty');
+        return false;
+    } else if (estimate_start && !(moment(estimate_start, 'MM/DD/YYYY', true).isValid())){
+        showErrMsg('#editTicketErrMessage', 'Estimate Start format should be MM/DD/YYYY ');
+        return false;
+    } else if (estimate_end && !(moment(estimate_end, 'MM/DD/YYYY', true).isValid())){
+        showErrMsg('#editTicketErrMessage', 'Estimate End format should be MM/DD/YYYY ');
+        return false;
+    } else if (actual_start && !(moment(actual_start, 'MM/DD/YYYY', true).isValid())){
+        showErrMsg('#editTicketErrMessage', 'Actual Start format should be MM/DD/YYYY ');
+        return false;
+    } else if (actual_end && !(moment(actual_end, 'MM/DD/YYYY', true).isValid())){
+        showErrMsg('#editTicketErrMessage', 'Actual End format should be MM/DD/YYYY ');
         return false;
     }
 });
@@ -130,19 +147,34 @@ $('.editPhase').on('show.bs.modal', function(e) {
 
 $('.editPhase form').on('submit', function(event){
     var name = $('#editPhaseName').val(),
-        estimate_start = new Date($('#editPhaseEstimateStart').val()),
-        estimate_end = new Date($('#editPhaseEstimateEnd').val()),
-        actual_start = new Date($('#editPhaseActualStart').val()),
-        actual_end = new Date($('#editPhaseActualEnd').val());
+        estimate_start_string = $('#editPhaseEstimateStart').val(),
+        estimate_end_string = $('#editPhaseEstimateEnd').val(),
+        actual_start_string = $('#editPhaseActualStart').val(),
+        actual_end_string = $('#editPhaseActualEnd').val(),
+        estimate_start = new Date(estimate_start_string),
+        estimate_end = new Date(estimate_end_string),
+        actual_start = new Date(actual_start_string),
+        actual_end = new Date(actual_end_string);
+
     if (name == ''){
         showErrMsg('#editPhaseErrMessage', 'Name is Empty');
         return false;
-    }
-    if (estimate_start > estimate_end) {
+    } else if (estimate_start_string && !(moment(estimate_start_string, 'MM/DD/YYYY', true).isValid())){
+        showErrMsg('#editPhaseErrMessage', 'Estimate Start format should be MM/DD/YYYY ');
+        return false;
+    } else if (estimate_end_string && !(moment(estimate_end_string, 'MM/DD/YYYY', true).isValid())){
+        showErrMsg('#editPhaseErrMessage', 'Estimate End format should be MM/DD/YYYY ');
+        return false;
+    } else if (actual_start_string && !(moment(actual_start_string, 'MM/DD/YYYY', true).isValid())){
+        showErrMsg('#editPhaseErrMessage', 'Actual Start format should be MM/DD/YYYY ');
+        return false;
+    } else if (actual_end_string && !(moment(actual_end_string, 'MM/DD/YYYY', true).isValid())){
+        showErrMsg('#editPhaseErrMessage', 'Actual End format should be MM/DD/YYYY ');
+        return false;
+    } else if (estimate_start > estimate_end) {
         showErrMsg('#editPhaseErrMessage', 'Estimate End cannot be earlier than Estimate Start');
         return false;
-    }
-    if (actual_start > actual_end) {
+    } else if (actual_start > actual_end) {
         showErrMsg('#editPhaseErrMessage', 'Actual End cannot be earlier than Actual Start');
         return false;
     }

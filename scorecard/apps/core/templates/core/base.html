@@ -138,9 +138,7 @@
                         <li{% if active == 'team' %} class="list-group-item-info" {% endif %}><a href="{% url 'teams:teams' %}"><i class="fa fa-weibo fa-fw"></i>Team</a></li>
                         <li{% if active == 'data' %} class="list-group-item-info" {% endif %}><a href="{% url 'datas:datas' %}"><i class="fa fa-pie-chart fa-fw"></i>Data</a> </li>
                         <li{% if active == 'automation' %} class="list-group-item-info" {% endif %}><a href="{% url 'automations:automations' %}"><i class="fa fa-table fa-fw"></i>Automation</a> </li>
-                        {% if user.username == 'sliu' %}
-                            <li{% if active == 'help' %} class="list-group-item-info" {% endif %}><a href="{% url 'help:guide' %}"><i class="fa fa-thumbs-o-up"></i> Help</a> </li>
-                        {% endif %}
+                        <li{% if active == 'help' %} class="list-group-item-info" {% endif %}><a href="{% url 'help:guide' %}"><i class="fa fa-thumbs-o-up"></i> Help</a> </li>
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
