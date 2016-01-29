@@ -1,5 +1,6 @@
 {% extends 'core/base.html' %}
 {% load staticfiles %}
+{% load team_extras %}
 
 {% block extrahead %}
 
@@ -272,12 +273,12 @@
                                             <tbody class="metrics_tbody">
                                             {% for qa in qa_data %}
                                                 <tr>
-                                                    <td>{{ qa.created|date }}</td>
+                                                    <td>{{ qa.created|date:'Y-m-d' }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ qa.staffs }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ qa.active_projects }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ qa.active_tickets }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ qa.avg_throughput|floatformat:2 }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.total_operational_cost }}</td>
+                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.total_operational_cost |prepend_dollars}}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ qa.team_initiative }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ qa.ticket_backlog }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ qa.ticket_prep }}</td>
@@ -340,7 +341,7 @@
                                             <tbody class="metrics_tbody">
                                             {% for qi in qi_data %}
                                                 <tr>
-                                                    <td>{{ qi.created|date }}</td>
+                                                    <td>{{ qi.created|date:'Y-m-d' }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ qi.staffs }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ qi.story_points_backlog }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ qi.story_points_prep }}</td>
@@ -396,7 +397,7 @@
                                             <tbody class="metrics_tbody">
                                             {% for re in re_data %}
                                                 <tr>
-                                                    <td>{{ re.created|date }}</td>
+                                                    <td>{{ re.created|date:'Y-m-d' }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ re.staffs }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ re.active_projects }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ re.elicitation_analysis_time }}</td>
@@ -409,7 +410,7 @@
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ re.rework_external_time }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ re.travel_cost }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ re.gross_available_time }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ re.efficiency }}</td>
+                                                    <td draggable="true" ondragstart="drag_home(event)">{{ re.efficiency|floatformat:2 }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ re.rework_external_cost }}</td>
                                                 </tr>
                                             {% endfor %}
@@ -459,7 +460,7 @@
                                             <tbody class="metrics_tbody">
                                             {% for te in te_data %}
                                                 <tr>
-                                                    <td>{{ te.created|date }}</td>
+                                                    <td>{{ te.created|date:'Y-m-d' }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ te.staffs }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ te.active_projects }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ te.active_tickets }}</td>
@@ -516,7 +517,7 @@
                                             <tbody class="metrics_tbody">
                                             {% for tl in tl_data %}
                                                 <tr>
-                                                    <td>{{ tl.created|date }}</td>
+                                                    <td>{{ tl.created|date:'Y-m-d' }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ tl.staffs }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ tl.tickets_received }}</td>
                                                     <td draggable="true" ondragstart="drag_home(event)">{{ tl.tickets_closed }}</td>
