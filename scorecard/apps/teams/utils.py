@@ -90,7 +90,7 @@ def fetch_team_members_per_team_per_date(key, date):
 
 
 def fetch_collect_data_per_team_per_date(key, date):
-    data = {}
+    form_data = calculate_data = {}
     team_personals = fetch_team_members_per_team_per_date(key, date)
 
     # QA, TE
@@ -129,7 +129,7 @@ def fetch_collect_data_per_team_per_date(key, date):
             standards_violated += person.standards_violated
             resource_swap_time += person.resource_swap_time
 
-        data = {
+        form_data = {
             'overtime_weekday': overtime_weekday,
             'overtime_weekend': overtime_weekend,
             'rework_time': rework_time,
@@ -146,6 +146,16 @@ def fetch_collect_data_per_team_per_date(key, date):
             'standards_violated': standards_violated,
             'resource_swap_time': resource_swap_time
         }
+        calculate_data = {
+            'auto_footprint_dev': 1,
+            'auto_footprint_exec': 2,
+            'avg_throughput': 3,
+            'auto_exec_time': 4,
+            'gross_available_time': 5,
+            'efficiency': 0.1,
+            'operational_cost': len(team_personals) * 10,
+            'total_cost': len(team_personals) * 10
+        }
 
     elif key == 'QI':
         for person in team_personals:
@@ -156,13 +166,18 @@ def fetch_collect_data_per_team_per_date(key, date):
             unit_tests_dev += person.unit_tests_dev
             elicitation_analysis_time += person.elicitation_analysis_time
 
-        data = {
+        form_data = {
             'overtime_weekday': overtime_weekday,
             'overtime_weekend': overtime_weekend,
             'rework_time': rework_time,
             'story_points_execution': story_points_execution,
             'unit_tests_dev': unit_tests_dev,
             'elicitation_analysis_time': elicitation_analysis_time
+        }
+        calculate_data = {
+            'avg_throughput': story_points_execution / len(team_personals) if len(team_personals) > 0 else 0,
+            'operational_cost': len(team_personals) * 40 * 45,
+            'total_cost': len(team_personals) * 40 * 45
         }
 
     elif key == 'RE':
@@ -175,7 +190,7 @@ def fetch_collect_data_per_team_per_date(key, date):
             rework_external_time += person.rework_external_time
             travel_cost += person.travel_cost
 
-        data = {
+        form_data = {
             'overtime_weekday': overtime_weekday,
             'overtime_weekend': overtime_weekend,
             'rework_time': rework_time,
@@ -183,6 +198,12 @@ def fetch_collect_data_per_team_per_date(key, date):
             'revisions': revisions,
             'rework_external_time':  rework_external_time,
             'travel_cost': travel_cost
+        }
+        calculate_data = {
+            'gross_available_time': len(team_personals) * 6 * 5,
+            'efficiency': elicitation_analysis_time / (len(team_personals) * 6 * 5) if len(team_personals) > 0 else 0,
+            'operational_cost': len(team_personals) * 30 * 50,
+            'rework_external_cost': rework_external_time * 50
         }
 
     elif key == 'TL':
@@ -192,13 +213,16 @@ def fetch_collect_data_per_team_per_date(key, date):
             rework_time += person.rework_time
             tickets_closed += person.tickets_closed
 
-        data = {
+        form_data = {
             'overtime_weekday': overtime_weekday,
             'overtime_weekend': overtime_weekend,
             'rework_time': rework_time,
             'tickets_closed': tickets_closed
         }
 
-    data['staffs'] = len(team_personals)
+    form_data['staffs'] = len(team_personals)
 
-    return data
+    return {
+        'form_data': form_data,
+        'calculate_data': calculate_data
+    }
