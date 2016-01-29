@@ -389,6 +389,15 @@
                 return d.y;
             });
 
+            if (ymax >= 1000) {
+                margin.left = margin.left + 10;
+                width = width - 10;
+            }
+            if (ymax >= 10000) {
+                margin.left = margin.left + 10;
+                width = width - 10;
+            }
+
             var min_unit = 0.0;  // ymax / chart_height;
 
             var xScale = d3.scale.ordinal()
@@ -432,7 +441,7 @@
                         .data(data)
                         .enter()
                         .append("rect")
-                        .attr("class", "bar")
+                        .attr("class", "bar_chart_d3")
                         .attr("x", function (d) {
                             return x(d.x);
                         })
@@ -509,12 +518,22 @@
             var x_min = x_data[0];
             var x_max = x_data[x_data.length - 1];
 
-            var minObjectValue = parseFloat(d3.min(data, function (d) {
-                return d.y;
-            }));
-            var maxObjectValue = parseFloat(d3.max(data, function (d) {
-                return d.y;
-            }));
+            var minObjectValue = d3.min(y_data, function (d) {
+                return parseFloat(d);
+            });
+            var maxObjectValue = d3.max(y_data, function (d) {
+                return parseFloat(d);
+            });
+
+            // adjust the left margin based on the max value of y
+            if (maxObjectValue >= 1000) {
+                margin.left = margin.left + 15;
+                width = width - 15;
+            }
+            if (maxObjectValue >= 10000) {
+                margin.left = margin.left + 15;
+                width = width - 15;
+            }
 
             // create the graph object
             var vis = d3.select("#qa_chart_svg_" + svg_id).append("svg")
