@@ -154,7 +154,7 @@ def collect_data(request):
     key = request.GET.get('key', '')
     date = request.GET.get('date', '')
 
-    collect_data = fetch_collect_data_per_team_per_date(key, date)
+    initial_data = fetch_collect_data_per_team_per_date(key, date)
 
     try:
         test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=key)
@@ -163,16 +163,16 @@ def collect_data(request):
 
     if key in ['QA', 'TE']:
         metric = get_object_or_404(TestMetrics, pk=metric_id)
-        form = TestForm(instance=metric, initial=collect_data)
+        form = TestForm(instance=metric, initial=initial_data['form_data'])
     elif key == 'QI':
         metric = get_object_or_404(InnovationMetrics, pk=metric_id)
-        form = InnovationForm(instance=metric, initial=collect_data)
+        form = InnovationForm(instance=metric, initial=initial_data['form_data'])
     elif key == 'RE':
         metric = get_object_or_404(RequirementMetrics, pk=metric_id)
-        form = RequirementForm(instance=metric, initial=collect_data)
+        form = RequirementForm(instance=metric, initial=initial_data['form_data'])
     elif key == 'TL':
         metric = get_object_or_404(LabMetrics, pk=metric_id)
-        form = LabForm(instance=metric, initial=collect_data)
+        form = LabForm(instance=metric, initial=initial_data['form_data'])
     else:
         messages.error(request, 'No key to Functional Group found')
         return redirect('teams:teams')
@@ -180,7 +180,8 @@ def collect_data(request):
     context = RequestContext(request, {
         'metric': metric,
         'form': form,
-        'test_metric_config': test_metric_config
+        'test_metric_config': test_metric_config,
+        'calculate_data': initial_data['calculate_data']
     })
 
     return render(request, 'teams/metric_detail.html', context)
