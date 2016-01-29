@@ -146,15 +146,41 @@ def fetch_collect_data_per_team_per_date(key, date):
             'standards_violated': standards_violated,
             'resource_swap_time': resource_swap_time
         }
+
+        if (tc_manual_dev + tc_auto_dev) > 0:
+            auto_footprint_dev_age = tc_auto_dev / (tc_manual_dev + tc_auto_dev)
+        else:
+            auto_footprint_dev_age = 0
+        if (tc_manual_execution + tc_auto_execution) > 0:
+            auto_footprint_execution_age = tc_auto_execution / (tc_manual_execution + tc_auto_execution)
+        else:
+            auto_footprint_execution_age = 0
+        auto_and_execution_time = tc_manual_dev_time + tc_auto_execution_time + tc_auto_dev_time + tc_auto_execution_time
+        gross_available_time = len(team_personals) * 30
+        if len(team_personals) > 0:
+            avg_throughput = (tc_manual_dev + tc_auto_dev + tc_manual_execution + tc_auto_execution) / len(team_personals)
+            efficiency = auto_and_execution_time / gross_available_time
+        else:
+            avg_throughput = 0
+            efficiency = 0
+
+        if key == 'TE':
+            hours = 40 # need rewrite
+            costs_staff = 50
+        elif key == 'QA':
+            hours = 40
+            costs_staff = 40
+
         calculate_data = {
-            'auto_footprint_dev': 1,
-            'auto_footprint_exec': 2,
-            'avg_throughput': 3,
-            'auto_exec_time': 4,
-            'gross_available_time': 5,
-            'efficiency': 0.1,
-            'operational_cost': len(team_personals) * 10,
-            'total_cost': len(team_personals) * 10
+            'auto_footprint_dev_age': auto_footprint_dev_age,
+            'auto_footprint_execution_age': auto_footprint_execution_age,
+            'avg_throughput': avg_throughput,
+            'auto_and_execution_time': auto_and_execution_time,
+            'gross_available_time': gross_available_time,
+            'efficiency':  efficiency,
+            'operational_cost': len(team_personals) * hours * costs_staff,
+            'total_cost': len(team_personals) * hours * costs_staff,
+            'auto_savings': tc_auto_execution_time * costs_staff
         }
 
     elif key == 'QI':
