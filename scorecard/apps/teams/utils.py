@@ -164,7 +164,7 @@ def fetch_collect_data_per_team_per_date(key, date):
             auto_footprint_execution_age = tc_auto_execution / (tc_manual_execution + tc_auto_execution)
         else:
             auto_footprint_execution_age = 0
-        auto_and_execution_time = tc_manual_dev_time + tc_auto_execution_time + tc_auto_dev_time + tc_auto_execution_time
+        auto_and_execution_time = tc_manual_dev_time + tc_manual_execution_time + tc_auto_dev_time + tc_auto_execution_time
         gross_available_time = len(team_personals) * 30
         if len(team_personals) > 0:
             avg_throughput = (tc_manual_dev + tc_auto_dev + tc_manual_execution + tc_auto_execution) / len(team_personals)
