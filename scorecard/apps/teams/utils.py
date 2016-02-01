@@ -1,9 +1,11 @@
 from datetime import datetime, timedelta
 from django.conf import settings
 from pytz import timezone
+
 from scorecard.apps.personals.models import TestStats, RequirementStats, LabStats
 from scorecard.apps.personals.models import InnovationStats
 from scorecard.apps.users.models import FunctionalGroup
+from models import TestMetricsConfiguration
 
 
 def context_teams(request):
@@ -109,6 +111,13 @@ def fetch_collect_data_per_team_per_date(key, date):
     tickets_closed = 0
 
     if key in ['QA', 'TE']:
+        try:
+            test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=key)
+            hours = test_metric_config.hours_per_week
+            costs_staff = test_metric_config.costs_per_hour_staff
+        except TestMetricsConfiguration.DoesNotExist:
+            hours, costs_staff = 0, 0
+
         for person in team_personals:
             overtime_weekday += person.overtime_weekday
             overtime_weekend += person.overtime_weekend
@@ -148,28 +157,21 @@ def fetch_collect_data_per_team_per_date(key, date):
         }
 
         if (tc_manual_dev + tc_auto_dev) > 0:
-            auto_footprint_dev_age = tc_auto_dev / (tc_manual_dev + tc_auto_dev)
+            auto_footprint_dev_age = float(tc_auto_dev) / (tc_manual_dev + tc_auto_dev)
         else:
             auto_footprint_dev_age = 0
         if (tc_manual_execution + tc_auto_execution) > 0:
-            auto_footprint_execution_age = tc_auto_execution / (tc_manual_execution + tc_auto_execution)
+            auto_footprint_execution_age = float(tc_auto_execution) / (tc_manual_execution + tc_auto_execution)
         else:
             auto_footprint_execution_age = 0
-        auto_and_execution_time = tc_manual_dev_time + tc_auto_execution_time + tc_auto_dev_time + tc_auto_execution_time
+        auto_and_execution_time = tc_manual_dev_time + tc_manual_execution_time + tc_auto_dev_time + tc_auto_execution_time
         gross_available_time = len(team_personals) * 30
         if len(team_personals) > 0:
-            avg_throughput = (tc_manual_dev + tc_auto_dev + tc_manual_execution + tc_auto_execution) / len(team_personals)
+            avg_throughput = (tc_manual_dev + tc_auto_dev + tc_manual_execution + tc_auto_execution) / float(len(team_personals))
             efficiency = auto_and_execution_time / gross_available_time
         else:
             avg_throughput = 0
             efficiency = 0
-
-        if key == 'TE':
-            hours = 40 # need rewrite
-            costs_staff = 50
-        elif key == 'QA':
-            hours = 40
-            costs_staff = 40
 
         calculate_data = {
             'auto_footprint_dev_age': auto_footprint_dev_age,
@@ -201,7 +203,7 @@ def fetch_collect_data_per_team_per_date(key, date):
             'elicitation_analysis_time': elicitation_analysis_time
         }
         calculate_data = {
-            'avg_throughput': story_points_execution / len(team_personals) if len(team_personals) > 0 else 0,
+            'avg_throughput': float(story_points_execution) / len(team_personals) if len(team_personals) > 0 else 0,
             'operational_cost': len(team_personals) * 40 * 45,
             'total_cost': len(team_personals) * 40 * 45
         }
