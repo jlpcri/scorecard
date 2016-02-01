@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load team_extras %}
 
 {% block title %} Quality Innovation Metric {% endblock %}
 
@@ -171,11 +172,11 @@
                     <div class="row">
                         <div class="col-sm-2">
                             <input class="gentle" id="auto_footprint_dev" title="AutoTCsDev /(ManualTCsDev + AutoTCsDev)"
-                                   {% if calculate_data %}value="{% widthratio calculate_data.auto_footprint_dev_age 1 100 %}%"{% else %}value="{% widthratio metric.auto_footprint_dev_age 1 100 %}%" {% endif %}disabled/>
+                                   {% if calculate_data %}value="{{ calculate_data.auto_footprint_dev_age|percentage_format }}"{% else %}value="{{ metric.auto_footprint_dev_age|percentage_format }}" {% endif %}disabled/>
                         </div>
                         <div class="col-sm-2">
                             <input class="gentle" id="auto_footprint_execution" title="AutoTCsExecution /(ManualTCsExecution + AutoTCsExecution)"
-                                   {% if calculate_data %}value="{% widthratio calculate_data.auto_footprint_execution_age 1 100 %}%"{% else %}value="{% widthratio metric.auto_footprint_execution_age 1 100 %}%" {% endif %} disabled/>
+                                   {% if calculate_data %}value="{{ calculate_data.auto_footprint_execution_age|percentage_format}}"{% else %}value="{{ metric.auto_footprint_execution_age|percentage_format }}" {% endif %} disabled/>
                         </div>
                         <div class="col-sm-2">
                             <input class="gentle" id="avg_throughput" title="(ManualTCsDev + AutoTCsDev + ManualTCsExecution + AutoTCsExecution) / Staffs"
@@ -231,7 +232,7 @@
                     <div class="row">
                         <div class="col-sm-2">
                             <input class="gentle" id="avg_throughput" title="ActiveProjects + TeamInitiatives"
-                                   value="{{ metric.avg_throughput }}" disabled/>
+                                   value="{{ metric.avg_throughput|floatformat:2 }}" disabled/>
                         </div>
                     </div>
                 {% else %}
@@ -279,7 +280,7 @@
                         <div class="col-sm-2">{{ form.overtime_weekend }}</div>
                         <div class="col-sm-2">
                             <input class="gentle" id="avg_throughput_qi" title="StoryPointsExecution / Staffs"
-                                    {% if calculate_data %} value="{{ calculate_data.avg_throughput|floatformat:2 }}" {% else %} value="{{ metric.avg_throughput }}" {% endif %} disabled/>
+                                    {% if calculate_data %} value="{{ calculate_data.avg_throughput|floatformat:2 }}" {% else %} value="{{ metric.avg_throughput|floatformat:2 }}" {% endif %} disabled/>
                         </div>
                         <div class="col-sm-2">{{ form.rework_time }}</div>
                         <div class="col-sm-2">{{ form.resource_swap_time }}</div>
@@ -299,7 +300,7 @@
                         </div>
                         <div class="col-sm-2">
                             <input class="gentle" id="id_efficiency" title="ElicitationAnalysis / GrossAvailable"
-                                    {% if calculate_data %} value="{% widthratio calculate_data.efficiency 1 100 %}%" {% else %}value="{% widthratio metric.efficiency 1 100 %}%" {% endif %} disabled/>
+                                    {% if calculate_data %} value="{{ calculate_data.efficiency|percentage_format }}" {% else %}value="{{ metric.efficiency|percentage_format }}" {% endif %} disabled/>
                         </div>
                         <div class="col-sm-2">{{ form.overtime_weekday }}</div>
                         <div class="col-sm-2">{{ form.overtime_weekend }}</div>
@@ -349,7 +350,7 @@
                         </div>
                         <div class="col-sm-2">
                             <input class="gentle" id="id_test_efficiency" title="AutoExecTime / GrossAvaiTime"
-                                   {% if calculate_data %}value="{% widthratio calculate_data.efficiency 1 100 %}%"{% else %}value="{% widthratio metric.efficiency 1 100 %}%" {% endif %} disabled/>
+                                   {% if calculate_data %}value="{{ calculate_data.efficiency|percentage_format }}"{% else %}value="{{ metric.efficiency|percentage_format }}" {% endif %} disabled/>
                         </div>
                     </div>
                 {% endif %}

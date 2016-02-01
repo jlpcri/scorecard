@@ -157,17 +157,17 @@ def fetch_collect_data_per_team_per_date(key, date):
         }
 
         if (tc_manual_dev + tc_auto_dev) > 0:
-            auto_footprint_dev_age = tc_auto_dev / (tc_manual_dev + tc_auto_dev)
+            auto_footprint_dev_age = float(tc_auto_dev) / (tc_manual_dev + tc_auto_dev)
         else:
             auto_footprint_dev_age = 0
         if (tc_manual_execution + tc_auto_execution) > 0:
-            auto_footprint_execution_age = tc_auto_execution / (tc_manual_execution + tc_auto_execution)
+            auto_footprint_execution_age = float(tc_auto_execution) / (tc_manual_execution + tc_auto_execution)
         else:
             auto_footprint_execution_age = 0
         auto_and_execution_time = tc_manual_dev_time + tc_manual_execution_time + tc_auto_dev_time + tc_auto_execution_time
         gross_available_time = len(team_personals) * 30
         if len(team_personals) > 0:
-            avg_throughput = (tc_manual_dev + tc_auto_dev + tc_manual_execution + tc_auto_execution) / len(team_personals)
+            avg_throughput = (tc_manual_dev + tc_auto_dev + tc_manual_execution + tc_auto_execution) / float(len(team_personals))
             efficiency = auto_and_execution_time / gross_available_time
         else:
             avg_throughput = 0
@@ -203,7 +203,7 @@ def fetch_collect_data_per_team_per_date(key, date):
             'elicitation_analysis_time': elicitation_analysis_time
         }
         calculate_data = {
-            'avg_throughput': story_points_execution / len(team_personals) if len(team_personals) > 0 else 0,
+            'avg_throughput': float(story_points_execution) / len(team_personals) if len(team_personals) > 0 else 0,
             'operational_cost': len(team_personals) * 40 * 45,
             'total_cost': len(team_personals) * 40 * 45
         }
