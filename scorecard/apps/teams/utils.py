@@ -1,9 +1,11 @@
 from datetime import datetime, timedelta
 from django.conf import settings
 from pytz import timezone
+
 from scorecard.apps.personals.models import TestStats, RequirementStats, LabStats
 from scorecard.apps.personals.models import InnovationStats
 from scorecard.apps.users.models import FunctionalGroup
+from models import TestMetricsConfiguration
 
 
 def context_teams(request):
@@ -109,6 +111,13 @@ def fetch_collect_data_per_team_per_date(key, date):
     tickets_closed = 0
 
     if key in ['QA', 'TE']:
+        try:
+            test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=key)
+            hours = test_metric_config.hours_per_week
+            costs_staff = test_metric_config.costs_per_hour_staff
+        except TestMetricsConfiguration.DoesNotExist:
+            hours, costs_staff = 0, 0
+
         for person in team_personals:
             overtime_weekday += person.overtime_weekday
             overtime_weekend += person.overtime_weekend
@@ -163,13 +172,6 @@ def fetch_collect_data_per_team_per_date(key, date):
         else:
             avg_throughput = 0
             efficiency = 0
-
-        if key == 'TE':
-            hours = 40 # need rewrite
-            costs_staff = 50
-        elif key == 'QA':
-            hours = 40
-            costs_staff = 40
 
         calculate_data = {
             'auto_footprint_dev_age': auto_footprint_dev_age,
