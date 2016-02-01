@@ -230,7 +230,8 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-2">
-                            <input class="gentle" id="avg_throughput" value="{{ metric.avg_throughput }}" disabled/>
+                            <input class="gentle" id="avg_throughput" title="ActiveProjects + TeamInitiatives"
+                                   value="{{ metric.avg_throughput }}" disabled/>
                         </div>
                     </div>
                 {% else %}
@@ -277,7 +278,8 @@
                         <div class="col-sm-2">{{ form.overtime_weekday }}</div>
                         <div class="col-sm-2">{{ form.overtime_weekend }}</div>
                         <div class="col-sm-2">
-                            <input class="gentle" id="avg_throughput_qi" {% if calculate_data %} value="{{ calculate_data.avg_throughput|floatformat:2 }}" {% else %} value="{{ metric.avg_throughput }}" {% endif %} disabled/>
+                            <input class="gentle" id="avg_throughput_qi" title="StoryPointsExecution / Staffs"
+                                    {% if calculate_data %} value="{{ calculate_data.avg_throughput|floatformat:2 }}" {% else %} value="{{ metric.avg_throughput }}" {% endif %} disabled/>
                         </div>
                         <div class="col-sm-2">{{ form.rework_time }}</div>
                         <div class="col-sm-2">{{ form.resource_swap_time }}</div>
@@ -292,10 +294,12 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-2">
-                            <input class="gentle" id="gross_available" {% if calculate_data %} value="{{ calculate_data.gross_available_time|floatformat:2 }}" {% else %} value="{{ metric.gross_available_time|floatformat:2 }}" {% endif %}disabled/>
+                            <input class="gentle" id="gross_available" title="Staffs * 30"
+                                    {% if calculate_data %} value="{{ calculate_data.gross_available_time|floatformat:2 }}" {% else %} value="{{ metric.gross_available_time|floatformat:2 }}" {% endif %}disabled/>
                         </div>
                         <div class="col-sm-2">
-                            <input class="gentle" id="id_efficiency" {% if calculate_data %} value="{% widthratio calculate_data.efficiency 1 100 %}%" {% else %}value="{% widthratio metric.efficiency 1 100 %}%" {% endif %} disabled/>
+                            <input class="gentle" id="id_efficiency" title="ElicitationAnalysis / GrossAvailable"
+                                    {% if calculate_data %} value="{% widthratio calculate_data.efficiency 1 100 %}%" {% else %}value="{% widthratio metric.efficiency 1 100 %}%" {% endif %} disabled/>
                         </div>
                         <div class="col-sm-2">{{ form.overtime_weekday }}</div>
                         <div class="col-sm-2">{{ form.overtime_weekend }}</div>
@@ -360,10 +364,12 @@
                     <div class="row">
                         <div class="col-sm-2">{{ form.travel_cost }}</div>
                         <div class="col-sm-2">
-                            <input class="gentle" id="operational_cost" {% if calculate_data %} value="{{ calculate_data.operational_cost|floatformat:2 }}" {% else %}value="{{ metric.operational_cost|floatformat:2 }}"{% endif %} disabled/>
+                            <input class="gentle" id="operational_cost" title="(Staffs + Contractors) * 30 * 50"
+                                    {% if calculate_data %} value="{{ calculate_data.operational_cost|floatformat:2 }}" {% else %}value="{{ metric.operational_cost|floatformat:2 }}"{% endif %} disabled/>
                         </div>
                         <div class="col-sm-2">
-                            <input class="gentle" id="rework_external_cost" {% if calculate_data %} value="{{ calculate_data.rework_external_cost|floatformat:2 }}" {% else %}value="{{ metric.rework_external_cost|floatformat:2 }}"{% endif %} disabled/>
+                            <input class="gentle" id="rework_external_cost" title="ReworkExternal * 50"
+                                    {% if calculate_data %} value="{{ calculate_data.rework_external_cost|floatformat:2 }}" {% else %}value="{{ metric.rework_external_cost|floatformat:2 }}"{% endif %} disabled/>
                         </div>
                     </div>
                 {% elif metric.functional_group.key == 'QI' %} <!-- QI Cost and Usage -->
@@ -376,10 +382,12 @@
                     <div class="row">
                         <div class="col-sm-2">{{ form.license_cost }}</div>
                         <div class="col-sm-2">
-                            <input class="gentle" id="operational_cost" {% if calculate_data %} value="{{ calculate_data.operational_cost|floatformat:2 }}" {% else %} value="{{ metric.operational_cost|floatformat:2 }}" {% endif %} disabled/>
+                            <input class="gentle" id="operational_cost" title="(Staffs + Contractors) * 40 * 45"
+                                    {% if calculate_data %} value="{{ calculate_data.operational_cost|floatformat:2 }}" {% else %} value="{{ metric.operational_cost|floatformat:2 }}" {% endif %} disabled/>
                         </div>
                         <div class="col-sm-2">
-                            <input class="gentle" id="total_cost" {% if calculate_data %} value="{{ calculate_data.total_cost|floatformat:2 }}" {% else %} value="{{ metric.total_operational_cost }}" {% endif %}disabled />
+                            <input class="gentle" id="total_cost" title="LicenseCost + OperationalCost"
+                                    {% if calculate_data %} value="{{ calculate_data.total_cost|floatformat:2 }}" {% else %} value="{{ metric.total_operational_cost }}" {% endif %}disabled />
                         </div>
                         <div class="col-sm-2">{{ form.other_savings }}</div>
                     </div>
