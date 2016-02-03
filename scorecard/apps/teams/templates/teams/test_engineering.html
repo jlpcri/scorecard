@@ -40,6 +40,22 @@
                 </tr>
             </thead>
             <tbody>
+                <tr>
+                    <td><strong>YTD Average</strong></td>
+                    <td>{{ tes_ytd.staffs.avg }}</td>
+                    <td>{{ tes_ytd.active_projects.avg }}</td>
+                    <td>{{ tes_ytd.active_tickets.avg }}</td>
+                    <td>{{ tes_ytd.avg_throughput.avg }}</td>
+                    <td>{{ tes_ytd.total_operational_cost.avg|prepend_dollars }}</td>
+                </tr>
+                <tr>
+                    <td><strong>YTD Totals</strong></td>
+                    <td>{{ tes_ytd.staffs.total }}</td>
+                    <td>{{ tes_ytd.active_projects.total }}</td>
+                    <td>{{ tes_ytd.active_tickets.total }}</td>
+                    <td>{{ tes_ytd.avg_throughput.total }}</td>
+                    <td>{{ tes_ytd.total_operational_cost.total|prepend_dollars }}</td>
+                </tr>
                 {% for item in tes %}
                     <tr>
                         <td><a href="{% url 'teams:metric_detail' item.id %}?key={{ item.functional_group.key }}">{{ item.created|date:'Y-m-d' }}</a></td>

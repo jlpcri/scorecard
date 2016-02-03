@@ -169,6 +169,7 @@ class TestMetrics(BaseMetrics):
     class Meta:
         verbose_name_plural = "Test Metrics"
 
+
 class InnovationMetrics(BaseMetrics):
     """
     Metrics for group: Quality Innovation

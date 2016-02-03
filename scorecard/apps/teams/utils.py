@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from django.conf import settings
+from django.db.models import Sum, Avg
 from pytz import timezone
 
 from scorecard.apps.personals.models import TestStats, RequirementStats, LabStats
@@ -13,19 +14,25 @@ def context_teams(request):
     start = start_end['start']
     end = start_end['end']
     qas = qis = res = tes = tls = []
+    qas_ytd = qis_ytd = res_ytd = tes_ytd = tls_ytd = {}
 
     functional_groups = FunctionalGroup.objects.all()
     for functional_group in functional_groups:
         if functional_group.key == 'QA':
             qas = functional_group.testmetrics_set.filter(created__range=(start, end)).order_by('-created')
+            qas_ytd = get_ytd_data(qas, functional_group.key)
         elif functional_group.key == 'QI':
             qis = functional_group.innovationmetrics_set.filter(created__range=(start, end)).order_by('-created')
+            qis_ytd = get_ytd_data(qis, functional_group.key)
         elif functional_group.key == 'RE':
             res = functional_group.requirementmetrics_set.filter(created__range=(start, end)).order_by('-created')
+            res_ytd = get_ytd_data(res, functional_group.key)
         elif functional_group.key == 'TE':
             tes = functional_group.testmetrics_set.filter(created__range=(start, end)).order_by('-created')
+            tes_ytd = get_ytd_data(tes, functional_group.key)
         elif functional_group.key == 'TL':
             tls = functional_group.labmetrics_set.filter(created__range=(start, end)).order_by('-created')
+            tls_ytd = get_ytd_data(tls, functional_group.key)
 
     context = {
         'qas': qas,
@@ -33,6 +40,12 @@ def context_teams(request):
         'res': res,
         'tes': tes,
         'tls': tls,
+
+        'qas_ytd': qas_ytd,
+        'qis_ytd': qis_ytd,
+        'res_ytd': res_ytd,
+        'tes_ytd': tes_ytd,
+        'tls_ytd': tls_ytd,
 
         'start': start,
         'end': end
@@ -254,3 +267,115 @@ def fetch_collect_data_per_team_per_date(key, date):
         'form_data': form_data,
         'calculate_data': calculate_data
     }
+
+
+def get_ytd_data(group, key):
+    data = {}
+    total_costs, total_active_projects, total_active_tickets, total_avg_throughput = 0, 0, 0, 0
+
+    if key in ['QA', 'TE']:
+        for item in group:
+            total_active_projects += item.active_projects
+            total_active_tickets += item.active_tickets
+            total_avg_throughput += item.avg_throughput
+            total_costs += item.total_operational_cost
+
+        data = {
+            'staffs': {
+                'total': group.aggregate(Sum('staffs'))['staffs__sum'],
+                'avg': group.aggregate(Avg('staffs'))['staffs__avg']
+            },
+            'active_projects': {
+                'total': total_active_projects,
+                'avg': total_active_projects / len(group)
+            },
+            'active_tickets': {
+                'total': total_active_tickets,
+                'avg': total_active_tickets / len(group)
+            },
+            'avg_throughput': {
+                'total': total_avg_throughput,
+                'avg': total_avg_throughput / len(group)
+            },
+            'total_operational_cost': {
+                'total': total_costs,
+                'avg': total_costs / len(group)
+            }
+        }
+
+    elif key == 'QI':
+        for item in group:
+            total_costs += item.total_operational_cost
+
+        data = {
+            'staffs': {
+                'total': group.aggregate(Sum('staffs'))['staffs__sum'],
+                'avg': group.aggregate(Avg('staffs'))['staffs__avg']
+            },
+            'story_points_backlog': {
+                'total': group.aggregate(Sum('story_points_backlog'))['story_points_backlog__sum'],
+                'avg': group.aggregate(Avg('story_points_backlog'))['story_points_backlog__avg']
+            },
+            'avg_team_size': {
+                'total': group.aggregate(Sum('avg_team_size'))['avg_team_size__sum'],
+                'avg': group.aggregate(Avg('avg_team_size'))['avg_team_size__avg']
+            },
+            'total_operational_cost': {
+                'total': total_costs,
+                'avg': total_costs / len(group)
+            },
+        }
+    elif key == 'RE':
+        for item in group:
+            total_active_projects += item.active_projects
+            total_avg_throughput += item.avg_throughput
+            total_costs += item.total_operational_cost
+
+        data = {
+            'staffs': {
+                'total': group.aggregate(Sum('staffs'))['staffs__sum'],
+                'avg': group.aggregate(Avg('staffs'))['staffs__avg']
+            },
+            'active_projects': {
+                'total': total_active_projects,
+                'avg': total_active_projects / len(group)
+            },
+            'elicitation_analysis_time': {
+                'total': group.aggregate(Sum('elicitation_analysis_time'))['elicitation_analysis_time__sum'],
+                'avg': group.aggregate(Avg('elicitation_analysis_time'))['elicitation_analysis_time__avg']
+            },
+            'avg_throughput': {
+                'total': total_avg_throughput,
+                'avg': total_avg_throughput / len(group)
+            },
+            'total_operational_cost': {
+                'total': total_costs,
+                'avg': total_costs / len(group)
+            }
+        }
+    elif key == 'TL':
+        data = {
+            'staffs': {
+                'total': group.aggregate(Sum('staffs'))['staffs__sum'],
+                'avg': group.aggregate(Avg('staffs'))['staffs__avg']
+            },
+            'tickets_received': {
+                'total': group.aggregate(Sum('tickets_received'))['tickets_received__sum'],
+                'avg': group.aggregate(Avg('tickets_received'))['tickets_received__avg']
+            },
+            'tickets_closed': {
+                'total': group.aggregate(Sum('tickets_closed'))['tickets_closed__sum'],
+                'avg': group.aggregate(Avg('tickets_closed'))['tickets_closed__avg']
+            },
+            'virtual_machines': {
+                'total': group.aggregate(Sum('virtual_machines'))['virtual_machines__sum'],
+                'avg': group.aggregate(Avg('virtual_machines'))['virtual_machines__avg']
+            },
+            'license_cost': {
+                'total': group.aggregate(Sum('license_cost'))['license_cost__sum'],
+                'avg': group.aggregate(Avg('license_cost'))['license_cost__avg']
+            }
+        }
+
+
+    return data
