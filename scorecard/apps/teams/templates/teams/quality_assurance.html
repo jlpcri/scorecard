@@ -41,16 +41,32 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for item in qas %}
                     <tr>
-                        <td><a href="{% url 'teams:metric_detail' item.id %}?key={{ item.functional_group.key }}">{{ item.created|date:'Y-m-d' }}</a></td>
-                        <td draggable="true" ondragstart="dragQA(event)">{{ item.staffs }}</td>
-                        <td draggable="true" ondragstart="dragQA(event)">{{ item.active_projects }}</td>
-                        <td draggable="true" ondragstart="dragQA(event)">{{ item.active_tickets }}</td>
-                        <td draggable="true" ondragstart="dragQA(event)">{{ item.avg_throughput|floatformat:2 }}</td>
-                        <td draggable="true" ondragstart="dragQA(event)">{{ item.total_operational_cost|prepend_dollars }}</td>
+                        <td><strong>YTD Average</strong></td>
+                        <td>{{ qas_ytd.staffs.avg }}</td>
+                        <td>{{ qas_ytd.active_projects.avg }}</td>
+                        <td>{{ qas_ytd.active_tickets.avg }}</td>
+                        <td>{{ qas_ytd.avg_throughput.avg }}</td>
+                        <td>{{ qas_ytd.total_operational_cost.avg|prepend_dollars }}</td>
                     </tr>
-                {% endfor %}
+                    <tr>
+                        <td><strong>YTD Totals</strong></td>
+                        <td>{{ qas_ytd.staffs.total }}</td>
+                        <td>{{ qas_ytd.active_projects.total }}</td>
+                        <td>{{ qas_ytd.active_tickets.total }}</td>
+                        <td>{{ qas_ytd.avg_throughput.total }}</td>
+                        <td>{{ qas_ytd.total_operational_cost.total|prepend_dollars }}</td>
+                    </tr>
+                    {% for item in qas %}
+                        <tr>
+                            <td><a href="{% url 'teams:metric_detail' item.id %}?key={{ item.functional_group.key }}">{{ item.created|date:'Y-m-d' }}</a></td>
+                            <td draggable="true" ondragstart="dragQA(event)">{{ item.staffs }}</td>
+                            <td draggable="true" ondragstart="dragQA(event)">{{ item.active_projects }}</td>
+                            <td draggable="true" ondragstart="dragQA(event)">{{ item.active_tickets }}</td>
+                            <td draggable="true" ondragstart="dragQA(event)">{{ item.avg_throughput|floatformat:2 }}</td>
+                            <td draggable="true" ondragstart="dragQA(event)">{{ item.total_operational_cost|prepend_dollars }}</td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
