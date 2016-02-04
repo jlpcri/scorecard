@@ -43,10 +43,10 @@
                 <tbody>
                     <tr>
                         <td><strong>YTD Average</strong></td>
-                        <td>{{ qas_ytd.staffs.avg }}</td>
-                        <td>{{ qas_ytd.active_projects.avg }}</td>
-                        <td>{{ qas_ytd.active_tickets.avg }}</td>
-                        <td>{{ qas_ytd.avg_throughput.avg }}</td>
+                        <td>{{ qas_ytd.staffs.avg|floatformat:2 }}</td>
+                        <td>{{ qas_ytd.active_projects.avg|floatformat:2 }}</td>
+                        <td>{{ qas_ytd.active_tickets.avg|floatformat:2 }}</td>
+                        <td>{{ qas_ytd.avg_throughput.avg|floatformat:2 }}</td>
                         <td>{{ qas_ytd.total_operational_cost.avg|prepend_dollars }}</td>
                     </tr>
                     <tr>

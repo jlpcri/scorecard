@@ -40,9 +40,9 @@
                 <tbody>
                     <tr>
                         <td><strong>YTD Average</strong></td>
-                        <td>{{ qis_ytd.staffs.avg }}</td>
-                        <td>{{ qis_ytd.story_points_backlog.avg }}</td>
-                        <td>{{ qis_ytd.avg_team_size.avg }}</td>
+                        <td>{{ qis_ytd.staffs.avg|floatformat:2 }}</td>
+                        <td>{{ qis_ytd.story_points_backlog.avg|floatformat:2 }}</td>
+                        <td>{{ qis_ytd.avg_team_size.avg|floatformat:2 }}</td>
                         <td>{{ qis_ytd.total_operational_cost.avg|prepend_dollars }}</td>
                     </tr>
                     <tr>

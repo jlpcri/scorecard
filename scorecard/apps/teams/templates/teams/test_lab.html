@@ -43,10 +43,10 @@
             <tbody>
                 <tr>
                     <td><strong>YTD Average</strong></td>
-                    <td>{{ tls_ytd.staffs.avg }}</td>
-                    <td>{{ tls_ytd.tickets_received.avg }}</td>
-                    <td>{{ tls_ytd.tickets_closed.avg }}</td>
-                    <td>{{ tls_ytd.virtual_machines.avg }}</td>
+                    <td>{{ tls_ytd.staffs.avg|floatformat:2 }}</td>
+                    <td>{{ tls_ytd.tickets_received.avg|floatformat:2 }}</td>
+                    <td>{{ tls_ytd.tickets_closed.avg|floatformat:2 }}</td>
+                    <td>{{ tls_ytd.virtual_machines.avg|floatformat:2 }}</td>
                     <td>{{ tls_ytd.license_cost.avg|prepend_dollars }}</td>
                 </tr>
                 <tr>
