@@ -270,6 +270,7 @@ def fetch_collect_data_per_team_per_date(key, date):
 
 
 def get_ytd_data(group, key):
+    count = len(group)
     data = {}
     total_costs, total_active_projects, total_active_tickets, total_avg_throughput = 0, 0, 0, 0
 
@@ -287,19 +288,19 @@ def get_ytd_data(group, key):
             },
             'active_projects': {
                 'total': total_active_projects,
-                'avg': total_active_projects / len(group)
+                'avg': total_active_projects / count if count > 0 else 0
             },
             'active_tickets': {
                 'total': total_active_tickets,
-                'avg': total_active_tickets / len(group)
+                'avg': total_active_tickets / count if count > 0 else 0
             },
             'avg_throughput': {
                 'total': total_avg_throughput,
-                'avg': total_avg_throughput / len(group)
+                'avg': total_avg_throughput / count if count > 0 else 0
             },
             'total_operational_cost': {
                 'total': total_costs,
-                'avg': total_costs / len(group)
+                'avg': total_costs / count if count > 0 else 0
             }
         }
 
@@ -322,7 +323,7 @@ def get_ytd_data(group, key):
             },
             'total_operational_cost': {
                 'total': total_costs,
-                'avg': total_costs / len(group)
+                'avg': total_costs / count if count > 0 else 0
             },
         }
     elif key == 'RE':
@@ -338,7 +339,7 @@ def get_ytd_data(group, key):
             },
             'active_projects': {
                 'total': total_active_projects,
-                'avg': total_active_projects / len(group)
+                'avg': total_active_projects / count if count > 0 else 0
             },
             'elicitation_analysis_time': {
                 'total': group.aggregate(Sum('elicitation_analysis_time'))['elicitation_analysis_time__sum'],
@@ -346,11 +347,11 @@ def get_ytd_data(group, key):
             },
             'avg_throughput': {
                 'total': total_avg_throughput,
-                'avg': total_avg_throughput / len(group)
+                'avg': total_avg_throughput / count if count > 0 else 0
             },
             'total_operational_cost': {
                 'total': total_costs,
-                'avg': total_costs / len(group)
+                'avg': total_costs / count if count > 0 else 0
             }
         }
     elif key == 'TL':
@@ -376,6 +377,5 @@ def get_ytd_data(group, key):
                 'avg': group.aggregate(Avg('license_cost'))['license_cost__avg']
             }
         }
-
 
     return data
