@@ -42,10 +42,10 @@
             <tbody>
                 <tr>
                     <td><strong>YTD Average</strong></td>
-                    <td>{{ res_ytd.staffs.avg }}</td>
-                    <td>{{ res_ytd.active_projects.avg }}</td>
-                    <td>{{ res_ytd.elicitation_analysis_time.avg }}</td>
-                    <td>{{ res_ytd.avg_throughput.avg }}</td>
+                    <td>{{ res_ytd.staffs.avg|floatformat:2 }}</td>
+                    <td>{{ res_ytd.active_projects.avg|floatformat:2 }}</td>
+                    <td>{{ res_ytd.elicitation_analysis_time.avg|floatformat:2 }}</td>
+                    <td>{{ res_ytd.avg_throughput.avg|floatformat:2 }}</td>
                     <td>{{ res_ytd.total_operational_cost.avg|prepend_dollars }}</td>
                 </tr>
                 <tr>
