@@ -8,7 +8,7 @@ from django.template import RequestContext
 from scorecard.apps.core.views import check_user_team
 
 from scorecard.apps.personals.tasks import weekly_personal_stats_new
-from scorecard.apps.personals.utils import get_distinct_dates
+from scorecard.apps.personals.utils import get_distinct_dates, check_new_login_on_friday
 from scorecard.apps.users.models import FunctionalGroup, HumanResource
 from models import InnovationStats, LabStats, RequirementStats, TestStats
 from scorecard.apps.users.views import user_is_superuser
@@ -105,6 +105,7 @@ def weekly_personal_stats_new_manually(request):
     :param request:
     :return: result valid or error
     """
+    check_new_login_on_friday()
     result = weekly_personal_stats_new()
     if not result['valid']:
         messages.error(request, result['message'])
