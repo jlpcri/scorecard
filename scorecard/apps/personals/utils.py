@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from itertools import groupby
 
 from models import InnovationStats, TestStats, RequirementStats, LabStats
@@ -20,15 +20,20 @@ def extract_date(qi):
 
 
 def check_new_login_on_friday():
-    if date.today().isoweekday() == 5:
+    today = date.today()
+    last_friday = today - timedelta(days=today.isoweekday() + 2)
+    print today, last_friday
+    if today.isoweekday() == 5:
         for fg in FunctionalGroup.objects.all():
-            check_new_login_on_friday_per_team(fg.key)
+            check_new_login_on_friday_per_team(fg.key, last_friday)
+    else:
+        print 'Not Friday'
 
 
-def check_new_login_on_friday_per_team(key):
+def check_new_login_on_friday_per_team(key, today):
     hrs = HumanResource.objects.filter(functional_group__key=key)
     personals = []
-    today = date.today()
+    # today = date.today()
     if key in ['QA', 'TE']:
         personals = TestStats.objects.filter(human_resource__functional_group__key=key,
                                              created__year=today.year,

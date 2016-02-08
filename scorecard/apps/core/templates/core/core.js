@@ -59,7 +59,8 @@ function attachDateRangePicker() {
             'Today': [moment(), moment()],
             'Last 30 Days': [moment().subtract(29, 'days'), moment()],
             'Last 60 Days': [moment().subtract(59, 'days'), moment()],
-            'This Year': [moment().startOf('year'), moment().endOf('year')]
+            'This Year': [moment().startOf('year'), moment().endOf('year')],
+            'Last Year': [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')]
         }
     }, setDate(start, end));
 }
