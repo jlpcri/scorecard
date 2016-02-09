@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.test import Client, TestCase
 from django.core.urlresolvers import resolve, reverse
 
-from scorecard.apps.teams.models import InnovationMetrics
+from scorecard.apps.teams.models import TestMetrics
 from scorecard.apps.teams.views import teams, metric_detail
 from scorecard.apps.users.models import FunctionalGroup, HumanResource
 
@@ -102,8 +102,8 @@ class TeamsViewTest(TestCase):
 class MetricDetailTest(TestCase):
     def setUp(self):
         self.client = Client()
-        self.fg = FunctionalGroup.objects.create(name='QI')
-        self.metric = InnovationMetrics.objects.create(
+        self.fg = FunctionalGroup.objects.create(name='QA')
+        self.metric = TestMetrics.objects.create(
             functional_group=self.fg
         )
 
@@ -130,8 +130,8 @@ class MetricDetailTest(TestCase):
         self.assertEqual(found.func, metric_detail)
 
     def test_metric_detail_successful_with_valid_id(self):
-        response = self.client.get(reverse('teams:metric_detail', args=[self.metric.id, ])+'?key=QI',
+        response = self.client.get(reverse('teams:metric_detail', args=[self.metric.id, ])+'?key=QA',
                                    follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.metric.functional_group.name + ' Metric Detail')
-        self.assertContains(response, self.metric.created.strftime('%b. %d, %Y'))
+        self.assertContains(response, self.metric.created.strftime('%Y-%m-%d'))

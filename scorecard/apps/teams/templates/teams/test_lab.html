@@ -41,16 +41,32 @@
             </tr>
             </thead>
             <tbody>
-            {% for item in tls %}
-            <tr>
-                <td><a href="{% url 'teams:metric_detail' item.id %}?key={{ item.functional_group.key }}">{{ item.created|date:'Y-m-d' }}</a></td>
-                <td draggable="true" ondragstart="dragTL(event)">{{ item.staffs }}</td>
-                <td draggable="true" ondragstart="dragTL(event)">{{ item.tickets_received }}</td>
-                <td draggable="true" ondragstart="dragTL(event)">{{ item.tickets_closed }}</td>
-                <td draggable="true" ondragstart="dragTL(event)">{{ item.virtual_machines }}</td>
-                <td draggable="true" ondragstart="dragTL(event)">{{ item.license_cost|prepend_dollars }}</td>
-            </tr>
-            {% endfor %}
+                <tr>
+                    <td><strong>YTD Average</strong></td>
+                    <td>{{ tls_ytd.staffs.avg|floatformat:2 }}</td>
+                    <td>{{ tls_ytd.tickets_received.avg|floatformat:2 }}</td>
+                    <td>{{ tls_ytd.tickets_closed.avg|floatformat:2 }}</td>
+                    <td>{{ tls_ytd.virtual_machines.avg|floatformat:2 }}</td>
+                    <td>{{ tls_ytd.license_cost.avg|prepend_dollars }}</td>
+                </tr>
+                <tr>
+                    <td><strong>YTD Totals</strong></td>
+                    <td>{{ tls_ytd.staffs.total }}</td>
+                    <td>{{ tls_ytd.tickets_received.total }}</td>
+                    <td>{{ tls_ytd.tickets_closed.total }}</td>
+                    <td>{{ tls_ytd.virtual_machines.total }}</td>
+                    <td>{{ tls_ytd.license_cost.total|prepend_dollars }}</td>
+                </tr>
+                {% for item in tls %}
+                    <tr>
+                        <td><a href="{% url 'teams:metric_detail' item.id %}?key={{ item.functional_group.key }}">{{ item.created|date:'Y-m-d' }}</a></td>
+                        <td draggable="true" ondragstart="dragTL(event)">{{ item.staffs }}</td>
+                        <td draggable="true" ondragstart="dragTL(event)">{{ item.tickets_received }}</td>
+                        <td draggable="true" ondragstart="dragTL(event)">{{ item.tickets_closed }}</td>
+                        <td draggable="true" ondragstart="dragTL(event)">{{ item.virtual_machines }}</td>
+                        <td draggable="true" ondragstart="dragTL(event)">{{ item.license_cost|prepend_dollars }}</td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

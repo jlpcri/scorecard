@@ -10,3 +10,8 @@ def prepend_dollars(dollars):
         return '$%s%s' % (intcomma(int(dollars)), ('%0.2f' % dollars)[-3:])
     else:
         return '$0.00'
+
+
+@register.filter
+def percentage_format(value):
+    return '{0:.2f}%'.format(value * 100)

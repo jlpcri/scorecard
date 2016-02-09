@@ -187,7 +187,8 @@ class TestFormTest(TestCase):
             'tc_auto_execution_time': random.randint(1, 100),
             'defect_caught': random.randint(1, 100),
             'uat_defects_not_prevented': random.randint(1, 100),
-            'standards_violated': random.randint(1, 100)
+            'standards_violated': random.randint(1, 100),
+            'resource_swap_time': random.randint(1, 100)
         }
         form = TestForm(instance=self.personal_stat, data=data)
         self.assertTrue(form.is_valid())
@@ -209,5 +210,6 @@ class TestFormTest(TestCase):
             'tc_auto_execution_time': ['This field is required.'],
             'defect_caught': ['This field is required.'],
             'uat_defects_not_prevented': ['This field is required.'],
-            'standards_violated': ['This field is required.']
+            'standards_violated': ['This field is required.'],
+            'resource_swap_time': ['This field is required.']
         })
