@@ -1,4 +1,5 @@
 import json
+import socket
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
@@ -105,7 +106,9 @@ def weekly_personal_stats_new_manually(request):
     :param request:
     :return: result valid or error
     """
-    check_new_login_on_friday()
+    if socket.gethostname() == 'sliu-OptiPlex-GX520':
+        check_new_login_on_friday()
+
     result = weekly_personal_stats_new()
     if not result['valid']:
         messages.error(request, result['message'])
