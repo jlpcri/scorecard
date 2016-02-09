@@ -708,3 +708,26 @@ function drawD3LineChart(chart_object) {
         .style("stroke-width", "2.5");
 }
 
+
+function allow_drop(tableid, event) {
+    event.preventDefault();
+}
+
+function drag(tableid, event) {
+    var target = event.target || event.srcElement;
+    alert("718  " + tableid + "  " + target.id);
+    //home_dnd_id = target.id;
+    event.dataTransfer.setData("text", event.target.id);
+}
+
+function drop(tableid, event) {
+    event.preventDefault();
+
+    var target = event.target || event.srcElement;
+    alert("727  " + tableid + "  " + target.id);
+
+    //var temp_array = home_dnd_id.split("_");
+    //var temp_column = temp_array[2];
+    //add_chart_to_table_home(event, temp_column);
+}
+

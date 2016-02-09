@@ -146,7 +146,7 @@
 
 {% block body %}
     <div class="container west_container">
-        <h1>Score Card</h1>
+        <h1>Score Card LocalHost</h1>
     <!--
     <h4> Scorecard, now available with QEI team: </h4>
     <ul>
@@ -218,11 +218,11 @@
                                         <tbody class="metrics_tbody">
                                         {% for pq in pq_data %}
                                         <tr>
-                                            <td draggable="true" ondragstart="drag_home(event)">{{ pq.staffs }}</td>
-                                            <td draggable="true" ondragstart="drag_home(event)">{{ pq.active_projects }}</td>
-                                            <td draggable="true" ondragstart="drag_home(event)">{{ pq.active_tickets }}</td>
-                                            <td draggable="true" ondragstart="drag_home(event)">{{ pq.avg_throughput|floatformat:2 }}</td>
-                                            <td draggable="true" ondragstart="drag_home(event)">{{ pq.total_operational_cost }}</td>
+                                            <td draggable="true" ondragstart="drag('home',event)">{{ pq.staffs }}</td>
+                                            <td draggable="true" ondragstart="drag('home',event)">{{ pq.active_projects }}</td>
+                                            <td draggable="true" ondragstart="drag('home',event)">{{ pq.active_tickets }}</td>
+                                            <td draggable="true" ondragstart="drag('home',event)">{{ pq.avg_throughput|floatformat:2 }}</td>
+                                            <td draggable="true" ondragstart="drag('home',event)">{{ pq.total_operational_cost }}</td>
                                         </tr>
                                         {% endfor %}
                                         </tbody>
@@ -274,32 +274,32 @@
                                             {% for qa in qa_data %}
                                                 <tr>
                                                     <td>{{ qa.created|date:'Y-m-d' }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.staffs }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.active_projects }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.active_tickets }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.avg_throughput|floatformat:2 }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.total_operational_cost | prepend_dollars }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.team_initiative }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.ticket_backlog }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.ticket_prep }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.ticket_execution }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.ticket_closed }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.project_backlog }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.project_prep }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.project_execution }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.project_closed }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.tc_manual_dev }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.tc_manual_dev_time }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.tc_manual_execution }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.tc_manual_execution_time }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.tc_auto_dev }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.tc_auto_dev_time }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.tc_auto_execution }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.tc_auto_execution_time }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.defect_caught }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.uat_defects_not_prevented }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.standards_violated }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qa.avg_time_frame }}</td>
+                                                    <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.staffs }}</td>
+                                                    <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.active_projects }}</td>
+                                                    <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.active_tickets }}</td>
+                                                    <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.avg_throughput|floatformat:2 }}</td>
+                                                    <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.total_operational_cost | prepend_dollars }}</td>
+                                                    <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.team_initiative }}</td>
+                                                    <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.ticket_backlog }}</td>
+                                                    <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.ticket_prep }}</td>
+                                                    <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.ticket_execution }}</td>
+                                                    <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.ticket_closed }}</td>
+                                                    <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.project_backlog }}</td>
+                                                    <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.project_prep }}</td>
+                                                    <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.project_execution }}</td>
+                                                    <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.project_closed }}</td>
+                                                    <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.tc_manual_dev }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qa.tc_manual_dev_time }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qa.tc_manual_execution }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qa.tc_manual_execution_time }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qa.tc_auto_dev }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qa.tc_auto_dev_time }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qa.tc_auto_execution }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qa.tc_auto_execution_time }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qa.defect_caught }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qa.uat_defects_not_prevented }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qa.standards_violated }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qa.avg_time_frame }}</td>
                                                 </tr>
                                             {% endfor %}
                                             </tbody>
@@ -342,25 +342,25 @@
                                             {% for qi in qi_data %}
                                                 <tr>
                                                     <td>{{ qi.created|date:'Y-m-d' }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qi.staffs }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qi.story_points_backlog }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qi.story_points_prep }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qi.story_points_execution }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qi.avg_team_size }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qi.total_operational_cost | prepend_dollars }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qi.unit_tests_dev }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qi.unit_tests_coverage }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qi.documentation_coverage }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qi.defects_in_dev }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qi.elicitation_analysis_time }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qi.revisions }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qi.active_projects }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qi.uat_defects_not_prevented }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qi.pheme_manual_tests }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qi.pheme_auto_tests }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qi.visilog_txl_parsed }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qi.visilog_txl_schema_violation }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ qi.avg_throughput }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qi.staffs }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qi.story_points_backlog }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qi.story_points_prep }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qi.story_points_execution }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qi.avg_team_size }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qi.total_operational_cost | prepend_dollars }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qi.unit_tests_dev }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qi.unit_tests_coverage }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qi.documentation_coverage }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qi.defects_in_dev }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qi.elicitation_analysis_time }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qi.revisions }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qi.active_projects }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qi.uat_defects_not_prevented }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qi.pheme_manual_tests }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qi.pheme_auto_tests }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qi.visilog_txl_parsed }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qi.visilog_txl_schema_violation }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ qi.avg_throughput }}</td>
                                                 </tr>
                                             {% endfor %}
                                             </tbody>
@@ -398,20 +398,20 @@
                                             {% for re in re_data %}
                                                 <tr>
                                                     <td>{{ re.created|date:'Y-m-d' }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ re.staffs }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ re.active_projects }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ re.elicitation_analysis_time }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ re.avg_throughput }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ re.total_operational_cost | prepend_dollars }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ re.backlog }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ re.team_initiative }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ re.revisions }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ re.slas_missed }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ re.rework_external_time }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ re.travel_cost | prepend_dollars }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ re.gross_available_time }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ re.efficiency|floatformat:2 }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ re.rework_external_cost }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ re.staffs }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ re.active_projects }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ re.elicitation_analysis_time }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ re.avg_throughput }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ re.total_operational_cost | prepend_dollars }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ re.backlog }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ re.team_initiative }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ re.revisions }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ re.slas_missed }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ re.rework_external_time }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ re.travel_cost | prepend_dollars }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ re.gross_available_time }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ re.efficiency|floatformat:2 }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ re.rework_external_cost }}</td>
                                                 </tr>
                                             {% endfor %}
                                             </tbody>
@@ -461,32 +461,32 @@
                                             {% for te in te_data %}
                                                 <tr>
                                                     <td>{{ te.created|date:'Y-m-d' }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.staffs }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.active_projects }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.active_tickets }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.avg_throughput|floatformat:2 }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.total_operational_cost | prepend_dollars }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.team_initiative }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.ticket_backlog }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.ticket_prep }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.ticket_execution }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.ticket_closed }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.project_backlog }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.project_prep }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.project_execution }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.project_closed }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.tc_manual_dev }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.tc_manual_dev_time }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.tc_manual_execution }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.tc_manual_execution_time }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.tc_auto_dev }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.tc_auto_dev_time }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.tc_auto_execution }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.tc_auto_execution_time }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.defect_caught }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.uat_defects_not_prevented }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.standards_violated }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ te.avg_time_frame }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.staffs }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.active_projects }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.active_tickets }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.avg_throughput|floatformat:2 }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.total_operational_cost | prepend_dollars }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.team_initiative }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.ticket_backlog }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.ticket_prep }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.ticket_execution }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.ticket_closed }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.project_backlog }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.project_prep }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.project_execution }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.project_closed }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.tc_manual_dev }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.tc_manual_dev_time }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.tc_manual_execution }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.tc_manual_execution_time }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.tc_auto_dev }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.tc_auto_dev_time }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.tc_auto_execution }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.tc_auto_execution_time }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.defect_caught }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.uat_defects_not_prevented }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.standards_violated }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ te.avg_time_frame }}</td>
                                                 </tr>
                                             {% endfor %}
                                             </tbody>
@@ -518,14 +518,14 @@
                                             {% for tl in tl_data %}
                                                 <tr>
                                                     <td>{{ tl.created|date:'Y-m-d' }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ tl.staffs }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ tl.tickets_received }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ tl.tickets_closed }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ tl.virtual_machines }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ tl.physical_machines }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ tl.power_consumption_ups_a }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ tl.power_consumption_ups_b }}</td>
-                                                    <td draggable="true" ondragstart="drag_home(event)">{{ tl.license_cost | prepend_dollars }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ tl.staffs }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ tl.tickets_received }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ tl.tickets_closed }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ tl.virtual_machines }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ tl.physical_machines }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ tl.power_consumption_ups_a }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ tl.power_consumption_ups_b }}</td>
+                                                    <td draggable="true" ondragstart="drag('home',event)">{{ tl.license_cost | prepend_dollars }}</td>
                                                 </tr>
                                             {% endfor %}
                                             </tbody>
@@ -666,7 +666,7 @@
         <div class="container">
 
             <section>
-                <div id="dnd_div_home" class="dnd_button_div" ondrop="drop_home(event)" ondragover="allow_drop_home(event)">Drop
+                <div id="dnd_div_home" class="dnd_button_div" ondrop="drop('home',event)" ondragover="allow_drop('home',event)">Drop
                     Target
                 </div>
             </section>
@@ -884,22 +884,6 @@
         }
 
         // start of dnd section
-        function allow_drop_home(event) {
-            event.preventDefault();
-        }
-
-        function drag_home(event) {
-            var target = event.target || event.srcElement;
-            home_dnd_id = target.id;
-            event.dataTransfer.setData("text", event.target.id);
-        }
-
-        function drop_home(event) {
-            event.preventDefault();
-            var temp_array = home_dnd_id.split("_");
-            var temp_column = temp_array[2];
-            add_chart_to_table_home(event, temp_column);
-        }
 
         // end of dnd section
 

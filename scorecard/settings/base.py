@@ -53,7 +53,7 @@ AUTH_LDAP_USER_ATTR_MAP = {
 SECRET_KEY = 'gtj7of6ig(#vs%z)wg5o9@9+6jzx52gc=iidd%c$9jb#6%3jhv'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -114,13 +114,23 @@ WSGI_APPLICATION = 'scorecard.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'scorecard',
+        'USER': 'scorecard',
+        'PASSWORD': 'scorecard_development',
+        'HOST': 'qaci01.wic.west.com',
+        'PORT': '5433'  # another postgres instance
     }
 }
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
