@@ -1,16 +1,68 @@
 {% extends 'core/base.html' %}
 
-{% block title %} Congregations {% endblock %}
+{% block title %} Automations {% endblock %}
+
+{% block subnav %}
+    <div class="container" style="margin-top: 10px;">
+        {% if user.is_superuser or user.humanresource.manager %}
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="col-xs-2">
+                    <small>
+                        <a href="{% url 'automations:automation_new' %}"><i class="fa fa-pencil fa-fw"></i> New Automation Script</a>
+                    </small>
+                </div>
+            </div>
+        {% endif %}
+        <ul id="subnav-tabs" class="nav nav-tabs">
+            {% if user.is_superuser %}
+                <li><a href="#quality_assurance" data-toggle="tab">Quality Assurance</a> </li>
+                <li><a href="#quality_innovation" data-toggle="tab">Quality Innovation</a> </li>
+                <li><a href="#requirements_engineering" data-toggle="tab">Requirements Engineering</a> </li>
+                <li><a href="#test_engineering" data-toggle="tab">Test Engineering</a> </li>
+                <li><a href="#test_lab" data-toggle="tab">Test Lab</a> </li>
+            {% elif user.humanresource.manager  %}
+                {% if user.humanresource.functional_group.key == 'QA' %}
+                    <li><a href="#quality_assurance" data-toggle="tab">Quality Assurance</a> </li>
+                {% elif user.humanresource.functional_group.key == 'QI' %}
+                    <li><a href="#quality_innovation" data-toggle="tab">Quality Innovation</a> </li>
+                {% elif user.humanresource.functional_group.key == 'RE' %}
+                    <li><a href="#requirements_engineering" data-toggle="tab">Requirements Engineering</a> </li>
+                {% elif user.humanresource.functional_group.key == 'TE' %}
+                    <li><a href="#test_engineering" data-toggle="tab">Test Engineering</a> </li>
+                {% elif user.humanresource.functional_group.key == 'TL' %}
+                    <li><a href="#test_lab" data-toggle="tab">Test Lab</a> </li>
+                {% endif %}
+            {% else %}
+                You are not team manager.
+            {% endif %}
+        </ul>
+    </div>
+{% endblock %}
 
 {% block body %}
     <div class="container">
-        <h1>Automations</h1>
-        <h4>Automatically gather data from:</h4>
-        <ul>
-            <li>jira.west.com</li>
-            <li>isr.west.com</li>
-            <li>Confluence</li>
-            <li>Pheme</li>
-        </ul>
+        <div class="tab-content">
+            <div class="tab-pane" id="quality_assurance">
+                {% include 'automations/quality_assurance.html' %}
+            </div>
+
+            <div class="tab-pane" id="quality_innovation">
+                {% include 'automations/quality_innovation.html' %}
+            </div>
+
+            <div class="tab-pane" id="requirements_engineering">
+                {% include 'automations/requirements_engineering.html' %}
+            </div>
+
+            <div class="tab-pane" id="test_engineering">
+                {% include 'automations/test_engineering.html' %}
+            </div>
+
+            <div class="tab-pane" id="test_lab">
+                {% include 'automations/test_lab.html' %}
+            </div>
+
+        </div>
+
     </div>
 {% endblock %}

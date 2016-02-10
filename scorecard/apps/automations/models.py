@@ -130,7 +130,7 @@ class LabAutomation(BaseAutomation):
         (POWER_UPS_B, 'Power Consumption UPS B'),
         (LICENSE_COST, 'License Cost')
     )
-    column_filed = models.CharField(max_length=50,
+    column_field = models.CharField(max_length=50,
                                     choices=COLUMN_FIELDS_CHOICES,
                                     default=BaseAutomation.COMPLIMENTS,
                                     unique=True)
