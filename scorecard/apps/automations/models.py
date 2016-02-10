@@ -81,7 +81,7 @@ class Automation(models.Model):
     script_name = models.TextField(default='')
     script_file = models.FileField(upload_to=script_location, blank=True, null=True)
 
-    column_fields = models.CharField(max_length=50)
+    column_field = models.CharField(max_length=50)
 
     def __unicode__(self):
         return '{0}: {1}: {2}: {3}'.format(self.functional_group.key,

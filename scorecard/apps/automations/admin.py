@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from models import InnovationAutomation, LabAutomation, RequirementAutomation, TestAutomation
+from models import Automation
 
-for m in [InnovationAutomation, LabAutomation, RequirementAutomation, TestAutomation]:
+for m in [Automation]:
     admin.site.register(m)
