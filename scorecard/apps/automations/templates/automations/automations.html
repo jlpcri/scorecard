@@ -8,7 +8,7 @@
             <div class="row" style="margin-bottom: 10px;">
                 <div class="col-xs-2">
                     <small>
-                        <a href="{% url 'automations:automation_new' %}"><i class="fa fa-pencil fa-fw"></i> New Automation Script</a>
+                        <a href="#" data-toggle="modal" data-target="#automation-new-modal"><i class="fa fa-pencil fa-fw"></i> New Automation Script</a>
                     </small>
                 </div>
             </div>
@@ -61,8 +61,9 @@
             <div class="tab-pane" id="test_lab">
                 {% include 'automations/test_lab.html' %}
             </div>
-
         </div>
+
+        {% include 'automations/automations_modal.html' %}
 
     </div>
 {% endblock %}

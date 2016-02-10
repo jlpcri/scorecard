@@ -24,8 +24,8 @@ class BaseAutomation(models.Model):
     last_successful_run = models.BooleanField(default=True)
     result = models.DecimalField(max_digits=15, decimal_places=2, default=0)  # result of script running
 
-    script_name = models.TextField()
-    script_file = models.FileField(upload_to=script_location)
+    script_name = models.TextField(default='')
+    script_file = models.FileField(upload_to=script_location, blank=True, null=True)
 
     COLUMN_FIELDS_CHOICES = (
         (COMPLIMENTS, 'Compliments'),

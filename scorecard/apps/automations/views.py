@@ -1,8 +1,10 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template import RequestContext
 
 from models import InnovationAutomation, LabAutomation, RequirementAutomation, TestAutomation
+from forms import AutomationNewForm
 from scorecard.apps.users.models import FunctionalGroup
 
 
@@ -22,12 +24,16 @@ def automations(request):
         elif fg.key == 'TL':
             tls = fg.labautomation_set.order_by('column_field')
 
+    automation_new_form = AutomationNewForm(initial={'functional_group': request.user.humanresource.functional_group})
+
     context = RequestContext(request, {
         'qas': qas,
         'qis': qis,
         'res': res,
         'tes': tes,
-        'tls': tls
+        'tls': tls,
+
+        'form': automation_new_form
     })
     return render(request, 'automations/automations.html', context)
 
@@ -41,4 +47,12 @@ def automation_edit(request, automation_id):
 
 
 def automation_new(request):
-    pass
+    if request.method == 'POST':
+        form = InnovationForm(request.POST)
+        if form.is_valid():
+            automation = form.save()
+            messages.success(request, 'Project is added')
+        else:
+            messages.error(request, 'Errors found')
+
+        return redirect('automations:automations')

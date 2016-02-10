@@ -4,7 +4,12 @@ from django.forms import ModelForm
 from models import InnovationAutomation, LabAutomation, RequirementAutomation, TestAutomation
 
 
-class InnovationForm(ModelForm):
+class AutomationNewForm(ModelForm):
     class Meta:
         model = InnovationAutomation
-        exclude = ['last_success', 'last_failure', 'last_successful_run']
+        fields = ['functional_group', 'column_field', 'script_name', 'script_file']
+        widgets = {
+            'functional_group': forms.Select(attrs={'class': 'form-control'}),
+            'column_field': forms.Select(attrs={'class': 'form-control'}),
+            'script_name': forms.TextInput(attrs={'class': 'form-control'})
+        }
