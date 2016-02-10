@@ -33,13 +33,14 @@ class BaseAutomation(models.Model):
         (ESCALATIONS, 'Escalations'),
     )
 
+    class Meta:
+        abstract = True
+
 
 class InnovationAutomation(BaseAutomation):
     """
     Automation for groups: QI
     """
-    # COMPLIMENTS = 'compliments'
-    # COMPLAINTS = 'complaints'
 
     BACKLOG_STORY = 'story_points_backlog'
     STORY_POINTS_PREP = 'story_points_prep'
@@ -52,7 +53,7 @@ class InnovationAutomation(BaseAutomation):
     SLAS_MET = 'slas_met'
     DELAYS_INTRODUCED_TIME = 'delays_introduced_time'
     SDIS_NOT_PREVENTED = 'sdis_not_prevented'
-    UAT_DEFECTS_NOT_PREVENTED = ''
+    UAT_DEFECTS_NOT_PREVENTED = 'uat_defects_not_prevented'
     RESOURCE_SWAP = 'resource_swap'
     ESCALATIONS = 'escalations'
     REWORK_INTRODUCED_TIME = 'rework_introduced_time'
@@ -69,9 +70,6 @@ class InnovationAutomation(BaseAutomation):
     VISILOG_TXL_VIOLATION = 'visilog_txl_schema_violation'
 
     COLUMN_FIELDS_CHOICES = BaseAutomation.COLUMN_FIELDS_CHOICES + (
-        # (COMPLIMENTS, 'Compliments'),
-        # (COMPLAINTS, 'Complaints'),
-
         (BACKLOG_STORY, 'Story Points Backlog'),
         (STORY_POINTS_PREP, 'Story Points Prep'),
         (UNIT_TESTS_COVER, 'Unit Tests Coverage'),
@@ -83,7 +81,7 @@ class InnovationAutomation(BaseAutomation):
         (SLAS_MET, 'SLAs Met'),
         (DELAYS_INTRODUCED_TIME, 'Delays Introduced Time'),
         (SDIS_NOT_PREVENTED, 'SDIs Not Prevented'),
-        (UAT_DEFECTS_NOT_PREVENTED, ''),
+        (UAT_DEFECTS_NOT_PREVENTED, 'Uat Defects Not Prevented'),
         (RESOURCE_SWAP, 'Resource Swap'),
         # (ESCALATIONS, 'Escalations'),
         (REWORK_INTRODUCED_TIME, 'Rework Introduced Time'),
@@ -100,7 +98,13 @@ class InnovationAutomation(BaseAutomation):
         (VISILOG_TXL_VIOLATION, 'Visilog TXL Schema Violation')
     )
 
-    column_field = models.TextField(choices=COLUMN_FIELDS_CHOICES, default=BaseAutomation.COMPLIMENTS)
+    column_field = models.CharField(max_length=50, choices=COLUMN_FIELDS_CHOICES, default=BaseAutomation.COMPLIMENTS)
+
+    def __unicode__(self):
+        return '{0}: {1}: {2}: {3}'.format(self.functional_group.key,
+                                           self.column_field,
+                                           self.tests_run,
+                                           localtime(self.last_success))
 
 
 class LabAutomation(BaseAutomation):
@@ -123,7 +127,13 @@ class LabAutomation(BaseAutomation):
         (POWER_UPS_B, 'Power Consumption UPS B'),
         (LICENSE_COST, 'License Cost')
     )
-    column_filed = models.TextField(choices=COLUMN_FIELDS_CHOICES, default=BaseAutomation.COMPLIMENTS)
+    column_filed = models.CharField(max_length=50, choices=COLUMN_FIELDS_CHOICES, default=BaseAutomation.COMPLIMENTS)
+
+    def __unicode__(self):
+        return '{0}: {1}: {2}: {3}'.format(self.functional_group.key,
+                                           self.column_field,
+                                           self.tests_run,
+                                           localtime(self.last_success))
 
 
 class RequirementAutomation(BaseAutomation):
@@ -151,7 +161,13 @@ class RequirementAutomation(BaseAutomation):
         (DELAYS_INTRO_TIME, 'Delays Introduced Time'),
     )
 
-    column_field = models.TextField(choices=COLUMN_FIELDS_CHOICES, default=BaseAutomation.COMPLIMENTS)
+    column_field = models.CharField(max_length=50, choices=COLUMN_FIELDS_CHOICES, default=BaseAutomation.COMPLIMENTS)
+
+    def __unicode__(self):
+        return '{0}: {1}: {2}: {3}'.format(self.functional_group.key,
+                                           self.column_field,
+                                           self.tests_run,
+                                           localtime(self.last_success))
 
 
 class TestAutomation(BaseAutomation):
@@ -168,20 +184,43 @@ class TestAutomation(BaseAutomation):
     PROJECT_EXECUTION = 'project_execution'
     PROJECT_CLOSED = 'project_closed'
 
-    SLAS_MET = ''
-    DELAYS_INTRO_TIME = ''
-    SDIS_NOT_PREVENTED = ''
-    RESOURCE_SWAP = ''
-    REWORK_INTRO_TIME = ''
+    SLAS_MET = 'slas_met'
+    DELAYS_INTRO_TIME = 'delays_introduced_time'
+    SDIS_NOT_PREVENTED = 'sdis_not_prevented'
+    RESOURCE_SWAP = 'resource_swap'
+    REWORK_INTRO_TIME = 'rework_introduced_time'
 
-    AVERAGE_TIME_SIZE = ''
-    AVERAGE_TIME_FRAME = ''
+    AVERAGE_TEAM_SIZE = 'avg_team_size'
+    AVERAGE_TIME_FRAME = 'avg_time_frame'
 
-    LICENSE_COST = ''
-    OTHER_SAVINGS = ''
+    LICENSE_COST = 'license_cost'
+    OTHER_SAVINGS = 'other_savings'
 
     COLUMN_FIELDS_CHOICES = BaseAutomation.COLUMN_FIELDS_CHOICES + (
         (TEAM_INITIATIVE, 'Team Initiative'),
+        (TICKET_BACKLOG, 'Ticket Backlog'),
+        (TICKET_PREP, 'Ticket Prep'),
+        (TICKET_EXECUTION, 'Ticket Execution'),
+        (TICKET_CLOSED, 'Ticket Closed'),
+        (PROJECT_BACKLOG, 'Project Backlog'),
+        (PROJECT_PREP, 'Project Prep'),
+        (PROJECT_EXECUTION, 'Project Execution'),
+        (PROJECT_CLOSED, 'Project Closed'),
+        (SLAS_MET, 'SLAs Met'),
+        (DELAYS_INTRO_TIME, 'Delays Introduced Time'),
+        (SDIS_NOT_PREVENTED, 'SDIs Not Prevented'),
+        (RESOURCE_SWAP, 'Resource Swap'),
+        (REWORK_INTRO_TIME, 'Rework Introduced Time'),
+        (AVERAGE_TEAM_SIZE, 'Average Team Size'),
+        (AVERAGE_TIME_FRAME, 'Average Time Frame'),
+        (LICENSE_COST, 'License Cost'),
+        (OTHER_SAVINGS, 'Other Savings')
     )
 
-    column_field = models.TextField(choices=COLUMN_FIELDS_CHOICES, default=BaseAutomation.COMPLIMENTS)
+    column_field = models.CharField(max_length=50, choices=COLUMN_FIELDS_CHOICES, default=BaseAutomation.COMPLIMENTS)
+
+    def __unicode__(self):
+        return '{0}: {1}: {2}: {3}'.format(self.functional_group.key,
+                                           self.column_field,
+                                           self.tests_run,
+                                           localtime(self.last_success))
