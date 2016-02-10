@@ -1,0 +1,144 @@
+{% load staticfiles %}
+{% load team_extras %}
+
+{% block headscript %}
+
+    <style>
+
+        #home_tl_dnd_div {
+            width: 200px;
+            height: 25px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+    </style>
+
+
+{% endblock headscript %}
+
+<div class="tab-content" id="tl-content">
+
+    <div class="container west_container" style="margin-top:-20px;">
+        <section>
+            <div class="dataTables_wrapper no-footer table-responsive">
+
+                <div class="dataTables_scroll">
+
+                    <table id="home_test_lab_table" class="display nowrap metrics_table" cellspacing="0">
+                        <thead class="metrics_thead">
+                        <tr id="tlh_th_r1">
+                            <th id="tlh_th_r1_0" class="col-md-3"><strong>Date</strong></th>
+                            <th id="tlh_th_r1_1" class="col-md-1"><strong>Staffs</strong></th>
+                            <th id="tlh_th_r1_2" class="col-md-2"><strong>Tickets Received</strong></th>
+                            <th id="tlh_th_r1_3" class="col-md-2"><strong>Tickets Closed</strong></th>
+                            <th id="tlh_th_r1_4" class="col-md-2"><strong>Virtual Machines</strong></th>
+                            <th id="tlh_th_r1_5" class="col-md-2"><strong>Physical Machines</strong></th>
+                            <th id="tlh_th_r1_6" class="col-md-2"><strong>Power UPS A</strong></th>
+                            <th id="tlh_th_r1_7" class="col-md-2"><strong>Power UPS B</strong></th>
+                            <th id="tlh_th_r1_8" class="col-md-2"><strong>License Costs</strong></th>
+                        </tr>
+                        </thead>
+                        <tbody class="metrics_tbody">
+                        {% for tl in tl_data %}
+                            <tr>
+                                <td>{{ tl.created|date:'Y-m-d' }}</td>
+                                <td draggable="true" ondragstart="drag('home_tl',event)">{{ tl.staffs }}</td>
+                                <td draggable="true" ondragstart="drag('home_tl',event)">{{ tl.tickets_received }}</td>
+                                <td draggable="true" ondragstart="drag('home_tl',event)">{{ tl.tickets_closed }}</td>
+                                <td draggable="true" ondragstart="drag('home_tl',event)">{{ tl.virtual_machines }}</td>
+                                <td draggable="true" ondragstart="drag('home_tl',event)">{{ tl.physical_machines }}</td>
+                                <td draggable="true" ondragstart="drag('home_tl',event)">{{ tl.power_consumption_ups_a }}</td>
+                                <td draggable="true" ondragstart="drag('home_tl',event)">{{ tl.power_consumption_ups_b }}</td>
+                                <td draggable="true" ondragstart="drag('home_tl',event)">{{ tl.license_cost | prepend_dollars }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="container west_container">
+
+        <section>
+            <div>
+                <table class="td_show_hide_sub_table">
+                    <tbody>
+                    <tr class="tr1_show_hide_table">
+                        <td>
+                            <input id="tlh_show_hide_dialog_button" type="button" value="Show/Hide Columns" onclick="on_click_show_hide_columns_dialog(event)">
+                        </td>
+                    </tr>
+                    <tr class="tr2_show_hide_table">
+                        <td id="home_tlh_dnd_div" ondrop="drop('home_tl',event)" ondragover="allow_drop('home_tl',event)">
+                                Drag a Table Cell Here
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
+    <br>
+
+    <div id="tlh_west_dialog" style="display:none;"></div>
+
+    {% comment %}
+    <div class="container west_container">
+        <section>
+            <div class="dataTables_wrapper no-footer table-responsive">
+                <div class="dataTables_scroll">
+                    <table class="chart_table">
+                        <tr id="tl_chart_row"></tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+    {% endcomment %}
+
+</div>
+
+{% block endscript %}
+
+    <script type="text/javascript">
+
+        var home_tl_table_id = "home_test_lab_table";
+
+        // save the names of all of the columns in a table so I
+        // have the full list when I build the show/hide dialog
+        var home_tl_all_column_names_list = [];
+        var home_tl_hide_column_list = [];
+        var home_tl_number_of_columns;
+
+
+        (function () {
+
+            $(document).ready(function () {
+
+                if (jQuery().dataTable) {
+
+                    build_column_names_list(home_tl_table_id, home_tl_all_column_names_list);
+                    initialize_metrics_table(home_tl_table_id, "tlh");
+                    // displayArray(home_tl_all_column_names_list);
+
+                    home_tl_number_of_columns = home_tl_all_column_names_list.length;
+
+                } else {
+                    alert("JQuery datatables library is not loaded.");
+                }
+
+            });
+
+        })(jQuery);
+
+    </script>
+
+{% endblock %}
+

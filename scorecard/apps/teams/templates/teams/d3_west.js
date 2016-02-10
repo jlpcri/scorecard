@@ -7,7 +7,7 @@ function getTablePrefix(table_id) {
     var prefix = "";
 
     if (table_id === "product_quality_table") {
-        prefix =  "pq";
+        prefix = "pq";
     } else if (table_id === "quality_assurance_table") {
         prefix = "qa";
     } else if (table_id === "quality_innovation_table") {
@@ -391,7 +391,7 @@ function buildColumnNamesList(temp_table_id, temp_all_column_names_list, temp_co
 
                 var split_array = temp.split(",");
 
-                cleaned_array.push( { 'meta_name': split_array[0].trim(), 'meta_type': split_array[1].trim() } );
+                cleaned_array.push({'meta_name': split_array[0].trim(), 'meta_type': split_array[1].trim()});
             }
         }
     }
@@ -422,56 +422,56 @@ function getLineChartDates(x_axis, temp_table_id) {
 }
 
 /*
-function remove_from_list(temp_list, temp_number) {
+ function remove_from_list(temp_list, temp_number) {
 
-    for (var index = 0; index < temp_list.length; index++) {
-        if (Number(temp_list[index] == Number(temp_number))) {
-            temp_list.splice(index, 1);
-            break;
-        }
-    }
-}
-*/
+ for (var index = 0; index < temp_list.length; index++) {
+ if (Number(temp_list[index] == Number(temp_number))) {
+ temp_list.splice(index, 1);
+ break;
+ }
+ }
+ }
+ */
 // the user clicked the button to change the columns to show or hide in the table
 // note, not using the right-click functionality since it had problems with the JQuery DataTables
 /*
-function showHideColumn(column_number, show_hide, temp_table_id) {
+ function showHideColumn(column_number, show_hide, temp_table_id) {
 
-    var oTable = $('#' + temp_table_id).dataTable();
+ var oTable = $('#' + temp_table_id).dataTable();
 
-    if (show_hide === "hide") {
-        oTable.fnSetColumnVis(column_number, false, false);
-    } else if (show_hide === "show") {
-        oTable.fnSetColumnVis(column_number, true, false);
-    }
-    oTable.fnDraw();
-}
-*/
+ if (show_hide === "hide") {
+ oTable.fnSetColumnVis(column_number, false, false);
+ } else if (show_hide === "show") {
+ oTable.fnSetColumnVis(column_number, true, false);
+ }
+ oTable.fnDraw();
+ }
+ */
 /*
-function hideUserColumnPreferences(temp_table_id, temp_hide_columns_json) {
+ function hideUserColumnPreferences(temp_table_id, temp_hide_columns_json) {
 
-    var columns = [];
+ var columns = [];
 
-    // this will be empty if the user didn't opt to hide any columns when the table is loaded
-    var json_length = Object.keys(columns).length;
+ // this will be empty if the user didn't opt to hide any columns when the table is loaded
+ var json_length = Object.keys(columns).length;
 
-    if (json_length > 0) {
+ if (json_length > 0) {
 
-        temp_hide_columns_json = temp_hide_columns_json.replace(/\[/g, '');
-        temp_hide_columns_json = temp_hide_columns_json.replace(/\]/g, '');
-        temp_hide_columns_json = temp_hide_columns_json.replace(/\"/g, '');
+ temp_hide_columns_json = temp_hide_columns_json.replace(/\[/g, '');
+ temp_hide_columns_json = temp_hide_columns_json.replace(/\]/g, '');
+ temp_hide_columns_json = temp_hide_columns_json.replace(/\"/g, '');
 
-        var temp_array = temp_hide_columns_json.split(",");
+ var temp_array = temp_hide_columns_json.split(",");
 
-        var oTable = $('#' + temp_table_id).dataTable();
+ var oTable = $('#' + temp_table_id).dataTable();
 
-        for (var index = 0; index < temp_array.length; index++) {
-            oTable.fnSetColumnVis(temp_array[index], false, false);
-        }
-        oTable.fnDraw();
-    }
-}
-*/
+ for (var index = 0; index < temp_array.length; index++) {
+ oTable.fnSetColumnVis(temp_array[index], false, false);
+ }
+ oTable.fnDraw();
+ }
+ }
+ */
 function drawD3BarChart(chart_object) {
 
     var svg_id = chart_object.chart_count;
@@ -708,15 +708,17 @@ function drawD3LineChart(chart_object) {
         .style("stroke-width", "2.5");
 }
 
+var dnd_id;
 
 function allow_drop(tableid, event) {
     event.preventDefault();
 }
 
 function drag(tableid, event) {
+
     var target = event.target || event.srcElement;
-    alert("718  " + tableid + "  " + target.id);
-    //home_dnd_id = target.id;
+    dnd_id = target.id;
+
     event.dataTransfer.setData("text", event.target.id);
 }
 
@@ -724,10 +726,19 @@ function drop(tableid, event) {
     event.preventDefault();
 
     var target = event.target || event.srcElement;
-    alert("727  " + tableid + "  " + target.id);
+    // alert("725  teams.d3_west.js  " + tableid + "  " + target.id + "  " + dnd_id);
 
-    //var temp_array = home_dnd_id.split("_");
-    //var temp_column = temp_array[2];
-    //add_chart_to_table_home(event, temp_column);
+    var temp_array = dnd_id.split("_");
+
+    // alert("729  " + temp_array);
+    // 0 = prefix, 1 = row (0 based), 2 = column (1 based)
+
+    var temp_column = temp_array[2];
+
+    add_chart_to_table_home(event, temp_column);
 }
 
+function add_chart_to_table_home(event, temp_column) {
+
+    alert("Charting Is In Progress.");
+}

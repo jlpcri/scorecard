@@ -1,0 +1,195 @@
+{% load staticfiles %}
+{% load team_extras %}
+
+{% block headscript %}
+
+    <style>
+
+        #home_qa_dnd_div {
+            width: 200px;
+            height: 25px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+    </style>
+
+
+{% endblock headscript %}
+
+<div class="tab-content" id="qa-content">
+
+    <div class="container west_container" style="margin-top:-20px;">
+        <section>
+            <div class="dataTables_wrapper no-footer table-responsive">
+
+                <div class="dataTables_scroll">
+
+                    <table id="home_quality_assurance_table" class="display nowrap metrics_table" cellspacing="0">
+                        <thead class="metrics_thead">
+                        <tr id="qah_th_r1">
+                            <th id="qah_th_r1_0" class="col-md-3"><strong>Date</strong></th>
+                            <th id="qah_th_r1_1" class="col-md-1"><strong>Staffs</strong></th>
+                            <th id="qah_th_r1_2" class="col-md-2"><strong>Active Projects</strong></th>
+                            <th id="qah_th_r1_3" class="col-md-2"><strong>Active Tickets</strong></th>
+                            <th id="qah_th_r1_4" class="col-md-2"><strong>Avg Throughput</strong></th>
+                            <th id="qah_th_r1_5" class="col-md-2"><strong>Total Costs</strong></th>
+                            <th id="qah_th_r1_6" class="col-md-2"><strong>Team Initiative</strong></th>
+                            <th id="qah_th_r1_7" class="col-md-2"><strong>Ticket Backlog</strong></th>
+                            <th id="qah_th_r1_8" class="col-md-2"><strong>Ticket Prep</strong></th>
+                            <th id="qah_th_r1_9" class="col-md-2"><strong>Ticket Execution</strong></th>
+                            <th id="qah_th_r1_10" class="col-md-2"><strong>Tickets Closed</strong></th>
+                            <th id="qah_th_r1_11" class="col-md-2"><strong>Project Backlog</strong></th>
+                            <th id="qah_th_r1_12" class="col-md-2"><strong>Project Prep</strong></th>
+                            <th id="qah_th_r1_13" class="col-md-2"><strong>Project Execution</strong></th>
+                            <th id="qah_th_r1_14" class="col-md-2"><strong>Project Closed</strong></th>
+                            <th id="qah_th_r1_15" class="col-md-2"><strong>TC Manual Dev</strong></th>
+                            <th id="qah_th_r1_16" class="col-md-2"><strong>TC Manual Dev Time</strong></th>
+                            <th id="qah_th_r1_17" class="col-md-2"><strong>TC Manual Execution</strong></th>
+                            <th id="qah_th_r1_18" class="col-md-2"><strong>TC Manual Execution Time</strong></th>
+                            <th id="qah_th_r1_19" class="col-md-2"><strong>TC Auto Dev</strong></th>
+                            <th id="qah_th_r1_20" class="col-md-2"><strong>TC Auto Dev Time</strong></th>
+                            <th id="qah_th_r1_21" class="col-md-2"><strong>TC Auto Execution</strong></th>
+                            <th id="qah_th_r1_22" class="col-md-2"><strong>TC Auto Execution Time</strong></th>
+                            <th id="qah_th_r1_23" class="col-md-2"><strong>Defects Caught</strong></th>
+                            <th id="qah_th_r1_24" class="col-md-2"><strong>UAT Defects Not Prevented</strong></th>
+                            <th id="qah_th_r1_25" class="col-md-2"><strong>Standard Violated</strong></th>
+                            <th id="qah_th_r1_26" class="col-md-2"><strong>Average Time Frame</strong></th>
+                        </tr>
+                        </thead>
+                        <tbody class="metrics_tbody">
+                        {% for qa in qa_data %}
+                            <tr>
+                                <td>{{ qa.created|date:'Y-m-d' }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.staffs }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.active_projects }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.active_tickets }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.avg_throughput|floatformat:2 }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.total_operational_cost | prepend_dollars }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.team_initiative }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.ticket_backlog }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.ticket_prep }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.ticket_execution }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.ticket_closed }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.project_backlog }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.project_prep }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.project_execution }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.project_closed }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.tc_manual_dev }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.tc_manual_dev_time }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.tc_manual_execution }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.tc_manual_execution_time }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.tc_auto_dev }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.tc_auto_dev_time }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.tc_auto_execution }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.tc_auto_execution_time }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.defect_caught }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.uat_defects_not_prevented }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.standards_violated }}</td>
+                                <td draggable="true" ondragstart="drag('home_qa',event)">{{ qa.avg_time_frame }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="container west_container">
+
+        <section>
+            <div>
+                <table class="td_show_hide_sub_table">
+                    <tbody>
+                    <tr class="tr1_show_hide_table">
+                        <td>
+                            <input id="qah_show_hide_dialog_button" type="button" value="Show/Hide Columns" onclick="on_click_show_hide_columns_dialog(event)">
+                        </td>
+                    </tr>
+                    <tr class="tr2_show_hide_table">
+                        <td id="home_qah_dnd_div" ondrop="drop('home_qa',event)" ondragover="allow_drop('home_qa',event)">
+                                Drag a Table Cell Here
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
+    <br>
+
+    <div id="qah_west_dialog" style="display:none;"></div>
+
+    {% comment %}
+        <div class="container west_container">
+            <section>
+                <div class="dataTables_wrapper no-footer table-responsive">
+                    <div class="dataTables_scroll">
+                        <table class="chart_table">
+                            <tr id="qa_chart_row"></tr>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    {% endcomment %}
+
+</div>
+
+{% block endscript %}
+
+    <script type="text/javascript">
+
+        var home_qa_table_id = "home_quality_assurance_table";
+
+        // save the names of all of the columns in a table so I
+        // have the full list when I build the show/hide dialog
+        var home_qa_all_column_names_list = [];
+        var home_qa_hide_column_list = [];
+        var home_qa_number_of_columns;
+
+        var home_qa_hide_columns_json = '{{ qa_user_hide_list | safe }}';
+
+        //var home_qa_chart_svg_prefix = "qa_chart_svg_";
+
+        //var home_qa_primary_date_time_column = 0;
+        //var home_qa_next_chart_id = 0;
+
+        //var home_qa_dnd_charts_list = [];
+        //var home_qa_dnd_id = "";
+
+        //var home_qa_column_details_list = [];
+        //var home_qa_number_of_columns;
+
+
+        (function () {
+
+            $(document).ready(function () {
+
+                if (jQuery().dataTable) {
+
+                    build_column_names_list(home_qa_table_id, home_qa_all_column_names_list);
+                    initialize_metrics_table(home_qa_table_id, "qah");  // qa home
+                    // displayArray(home_qa_all_column_names_list);
+
+                    home_qa_number_of_columns = home_qa_all_column_names_list.length;
+
+                    hide_user_column_preferences_by_column_name(home_qa_table_id, "qah");
+
+                } else {
+                    alert("JQuery datatables library is not loaded.");
+                }
+
+            });
+
+        })(jQuery);
+
+
+    </script>
+
+{% endblock %}
+
