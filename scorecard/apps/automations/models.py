@@ -98,7 +98,10 @@ class InnovationAutomation(BaseAutomation):
         (VISILOG_TXL_VIOLATION, 'Visilog TXL Schema Violation')
     )
 
-    column_field = models.CharField(max_length=50, choices=COLUMN_FIELDS_CHOICES, default=BaseAutomation.COMPLIMENTS)
+    column_field = models.CharField(max_length=50,
+                                    choices=COLUMN_FIELDS_CHOICES,
+                                    default=BaseAutomation.COMPLIMENTS,
+                                    unique=True)
 
     def __unicode__(self):
         return '{0}: {1}: {2}: {3}'.format(self.functional_group.key,
@@ -127,7 +130,10 @@ class LabAutomation(BaseAutomation):
         (POWER_UPS_B, 'Power Consumption UPS B'),
         (LICENSE_COST, 'License Cost')
     )
-    column_filed = models.CharField(max_length=50, choices=COLUMN_FIELDS_CHOICES, default=BaseAutomation.COMPLIMENTS)
+    column_filed = models.CharField(max_length=50,
+                                    choices=COLUMN_FIELDS_CHOICES,
+                                    default=BaseAutomation.COMPLIMENTS,
+                                    unique=True)
 
     def __unicode__(self):
         return '{0}: {1}: {2}: {3}'.format(self.functional_group.key,
@@ -161,7 +167,10 @@ class RequirementAutomation(BaseAutomation):
         (DELAYS_INTRO_TIME, 'Delays Introduced Time'),
     )
 
-    column_field = models.CharField(max_length=50, choices=COLUMN_FIELDS_CHOICES, default=BaseAutomation.COMPLIMENTS)
+    column_field = models.CharField(max_length=50,
+                                    choices=COLUMN_FIELDS_CHOICES,
+                                    default=BaseAutomation.COMPLIMENTS,
+                                    unique=True)
 
     def __unicode__(self):
         return '{0}: {1}: {2}: {3}'.format(self.functional_group.key,
@@ -217,7 +226,12 @@ class TestAutomation(BaseAutomation):
         (OTHER_SAVINGS, 'Other Savings')
     )
 
-    column_field = models.CharField(max_length=50, choices=COLUMN_FIELDS_CHOICES, default=BaseAutomation.COMPLIMENTS)
+    column_field = models.CharField(max_length=50,
+                                    choices=COLUMN_FIELDS_CHOICES,
+                                    default=BaseAutomation.COMPLIMENTS)
+
+    class Meta:
+        unique_together = ('functional_group', 'column_field')
 
     def __unicode__(self):
         return '{0}: {1}: {2}: {3}'.format(self.functional_group.key,
