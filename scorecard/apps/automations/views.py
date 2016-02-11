@@ -17,6 +17,7 @@ def automations(request):
             qas = fg.automation_set.order_by('column_field')
         elif fg.key == 'QI':
             qis = fg.automation_set.order_by('column_field')
+            # automation_new_form = AutomationNewForm(initial={'key': fg.key})
         elif fg.key == 'RE':
             res = fg.automation_set.order_by('column_field')
         elif fg.key == 'TE':
@@ -24,7 +25,8 @@ def automations(request):
         elif fg.key == 'TL':
             tls = fg.automation_set.order_by('column_field')
 
-    automation_new_form = AutomationNewForm()
+    automation_new_form = AutomationNewForm(initial={'functional_group': request.user.humanresource.functional_group,
+                                                     'key': request.user.humanresource.functional_group.key})
 
     context = RequestContext(request, {
         'qas': qas,
@@ -48,7 +50,7 @@ def automation_edit(request, automation_id):
 
 def automation_new(request):
     if request.method == 'POST':
-        form = AutomationNewForm(request.POST)
+        form = AutomationNewForm(request.POST, initial={'key': request.user.humanresource.functional_group.key})
         if form.is_valid():
             automation = form.save()
             messages.success(request, 'Project is added')
