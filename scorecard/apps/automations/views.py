@@ -1,10 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
 
 from models import Automation
-from forms import AutomationNewForm
+from forms import AutomationNewForm, AutomationForm
 from scorecard.apps.users.models import FunctionalGroup
 
 
@@ -41,7 +41,15 @@ def automations(request):
 
 
 def automation_detail(request, automation_id):
-    pass
+    automation = get_object_or_404(Automation, pk=automation_id)
+    form = AutomationForm(instance=automation)
+
+    context = RequestContext(request, {
+        'automation': automation,
+        'form': form
+    })
+
+    return render(request, 'automations/automation.html', context)
 
 
 def automation_edit(request, automation_id):
