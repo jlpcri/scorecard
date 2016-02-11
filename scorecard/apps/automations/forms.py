@@ -44,9 +44,10 @@ class AutomationForm(ModelForm):
 
     class Meta:
         model = Automation
-        fields = ['functional_group', 'column_field', 'script_name', 'script_file']
+        fields = ['functional_group', 'column_field', 'tests_run', 'result', 'script_name', 'script_file']
         widgets = {
             'functional_group': forms.Select(attrs={'class': 'form-control'}),
             'column_field': forms.TextInput(attrs={'class': 'form-control'}),
-            # 'script_name': forms.TextInput(attrs={'class': 'form-control'})
+            'tests_run': forms.TextInput(attrs={'class': 'form-control', 'readonly': True}),
+            'result': forms.TextInput(attrs={'class': 'form-control', 'readonly': True}),
         }
