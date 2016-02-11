@@ -7,7 +7,14 @@
         <legend>Automation Tests</legend>
         <div class="row">
             <div class="col-xs-6">
-                {{ form }}
+                <form action="{% url 'automations:automation_edit' automation.id %}" method="post" enctype="multipart/form-data">
+                    {{ form }}
+                    {% csrf_token %}
+                    <br>
+                    <input id="automation_edit" class="btn btn-primary" type="submit" value="Save Automation">
+                    <a href="{% url 'automations:automations' %}" class="btn btn-default">Cancel</a>
+
+                </form>
 {#                <label for="functional_group">Functional Group:</label>#}
 {#                <input class="form-control" id="functional_group" name="functional_group" type="text" value="{{ automation.functional_group.name }}" readonly>#}
 {#                <label for="column_field">Column Field:</label>#}
@@ -19,7 +26,11 @@
             </div>
             <div class="col-xs-6">
                 <label for="script-content">Script Content:</label>
-                <textarea class="form-control" id="script-content" name="script-content" rows="10" >{{ automation.script_file.read }}</textarea>
+                <textarea class="form-control" id="script-content" name="script-content" rows="20" >
+                    {% if automation.script_file %}
+                        {{ automation.script_file.read }}
+                    {% endif %}
+                </textarea>
 
             </div>
         </div>

@@ -53,21 +53,42 @@ def automation_detail(request, automation_id):
 
 
 def automation_edit(request, automation_id):
-    pass
+    automation = get_object_or_404(Automation, pk=automation_id)
+    if request.method == 'POST':
+        form = AutomationForm(request.POST, request.FILES, instance=automation)
+        if form.is_valid():
+            if request.FILES and not request.FILES['script_file'].name.endswith('.py'):
+                messages.error(request, 'Invalid file type, unable to upload (must be .py)')
+                return redirect('automations:automation_detail', automation.id)
+
+            automation = form.save()
+            if not form.cleaned_data['script_name'] and request.FILES:
+                automation.script_name = request.FILES['script_file'].name
+                automation.save()
+            messages.success(request, 'Automation is saved')
+        else:
+            print form.errors
+            messages.error(request, 'Errors found in Automation Edit')
+
+        return redirect('automations:automations')
 
 
 def automation_new(request):
     if request.method == 'POST':
         form = AutomationNewForm(request.POST, request.FILES, initial={'key': request.user.humanresource.functional_group.key})
         if form.is_valid():
+            if request.FILES and not request.FILES['script_file'].name.endswith('.py'):
+                messages.error(request, 'Invalid file type, unable to upload (must be .py)')
+                return redirect('automations:automations')
+
             automation = form.save()
-            if not form.cleaned_data['script_name'] and request.FILES['script_file']:
+            if not form.cleaned_data['script_name'] and request.FILES:
                 automation.script_name = request.FILES['script_file'].name
                 automation.save()
 
-            messages.success(request, 'Project is added')
+            messages.success(request, 'Automation is added')
         else:
             print form.errors
-            messages.error(request, 'Errors found')
+            messages.error(request, 'Errors found in Automation New')
 
         return redirect('automations:automations')
