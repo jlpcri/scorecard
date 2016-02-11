@@ -50,11 +50,16 @@ def automation_edit(request, automation_id):
 
 def automation_new(request):
     if request.method == 'POST':
-        form = AutomationNewForm(request.POST, initial={'key': request.user.humanresource.functional_group.key})
+        form = AutomationNewForm(request.POST, request.FILES, initial={'key': request.user.humanresource.functional_group.key})
         if form.is_valid():
             automation = form.save()
+            if not form.cleaned_data['script_name'] and request.FILES['script_file']:
+                automation.script_name = request.FILES['script_file'].name
+                automation.save()
+
             messages.success(request, 'Project is added')
         else:
+            print form.errors
             messages.error(request, 'Errors found')
 
         return redirect('automations:automations')

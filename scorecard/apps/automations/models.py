@@ -25,6 +25,9 @@ class Automation(models.Model):
 
     column_field = models.CharField(max_length=50)
 
+    class Meta:
+        unique_together = (("functional_group", "column_field"), )
+
     def __unicode__(self):
         return '{0}: {1}: {2}: {3}'.format(self.functional_group.key,
                                            self.column_field,

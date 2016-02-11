@@ -8,7 +8,10 @@ from utils import CHOICES_QI, CHOICES_TL, CHOICES_RE, CHOICES_QA_TE
 class AutomationNewForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(AutomationNewForm, self).__init__(*args, **kwargs)
-        key = kwargs.pop('initial')['key']
+        try:
+            key = kwargs.pop('initial')['key']
+        except KeyError:
+            key = ''
         if key == 'QI':
             choices = CHOICES_QI
         elif key == 'TL':
@@ -17,8 +20,13 @@ class AutomationNewForm(ModelForm):
             choices = CHOICES_RE
         elif key in ['QA', 'TE']:
             choices = CHOICES_QA_TE
+        else:
+            choices = ''
         self.fields['column_field'] = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}),
                                                         choices=choices)
+
+    script_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}),
+                                  required=False)
 
     class Meta:
         model = Automation
