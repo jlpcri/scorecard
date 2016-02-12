@@ -2,12 +2,13 @@
 {% load staticfiles %}
 {% load team_extras %}
 
+{% block title %} Home {% endblock %}
+
 {% block extrahead %}
 
     <link rel="stylesheet" type="text/css" href="{% static 'jquery-data-tables/css/jquery.dataTables.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'jquery-data-tables/css/jquery-ui.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'jquery-data-tables/syntax/shCore.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'jquery-data-tables/css/demo.css' %}">
+
 
     <script type="text/javascript" language="javascript" src="{% static 'jquery-data-tables/js/jquery.dataTables.js' %}"></script>
     <script type="text/javascript" language="javascript" src="{% static 'jquery-data-tables/syntax/shCore.js' %}"></script>
@@ -16,7 +17,6 @@
     <style>
 
         .west_container {
-            border:0px solid red;
             min-width: 60%;
         }
 
@@ -55,6 +55,11 @@
             text-align:center;
         }
 
+        .chart_td {
+            border: 0px solid black;
+            width:  400px;
+            height: 400px;
+        }
 
     </style>
 

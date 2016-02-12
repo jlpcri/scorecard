@@ -5,16 +5,11 @@
 
     <style>
 
-        #quality_innovation_dnd_div {
+        #qi_dnd_div {
             width: 200px;
             height: 25px;
             margin-left: auto;
             margin-right: auto;
-            text-align: center;
-        }
-
-        .td_title {
-            border: 1px solid lightgray;
             text-align: center;
         }
 
@@ -55,10 +50,10 @@
                     {% for item in qis %}
                         <tr>
                             <td><a href="{% url 'teams:metric_detail' item.id %}?key={{ item.functional_group.key }}">{{ item.created|date:'Y-m-d' }}</a></td>
-                            <td draggable="true" ondragstart="drag('qi',event)">{{ item.staffs }}</td>
-                            <td draggable="true" ondragstart="drag('qi',event)">{{ item.story_points_backlog }}</td>
-                            <td draggable="true" ondragstart="drag('qi',event)">{{ item.avg_team_size }}</td>
-                            <td draggable="true" ondragstart="drag('qi',event)">{{ item.total_operational_cost|prepend_dollars }}</td>
+                            <td draggable="true" ondragstart="drag(event)">{{ item.staffs }}</td>
+                            <td draggable="true" ondragstart="drag(event)">{{ item.story_points_backlog }}</td>
+                            <td draggable="true" ondragstart="drag(event)">{{ item.avg_team_size }}</td>
+                            <td draggable="true" ondragstart="drag(event)">{{ item.total_operational_cost|prepend_dollars }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -67,7 +62,7 @@
 
         <div class="container">
             <section>
-                <div id="quality_innovation_dnd_div" class="dnd_button_div" ondrop="drop('qi',event)" ondragover="allow_drop('qi',event)">
+                <div id="qi_dnd_div" class="dnd_button_div" ondrop="drop(event)" ondragover="allow_drop(event)">
                     Drag a Table Cell Here
                 </div>
             </section>
@@ -75,7 +70,6 @@
 
         <br>
 
-        {% comment %}
         <div class="container west_container">
             <section>
                 <div class="dataTables_wrapper no-footer table-responsive">
@@ -87,7 +81,6 @@
                 </div>
             </section>
         </div>
-        {% endcomment %}
 
     {% else %}
         No Contents
@@ -99,26 +92,16 @@
 
     <script type="text/javascript">
 
-        var quality_innovation_table_id = "quality_innovation_table";
-        var quality_innovation_chart_svg_prefix = "qi_chart_svg_";
-
-        var quality_innovation_primary_date_time_column = 0;
         var quality_innovation_next_chart_id = 0;
-
         var quality_innovation_dnd_charts_list = [];
-        var quality_innovation_dnd_id = "";
-
         var quality_innovation_all_column_names_list = [];
-        var quality_innovation_column_details_list = [];
 
-        var quality_innovation_hide_column_list = [];
-        var quality_innovation_column_data_list_json = '{{ column_data_list | safe }}';
 
         (function () {
 
             $(document).ready(function () {
-                addIdsToMainTable(quality_innovation_table_id);
-                buildColumnNamesList(quality_innovation_table_id, quality_innovation_all_column_names_list, quality_innovation_column_data_list_json, quality_innovation_column_details_list);
+                add_id_to_teams_table("quality_innovation_table");
+                build_column_names_list_teams("quality_innovation_table", quality_innovation_all_column_names_list);
             });
 
         })(jQuery);

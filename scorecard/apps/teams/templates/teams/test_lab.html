@@ -5,19 +5,13 @@
 
 <style>
 
-    #test_lab_dnd_div {
+    #tl_dnd_div {
         width: 200px;
         height: 25px;
         margin-left: auto;
         margin-right: auto;
         text-align: center;
     }
-
-    .td_title {
-        border: 1px solid lightgray;
-        text-align: center;
-    }
-
 
 </style>
 
@@ -60,11 +54,11 @@
                 {% for item in tls %}
                     <tr>
                         <td><a href="{% url 'teams:metric_detail' item.id %}?key={{ item.functional_group.key }}">{{ item.created|date:'Y-m-d' }}</a></td>
-                        <td draggable="true" ondragstart="drag('tl',event)">{{ item.staffs }}</td>
-                        <td draggable="true" ondragstart="drag('tl',event)">{{ item.tickets_received }}</td>
-                        <td draggable="true" ondragstart="drag('tl',event)">{{ item.tickets_closed }}</td>
-                        <td draggable="true" ondragstart="drag('tl',event)">{{ item.virtual_machines }}</td>
-                        <td draggable="true" ondragstart="drag('tl',event)">{{ item.license_cost|prepend_dollars }}</td>
+                        <td draggable="true" ondragstart="drag(event)">{{ item.staffs }}</td>
+                        <td draggable="true" ondragstart="drag(event)">{{ item.tickets_received }}</td>
+                        <td draggable="true" ondragstart="drag(event)">{{ item.tickets_closed }}</td>
+                        <td draggable="true" ondragstart="drag(event)">{{ item.virtual_machines }}</td>
+                        <td draggable="true" ondragstart="drag(event)">{{ item.license_cost|prepend_dollars }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -73,7 +67,7 @@
 
     <div class="container">
         <section>
-            <div id="test_lab_dnd_div" class="dnd_button_div" ondrop="drop('tl',event)" ondragover="allow_drop('tl',event)">
+            <div id="tl_dnd_div" class="dnd_button_div" ondrop="drop(event)" ondragover="allow_drop(event)">
                 Drag a Table Cell Here
             </div>
         </section>
@@ -81,7 +75,6 @@
 
     <br>
 
-    {% comment %}
     <div class="container west_container">
         <section>
             <div class="dataTables_wrapper no-footer table-responsive">
@@ -93,7 +86,6 @@
             </div>
         </section>
     </div>
-    {% endcomment %}
 
     {% else %}
         No Contents
@@ -105,26 +97,16 @@
 
 <script type="text/javascript">
 
-    var test_lab_table_id = "test_lab_table";
-    var test_lab_chart_svg_prefix = "tl_chart_svg_";
-
-    var test_lab_primary_date_time_column = 0;
     var test_lab_next_chart_id = 0;
-
     var test_lab_dnd_charts_list = [];
-    var test_lab_dnd_id = "";
-
     var test_lab_all_column_names_list = [];
-    var test_lab_column_details_list = [];
 
-    var test_lab_hide_column_list = [];
-    var test_lab_column_data_list_json = '{{ column_data_list | safe }}';
 
     (function () {
 
         $(document).ready(function () {
-            addIdsToMainTable(test_lab_table_id);
-            buildColumnNamesList(test_lab_table_id, test_lab_all_column_names_list, test_lab_column_data_list_json, test_lab_column_details_list);
+            add_id_to_teams_table("test_lab_table");
+            build_column_names_list_teams("test_lab_table", test_lab_all_column_names_list);
         });
 
     })(jQuery);

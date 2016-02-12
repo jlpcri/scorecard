@@ -15,46 +15,36 @@ function initialize_metrics_table(table_id, prefix) {
         "bSort": false,
         "order": [],
         "fnAdjustColumnSizing": false,
-        "fnInitComplete": add_ids_to_metrics_table(table_id, prefix)
+        "fnInitComplete": add_ids_to_metrics_table(table_id)
     });
 }
 
-function add_ids_to_metrics_table(table_id, prefix) {
+function add_ids_to_metrics_table(table_id) {
 
+    var prefix = get_prefix_from_table_id(table_id);
+
+    // qa_th_r0_1
     var row_count = 0;
+    $('#' + table_id + ' thead tr').each(function () {
+        var column_count = 0;
+        $('th', this).each(function () {
+            var temp_id = prefix + "_th_r" + row_count + "_" + column_count;
+            $(this).attr("id", temp_id);
+            column_count++;
+        });
+    });
+
+    row_count = 1;
 
     $('#' + table_id + ' tbody tr').each(function () {
-        var column_count = 1;
+        var column_count = 0;
         $('td', this).each(function () {
-            var temp_id = "" + prefix + "_" + row_count + "_" + column_count;
+            var temp_id = prefix + "_" + row_count + "_" + column_count;
             $(this).attr("id", temp_id);
             column_count++;
         });
         row_count++;
-    });
-}
-
-function build_column_names_list(temp_table_id, temp_all_column_names_list) {
-
-    $("#" + temp_table_id + " tr th").each(function () {
-        var header_text = $(this).text();
-        temp_all_column_names_list.push(header_text);
-    });
-
-}
-
-// display the elements of an array in separate lines
-function displayArray(temp_list) {
-
-    var output = "--------------------------\n";
-
-    for (var index = 0; index < temp_list.length; index++) {
-        output = output + temp_list[index] + "\n";
-    }
-
-    output = output + "\n--------------------------";
-
-    alert(output);
+    })
 }
 
 function on_click_show_hide_columns_dialog(event) {
@@ -108,8 +98,8 @@ function on_click_show_hide_columns_dialog(event) {
         table_title = "Test Lab Columns";
     }
 
-    // displayArray(all_column_names_list);
-    // displayArray(hide_column_list);
+    // display_array(all_column_names_list);
+    // display_array(hide_column_list);
 
     var output = "";
     var header_count = 1;
@@ -182,7 +172,7 @@ function checkbox_change(event) {
 
     var temp_array = target_id.split("_");  // e.g.  qa_show_hide_dialog_button"
 
-    // displayArray(temp_array);
+    // display_array(temp_array);
 
     var prefix = temp_array[0];
     var column_number = temp_array[2];
@@ -199,31 +189,31 @@ function checkbox_change(event) {
 
         table_id = home_qa_table_id;
         hide_column_list = home_qa_hide_column_list;
-        max_columns = home_qa_number_of_columns;
+        max_columns = home_qa_all_column_names_list.length;
 
     } else if (prefix == "qih") {
 
         table_id = home_qi_table_id;
         hide_column_list = home_qi_hide_column_list;
-        max_columns = home_qi_number_of_columns;
+        max_columns = home_qi_all_column_names_list.length;
 
     } else if (prefix == "reh") {
 
         table_id = home_re_table_id;
         hide_column_list = home_re_hide_column_list;
-        max_columns = home_re_number_of_columns;
+        max_columns = home_re_all_column_names_list.length;
 
     } else if (prefix == "teh") {
 
         table_id = home_te_table_id;
         hide_column_list = home_te_hide_column_list;
-        max_columns = home_te_number_of_columns;
+        max_columns = home_te_all_column_names_list.length;
 
     } else if (prefix == "tlh") {
 
         table_id = home_tl_table_id;
         hide_column_list = home_tl_hide_column_list;
-        max_columns = home_tl_number_of_columns;
+        max_columns = home_tl_all_column_names_list.length;
 
     }
 
@@ -278,27 +268,27 @@ function show_hide_column(temp_table_id, column_number, show_hide, force_table_h
     if (temp_table_id === "home_quality_assurance_table") {
 
         prefix = "qah";
-        max_columns = home_qa_number_of_columns;
+        max_columns = home_qa_all_column_names_list.length;
 
     } else if (temp_table_id === "home_quality_innovation_table") {
 
         prefix = "qih";
-        max_columns = home_qi_number_of_columns;
+        max_columns = home_qi_all_column_names_list.length;
 
     } else if (temp_table_id === "home_requirements_engineering_table") {
 
         prefix = "reh";
-        max_columns = home_re_number_of_columns;
+        max_columns = home_re_all_column_names_list.length;
 
     } else if (temp_table_id === "home_test_engineering_table") {
 
         prefix = "teh";
-        max_columns = home_te_number_of_columns;
+        max_columns = home_te_all_column_names_list.length;
 
     } else if (temp_table_id === "home_test_lab_table") {
 
         prefix = "tlh";
-        max_columns = home_tl_number_of_columns;
+        max_columns = home_tl_all_column_names_list.length;
 
     }
 
@@ -414,27 +404,27 @@ function hide_user_column_preferences_by_column_name(temp_table_id, prefix) {
     if (prefix === "qah") {
 
         hide_columns_json = home_qa_hide_columns_json;
-        max_columns = home_qa_number_of_columns;
+        max_columns = home_qa_all_column_names_list.length;
 
     } else if (prefix === "qih") {
 
         hide_columns_json = home_qi_hide_columns_json;
-        max_columns = home_qi_number_of_columns;
+        max_columns = home_qi_all_column_names_list.length;
 
     } else if (prefix === "reh") {
 
         hide_columns_json = home_re_hide_columns_json;
-        max_columns = home_re_number_of_columns;
+        max_columns = home_re_all_column_names_list.length;
 
     } else if (prefix === "teh") {
 
         hide_columns_json = home_te_hide_columns_json;
-        max_columns = home_te_number_of_columns;
+        max_columns = home_te_all_column_names_list.length;
 
     } else if (prefix === "tlh") {
 
         hide_columns_json = home_tl_hide_columns_json;
-        max_columns = home_tl_number_of_columns;
+        max_columns = home_tl_all_column_names_list.length;
 
     }
 
