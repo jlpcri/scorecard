@@ -2,11 +2,13 @@ from datetime import datetime, timedelta
 from django.conf import settings
 from django.db.models import Sum, Avg
 from pytz import timezone
+from scorecard.apps.automations.models import Automation
 
 from scorecard.apps.personals.models import TestStats, RequirementStats, LabStats
 from scorecard.apps.personals.models import InnovationStats
 from scorecard.apps.users.models import FunctionalGroup
 from models import TestMetricsConfiguration
+from scorecard.apps.automations.utils import CHOICES_QI, CHOICES_RE, CHOICES_TL, CHOICES_QA_TE
 
 
 def context_teams(request):
@@ -105,7 +107,7 @@ def fetch_team_members_per_team_per_date(key, date):
 
 
 def fetch_collect_data_per_team_per_date(key, date):
-    form_data = calculate_data = {}
+    form_data = calculate_data = automation_data = {}
     team_personals = fetch_team_members_per_team_per_date(key, date)
 
     # QA, TE
@@ -198,6 +200,8 @@ def fetch_collect_data_per_team_per_date(key, date):
             'auto_savings': tc_auto_execution_time * costs_staff
         }
 
+        automation_data = get_automation_data(key, CHOICES_QA_TE)
+
     elif key == 'QI':
         for person in team_personals:
             overtime_weekday += person.overtime_weekday
@@ -220,6 +224,7 @@ def fetch_collect_data_per_team_per_date(key, date):
             'operational_cost': len(team_personals) * 40 * 45,
             'total_cost': len(team_personals) * 40 * 45
         }
+        automation_data = get_automation_data(key, CHOICES_QI)
 
     elif key == 'RE':
         for person in team_personals:
@@ -246,6 +251,7 @@ def fetch_collect_data_per_team_per_date(key, date):
             'operational_cost': len(team_personals) * 30 * 50,
             'rework_external_cost': rework_external_time * 50
         }
+        automation_data = get_automation_data(key, CHOICES_RE)
 
     elif key == 'TL':
         for person in team_personals:
@@ -260,12 +266,14 @@ def fetch_collect_data_per_team_per_date(key, date):
             'rework_time': rework_time,
             'tickets_closed': tickets_closed
         }
+        automation_data = get_automation_data(key, CHOICES_TL)
 
     form_data['staffs'] = len(team_personals)
 
     return {
         'form_data': form_data,
-        'calculate_data': calculate_data
+        'calculate_data': calculate_data,
+        'automation_data': automation_data
     }
 
 
@@ -377,5 +385,25 @@ def get_ytd_data(group, key):
                 'avg': group.aggregate(Avg('license_cost'))['license_cost__avg']
             }
         }
+
+    return data
+
+
+def get_automation_data(key, choices):
+    data = {}
+    for item in choices:
+        try:
+            automation = Automation.objects.get(functional_group__key=key,
+                                                column_field=item[0])
+
+            exec(automation.script_file.read())
+            try:
+                result = run_script()
+            except Exception:
+                result = 0
+
+            data[item[0]] = result
+        except Automation.DoesNotExist:
+            continue
 
     return data

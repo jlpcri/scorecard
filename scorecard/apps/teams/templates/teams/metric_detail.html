@@ -70,7 +70,10 @@
                     <div class="col-sm-2">{{ form.staffs }}</div>
                     <div class="col-sm-2">{{ form.openings }}</div>
                     <div class="col-sm-2">{{ form.contractors }}</div>
-                    <div class="col-sm-2">{{ form.compliments }}</div>
+                    <div class="col-sm-2">
+                        <input id="id_compliments" name="compliments"
+                                {% if automation_data.compliments %} value="{{ automation_data.compliments }}" class="gentle" {% else %} value="{{ metric.compliments }}" {% endif %}>
+                    </div>
                     <div class="col-sm-2">{{ form.complaints }}</div>
                 </div>
 
@@ -127,7 +130,10 @@
                         <div class="col-sm-2"><label>Projects Backlog</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2">{{ form.team_initiative }}</div>
+                        <div class="col-sm-2">
+                            <input id="id_team_initiative" name="team_initiative"
+                                {% if automation_data.team_initiative %} value="{{ automation_data.team_initiative }}" class="gentle" {% else %} value="{{ metric.team_initiative }}" {% endif %}>
+                        </div>
                         <div class="col-sm-2">{{ form.ticket_backlog }}</div>
                         <div class="col-sm-2">{{ form.ticket_prep }}</div>
                         <div class="col-sm-2">{{ form.ticket_execution }}</div>

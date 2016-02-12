@@ -181,7 +181,8 @@ def collect_data(request):
         'metric': metric,
         'form': form,
         'test_metric_config': test_metric_config,
-        'calculate_data': initial_data['calculate_data']
+        'calculate_data': initial_data['calculate_data'],
+        'automation_data': initial_data['automation_data']
     })
 
     return render(request, 'teams/metric_detail.html', context)
