@@ -1,5 +1,7 @@
+import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
 
@@ -92,3 +94,27 @@ def automation_new(request):
             messages.error(request, 'Errors found in Automation New')
 
         return redirect('automations:automations')
+
+
+def run_script(request):
+    automation_id = request.GET.get('automation_id', '')
+    automation = get_object_or_404(Automation, pk=automation_id)
+
+    # execute python code read from script file of automation
+    exec(automation.script_file.read())
+    try:
+        result = run_script()
+        automation.result = result
+    except (TypeError, AttributeError) as e:
+        # print '{0}: {1}'.format(e.message, type(e))
+        result = 'Main Function Name should be run_script'
+
+    automation.tests_run += 1
+    automation.save()
+
+    data = {
+        'times': automation.tests_run,
+        'result': result
+    }
+
+    return HttpResponse(json.dumps(data), content_type="application/json")
