@@ -48,7 +48,7 @@ def automation_detail(request, automation_id):
 
     context = RequestContext(request, {
         'automation': automation,
-        'form': form
+        'form': form,
     })
 
     return render(request, 'automations/automation.html', context)
@@ -101,13 +101,15 @@ def run_script(request):
     automation = get_object_or_404(Automation, pk=automation_id)
 
     # execute python code read from script file of automation
-    exec(automation.script_file.read())
+    script_code = automation.script_file.read()
+    exec(script_code)
+
     try:
         result = run_script()
         automation.result = result
-    except (TypeError, AttributeError) as e:
-        # print '{0}: {1}'.format(e.message, type(e))
-        result = 'Main Function Name should be run_script'
+    except Exception as e:
+        print '{0}: {1}'.format(e.message, type(e))
+        result = 'Errors found'
 
     automation.tests_run += 1
     automation.save()

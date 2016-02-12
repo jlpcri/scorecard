@@ -18,11 +18,8 @@
 
             <div class="col-xs-6">
                 <div class="row">
-                    <label for="script-content">Script Content (Main function should be run_script):</label>
-                    <textarea class="form-control" id="script-content" name="script-content" rows="20" >
-                        {% if automation.script_file %}
-                            {{ automation.script_file.read }}
-                        {% endif %}
+                    <label for="script-content">Script Content (Main function: run_script, Called function: Global):</label>
+                    <textarea class="form-control" id="script-content" name="script-content" rows="20" >{% if automation.script_file %}{{ automation.script_file.read }}{% endif %}
                     </textarea>
                 </div>
                 <br>
