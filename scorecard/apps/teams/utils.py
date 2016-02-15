@@ -397,7 +397,11 @@ def get_automation_data(key, choices):
                                                 column_field=item[0])
 
             if automation.script_file:
-                exec(automation.script_file.read())
+                try:
+                    exec(automation.script_file.read())
+                except IOError:
+                    continue
+
                 try:
                     result = run_script()
                 except Exception:
