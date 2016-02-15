@@ -149,6 +149,8 @@ def user_management(request):
         sort_types = [
             'username',
             '-username',
+            'first_name',
+            '-first_name',
             'last_login',
             '-last_login',
             'humanresource__functional_group__key',
