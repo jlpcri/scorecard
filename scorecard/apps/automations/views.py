@@ -19,7 +19,6 @@ def automations(request):
             qas = fg.automation_set.order_by('column_field')
         elif fg.key == 'QI':
             qis = fg.automation_set.order_by('column_field')
-            # automation_new_form = AutomationNewForm(initial={'key': fg.key})
         elif fg.key == 'RE':
             res = fg.automation_set.order_by('column_field')
         elif fg.key == 'TE':
@@ -27,8 +26,13 @@ def automations(request):
         elif fg.key == 'TL':
             tls = fg.automation_set.order_by('column_field')
 
-    automation_new_form = AutomationNewForm(initial={'functional_group': request.user.humanresource.functional_group,
-                                                     'key': request.user.humanresource.functional_group.key})
+    try:
+        automation_new_form = AutomationNewForm(initial={'functional_group': request.user.humanresource.functional_group,
+                                                         'key': request.user.humanresource.functional_group.key})
+    except AttributeError as e:
+        # print e.message, type(e)
+        automation_new_form = AutomationNewForm(initial={'functional_group': FunctionalGroup.objects.get(key='QA'),
+                                                         'key': 'QA'})
 
     context = RequestContext(request, {
         'qas': qas,
@@ -69,7 +73,7 @@ def automation_edit(request, automation_id):
                 automation.save()
             messages.success(request, 'Automation is saved')
         else:
-            print form.errors
+            # print form.errors
             messages.error(request, 'Errors found in Automation Edit')
 
         return redirect('automations:automations')

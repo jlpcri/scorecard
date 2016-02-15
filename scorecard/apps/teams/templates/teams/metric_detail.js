@@ -258,6 +258,7 @@ $('#collect_data_button').click(function(){
     //console.log(key, date);
     $.getJSON("{% url 'teams:fetch_team_members_by_date'%}?key={0}&date={1}".format(key, date)).done(function(data){
         //console.log(data);
+        $.ajaxSetup({cache: false});
         var contents_head = '<tr><th>Name</th><th>Updated</th></tr>',
             contents_body = '';
         $.each(data, function(index, value){

@@ -15,7 +15,7 @@
                         <tr>
                             <td><a href="{% url 'automations:automation_detail' item.id %}">{{ item.column_field }}</a></td>
                             <td>{{ item.script_name }}</td>
-                            <td>{{ item.last_success|date }}</td>
+                            <td>{{ item.last_success }}</td>
                             <td>{{ item.tests_run }}</td>
                         </tr>
                     {% endfor %}
