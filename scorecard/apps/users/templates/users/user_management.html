@@ -19,6 +19,18 @@
                         {% endif %}
                     </th>
                     <th class="col-xs-2">
+                        {% if sort == 'first_name' %}
+                            <a href="{% url 'users:management' %}?sort=-first_name">
+                            <strong>Fullname</strong></a>&nbsp;<i class="fa fa-sort-asc"></i>
+                        {% elif sort == '-first_name' %}
+                            <a href="{% url 'users:management' %}?sort=first_name">
+                            <strong>Fullname</strong></a>&nbsp;<i class="fa fa-sort-desc"></i>
+                        {% else %}
+                            <a href="{% url 'users:management' %}?sort=first_name">
+                            <strong>Fullname</strong></a>&nbsp;<i class="fa fa-sort"></i>
+                        {% endif %}
+                    </th>
+                    <th class="col-xs-2">
                         {% if sort == 'last_login' %}
                             <a href="{% url 'users:management' %}?sort=-last_login">
                             <strong>Last Login</strong></a>&nbsp;<i class="fa fa-sort-asc"></i>
@@ -51,6 +63,7 @@
             {% for user in users %}
                 <tr>
                     <td>{{ user.username }}</td>
+                    <td>{{ user.first_name }} {{ user.last_name }}</td>
                     <td>{{ user.last_login }}</td>
                     <td>{{ user.humanresource.functional_group.key }}</td>
                     <td style="text-align: center;">
