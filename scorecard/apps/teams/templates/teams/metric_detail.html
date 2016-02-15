@@ -72,9 +72,12 @@
                     <div class="col-sm-2">{{ form.contractors }}</div>
                     <div class="col-sm-2">
                         <input id="id_compliments" name="compliments"
-                                {% if automation_data.compliments %} value="{{ automation_data.compliments }}" class="gentle" {% else %} value="{{ metric.compliments }}" {% endif %}>
+                            {% if automation_data.compliments %} value="{{ automation_data.compliments }}" class="gentle" {% else %} value="{{ metric.compliments }}" {% endif %}>
                     </div>
-                    <div class="col-sm-2">{{ form.complaints }}</div>
+                    <div class="col-sm-2">
+                        <input id="id_complaints" name="complaints"
+                            {% if automation_data.complaints %} value="{{ automation_data.complaints }}" class="gentle" {% else %} value="{{ metric.complaints }}" {% endif %}>
+                    </div>
                 </div>
 
                 <legend style="margin-top: 30px;">Throughput</legend>
@@ -87,8 +90,22 @@
                         <div class="col-sm-2"><label>Unit Tests Cover</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2">{{ form.story_points_backlog }}</div>
-                        <div class="col-sm-2">{{ form.story_points_prep }}</div>
+                        <div class="col-sm-2">
+                            <input id="id_story_points_backlog" name="story_points_backlog"
+                                {% if automation_data.story_points_backlog %}
+                                   value="{{ automation_data.story_points_backlog }}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.story_points_backlog }}"
+                                {% endif %}>
+                        </div>
+                        <div class="col-sm-2">
+                            <input id="id_story_points_prep" name="story_points_prep"
+                                {% if automation_data.story_points_prep %}
+                                   value="{{ automation_data.story_points_prep }}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.story_points_prep }}"
+                                {% endif %}>
+                        </div>
                         <div class="col-sm-2">{{ form.story_points_execution }}</div>
                         <div class="col-sm-2">{{ form.unit_tests_dev }}</div>
                         <div class="col-sm-2">{{ form.unit_tests_coverage }}</div>
