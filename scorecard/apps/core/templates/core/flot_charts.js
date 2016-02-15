@@ -534,7 +534,7 @@ function get_chart_object_from_list(temp_prefix, temp_chart_count) {
     } else if (temp_prefix === "qa") {
         dnd_charts_list = quality_assurance_dnd_charts_list;
     } else if (temp_prefix === "qi") {
-        dnd_charts_list = quality_innovaton_dnd_charts_list;
+        dnd_charts_list = quality_innovation_dnd_charts_list;
     } else if (temp_prefix === "re") {
         dnd_charts_list = requirements_engineering_dnd_charts_list;
     } else if (temp_prefix === "te") {
