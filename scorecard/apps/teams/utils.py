@@ -396,13 +396,14 @@ def get_automation_data(key, choices):
             automation = Automation.objects.get(functional_group__key=key,
                                                 column_field=item[0])
 
-            exec(automation.script_file.read())
-            try:
-                result = run_script()
-            except Exception:
-                result = 0
+            if automation.script_file:
+                exec(automation.script_file.read())
+                try:
+                    result = run_script()
+                except Exception:
+                    result = 0
 
-            data[item[0]] = result
+                data[item[0]] = result
         except Automation.DoesNotExist:
             continue
 
