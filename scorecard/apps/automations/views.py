@@ -105,22 +105,26 @@ def run_script(request):
     automation = get_object_or_404(Automation, pk=automation_id)
 
     # execute python code read from script file of automation
-    script_code = automation.script_file.read()
-    exec(script_code)
+    if automation.script_file:
+        script_code = automation.script_file.read()
+        exec(script_code)
 
-    try:
-        result = run_script()
-        automation.result = result
-    except Exception as e:
-        print '{0}: {1}'.format(e.message, type(e))
-        result = 'Errors found'
+        try:
+            result = run_script()
+            automation.result = result
+        except Exception as e:
+            print '{0}: {1}'.format(e.message, type(e))
+            result = 'Errors found'
 
-    automation.tests_run += 1
-    automation.save()
+        automation.tests_run += 1
+        automation.save()
 
-    data = {
-        'times': automation.tests_run,
-        'result': result
-    }
+        data = {
+            'result': result
+        }
+    else:
+        data = {
+            'result': 'No Script File'
+        }
 
     return HttpResponse(json.dumps(data), content_type="application/json")
