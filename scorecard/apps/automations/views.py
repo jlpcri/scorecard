@@ -73,7 +73,7 @@ def automation_edit(request, automation_id):
                 automation.save()
             messages.success(request, 'Automation is saved')
         else:
-            print form.errors
+            # print form.errors
             messages.error(request, 'Errors found in Automation Edit')
 
         return redirect('automations:automations')
