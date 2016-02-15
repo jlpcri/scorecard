@@ -24,7 +24,7 @@
         <div class="table-responsive">
             <table id="quality_innovation_table" class="table table-striped table-hover table-condensed table-bordered">
                 <thead>
-                <tr>
+                <tr id="qi_th_r1">
                     <th class="col-md-3"><strong>Date</strong></th>
                     <th class="col-md-3"><strong>Staffs</strong></th>
                     <th class="col-md-2"><strong>Backlog Story</strong></th>
@@ -100,8 +100,8 @@
         (function () {
 
             $(document).ready(function () {
-                add_id_to_teams_table("quality_innovation_table");
-                build_column_names_list_teams("quality_innovation_table", quality_innovation_all_column_names_list);
+                add_ids_to_teams_table("quality_innovation_table");
+                build_column_names_list("quality_innovation_table", quality_innovation_all_column_names_list);
             });
 
         })(jQuery);

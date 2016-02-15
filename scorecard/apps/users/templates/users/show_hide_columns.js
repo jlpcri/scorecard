@@ -14,8 +14,13 @@ function initialize_metrics_table(table_id, prefix) {
         "bAutoWidth": true,
         "bSort": false,
         "order": [],
-        "fnAdjustColumnSizing": false,
-        "fnInitComplete": add_ids_to_metrics_table(table_id)
+        "fnAdjustColumnSizing": true,
+        "fnInitComplete": add_ids_to_metrics_table(table_id),
+        "fnDrawCallback": function () {
+            setTimeout( function () {
+                hide_user_column_preferences_by_column_name(table_id, prefix);
+            }, 2 );
+        }
     });
 }
 
@@ -44,7 +49,7 @@ function add_ids_to_metrics_table(table_id) {
             column_count++;
         });
         row_count++;
-    })
+    });
 }
 
 function on_click_show_hide_columns_dialog(event) {
@@ -68,29 +73,28 @@ function on_click_show_hide_columns_dialog(event) {
         hide_column_list = home_qa_hide_column_list;
         table_title = "Quality Assurance Columns";
 
-    } else if (prefix == "qi") {
+    } else if (prefix == "qih") {
 
-        table_id = home_qi_table;
+        table_id = home_qi_table_id;
         all_column_names_list = home_qi_all_column_names_list;
         hide_column_list = home_qi_hide_column_list;
         table_title = "Quality Innovation Columns";
 
-    } else if (prefix == "re") {
+    } else if (prefix == "reh") {
 
         table_id = home_re_table_id;
         all_column_names_list = home_re_all_column_names_list;
         hide_column_list = home_re_hide_column_list;
         table_title = "Requirements Engineering Columns";
 
-    } else if (prefix == "te") {
+    } else if (prefix == "teh") {
 
         table_id = home_te_table_id;
         all_column_names_list = home_te_all_column_names_list;
         hide_column_list = home_te_hide_column_list;
-        // table_visible = $('#test_engineering_table').is(':visible');
         table_title = "Test Engineering Columns";
 
-    } else if (prefix == "tl") {
+    } else if (prefix == "tlh") {
 
         table_id = home_tl_table_id;
         all_column_names_list = home_tl_all_column_names_list;
@@ -256,8 +260,6 @@ function remove_from_hide_list(temp_list, temp_number) {
 }
 
 function show_hide_column(temp_table_id, column_number, show_hide, force_table_hide, force_table_show) {
-
-    // console.log("show_hide_column " + column_number + "  " + force_table_hide + "  " + force_table_show);
 
     var oTable = $('#' + temp_table_id).dataTable();
 
@@ -454,7 +456,7 @@ function hide_user_column_preferences_by_column_name(temp_table_id, prefix) {
                 for (var index01 = 0; index01 < temp_array.length; index01++) {
 
                     var column_name = temp_array[index01].trim();
-                    var column_number = get_column_number_by_name(temp_table_id, prefix, column_name);
+                    var column_number = get_column_number_by_name(temp_table_id, column_name);
 
                     // if the user has entered a column name that cannot be found in the table, the column_number will be -1
                     if (column_number > -1) {
@@ -480,9 +482,11 @@ function hide_user_column_preferences_by_column_name(temp_table_id, prefix) {
     }
 }
 
-function get_column_number_by_name(temp_table_id, prefix, column_name) {
+function get_column_number_by_name(temp_table_id, column_name) {
 
     var column_number = -1;
+
+    column_name.trim();
 
     $('#' + temp_table_id).find('th').each(function ($index) {
         var temp_name = $(this).text().trim();

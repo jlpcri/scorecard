@@ -40,7 +40,7 @@
 
                 <div class="dataTables_scroll">
 
-                    <table id="home_test_engineering_table" class="display nowrap metrics_table" cellspacing="0">
+                    <table id="home_test_engineering_table" class="display nowrap metrics_table" cellspacing="0" style="width:100%;">
                         <thead class="metrics_thead">
                         <tr id="teh_th_r1">
                             <th class="col-md-3"><strong>Date</strong></th>
@@ -166,7 +166,6 @@
 
                     build_column_names_list(home_te_table_id, home_te_all_column_names_list);
                     initialize_metrics_table(home_te_table_id, "teh");
-                    hide_user_column_preferences_by_column_name(home_te_table_id, "teh");
 
                 } else {
                     alert("JQuery datatables library is not loaded.");
