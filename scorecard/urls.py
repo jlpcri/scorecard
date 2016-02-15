@@ -13,6 +13,7 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
+from django.conf import settings
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
 
@@ -30,3 +31,7 @@ urlpatterns = [
 ]
 
 admin.site.site_header = 'Score Card Administration'
+
+urlpatterns += patterns('', (r'^scorecard/media/(?P<path>.*)$',
+                             'django.views.static.serve',
+                             {'document_root': settings.MEDIA_ROOT}))

@@ -1,0 +1,51 @@
+{% extends 'core/base.html' %}
+
+{% block title %} Automation Detail {% endblock %}
+
+{% block body %}
+    <div class="container">
+        <legend>Automation Tests</legend>
+        <div class="row">
+            <div class="col-xs-6">
+                <form action="{% url 'automations:automation_edit' automation.id %}" method="post" enctype="multipart/form-data">
+                    {{ form }}
+                    {% csrf_token %}
+                    <br>
+                    <input id="automation_edit" class="btn btn-primary" type="submit" value="Save Automation">
+                    <a href="{% url 'automations:automations' %}" class="btn btn-default">Cancel</a>
+                </form>
+            </div>
+
+            <div class="col-xs-6">
+                <div class="row">
+                    <label for="script-content">Script Content (Main function: run_script, Called function: Global):</label>
+                    <textarea class="form-control" id="script-content" name="script-content" rows="20" >{% if automation.script_file %}{{ automation.script_file.read }}{% endif %}
+                    </textarea>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-xs-2">
+                        <button type="button" id="run-script" name="run-script" class="btn btn-primary">Run Script</button>
+                    </div>
+                    <div class="col-xs-1"></div>
+                    <div class="col-xs-9">
+                        <label for="run-script-result">Result:</label>
+                        <input type="text" id="run-script-result" name="run-script-result" value="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+    <script>
+        $('#run-script').click(function () {
+            $.getJSON("{% url 'automations:run_script' %}?automation_id={0}".format({{ automation.id }})).done(function(data){
+                console.log(data);
+                $('#run-script-result').val(data['result'])
+            })
+        })
+
+    </script>
+{% endblock %}

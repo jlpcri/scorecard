@@ -222,6 +222,11 @@ def user_manager_assign(request):
 
     if request.method == 'GET':
         users = User.objects.all().order_by('username')
+        try:
+            first_check = users[0].humanresource.manager
+        except HumanResource.DoesNotExist:
+            first_check = False
+
         if user.is_superuser or not key:
             groups = FunctionalGroup.objects.all().order_by('name')
         else:
@@ -230,7 +235,7 @@ def user_manager_assign(request):
         context = RequestContext(request, {
             'users': users,
             'groups': groups,
-            'first_check': users[0].humanresource.manager
+            'first_check': first_check
         })
 
         return render(request, 'users/user_manager_assign.html', context)

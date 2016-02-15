@@ -70,8 +70,14 @@
                     <div class="col-sm-2">{{ form.staffs }}</div>
                     <div class="col-sm-2">{{ form.openings }}</div>
                     <div class="col-sm-2">{{ form.contractors }}</div>
-                    <div class="col-sm-2">{{ form.compliments }}</div>
-                    <div class="col-sm-2">{{ form.complaints }}</div>
+                    <div class="col-sm-2">
+                        <input id="id_compliments" name="compliments"
+                            {% if automation_data.compliments %} value="{{ automation_data.compliments }}" class="gentle" {% else %} value="{{ metric.compliments }}" {% endif %}>
+                    </div>
+                    <div class="col-sm-2">
+                        <input id="id_complaints" name="complaints"
+                            {% if automation_data.complaints %} value="{{ automation_data.complaints }}" class="gentle" {% else %} value="{{ metric.complaints }}" {% endif %}>
+                    </div>
                 </div>
 
                 <legend style="margin-top: 30px;">Throughput</legend>
@@ -84,11 +90,32 @@
                         <div class="col-sm-2"><label>Unit Tests Cover</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2">{{ form.story_points_backlog }}</div>
-                        <div class="col-sm-2">{{ form.story_points_prep }}</div>
+                        <div class="col-sm-2">
+                            <input id="id_story_points_backlog" name="story_points_backlog"
+                                {% if automation_data.story_points_backlog %}
+                                   value="{{ automation_data.story_points_backlog }}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.story_points_backlog }}"
+                                {% endif %}>
+                        </div>
+                        <div class="col-sm-2">
+                            <input id="id_story_points_prep" name="story_points_prep"
+                                {% if automation_data.story_points_prep %}
+                                   value="{{ automation_data.story_points_prep }}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.story_points_prep }}"
+                                {% endif %}>
+                        </div>
                         <div class="col-sm-2">{{ form.story_points_execution }}</div>
                         <div class="col-sm-2">{{ form.unit_tests_dev }}</div>
-                        <div class="col-sm-2">{{ form.unit_tests_coverage }}</div>
+                        <div class="col-sm-2">
+                            <input id="id_unit_tests_coverage" name="unit_tests_coverage"
+                                {% if automation_data.unit_tests_coverage %}
+                                   value="{{ automation_data.unit_tests_coverage }}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.unit_tests_coverage }}"
+                                {% endif %}>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-2"><label>Document Cover</label></div>
@@ -98,11 +125,39 @@
                         <div class="col-sm-2"><label>Active Projects</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2">{{ form.documentation_coverage }}</div>
-                        <div class="col-sm-2">{{ form.defects_in_dev }}</div>
+                        <div class="col-sm-2">
+                            <input id="id_documentation_coverage" name="documentation_coverage"
+                                {% if automation_data.documentation_coverage%}
+                                   value="{{ automation_data.documentation_coverage}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.documentation_coverage}}"
+                                {% endif %}>
+                        </div>
+                        <div class="col-sm-2">
+                            <input id="id_defects_in_dev" name="defects_in_dev"
+                                {% if automation_data.defects_in_dev%}
+                                   value="{{ automation_data.defects_in_dev}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.defects_in_dev}}"
+                                {% endif %}>
+                        </div>
                         <div class="col-sm-2">{{ form.elicitation_analysis_time }}</div>
-                        <div class="col-sm-2">{{ form.revisions }}</div>
-                        <div class="col-sm-2">{{ form.active_projects }}</div>
+                        <div class="col-sm-2">
+                            <input id="id_revisions" name="revisions"
+                                {% if automation_data.revisions%}
+                                   value="{{ automation_data.revisions}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.revisions}}"
+                                {% endif %}>
+                        </div>
+                        <div class="col-sm-2">
+                            <input id="id_active_projects" name="active_projects"
+                                {% if automation_data.active_projects%}
+                                   value="{{ automation_data.active_projects}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.active_projects}}"
+                                {% endif %}>
+                        </div>
                     </div>
                 {% elif metric.functional_group.key == 'RE' %}
                     <div class="row">
@@ -127,7 +182,10 @@
                         <div class="col-sm-2"><label>Projects Backlog</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2">{{ form.team_initiative }}</div>
+                        <div class="col-sm-2">
+                            <input id="id_team_initiative" name="team_initiative"
+                                {% if automation_data.team_initiative %} value="{{ automation_data.team_initiative }}" class="gentle" {% else %} value="{{ metric.team_initiative }}" {% endif %}>
+                        </div>
                         <div class="col-sm-2">{{ form.ticket_backlog }}</div>
                         <div class="col-sm-2">{{ form.ticket_prep }}</div>
                         <div class="col-sm-2">{{ form.ticket_execution }}</div>
@@ -194,10 +252,38 @@
                         <div class="col-sm-4"><label>UAT Defects not Prevented</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2">{{ form.slas_met }}</div>
-                        <div class="col-sm-2">{{ form.delays_introduced_time }}</div>
-                        <div class="col-sm-2">{{ form.sdis_not_prevented }}</div>
-                        <div class="col-sm-4">{{ form.uat_defects_not_prevented }}</div>
+                        <div class="col-sm-2">
+                            <input id="id_slas_met" name="slas_met"
+                                {% if automation_data.slas_met%}
+                                   value="{{ automation_data.slas_met}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.slas_met}}"
+                                {% endif %}>
+                        </div>
+                        <div class="col-sm-2">
+                            <input id="id_delays_introduced_time" name="delays_introduced_time"
+                                {% if automation_data.delays_introduced_time%}
+                                   value="{{ automation_data.delays_introduced_time}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.delays_introduced_time}}"
+                                {% endif %}>
+                        </div>
+                        <div class="col-sm-2">
+                            <input id="id_sdis_not_prevented" name="sdis_not_prevented"
+                                {% if automation_data.sdis_not_prevented%}
+                                   value="{{ automation_data.sdis_not_prevented}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.sdis_not_prevented}}"
+                                {% endif %}>
+                        </div>
+                        <div class="col-sm-4">
+                            <input id="id_uat_defects_not_prevented" name="uat_defects_not_prevented"
+                                {% if automation_data.uat_defects_not_prevented%}
+                                   value="{{ automation_data.uat_defects_not_prevented}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.uat_defects_not_prevented}}"
+                                {% endif %}>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-2"><label>Resource Swap</label></div>
@@ -205,9 +291,30 @@
                         <div class="col-sm-2"><label>Rework Intro Time</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2">{{ form.resource_swap }}</div>
-                        <div class="col-sm-2">{{ form.escalations }}</div>
-                        <div class="col-sm-2">{{ form.rework_introduced_time }}</div>
+                        <div class="col-sm-2">
+                            <input id="id_resource_swap" name="resource_swap"
+                                {% if automation_data.resource_swap%}
+                                   value="{{ automation_data.resource_swap}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.resource_swap}}"
+                                {% endif %}>
+                        </div>
+                        <div class="col-sm-2">
+                            <input id="id_escalations" name="escalations"
+                                {% if automation_data.escalations%}
+                                   value="{{ automation_data.escalations}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.escalations}}"
+                                {% endif %}>
+                        </div>
+                        <div class="col-sm-2">
+                            <input id="id_rework_introduced_time" name="rework_introduced_time"
+                                {% if automation_data.rework_introduced_time%}
+                                   value="{{ automation_data.rework_introduced_time}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.rework_introduced_time}}"
+                                {% endif %}>
+                        </div>
                     </div>
                 {% elif metric.functional_group.key == 'RE' %}
                     <div class="row">
@@ -275,7 +382,14 @@
                         <div class="col-sm-2"><label>Resource Swap time</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2">{{ form.avg_team_size }}</div>
+                        <div class="col-sm-2">
+                            <input id="id_avg_team_size" name="avg_team_size"
+                                {% if automation_data.avg_team_size%}
+                                   value="{{ automation_data.avg_team_size}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.avg_team_size}}"
+                                {% endif %}>
+                        </div>
                         <div class="col-sm-2">{{ form.overtime_weekday }}</div>
                         <div class="col-sm-2">{{ form.overtime_weekend }}</div>
                         <div class="col-sm-2">
@@ -283,7 +397,14 @@
                                     {% if calculate_data %} value="{{ calculate_data.avg_throughput|floatformat:2 }}" {% else %} value="{{ metric.avg_throughput|floatformat:2 }}" {% endif %} disabled/>
                         </div>
                         <div class="col-sm-2">{{ form.rework_time }}</div>
-                        <div class="col-sm-2">{{ form.resource_swap_time }}</div>
+                        <div class="col-sm-2">
+                            <input id="id_resource_swap_time" name="resource_swap_time"
+                                {% if automation_data.resource_swap_time%}
+                                   value="{{ automation_data.resource_swap_time}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.resource_swap_time}}"
+                                {% endif %}>
+                        </div>
                     </div>
                 {% elif metric.functional_group.key == 'RE' %}
                     <div class="row">
@@ -381,7 +502,14 @@
                         <div class="col-sm-2"><label>Other Savings</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2">{{ form.license_cost }}</div>
+                        <div class="col-sm-2">
+                            <input id="id_license_cost" name="license_cost"
+                                {% if automation_data.license_cost%}
+                                   value="{{ automation_data.license_cost}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.license_cost}}"
+                                {% endif %}>
+                        </div>
                         <div class="col-sm-2">
                             <input class="gentle" id="operational_cost" title="(Staffs + Contractors) * 40 * 45"
                                     {% if calculate_data %} value="{{ calculate_data.operational_cost|floatformat:2 }}" {% else %} value="{{ metric.operational_cost|floatformat:2 }}" {% endif %} disabled/>
@@ -390,7 +518,14 @@
                             <input class="gentle" id="total_cost" title="LicenseCost + OperationalCost"
                                     {% if calculate_data %} value="{{ calculate_data.total_cost|floatformat:2 }}" {% else %} value="{{ metric.total_operational_cost }}" {% endif %}disabled />
                         </div>
-                        <div class="col-sm-2">{{ form.other_savings }}</div>
+                        <div class="col-sm-2">
+                            <input id="id_other_savings" name="other_savings"
+                                {% if automation_data.other_savings%}
+                                   value="{{ automation_data.other_savings}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.other_savings}}"
+                                {% endif %}>
+                        </div>
                     </div>
                     <!-- Usage -->
                     <legend style="margin-top: 30px;">Usage</legend>
@@ -401,10 +536,38 @@
                         <div class="col-sm-2"><label>Visilog TXL Violation</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2">{{ form.pheme_manual_tests }}</div>
-                        <div class="col-sm-2">{{ form.pheme_auto_tests }}</div>
-                        <div class="col-sm-2">{{ form.visilog_txl_parsed }}</div>
-                        <div class="col-sm-2">{{ form.visilog_txl_schema_violation }}</div>
+                        <div class="col-sm-2">
+                            <input id="id_pheme_manual_tests" name="pheme_manual_tests"
+                                {% if automation_data.pheme_manual_tests%}
+                                   value="{{ automation_data.pheme_manual_tests}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.pheme_manual_tests}}"
+                                {% endif %}>
+                        </div>
+                        <div class="col-sm-2">
+                            <input id="id_pheme_auto_tests" name="pheme_auto_tests"
+                                {% if automation_data.pheme_auto_tests%}
+                                   value="{{ automation_data.pheme_auto_tests}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.pheme_auto_tests}}"
+                                {% endif %}>
+                        </div>
+                        <div class="col-sm-2">
+                            <input id="id_visilog_txl_parsed" name="visilog_txl_parsed"
+                                {% if automation_data.visilog_txl_parsed%}
+                                   value="{{ automation_data.visilog_txl_parsed}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.visilog_txl_parsed}}"
+                                {% endif %}>
+                        </div>
+                        <div class="col-sm-2">
+                            <input id="id_visilog_txl_schema_violation" name="visilog_txl_schema_violation"
+                                {% if automation_data.visilog_txl_schema_violation%}
+                                   value="{{ automation_data.visilog_txl_schema_violation}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.visilog_txl_schema_violation}}"
+                                {% endif %}>
+                        </div>
                     </div>
                 {% else %} <!-- QA, TE cost -->
                     <div class="row">

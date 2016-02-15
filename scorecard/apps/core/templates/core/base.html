@@ -28,14 +28,12 @@
             <script src="http://apps.qaci01.wic.west.com/static/common/bootstrap/3.0.0/assets/js/respond.min.js"></script>
         <![endif]-->
 
-        <link rel="stylesheet" type="text/css" href="{% static 'd3charts/main.css' %}"/>
         <link rel="stylesheet" type="text/css" href="{% static 'd3charts/d3_west_charts.css' %}"/>
 
-{#        <script type='text/javascript' language="javascript" src="{% static 'common/jquery/2.0.3/jquery.min.js' %}"></script>#}
+        <script type="text/javascript" language="javascript" src="{% static 'flot/jquery.flot.js' %}"></script>
+        <script type="text/javascript" language="javascript" src="{% static 'flot/jquery.flot.categories.js' %}"></script>
+        <script type="text/javascript" language="javascript" src="{% static 'flot/jquery.flot.pie.js' %}"></script>
 
-        <script type="text/javascript" language="javascript" src="{% static 'd3charts/d3.v3.min.js' %}"></script>
-        <script type="text/javascript" language="javascript" src="{% static 'd3charts/colorbrewer.js' %}"></script>
-        <script type="text/javascript" language="javascript" src="{% static 'd3charts/date.js' %}"></script>
 
         <style>
             html, body, .container, .content {
@@ -105,13 +103,11 @@
                 font-style: italic;
             }
 
-            .bar_chart_d3 {
-                fill: blue;
+            .td_title {
+                text-align: center;
             }
 
         </style>
-
-
 
         {% block extrahead %} {% endblock %}
 
@@ -178,8 +174,6 @@
 
         </header>
 
-
-
         <div class="content">
             <div class="wrapper">
                 <div class="proper-content">
@@ -202,7 +196,6 @@
                 <div class="push"></div>
             </div>
 
-
             <div class="footer-wrapper">
                 <div class="text-right text-muted">
                     <p>v 0.1 | Powered by Quality Engineering & Innovation |
@@ -214,7 +207,6 @@
 
         </div>
 
-        <!-- <script src="{% static 'common/jquery/1.10.2/jquery.min.js' %}"></script> -->
         <script src="{% static 'common/bootstrap/3.3.5/dist/js/bootstrap.min.js' %}"></script>
         <script src="{% static 'common/placeholders/3.0.0/placeholders.min.js' %}"></script>
         <script src="{% static 'common/highcharts/4.0.4/js/highcharts.js' %}"></script>
@@ -222,7 +214,7 @@
 
         <script>
             {% include 'core/core.js' %}
-            {% include 'teams/d3_west.js' %}
+            {% include 'core/flot_charts.js' %}
         </script>
 
         {% block endscript %}
