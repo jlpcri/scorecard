@@ -50,9 +50,18 @@ def automation_detail(request, automation_id):
     automation = get_object_or_404(Automation, pk=automation_id)
     form = AutomationForm(instance=automation)
 
+    if automation.script_file:
+        try:
+            script_content = automation.script_file.read()
+        except IOError:
+            script_content = ''
+    else:
+        script_content = ''
+
     context = RequestContext(request, {
         'automation': automation,
         'form': form,
+        'script_content': script_content
     })
 
     return render(request, 'automations/automation.html', context)
@@ -106,22 +115,27 @@ def run_script(request):
 
     # execute python code read from script file of automation
     if automation.script_file:
-        script_code = automation.script_file.read()
-        exec(script_code)
-
         try:
-            result = run_script()
-            automation.result = result
-        except Exception as e:
-            print '{0}: {1}'.format(e.message, type(e))
-            result = 'Errors found'
+            script_code = automation.script_file.read()
+            exec(script_code)
 
-        automation.tests_run += 1
-        automation.save()
+            try:
+                result = run_script()
+                automation.result = result
+            except Exception as e:
+                print '{0}: {1}'.format(e.message, type(e))
+                result = 'Errors found'
 
-        data = {
-            'result': result
-        }
+            automation.tests_run += 1
+            automation.save()
+
+            data = {
+                'result': result
+            }
+        except IOError:
+            data = {
+                'result': 'Cannot read file'
+            }
     else:
         data = {
             'result': 'No Script File'
