@@ -30,8 +30,14 @@
                     <div class="col-sm-2">{{ form.staffs }}</div>
                     <div class="col-sm-2">{{ form.openings }}</div>
                     <div class="col-sm-2">{{ form.contractors }}</div>
-                    <div class="col-sm-2">{{ form.compliments }}</div>
-                    <div class="col-sm-2">{{ form.complaints }}</div>
+                    <div class="col-sm-2">
+                        <input id="id_compliments" name="compliments"
+                            {% if automation_data.compliments %} value="{{ automation_data.compliments }}" class="gentle" {% else %} value="{{ metric.compliments }}" {% endif %}>
+                    </div>
+                    <div class="col-sm-2">
+                        <input id="id_complaints" name="complaints"
+                            {% if automation_data.complaints %} value="{{ automation_data.complaints }}" class="gentle" {% else %} value="{{ metric.complaints }}" {% endif %}>
+                    </div>
                 </div>
                 <legend style="margin-top: 30px;">Throughput</legend>
                 <div class="row">
@@ -41,10 +47,31 @@
                     <div class="col-sm-2"><label>Physical Machines</label></div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-2">{{ form.tickets_received }}</div>
+                    <div class="col-sm-2">
+                        <input id="id_tickets_received" name="tickets_received"
+                            {% if automation_data.tickets_received%}
+                               value="{{ automation_data.tickets_received}}" class="gentle"
+                            {% else %}
+                               value="{{ metric.tickets_received}}"
+                            {% endif %}>
+                    </div>
                     <div class="col-sm-2">{{ form.tickets_closed }}</div>
-                    <div class="col-sm-2">{{ form.virtual_machines }}</div>
-                    <div class="col-sm-2">{{ form.physical_machines }}</div>
+                    <div class="col-sm-2">
+                        <input id="id_virtual_machines" name="virtual_machines"
+                            {% if automation_data.virtual_machines%}
+                               value="{{ automation_data.virtual_machines}}" class="gentle"
+                            {% else %}
+                               value="{{ metric.virtual_machines}}"
+                            {% endif %}>
+                    </div>
+                    <div class="col-sm-2">
+                        <input id="id_physical_machines" name="physical_machines"
+                            {% if automation_data.physical_machines%}
+                               value="{{ automation_data.physical_machines}}" class="gentle"
+                            {% else %}
+                               value="{{ metric.physical_machines}}"
+                            {% endif %}>
+                    </div>
                 </div>
                 <legend style="margin-top: 30px;">Costs</legend>
                 <div class="row">
@@ -53,9 +80,30 @@
                     <div class="col-sm-2"><label>License Cost</label></div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-2">{{ form.power_consumption_ups_a }}</div>
-                    <div class="col-sm-2">{{ form.power_consumption_ups_b }}</div>
-                    <div class="col-sm-2">{{ form.license_cost }}</div>
+                    <div class="col-sm-2">
+                        <input id="id_power_consumption_ups_a" name="power_consumption_ups_a"
+                            {% if automation_data.power_consumption_ups_a%}
+                               value="{{ automation_data.power_consumption_ups_a}}" class="gentle"
+                            {% else %}
+                               value="{{ metric.power_consumption_ups_a}}"
+                            {% endif %}>
+                    </div>
+                    <div class="col-sm-2">
+                        <input id="id_power_consumption_ups_b" name="power_consumption_ups_b"
+                            {% if automation_data.power_consumption_ups_b%}
+                               value="{{ automation_data.power_consumption_ups_b}}" class="gentle"
+                            {% else %}
+                               value="{{ metric.power_consumption_ups_b}}"
+                            {% endif %}>
+                    </div>
+                    <div class="col-sm-2">
+                        <input id="id_license_cost" name="license_cost"
+                            {% if automation_data.license_cost%}
+                               value="{{ automation_data.license_cost}}" class="gentle"
+                            {% else %}
+                               value="{{ metric.license_cost}}"
+                            {% endif %}>
+                    </div>
                 </div>
             {% else %} <!-- For QA, TE, RE, QI -->
                 <legend style="margin-top: 30px;">Human Resource</legend>
