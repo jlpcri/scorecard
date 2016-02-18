@@ -24,6 +24,15 @@ class FunctionalGroup(models.Model):
         verbose_name_plural = "Functional Groups"
 
 
+class Subteam(models.Model):
+    """
+    Division of a functional group
+    """
+    parent = models.ForeignKey(FunctionalGroup)
+    name = models.TextField()
+    hourly_rate = models.IntegerField(default=50)
+
+
 class HumanResource(models.Model):
     """
     Link to auth user
