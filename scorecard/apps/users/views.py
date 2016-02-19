@@ -21,7 +21,7 @@ def home(request):
     check_user_team(request)
 
     functional_groups = FunctionalGroup.objects.all()
-
+    metrics = []
     for functional_group in functional_groups:
         if functional_group.key == 'QA':
             qa_metrics = functional_group.testmetrics_set.order_by('-created')

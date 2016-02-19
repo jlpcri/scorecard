@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('table_name', models.CharField(default=b'change me', max_length=250)),
                 ('hide_list', models.CharField(default=b'', max_length=50, blank=True)),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('user', models.ForeignKey(to='auth.User')),
             ],
             options={
                 'ordering': ('user',),
