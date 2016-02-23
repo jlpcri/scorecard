@@ -1,27 +1,60 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+import simplejson
+
+from scorecard.apps.teams.models import TestMetrics, LabMetrics, InnovationMetrics, RequirementMetrics
+
 
 class FunctionalGroup(models.Model):
     """
     Functional Group, such as RE, QA, QI, TL
     """
-    KEY_CHOICES = (
-        ('QA', 'Quality Assurance'),
-        ('QI', 'Quality Innovation'),
-        ('RE', 'Requirement Engineering'),
-        ('TE', 'Test Engineering'),
-        ('TL', 'Test Lab')
+    TESTING = 'Testing'
+    DEVELOPMENT = 'Development'
+    REQUIREMENTS = 'Requirements'
+    LAB = 'Lab'
+    METRIC_CHOICES = (
+        ('Testing', TESTING),
+        ('Development', DEVELOPMENT),
+        ('Requirements', REQUIREMENTS),
+        ('Lab', LAB)
     )
 
     name = models.CharField(max_length=50, unique=True, default='')
-    key = models.CharField(max_length=10, choices=KEY_CHOICES, default='')
+    abbreviation = models.CharField(max_length=4, unique=True, default = '')
+    metric_type = models.CharField(max_length=13, choices=METRIC_CHOICES, default=TESTING)
 
     def __unicode__(self):
-        return '{0}: {1}'.format(self.name, self.key)
+        return self.name
 
     class Meta:
         verbose_name_plural = "Functional Groups"
+
+    @property
+    def metrics_set(self):
+        if self.metric_type == self.TESTING:
+            return self.testmetrics_set.order_by('-created')
+        elif self.metric_type == self.DEVELOPMENT:
+            return self.innovationmetrics_set.order_by('-created')
+        elif self.metric_type == self.REQUIREMENTS:
+            return self.requirementmetrics_set.order_by('-created')
+        elif self.metric_type == self.LAB:
+            return self.labmetrics_set.order_by('-created')
+
+    def metric_fields(self):
+        if self.metric_type == self.TESTING:
+            metric = TestMetrics
+        elif self.metric_type == self.DEVELOPMENT:
+            metric = InnovationMetrics
+        elif self.metric_type == self.REQUIREMENTS:
+            metric = RequirementMetrics
+        elif self.metric_type == self.LAB:
+            metric = LabMetrics
+
+        fields = metric._meta.get_fields()
+        EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated']
+        return [field for field in fields if field.name not in EXCLUSION_LIST]
 
 
 class Subteam(models.Model):
@@ -67,5 +100,8 @@ class ColumnPreference(models.Model):
     class Meta:
         ordering = ('user',)
         verbose_name = "Column Preference"
+
+    def unpack(self):
+        return simplejson.dumps(self.hide_list) if self.hide_list else []
 
 

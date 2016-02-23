@@ -1,9 +1,10 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
+from scorecard.apps.help import views
 
-urlpatterns = patterns('scorecard.apps.help.views',
-    url(r'^$', 'guide', name='guide'),
+urlpatterns = [
+    url(r'^$', views.guide, name='guide'),
 
-)
+]
 
 

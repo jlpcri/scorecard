@@ -20,6 +20,16 @@
             min-width: 60%;
         }
 
+        .metrics_table th {
+            white-space: nowrap;
+            padding: 0.2em;
+        }
+
+        .metrics_table td {
+            text-align: right;
+            padding: 0.2em;
+        }
+
         .td_show_hide_sub_table {
             width: 300px;
             height: 35px;
@@ -79,52 +89,39 @@
     <div class="container west_container">
         <h1>Score Card</h1>
 
-        <div class="container" style="margin-top:5px;">
+        <ul id="subnav-tabs" class="nav nav-tabs">
+            {% for group in groups %}
+            <li><a href="#{{ group.abbreviation }}" data-toggle="tab">{{ group.name }}</a></li>
+            {% endfor %}
+        </ul>
 
-            <ul id="subnav-tabs" class="nav nav-tabs">
-                <li><a href="#quality_assurance" data-toggle="tab">Quality Assurance</a></li>
-                <li><a href="#quality_innovation" data-toggle="tab">Quality Innovation</a></li>
-                <li><a href="#requirements_engineering" data-toggle="tab">Requirements Engineering</a></li>
-                <li><a href="#test_engineering" data-toggle="tab">Test Engineering</a></li>
-                <li><a href="#test_lab" data-toggle="tab">Test Lab</a></li>
-            </ul>
+        <form action="." method="POST">
+            {% csrf_token %}
 
-        </div>
-
-    </div>
-
-    <form action="." method="POST">
-
-        {% csrf_token %}
-
-        <br>
-
-            <div class="container">
-                <div class="tab-content">
-                    <div class="tab-pane" id="quality_assurance">
-                        {% include 'users/home_quality_assurance.html' %}
+            <div class="tab-content">
+                {% for group in groups %}
+                <div class="tab-pane" id="{{ group.abbreviation }}">
+                    <div class="dataTables_wrapper no-footer table-responsive">
+                        <table class="display nowrap metrics_table">
+                            <tr>
+                                <th>Date</th>
+                                {% for field in group.metric_fields %}
+                                <th>{{ field.verbose_name | capfirst}}</th>
+                                {% endfor %}
+                            </tr>
+                            {% for row in group.metrics_set %}
+                                <td>{{ row.created | date:"m/d/y" }}</td>
+                                {% for field in row.table_row %}
+                                    <td>{{ field }}</td>
+                                {% endfor %}
+                            {% endfor %}
+                        </table>
                     </div>
-
-                    <div class="tab-pane" id="quality_innovation">
-                        {% include 'users/home_quality_innovation.html' %}
-                    </div>
-
-                    <div class="tab-pane" id="requirements_engineering">
-                        {% include 'users/home_requirements_engineering.html' %}
-                    </div>
-
-                    <div class="tab-pane" id="test_engineering">
-                        {% include 'users/home_test_engineering.html' %}
-                    </div>
-
-                    <div class="tab-pane" id="test_lab">
-                        {% include 'users/home_test_lab.html' %}
-                    </div>
-
                 </div>
+                {% endfor %}
             </div>
-
-    </form>
+        </form>
+    </div>
 
     {% block endscript %}
 
