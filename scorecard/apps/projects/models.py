@@ -11,26 +11,6 @@ class Project(models.Model):
     def __unicode__(self):
         return self.name
 
-    @property
-    def phases_qa(self):
-        return self.projectphase_set.filter(functional_group__key='QA')
-
-    @property
-    def phases_te(self):
-        return self.projectphase_set.filter(functional_group__key='TE')
-
-    @property
-    def phases_qi(self):
-        return self.projectphase_set.filter(functional_group__key='QI')
-
-    @property
-    def phases_re(self):
-        return self.projectphase_set.filter(functional_group__key='RE')
-
-    @property
-    def phases_tl(self):
-        return self.projectphase_set.filter(functional_group__key='TL')
-
 
 class ProjectPhase(models.Model):
     project = models.ForeignKey(Project)
@@ -49,9 +29,9 @@ class ProjectPhase(models.Model):
         unique_together = ('project', 'name')
 
     def __unicode__(self):
-        return '{0}: {1}: {2}'.format(self.name,
-                                      self.project.name,
-                                      self.functional_group.key)
+        return '{0} {1}: {2}'.format(self.project.name,
+                                      self.name,
+                                      self.functional_group.abbreviation)
 
     @property
     def start_delays(self):
@@ -85,8 +65,6 @@ class Ticket(models.Model):
     actual_end = models.DateTimeField(null=True, blank=True)
 
     def __unicode__(self):
-        return '{0}: {1}: {2}'.format(self.key,
-                                      self.lead.user,
-                                      self.functional_group.key)
+        return self.key
 
 

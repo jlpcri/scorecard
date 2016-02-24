@@ -79,10 +79,21 @@ class HumanResource(models.Model):
     def __unicode__(self):
         if self.functional_group:
             return '{0}: {1}: {2}'.format(self.user.username,
-                                          self.functional_group.key,
+                                          self.functional_group.abbreviation,
                                           self.manager)
         else:
             return '{0}: {1}: {2}'.format(self.user.username, 'No Team',  self.manager)
+
+    @property
+    def stat_set(self):
+        if self.functional_group.metric_type == FunctionalGroup.TESTING:
+            return self.teststats_set
+        elif self.functional_group.metric_type == FunctionalGroup.REQUIREMENTS:
+            return self.requirementstats_set
+        elif self.functional_group.metric_type == FunctionalGroup.DEVELOPMENT:
+            return self.innovationstats_set
+        elif self.functional_group.metric_type == FunctionalGroup.LAB:
+            return self.labstats_set
 
 
 class ColumnPreference(models.Model):

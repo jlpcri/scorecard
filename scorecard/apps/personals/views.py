@@ -28,8 +28,10 @@ def personals(request):
     tl_personals = []
     current_user_personals = []
 
+    users = HumanResource.objects.filter(functional_group__isnull=False).order_by('functional_group', 'user__last_name')
+
     for function_group in function_groups:
-        if function_group.key == 'QA':
+        if function_group.abbreviation == 'QA':
             try:
                 qa = TestStats.objects.latest('created')
                 qa_personals = TestStats.objects.filter(human_resource__functional_group__key='QA',
@@ -38,7 +40,7 @@ def personals(request):
                                                         created__day=qa.created.day)
             except TestStats.DoesNotExist:
                 pass
-        elif function_group.key == 'TE':
+        elif function_group.abbreviation == 'TE':
             try:
                 te = TestStats.objects.latest('created')
                 te_personals = TestStats.objects.filter(human_resource__functional_group__key='TE',
@@ -47,7 +49,7 @@ def personals(request):
                                                         created__day=te.created.day)
             except TestStats.DoesNotExist:
                 pass
-        elif function_group.key == 'QI':
+        elif function_group.abbreviation == 'QI':
             try:
                 qi = InnovationStats.objects.latest('created')
                 qi_personals = InnovationStats.objects.filter(created__year=qi.created.year,
@@ -55,7 +57,7 @@ def personals(request):
                                                               created__day=qi.created.day)
             except InnovationStats.DoesNotExist:
                 pass
-        elif function_group.key == 'RE':
+        elif function_group.abbreviation == 'RE':
             try:
                 re = RequirementStats.objects.latest('created')
                 re_personals = RequirementStats.objects.filter(created__year=re.created.year,
@@ -63,7 +65,7 @@ def personals(request):
                                                                created__day=re.created.day)
             except RequirementStats.DoesNotExist:
                 pass
-        elif function_group.key == 'TL':
+        elif function_group.abbreviation == 'TL':
             try:
                 tl = LabStats.objects.latest('created')
                 tl_personals = LabStats.objects.filter(created__year=tl.created.year,
@@ -74,13 +76,13 @@ def personals(request):
 
     hr = HumanResource.objects.get(user=request.user)
     if hr.functional_group:
-        if hr.functional_group.key in ['QA', 'TE']:
+        if hr.functional_group.abbreviation in ['QA', 'TE']:
             current_user_personals = hr.teststats_set.order_by('-created')
-        elif hr.functional_group.key == 'QI':
+        elif hr.functional_group.abbreviation == 'QI':
             current_user_personals = hr.innovationstats_set.order_by('-created')
-        elif hr.functional_group.key == 'RE':
+        elif hr.functional_group.abbreviation == 'RE':
             current_user_personals = hr.requirementstats_set.order_by('-created')
-        elif hr.functional_group.key == 'TL':
+        elif hr.functional_group.abbreviation == 'TL':
             current_user_personals = hr.labstats_set.order_by('-created')
 
     dates = get_distinct_dates()
@@ -93,7 +95,9 @@ def personals(request):
         'tl_personals': tl_personals,
 
         'current_user_personals': current_user_personals,
-        'dates': dates
+        'groups': function_groups,
+        'dates': dates,
+        'users': users
     })
 
     return render(request, 'personals/personals.html', context)

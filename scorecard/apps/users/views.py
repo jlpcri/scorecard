@@ -20,17 +20,10 @@ from scorecard.apps.core.views import check_user_team
 def home(request):
     check_user_team(request)
 
-    functional_groups = FunctionalGroup.objects.all()
-    metrics = []
-    for functional_group in functional_groups:
-        metrics.append(functional_group.metrics_set.order_by('-created'))
-    column_preferences = ColumnPreference.objects.filter(user=request.user)
-
     return render(request, 'users/home.html',
                   {
                       'groups': FunctionalGroup.objects.all(),
-                      'metrics': metrics,
-                      'column_preferences': column_preferences
+                      'column_preferences': ColumnPreference.objects.filter(user=request.user)
                   })
 
 
