@@ -1,7 +1,7 @@
 from django.utils import timezone
 from django.db import models
 
-from scorecard.apps.users.models import FunctionalGroup, HumanResource
+from scorecard.apps.users.models import FunctionalGroup, HumanResource, Subteam
 from utils import calculate_business_day
 
 
@@ -15,6 +15,7 @@ class Project(models.Model):
 class ProjectPhase(models.Model):
     project = models.ForeignKey(Project)
     functional_group = models.ForeignKey(FunctionalGroup)
+    subteam = models.ForeignKey(Subteam, blank=True, null=True)
     lead = models.ForeignKey(HumanResource)
 
     name = models.CharField(max_length=50)
@@ -55,6 +56,7 @@ class ProjectPhase(models.Model):
 
 class Ticket(models.Model):
     functional_group = models.ForeignKey(FunctionalGroup)
+    subteam = models.ForeignKey(Subteam, blank=True, null=True)
     lead = models.ForeignKey(HumanResource)
 
     key = models.CharField(max_length=50)

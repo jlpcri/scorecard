@@ -20,11 +20,6 @@
                             <li><a href="#">{{ date }}</a></li>
                         {% endfor %}
                     </ul>
-{#                    <select class="pull-right">#}
-{#                        {% for date in dates %}#}
-{#                            <option value="{{ date }}">{{ date }}</option>#}
-{#                        {% endfor %}#}
-{#                    </select>#}
                 {% endif %}
             </div>
         </div>
@@ -44,6 +39,12 @@
         <div class="tab-content">
             {% for group in groups %}
                 <div class="tab-pane{% if group == user.humanresource.functional_group %} active{% endif %}" id="{{ group.abbreviation }}">
+                    <ul id="subnav-pills" class="nav nav-pills">
+                        <li class="active"><a href="#{{ group.abbreviation }}-all" data-toggle="pill">All</a></li>
+                        {% for subteam in group.subteam_set.all %}
+                            <li><a href="#{{ subteam.name }}" data-toggle="pill">{{ subteam.name }}</a></li>
+                        {% endfor %}
+                    </ul>
                     {% include 'personals/quality_assurance.html' %}
                 </div>
             {% endfor %}

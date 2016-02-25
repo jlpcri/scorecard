@@ -29,25 +29,15 @@
         {% endif %}
         <ul id="subnav-tabs" class="nav nav-tabs">
             {% if user.is_superuser %}
-                <li><a href="#quality_assurance" data-toggle="tab">Quality Assurance</a> </li>
-                <li><a href="#quality_innovation" data-toggle="tab">Quality Innovation</a> </li>
-                <li><a href="#requirements_engineering" data-toggle="tab">Requirements Engineering</a> </li>
-                <li><a href="#test_engineering" data-toggle="tab">Test Engineering</a> </li>
-                <li><a href="#test_lab" data-toggle="tab">Test Lab</a> </li>
+                {% for group in groups %}
+                    <li{% if user.humanresource.functional_group == group %} class="active"{% endif %}>
+                        <a href="#{{ group.abbreviation }}" data-toggle="tab">{{ group.name }}</a>
+                    </li>
+                {% endfor %}
             {% elif user.humanresource.manager  %}
-                {% if user.humanresource.functional_group.key == 'QA' %}
-                    <li><a href="#quality_assurance" data-toggle="tab">Quality Assurance</a> </li>
-                {% elif user.humanresource.functional_group.key == 'QI' %}
-                    <li><a href="#quality_innovation" data-toggle="tab">Quality Innovation</a> </li>
-                {% elif user.humanresource.functional_group.key == 'RE' %}
-                    <li><a href="#requirements_engineering" data-toggle="tab">Requirements Engineering</a> </li>
-                {% elif user.humanresource.functional_group.key == 'TE' %}
-                    <li><a href="#test_engineering" data-toggle="tab">Test Engineering</a> </li>
-                {% elif user.humanresource.functional_group.key == 'TL' %}
-                    <li><a href="#test_lab" data-toggle="tab">Test Lab</a> </li>
-                {% endif %}
+                <li class="active"><a href="#{{ group.abbreviation }}" data-toggle="tab">{{ group.name }}</a></li>
             {% else %}
-                You are not team manager.
+                You have not been authorized to enter team-level data.
             {% endif %}
         </ul>
     </div>
@@ -56,6 +46,27 @@
 {% block body %}
     <div class="container">
         <div class="tab-content">
+            {% for group in groups %}
+                <div class="tab-pane{% if user.humanresource.functional_group == group %} active{% endif %}" id="{{ group.abbreviation }}">
+                    <ul id="subnav-pills" class="nav nav-pills">
+                        <li class="active"><a href="#{{ group.abbreviation }}-all" data-toggle="pill">All</a></li>
+                        {% for subteam in group.subteam_set.all %}
+                            <li><a href="#{{ subteam.name }}" data-toggle="pill">{{ subteam.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="{{ group.abbreviation }}-all">
+                            {% include 'teams/quality_assurance.html' %}
+                        </div>
+                        {% for subteam in group.subteam_set.all %}
+                            <div class="tab-pane" id="{{ subteam.name }}">
+                                {% include 'teams/quality_assurance.html' %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+
             <div class="tab-pane" id="quality_assurance">
                 {% include 'teams/quality_assurance.html' %}
             </div>

@@ -12,6 +12,7 @@ from scorecard.apps.core.views import check_user_team
 from scorecard.apps.users.views import user_is_superuser, user_is_manager
 from tasks import weekly_metric_new, weekly_send_email
 from utils import context_teams, fetch_team_members_per_team_per_date, fetch_collect_data_per_team_per_date
+from scorecard.apps.users.models import FunctionalGroup
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -22,6 +23,7 @@ def teams(request):
     check_user_team(request)
 
     context = RequestContext(request, context_teams(request))
+    context.update({'groups': FunctionalGroup.objects.all()})
 
     return render(request, 'teams/teams.html', context)
 
