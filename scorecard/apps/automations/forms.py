@@ -23,7 +23,7 @@ class AutomationNewForm(ModelForm):
         else:
             choices = ''
         self.fields['functional_group'] = forms.ModelChoiceField(widget=forms.Select(attrs={'class': 'form-control'}),
-                                                                 queryset=FunctionalGroup.objects.filter(key=key))
+                                                                 queryset=FunctionalGroup.objects.filter(abbreviation=key))
         self.fields['column_field'] = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}),
                                                         choices=choices)
 
@@ -44,7 +44,7 @@ class AutomationForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(AutomationForm, self).__init__(*args, **kwargs)
         if self.instance:
-            self.fields['functional_group'] = forms.ModelChoiceField(queryset=FunctionalGroup.objects.filter(key=self.instance.functional_group.key),
+            self.fields['functional_group'] = forms.ModelChoiceField(queryset=FunctionalGroup.objects.filter(abbreviation=self.instance.functional_group.abberviation),
                                                                      widget=forms.Select(attrs={'class': 'form-control',
                                                                                                 'readonly': True}))
 

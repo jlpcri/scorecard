@@ -30,6 +30,12 @@
         <div class="tab-content">
             {% for group in groups %}
                 <div class="tab-pane{% if user.humanresource.functional_group == group.group %} active{% endif %}" id="{{ group.group.abbreviation }}">
+                    <ul id="subnav-pills" class="nav nav-pills">
+                        <li class="active"><a href="#" data-toggle="pill">All</a></li>
+                        {% for subteam in group.group.subteam_set.all %}
+                            <li><a href="#" data-toggle="pill">{{ subteam }}</a></li>
+                        {% endfor %}
+                    </ul>
                     <div class="row">
                         <div class="col-xs-6">
                             <h1>Projects</h1>

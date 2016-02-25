@@ -56,6 +56,10 @@ class FunctionalGroup(models.Model):
         EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated']
         return [field for field in fields if field.name not in EXCLUSION_LIST]
 
+    @property
+    def key(self):
+        return self.abbreviation if self.abbreviation != 'BPO' else 'QI'
+
 
 class Subteam(models.Model):
     """
@@ -64,6 +68,9 @@ class Subteam(models.Model):
     parent = models.ForeignKey(FunctionalGroup)
     name = models.TextField()
     hourly_rate = models.IntegerField(default=50)
+
+    def __unicode__(self):
+        return self.name
 
 
 class HumanResource(models.Model):

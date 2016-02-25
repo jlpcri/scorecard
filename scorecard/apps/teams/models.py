@@ -147,7 +147,7 @@ class TestMetrics(BaseMetrics):
         Different computer formula for Product Quality, Quality Assurance, and Test Engineering
         """
         try:
-            test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=self.functional_group.key)
+            test_metric_config = TestMetricsConfiguration.objects.get(functional_group__abbreviation=self.functional_group.abbreviation)
             hours = test_metric_config.hours_per_week
             costs_staff = test_metric_config.costs_per_hour_staff
             costs_contractor = test_metric_config.costs_per_hour_contractor
@@ -167,7 +167,7 @@ class TestMetrics(BaseMetrics):
         """
 
         try:
-            test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=self.functional_group.key)
+            test_metric_config = TestMetricsConfiguration.objects.get(functional_group__abbreviation=self.functional_group.abbreviation)
             costs_staff = test_metric_config.costs_per_hour_staff
         except TestMetricsConfiguration.DoesNotExist:
             costs_staff = 0
