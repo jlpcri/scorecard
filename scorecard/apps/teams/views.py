@@ -57,7 +57,7 @@ def send_email(request):
 def metric_detail(request, metric_id):
     key = request.GET.get('key', '')
     try:
-        test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=key)
+        test_metric_config = TestMetricsConfiguration.objects.get(functional_group__abbreviation=key)
     except TestMetricsConfiguration.DoesNotExist:
         test_metric_config = ''
 
@@ -159,7 +159,7 @@ def collect_data(request):
     initial_data = fetch_collect_data_per_team_per_date(key, date)
 
     try:
-        test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=key)
+        test_metric_config = TestMetricsConfiguration.objects.get(functional_group__abbreviation=key)
     except TestMetricsConfiguration.DoesNotExist:
         test_metric_config = ''
 
