@@ -22,7 +22,7 @@ class FunctionalGroup(models.Model):
     )
 
     name = models.CharField(max_length=50, unique=True, default='')
-    abbreviation = models.CharField(max_length=4, unique=True, default = '')
+    abbreviation = models.CharField(max_length=4, unique=True, default='')
     metric_type = models.CharField(max_length=13, choices=METRIC_CHOICES, default=TESTING)
 
     def __unicode__(self):
@@ -34,27 +34,43 @@ class FunctionalGroup(models.Model):
     @property
     def metrics_set(self):
         if self.metric_type == self.TESTING:
-            return self.testmetrics_set.order_by('-created')
+            return self.testmetrics_set
         elif self.metric_type == self.DEVELOPMENT:
-            return self.innovationmetrics_set.order_by('-created')
+            return self.innovationmetrics_set
         elif self.metric_type == self.REQUIREMENTS:
-            return self.requirementmetrics_set.order_by('-created')
+            return self.requirementmetrics_set
         elif self.metric_type == self.LAB:
-            return self.labmetrics_set.order_by('-created')
+            return self.labmetrics_set
 
     def metric_fields(self):
-        if self.metric_type == self.TESTING:
-            metric = TestMetrics
-        elif self.metric_type == self.DEVELOPMENT:
-            metric = InnovationMetrics
-        elif self.metric_type == self.REQUIREMENTS:
-            metric = RequirementMetrics
-        elif self.metric_type == self.LAB:
-            metric = LabMetrics
+        metric = self.metrics()
 
         fields = metric._meta.get_fields()
-        EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated']
+        EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated', 'subteam']
         return [field for field in fields if field.name not in EXCLUSION_LIST]
+
+    def metrics(self):
+        if self.metric_type == self.TESTING:
+            return TestMetrics.objects.filter(functional_group=self).first()
+        elif self.metric_type == self.DEVELOPMENT:
+            return InnovationMetrics.objects.filter(functional_group=self).first()
+        elif self.metric_type == self.REQUIREMENTS:
+            return RequirementMetrics.objects.filter(functional_group=self).first()
+        elif self.metric_type == self.LAB:
+            return LabMetrics.objects.filter(functional_group=self).first()
+
+    def quality_graph(self):
+        metrics = self.metrics()
+        return metrics.quality_graph()
+
+    def efficiency_graph(self):
+        return self.metrics().efficiency_graph()
+
+    def throughput_graph(self):
+        return self.metrics().throughput_graph()
+
+    def progress_graph(self):
+        return self.metrics().progress_graph()
 
     @property
     def key(self):
@@ -71,6 +87,18 @@ class Subteam(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    @property
+    def metrics_set(self):
+        parent_metric_type = self.parent.metric_type
+        if parent_metric_type == self.parent.TESTING:
+            return self.testmetrics_set
+        elif parent_metric_type == self.parent.DEVELOPMENT:
+            return self.innovationmetrics_set
+        elif parent_metric_type == self.parent.REQUIREMENTS:
+            return self.requirementmetrics_set
+        elif parent_metric_type == self.parent.LAB:
+            return self.labmetrics_set
 
 
 class HumanResource(models.Model):

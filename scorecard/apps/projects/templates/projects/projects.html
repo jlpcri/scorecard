@@ -33,7 +33,7 @@
                     <ul id="subnav-pills" class="nav nav-pills">
                         <li class="active"><a href="#{{ group.group.abbreviation }}-all" data-toggle="pill">All</a></li>
                         {% for subteam in group.group.subteam_set.all %}
-                            <li><a href="#{{ subteam.name }}" data-toggle="pill">{{ subteam.name }}</a></li>
+                            <li><a href="#{{ subteam.name|slugify }}" data-toggle="pill">{{ subteam.name }}</a></li>
                         {% endfor %}
                     </ul>
                     <div class="tab-content">
@@ -127,7 +127,7 @@
                             </div>
                         </div>
                         {% for subteam in group.group.subteam_set.all %}
-                            <div class="tab-pane" id="{{ subteam.name }}">
+                            <div class="tab-pane" id="{{ subteam.name|slugify }}">
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <h1>Projects</h1>

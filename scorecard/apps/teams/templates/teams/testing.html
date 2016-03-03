@@ -1,0 +1,85 @@
+{% load staticfiles %}
+{% load team_extras %}
+
+{% block headscript %}
+
+    <style>
+
+        #qa_dnd_div {
+            width: 200px;
+            height: 25px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+    </style>
+
+
+{% endblock headscript %}
+
+<div class="tab-content" id="qa-content">
+
+    {% if qas %}
+        <p>{{ subteam.team.name }}</p>
+        <div class="table-responsive">
+            <table id="quality_assurance_table" class="table table-striped table-hover table-condensed table-bordered">
+                <thead>
+                <tr id="qa_th_r1">
+                    <th class="col-md-3"><strong>Date</strong></th>
+                    <th class="col-md-1"><strong>Staff</strong></th>
+                    <th class="col-md-2"><strong>Active Projects</strong></th>
+                    <th class="col-md-2"><strong>Active Tickets</strong></th>
+                    <th class="col-md-2"><strong>Avg Throughput</strong></th>
+                    <th class="col-md-2"><strong>Total Costs</strong></th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>YTD Average</strong></td>
+                        <td>{{ qas_ytd.staffs.avg|floatformat:2 }}</td>
+                        <td>{{ qas_ytd.active_projects.avg|floatformat:2 }}</td>
+                        <td>{{ qas_ytd.active_tickets.avg|floatformat:2 }}</td>
+                        <td>{{ qas_ytd.avg_throughput.avg|floatformat:2 }}</td>
+                        <td>${{ qas_ytd.total_operational_cost.avg }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>YTD Totals</strong></td>
+                        <td>{{ qas_ytd.staffs.total }}</td>
+                        <td>{{ qas_ytd.active_projects.total }}</td>
+                        <td>{{ qas_ytd.active_tickets.total }}</td>
+                        <td>{{ qas_ytd.avg_throughput.total }}</td>
+                        <td>{{ qas_ytd.total_operational_cost.total|prepend_dollars }}</td>
+                    </tr>
+                    {% for week in subteam.weeks %}
+                        <tr>
+                            <td><a href="{% url 'teams:metric_detail' week.id %}?key={{ week.functional_group.key }}">{{ week.created|date:'Y-m-d' }}</a></td>
+                            <td draggable="true" ondragstart="drag(event)">{{ week.staffs }}</td>
+                            <td draggable="true" ondragstart="drag(event)">{{ week.active_projects }}</td>
+                            <td draggable="true" ondragstart="drag(event)">{{ week.active_tickets }}</td>
+                            <td draggable="true" ondragstart="drag(event)">{{ week.avg_throughput|floatformat:2 }}</td>
+                            <td draggable="true" ondragstart="drag(event)">{{ week.total_operational_cost|prepend_dollars }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <div class="container west_container">
+            <section>
+                <div class="dataTables_wrapper no-footer table-responsive">
+                    <div class="dataTables_scroll">
+                        <table class="chart_table">
+                            <tr id="qa_chart_row"></tr>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    {% else %}
+        No Contents
+    {% endif %}
+
+</div>
+

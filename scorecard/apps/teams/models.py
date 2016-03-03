@@ -6,8 +6,9 @@ class BaseMetrics(models.Model):
     """
     Base Metrics for all four different metrics
     """
-    functional_group = models.ForeignKey('users.FunctionalGroup')
-    created = models.DateTimeField(auto_now_add=True, db_index=True)
+    functional_group = models.ForeignKey('users.FunctionalGroup', blank=True, null=True)
+    subteam = models.ForeignKey('users.Subteam', blank=True, null=True)
+    created = models.DateTimeField(db_index=True)
     confirmed = models.DateTimeField(auto_now=True, db_index=True)
     updated = models.BooleanField(default=False)
 
@@ -165,7 +166,6 @@ class TestMetrics(BaseMetrics):
         """
         Cost Saved by Automation
         """
-
         try:
             test_metric_config = TestMetricsConfiguration.objects.get(functional_group__abbreviation=self.functional_group.abbreviation)
             costs_staff = test_metric_config.costs_per_hour_staff
@@ -173,6 +173,11 @@ class TestMetrics(BaseMetrics):
             costs_staff = 0
 
         return self.tc_auto_execution_time * costs_staff
+
+    def quality_graph(self):
+        data = self.functional_group.testmetrics_set.all().order_by("-created")[0:9].reverse()
+        return {'title': 'UAT Defects',
+                'data': [{'date': week.created.strftime("%b %-d"), 'value': week.uat_defects_not_prevented} for week in data]}
 
     class Meta:
         verbose_name_plural = "Test Metrics"
@@ -220,6 +225,11 @@ class InnovationMetrics(BaseMetrics):
     def total_operational_cost(self):
         return self.operational_cost + self.license_cost
 
+    @classmethod
+    def quality_graph(cls):
+        data = cls.objects.all().order_by("-created")[0:9].reverse()
+        return {'title': 'Externally Reported Defects',
+                'data': [{'date': week.created.strftime("%b %-d"), 'value': week.uat_defects_not_prevented} for week in data]}
 
     class Meta:
         verbose_name_plural = "Innovation Metrics"
@@ -277,6 +287,12 @@ class RequirementMetrics(BaseMetrics):
     def overall_cost(self):
         return self.total_operational_cost + self.travel_cost
 
+    @classmethod
+    def quality_graph(cls):
+        data = cls.objects.all().order_by("-created")[0:9].reverse()
+        return {'title': 'Revisions',
+                'data': [{'date': week.created.strftime("%b %-d"), 'value': week.revisions} for week in data]}
+
     class Meta:
         verbose_name_plural = "Requirement Metrics"
 
@@ -294,6 +310,12 @@ class LabMetrics(BaseMetrics):
     # Costs
     power_consumption_ups_a = models.PositiveIntegerField(default=0)  # in kw
     power_consumption_ups_b = models.PositiveIntegerField(default=0)  # in kw
+
+    @classmethod
+    def quality_graph(cls):
+        data = cls.objects.all().order_by("-created")[0:9].reverse()
+        return {'title': 'Power Consumption',
+                'data': [{'date': week.created.strftime("%b %-d"), 'value': week.power_consumption_ups_a + week.power_consumption_ups_b} for week in data]}
 
     class Meta:
         verbose_name_plural = "Lab Metrics"
