@@ -159,7 +159,7 @@ def fetch_collect_data_per_team_per_date(key, date):
             'rework_time': rework_time,
             'tc_manual_dev': tc_manual_dev,
             'tc_manual_dev_time': tc_manual_dev_time,
-            'tc_manual_execution': tc_auto_execution,
+            'tc_manual_execution': tc_manual_execution,
             'tc_manual_execution_time': tc_manual_execution_time,
             'tc_auto_dev': tc_auto_dev,
             'tc_auto_dev_time': tc_auto_dev_time,
