@@ -200,7 +200,7 @@ def fetch_collect_data_per_team_per_date(key, date):
             'auto_savings': tc_auto_execution_time * costs_staff
         }
 
-        automation_data = get_automation_data(key, CHOICES_QA_TE)
+        automation_data = get_automation_data(key, CHOICES_QA_TE, date)
 
     elif key == 'QI':
         for person in team_personals:
@@ -224,7 +224,7 @@ def fetch_collect_data_per_team_per_date(key, date):
             'operational_cost': len(team_personals) * 40 * 45,
             'total_cost': len(team_personals) * 40 * 45
         }
-        automation_data = get_automation_data(key, CHOICES_QI)
+        automation_data = get_automation_data(key, CHOICES_QI, date)
 
     elif key == 'RE':
         for person in team_personals:
@@ -251,7 +251,7 @@ def fetch_collect_data_per_team_per_date(key, date):
             'operational_cost': len(team_personals) * 30 * 50,
             'rework_external_cost': rework_external_time * 50
         }
-        automation_data = get_automation_data(key, CHOICES_RE)
+        automation_data = get_automation_data(key, CHOICES_RE, date)
 
     elif key == 'TL':
         for person in team_personals:
@@ -266,7 +266,7 @@ def fetch_collect_data_per_team_per_date(key, date):
             'rework_time': rework_time,
             'tickets_closed': tickets_closed
         }
-        automation_data = get_automation_data(key, CHOICES_TL)
+        automation_data = get_automation_data(key, CHOICES_TL, date)
 
     form_data['staffs'] = len(team_personals)
 
@@ -389,7 +389,7 @@ def get_ytd_data(group, key):
     return data
 
 
-def get_automation_data(key, choices):
+def get_automation_data(key, choices, date=None):
     data = {}
     for item in choices:
         try:
@@ -403,7 +403,7 @@ def get_automation_data(key, choices):
                     continue
 
                 try:
-                    result = run_script()
+                    result = run_script(date)
                 except Exception:
                     result = 0
 
