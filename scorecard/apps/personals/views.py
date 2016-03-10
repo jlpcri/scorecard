@@ -19,6 +19,8 @@ from forms import InnovationForm, LabForm, RequirementForm, TestForm
 @login_required
 def personals(request):
     check_user_team(request)
+    if not (request.user.is_superuser or request.user.humanresource.manager):
+        return render(request, 'personals/nonmanager.html', {'stats': request.user.humanresource.stat_set.all().order_by('-created')})
 
     function_groups = FunctionalGroup.objects.all()
     qa_personals = []
@@ -123,21 +125,25 @@ def weekly_personal_stats_new_manually(request):
 @login_required
 def personal_stats(request, stats_id):
     key = request.GET.get('key', '')
-
-    if key in ['QA', 'TE']:
-        personal_stat = get_object_or_404(TestStats, pk=stats_id)
-        form = TestForm(instance=personal_stat)
-    elif key == 'QI':
-        personal_stat = get_object_or_404(InnovationStats, pk=stats_id)
-        form = InnovationForm(instance=personal_stat)
-    elif key == 'RE':
-        personal_stat = get_object_or_404(RequirementStats, pk=stats_id)
-        form = RequirementForm(instance=personal_stat)
-    elif key == 'TL':
-        personal_stat = get_object_or_404(LabStats, pk=stats_id)
-        form = LabForm(instance=personal_stat)
-    else:
-        messages.error(request, 'No key to Human Resource found')
+    try:
+        fg = FunctionalGroup.objects.get(abbreviation=key)
+        if fg.metric_type == FunctionalGroup.TESTING:
+            personal_stat = TestStats.objects.get(pk=stats_id)
+            form = TestForm(instance=personal_stat)
+        elif fg.metric_type == FunctionalGroup.DEVELOPMENT:
+            personal_stat = InnovationStats.objects.get(pk=stats_id)
+            form = InnovationForm(instance=personal_stat)
+        elif fg.metric_type == FunctionalGroup.REQUIREMENTS:
+            personal_stat = RequirementStats.objects.get(pk=stats_id)
+            form = RequirementForm(instance=personal_stat)
+        elif fg.metric_type == FunctionalGroup.LAB:
+            personal_stat = LabStats.objects.get(pk=stats_id)
+            form = LabForm(instance=personal_stat)
+        else:
+            raise ValueError("Fell through stat retrieval table")
+    except Exception as e:
+        print e
+        messages.error(request, 'Failed to load selected scorecard. Please email QEIInnovation@west.com for assistance.')
         return redirect('personals:personals')
 
     context = RequestContext(request, {

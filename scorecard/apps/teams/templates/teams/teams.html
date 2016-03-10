@@ -44,6 +44,7 @@
 {% endblock %}
 
 {% block body %}
+    {% if user.is_superuser or user.humanresource.manager %}
     <div class="container">
         <div class="tab-content">
             {% for group in groups %}
@@ -72,6 +73,7 @@
             {% endfor %}
         </div>
     </div>
+    {% endif %}
 {% endblock %}
 
 {% block footer %}
