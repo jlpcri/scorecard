@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.template import RequestContext
 
-from models import HumanResource, FunctionalGroup, ColumnPreference
+from models import HumanResource, FunctionalGroup, ColumnPreference, Subteam
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -160,7 +160,7 @@ def update_user_chart_preferences(request):
 def user_manager_assign(request):
     user = request.user
     try:
-        key = request.user.humanresource.functional_group.key
+        key = request.user.humanresource.functional_group.abbreviation
     except AttributeError:
         key = ''
 
@@ -179,6 +179,7 @@ def user_manager_assign(request):
         context = RequestContext(request, {
             'users': users,
             'groups': groups,
+            'subteams': Subteam.objects.all().order_by('parent'),
             'first_check': first_check
         })
 
@@ -187,10 +188,12 @@ def user_manager_assign(request):
     elif request.method == 'POST':
         user_id = request.POST.get('user_select', '')
         group_id = request.POST.get('group_select', '')
+        subteam_id = request.POST.get('subteam_select', '')
         is_manager = request.POST.get('is_manager', '')
 
         user = User.objects.get(id=user_id)
         user.humanresource.functional_group = FunctionalGroup.objects.get(pk=group_id)
+        user.humanresource.subteam = Subteam.objects.get(pk=subteam_id)
         if is_manager:
             user.humanresource.manager = True
         else:

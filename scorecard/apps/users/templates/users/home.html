@@ -114,8 +114,7 @@
                         min: 0
                     }
                 })
-                //data = [[0, .53], [1, .97], [2, 1.35], [3, 1.03], [4, 0.96], [5, 0.89], [6, 0.81]]
-                data = [{% for week in group.efficiency_graph.data %}["{{ week.date }}", {{ week.value }}], {% endfor %}]
+                data = [[0, .53], [1, .97], [2, 1.35], [3, 1.03], [4, 0.96], [5, 0.89], [6, 0.81]]
                 $.plot("#efficiency-chart-{{ group.abbreviation }}", [data], {
                     //bars: {show: true}
                     series: {

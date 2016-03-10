@@ -86,7 +86,7 @@ class Subteam(models.Model):
     hourly_rate = models.IntegerField(default=50)
 
     def __unicode__(self):
-        return self.name
+        return self.parent.abbreviation + " " + self.name
 
     @property
     def metrics_set(self):
@@ -106,6 +106,7 @@ class HumanResource(models.Model):
     Link to auth user
     """
     functional_group = models.ForeignKey(FunctionalGroup, null=True, blank=True)
+    subteam = models.ForeignKey(Subteam, null=True, blank=True)
     user = models.OneToOneField(User)
 
     manager = models.BooleanField(default=False)
