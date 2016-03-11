@@ -1,27 +1,104 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+import simplejson
+
+from scorecard.apps.teams.models import TestMetrics, LabMetrics, InnovationMetrics, RequirementMetrics
+
 
 class FunctionalGroup(models.Model):
     """
     Functional Group, such as RE, QA, QI, TL
     """
-    KEY_CHOICES = (
-        ('QA', 'Quality Assurance'),
-        ('QI', 'Quality Innovation'),
-        ('RE', 'Requirement Engineering'),
-        ('TE', 'Test Engineering'),
-        ('TL', 'Test Lab')
+    TESTING = 'Testing'
+    DEVELOPMENT = 'Development'
+    REQUIREMENTS = 'Requirements'
+    LAB = 'Lab'
+    METRIC_CHOICES = (
+        ('Testing', TESTING),
+        ('Development', DEVELOPMENT),
+        ('Requirements', REQUIREMENTS),
+        ('Lab', LAB)
     )
 
     name = models.CharField(max_length=50, unique=True, default='')
-    key = models.CharField(max_length=10, choices=KEY_CHOICES, default='')
+    abbreviation = models.CharField(max_length=4, unique=True, default='')
+    metric_type = models.CharField(max_length=13, choices=METRIC_CHOICES, default=TESTING)
 
     def __unicode__(self):
-        return '{0}: {1}'.format(self.name, self.key)
+        return self.name
 
     class Meta:
         verbose_name_plural = "Functional Groups"
+
+    @property
+    def metrics_set(self):
+        if self.metric_type == self.TESTING:
+            return self.testmetrics_set
+        elif self.metric_type == self.DEVELOPMENT:
+            return self.innovationmetrics_set
+        elif self.metric_type == self.REQUIREMENTS:
+            return self.requirementmetrics_set
+        elif self.metric_type == self.LAB:
+            return self.labmetrics_set
+
+    def metric_fields(self):
+        metric = self.metrics()
+
+        fields = metric._meta.get_fields()
+        EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated', 'subteam']
+        return [field for field in fields if field.name not in EXCLUSION_LIST]
+
+    def metrics(self):
+        if self.metric_type == self.TESTING:
+            return TestMetrics.objects.filter(functional_group=self).first()
+        elif self.metric_type == self.DEVELOPMENT:
+            return InnovationMetrics.objects.filter(functional_group=self).first()
+        elif self.metric_type == self.REQUIREMENTS:
+            return RequirementMetrics.objects.filter(functional_group=self).first()
+        elif self.metric_type == self.LAB:
+            return LabMetrics.objects.filter(functional_group=self).first()
+
+    def quality_graph(self):
+        metrics = self.metrics()
+        return metrics.quality_graph()
+
+    def efficiency_graph(self):
+        return self.metrics().efficiency_graph()
+
+    def throughput_graph(self):
+        return self.metrics().throughput_graph()
+
+    def progress_graph(self):
+        return self.metrics().progress_graph()
+
+    @property
+    def key(self):
+        return self.abbreviation if self.abbreviation != 'BPO' else 'QI'
+
+
+class Subteam(models.Model):
+    """
+    Division of a functional group
+    """
+    parent = models.ForeignKey(FunctionalGroup)
+    name = models.TextField()
+    hourly_rate = models.IntegerField(default=50)
+
+    def __unicode__(self):
+        return self.parent.abbreviation + " " + self.name
+
+    @property
+    def metrics_set(self):
+        parent_metric_type = self.parent.metric_type
+        if parent_metric_type == self.parent.TESTING:
+            return self.testmetrics_set
+        elif parent_metric_type == self.parent.DEVELOPMENT:
+            return self.innovationmetrics_set
+        elif parent_metric_type == self.parent.REQUIREMENTS:
+            return self.requirementmetrics_set
+        elif parent_metric_type == self.parent.LAB:
+            return self.labmetrics_set
 
 
 class HumanResource(models.Model):
@@ -29,6 +106,7 @@ class HumanResource(models.Model):
     Link to auth user
     """
     functional_group = models.ForeignKey(FunctionalGroup, null=True, blank=True)
+    subteam = models.ForeignKey(Subteam, null=True, blank=True)
     user = models.OneToOneField(User)
 
     manager = models.BooleanField(default=False)
@@ -37,10 +115,21 @@ class HumanResource(models.Model):
     def __unicode__(self):
         if self.functional_group:
             return '{0}: {1}: {2}'.format(self.user.username,
-                                          self.functional_group.key,
+                                          self.functional_group.abbreviation,
                                           self.manager)
         else:
             return '{0}: {1}: {2}'.format(self.user.username, 'No Team',  self.manager)
+
+    @property
+    def stat_set(self):
+        if self.functional_group.metric_type == FunctionalGroup.TESTING:
+            return self.teststats_set
+        elif self.functional_group.metric_type == FunctionalGroup.REQUIREMENTS:
+            return self.requirementstats_set
+        elif self.functional_group.metric_type == FunctionalGroup.DEVELOPMENT:
+            return self.innovationstats_set
+        elif self.functional_group.metric_type == FunctionalGroup.LAB:
+            return self.labstats_set
 
 
 class ColumnPreference(models.Model):
@@ -58,5 +147,8 @@ class ColumnPreference(models.Model):
     class Meta:
         ordering = ('user',)
         verbose_name = "Column Preference"
+
+    def unpack(self):
+        return simplejson.dumps(self.hide_list) if self.hide_list else []
 
 

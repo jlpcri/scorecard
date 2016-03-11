@@ -1,10 +1,12 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
+
+from scorecard.apps.datas import views
 
 
-urlpatterns = patterns('scorecard.apps.datas.views',
-    url(r'^$', 'datas', name='datas'),
-    url(r'^excel', 'export_excel', name='export_excel'),
+urlpatterns = [
+    url(r'^$', views.datas, name='datas'),
+    url(r'^excel', views.export_excel, name='export_excel'),
 
-)
+]
 
 

@@ -28,10 +28,10 @@ def automations(request):
 
     try:
         automation_new_form = AutomationNewForm(initial={'functional_group': request.user.humanresource.functional_group,
-                                                         'key': request.user.humanresource.functional_group.key})
+                                                         'key': request.user.humanresource.functional_group.abbreviation})
     except AttributeError as e:
         # print e.message, type(e)
-        automation_new_form = AutomationNewForm(initial={'functional_group': FunctionalGroup.objects.get(key='QA'),
+        automation_new_form = AutomationNewForm(initial={'functional_group': FunctionalGroup.objects.get(abbreviation='QA'),
                                                          'key': 'QA'})
 
     context = RequestContext(request, {

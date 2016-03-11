@@ -8,6 +8,9 @@ ALLOWED_HOSTS = [
 ]
 
 HOST_URL = 'http://apps.qaci01.wic.west.com' + LOGIN_URL
+EMAIL_HOST = 'linux745.wic.west.com'
+EMAIL_USE_TLS = False
+DEFAULT_FROM_EMAIL = 'QEIInnovation@west.com'
 
 DATABASES = {
     'default': {

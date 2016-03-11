@@ -20,42 +20,47 @@
                             <li><a href="#">{{ date }}</a></li>
                         {% endfor %}
                     </ul>
-{#                    <select class="pull-right">#}
-{#                        {% for date in dates %}#}
-{#                            <option value="{{ date }}">{{ date }}</option>#}
-{#                        {% endfor %}#}
-{#                    </select>#}
                 {% endif %}
             </div>
         </div>
 
         <ul id="subnav-tabs" class="nav nav-tabs">
             {% if user.is_superuser %}
-                <li><a href="#quality_assurance" data-toggle="tab">Quality Assurance</a> </li>
-                <li><a href="#quality_innovation" data-toggle="tab">Quality Innovation</a> </li>
-                <li><a href="#requirements_engineering" data-toggle="tab">Requirements Engineering</a> </li>
-                <li><a href="#test_engineering" data-toggle="tab">Test Engineering</a> </li>
-                <li><a href="#test_lab" data-toggle="tab">Test Lab</a> </li>
-            {% else %}
-                {% if user.humanresource.functional_group.key == 'QA' %}
-                    <li><a href="#quality_assurance" data-toggle="tab">Quality Assurance</a> </li>
-                {% elif user.humanresource.functional_group.key == 'QI' %}
-                    <li><a href="#quality_innovation" data-toggle="tab">Quality Innovation</a> </li>
-                {% elif user.humanresource.functional_group.key == 'RE' %}
-                    <li><a href="#requirements_engineering" data-toggle="tab">Requirements Engineering</a> </li>
-                {% elif user.humanresource.functional_group.key == 'TE' %}
-                    <li><a href="#test_engineering" data-toggle="tab">Test Engineering</a> </li>
-                {% elif user.humanresource.functional_group.key == 'TL' %}
-                    <li><a href="#test_lab" data-toggle="tab">Test Lab</a> </li>
-                {% endif %}
+                {% for group in groups %}
+                    <li{% if group == user.humanresource.functional_group %} class="active"{% endif %}><a href="#{{ group.abbreviation }}" data-toggle="tab">{{ group.name }}</a></li>
+                {% endfor %}
             {% endif %}
         </ul>
     </div>
 {% endblock %}
 
+{% block badbody %}
+    <div class="container">
+        <div class="tab-content">
+            {% for user_data in users %}
+            {% ifchanged user_data.functional_group %}
+                <div class="tab-pane{% if user.humanresource.functional_group == user_data.functional_group %} active{% endif %}" id="{{ user.functional_group.abbreviation }}">
+
+            {% endifchanged %}
+            {% endfor %}
+        </div>
+    <.div>
+{% endblock %}
+
 {% block body %}
     <div class="container">
         <div class="tab-content">
+            {% for group in groups %}
+                <div class="tab-pane{% if group == user.humanresource.functional_group %} active{% endif %}" id="{{ group.abbreviation }}">
+                    <ul id="subnav-pills" class="nav nav-pills">
+                        <li class="active"><a href="#{{ group.abbreviation }}-all" data-toggle="pill">All</a></li>
+                        {% for subteam in group.subteam_set.all %}
+                            <li><a href="#{{ subteam.name|slugify }}" data-toggle="pill">{{ subteam.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                    {% include 'personals/team.html' %}
+                </div>
+            {% endfor %}
             <div class="tab-pane" id="quality_assurance">
                 {% include 'personals/quality_assurance.html' %}
             </div>

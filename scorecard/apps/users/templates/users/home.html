@@ -20,6 +20,16 @@
             min-width: 60%;
         }
 
+        .metrics_table th {
+            white-space: nowrap;
+            padding: 0.2em;
+        }
+
+        .metrics_table td {
+            text-align: right;
+            padding: 0.2em;
+        }
+
         .td_show_hide_sub_table {
             width: 300px;
             height: 35px;
@@ -70,68 +80,148 @@
         }
 
     </style>
+    <script>
+            {% include 'users/show_hide_columns.js' %}
+            $(function(){
+                {% for group in groups %}
+                    $("a[href='#{{ group.abbreviation }}']").on("shown.bs.tab", plot{{ group.abbreviation }})
+                {% endfor %}
+                {% if user.humanresource.functional_group %}
+                    $("a[href='#{{ user.humanresource.functional_group.abbreviation }}']").click()
+                {% endif %}
+            })
+            {% for group in groups %}
+            function plot{{ group.abbreviation }}(event) {
+                //var data = [["Jan 7", 0], ["Jan 14", 1], ["Jan 21", 0], ["Jan 28", 0], ["Feb 5", 1], ["Feb 12", 0], ["Feb 19", 1]]
+                var data = [{% for week in group.quality_graph.data %}["{{ week.date }}", {{ week.value }}], {% endfor %}]
+                //var data = [[0, 11], [1, 10], [2, 11], [3, 14], [4, 16], [5, 7], [6, 13]]
+                $.plot("#quality-chart-{{ group.abbreviation }}",
+                [data],
+                {
+                    series: {
+                        bars: {
+                            show: true,
+                            align: 'center',
+                        }
+                    },
+                    colors: ['rgba(255,0,0,1)'],
+                    xaxis: {
+                        mode: "categories",
+                        tickLength: 0
+                    },
+                    yaxis: {
+                        tickSize: 5,
+                        min: 0
+                    }
+                })
+                data = [[0, .53], [1, .97], [2, 1.35], [3, 1.03], [4, 0.96], [5, 0.89], [6, 0.81]]
+                $.plot("#efficiency-chart-{{ group.abbreviation }}", [data], {
+                    //bars: {show: true}
+                    series: {
+                        lines: {
+                            show: true,
+                        },
+                        threshold: [
+                            {
+                                below: 1,
+                                color: '#eba51f' //yellow-gold
+                            }, {
+                                below: 0.85,
+                                color: '#0f0' //green
+                            }, {
+                                below: 0.7,
+                                color: '#f00' //red
+                            }
+                        ]
+                    },
+                    xaxis: {
+                        ticks: [[0, "Jan 7"], [1, "Jan 14"], [2, "Jan 21"], [3, "Jan 28"], [4, "Feb 5"], [5, "Feb 12"], [6, "Feb 19"]]
+                    },
+                    colors: ['#ff751f'],
 
+                })
+                data = [[0, 95.5], [1, 174.5], [2, 242.5], [3, 184.5], [4, 173.5], [5, 160], [6, 145.25]]
+                $.plot("#throughput-chart-{{ group.abbreviation }}", [data], {
+                    lines: {show: true},
+                    xaxis: {
+                        ticks: [[0, "Jan 7"], [1, "Jan 14"], [2, "Jan 21"], [3, "Jan 28"], [4, "Feb 5"], [5, "Feb 12"], [6, "Feb 19"]]
+                    },
+                    colors: ['#1daff2'] //powder blue
+                })
+                $.plot("#progress-chart-{{ group.abbreviation }}",
+                    [
+                        {data: .92, color: 'rgba(256,0,0,.9)', width: 6, label: "Manual"},
+                        {data: .08, color: 'rgba(5,5,220,.9)', stroke: {color:'rgba(5,5,220,1)', width: 5}, label: "Automatic"}
+                    ],
+                    {
+                        series: {
+                            pie: {
+                                show: true,
+                                stroke: {width: 2}
+                        }
+                            },
+                        legend: {show: false}
+                    })
+            }
+
+            {% endfor %}
+        </script>
 {% endblock extrahead %}
 
 
 {% block body %}
 
     <div class="container west_container">
-        <h1>Score Card</h1>
+        <ul id="subnav-tabs" class="nav nav-tabs">
+            {% for group in groups %}
+            <li><a href="#{{ group.abbreviation }}" data-toggle="tab">{{ group.name }}</a></li>
+            {% endfor %}
+        </ul>
 
-        <div class="container" style="margin-top:5px;">
-
-            <ul id="subnav-tabs" class="nav nav-tabs">
-                <li><a href="#quality_assurance" data-toggle="tab">Quality Assurance</a></li>
-                <li><a href="#quality_innovation" data-toggle="tab">Quality Innovation</a></li>
-                <li><a href="#requirements_engineering" data-toggle="tab">Requirements Engineering</a></li>
-                <li><a href="#test_engineering" data-toggle="tab">Test Engineering</a></li>
-                <li><a href="#test_lab" data-toggle="tab">Test Lab</a></li>
-            </ul>
-
-        </div>
-
-    </div>
-
-    <form action="." method="POST">
-
-        {% csrf_token %}
-
-        <br>
-
-            <div class="container">
-                <div class="tab-content">
-                    <div class="tab-pane" id="quality_assurance">
-                        {% include 'users/home_quality_assurance.html' %}
+        <form action="." method="POST">
+            {% csrf_token %}
+            <div class="tab-content">
+                {% for group in groups %}
+                <div class="tab-pane" id="{{ group.abbreviation }}">
+                    <br>
+                    <div class="title-wrapper" style="width:520px;float:left">
+                        <h2>{{ group.quality_graph.title }}</h2>
+                        <div id="quality-chart-{{ group.abbreviation }}" style="height:260px;width:520px;"></div>
                     </div>
-
-                    <div class="tab-pane" id="quality_innovation">
-                        {% include 'users/home_quality_innovation.html' %}
+                    <div class="title-wrapper" style="width:520px;float:left">
+                        <h2>Utilization</h2>
+                        <div id="efficiency-chart-{{ group.abbreviation }}" style="height:260px;width:520px;"></div>
                     </div>
-
-                    <div class="tab-pane" id="requirements_engineering">
-                        {% include 'users/home_requirements_engineering.html' %}
+                    <div class="title-wrapper" style="width:520px;float:left">
+                        <h2>Analysis Hours</h2>
+                        <div id="throughput-chart-{{ group.abbreviation }}" style="height:260px;width:520px;"></div>
                     </div>
-
-                    <div class="tab-pane" id="test_engineering">
-                        {% include 'users/home_test_engineering.html' %}
+                    <div class="title-wrapper" style="width:520px;float:left">
+                        <h2>Requirement Standardization</h2>
+                        <div id="progress-chart-{{ group.abbreviation }}" style="height:260px;width:520px;"></div>
                     </div>
-
-                    <div class="tab-pane" id="test_lab">
-                        {% include 'users/home_test_lab.html' %}
+                <br><hr><br>
+                    <div class="dataTables_wrapper no-footer table-responsive">
+                        <table class="display nowrap metrics_table">
+                            <tr>
+                                <th>Date</th>
+                                {% for field in group.metric_fields %}
+                                <th>{{ field.verbose_name | capfirst}}</th>
+                                {% endfor %}
+                            </tr>
+                            {% for row in group.metrics_set.all %}
+                                <td>{{ row.created | date:"m/d/y" }}</td>
+                                {% for field in row.table_row %}
+                                    <td>{{ field }}</td>
+                                {% endfor %}
+                            {% endfor %}
+                        </table>
                     </div>
-
                 </div>
+                {% endfor %}
             </div>
-
-    </form>
-
-    {% block endscript %}
-
-        <script>
-            {% include 'users/show_hide_columns.js' %}
-        </script>
-
-    {% endblock %}
-
+        </form>
+    </div>
 {% endblock body %}
+
+

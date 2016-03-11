@@ -19,6 +19,8 @@ from forms import InnovationForm, LabForm, RequirementForm, TestForm
 @login_required
 def personals(request):
     check_user_team(request)
+    if not (request.user.is_superuser or request.user.humanresource.manager):
+        return render(request, 'personals/nonmanager.html', {'stats': request.user.humanresource.stat_set.all().order_by('-created')})
 
     function_groups = FunctionalGroup.objects.all()
     qa_personals = []
@@ -28,26 +30,30 @@ def personals(request):
     tl_personals = []
     current_user_personals = []
 
+    users = HumanResource.objects.filter(functional_group__isnull=False).order_by('functional_group', 'subteam', 'user__last_name')
+    #return render(request, 'personals/personals.html', {'users': users})
+
+    #old
     for function_group in function_groups:
-        if function_group.key == 'QA':
+        if function_group.abbreviation == 'QA':
             try:
                 qa = TestStats.objects.latest('created')
-                qa_personals = TestStats.objects.filter(human_resource__functional_group__key='QA',
+                qa_personals = TestStats.objects.filter(human_resource__functional_group__abbreviation='QA',
                                                         created__year=qa.created.year,
                                                         created__month=qa.created.month,
                                                         created__day=qa.created.day)
             except TestStats.DoesNotExist:
                 pass
-        elif function_group.key == 'TE':
+        elif function_group.abbreviation == 'TE':
             try:
                 te = TestStats.objects.latest('created')
-                te_personals = TestStats.objects.filter(human_resource__functional_group__key='TE',
+                te_personals = TestStats.objects.filter(human_resource__functional_group__abbreviation='TE',
                                                         created__year=te.created.year,
                                                         created__month=te.created.month,
                                                         created__day=te.created.day)
             except TestStats.DoesNotExist:
                 pass
-        elif function_group.key == 'QI':
+        elif function_group.abbreviation == 'QI':
             try:
                 qi = InnovationStats.objects.latest('created')
                 qi_personals = InnovationStats.objects.filter(created__year=qi.created.year,
@@ -55,7 +61,7 @@ def personals(request):
                                                               created__day=qi.created.day)
             except InnovationStats.DoesNotExist:
                 pass
-        elif function_group.key == 'RE':
+        elif function_group.abbreviation == 'RE':
             try:
                 re = RequirementStats.objects.latest('created')
                 re_personals = RequirementStats.objects.filter(created__year=re.created.year,
@@ -63,7 +69,7 @@ def personals(request):
                                                                created__day=re.created.day)
             except RequirementStats.DoesNotExist:
                 pass
-        elif function_group.key == 'TL':
+        elif function_group.abbreviation == 'TL':
             try:
                 tl = LabStats.objects.latest('created')
                 tl_personals = LabStats.objects.filter(created__year=tl.created.year,
@@ -74,13 +80,13 @@ def personals(request):
 
     hr = HumanResource.objects.get(user=request.user)
     if hr.functional_group:
-        if hr.functional_group.key in ['QA', 'TE']:
+        if hr.functional_group.abbreviation in ['QA', 'TE']:
             current_user_personals = hr.teststats_set.order_by('-created')
-        elif hr.functional_group.key == 'QI':
+        elif hr.functional_group.abbreviation == 'QI':
             current_user_personals = hr.innovationstats_set.order_by('-created')
-        elif hr.functional_group.key == 'RE':
+        elif hr.functional_group.abbreviation == 'RE':
             current_user_personals = hr.requirementstats_set.order_by('-created')
-        elif hr.functional_group.key == 'TL':
+        elif hr.functional_group.abbreviation == 'TL':
             current_user_personals = hr.labstats_set.order_by('-created')
 
     dates = get_distinct_dates()
@@ -93,7 +99,9 @@ def personals(request):
         'tl_personals': tl_personals,
 
         'current_user_personals': current_user_personals,
-        'dates': dates
+        'groups': function_groups,
+        'dates': dates,
+        'users': users
     })
 
     return render(request, 'personals/personals.html', context)
@@ -119,21 +127,25 @@ def weekly_personal_stats_new_manually(request):
 @login_required
 def personal_stats(request, stats_id):
     key = request.GET.get('key', '')
-
-    if key in ['QA', 'TE']:
-        personal_stat = get_object_or_404(TestStats, pk=stats_id)
-        form = TestForm(instance=personal_stat)
-    elif key == 'QI':
-        personal_stat = get_object_or_404(InnovationStats, pk=stats_id)
-        form = InnovationForm(instance=personal_stat)
-    elif key == 'RE':
-        personal_stat = get_object_or_404(RequirementStats, pk=stats_id)
-        form = RequirementForm(instance=personal_stat)
-    elif key == 'TL':
-        personal_stat = get_object_or_404(LabStats, pk=stats_id)
-        form = LabForm(instance=personal_stat)
-    else:
-        messages.error(request, 'No key to Human Resource found')
+    try:
+        fg = FunctionalGroup.objects.get(abbreviation=key)
+        if fg.metric_type == FunctionalGroup.TESTING:
+            personal_stat = TestStats.objects.get(pk=stats_id)
+            form = TestForm(instance=personal_stat)
+        elif fg.metric_type == FunctionalGroup.DEVELOPMENT:
+            personal_stat = InnovationStats.objects.get(pk=stats_id)
+            form = InnovationForm(instance=personal_stat)
+        elif fg.metric_type == FunctionalGroup.REQUIREMENTS:
+            personal_stat = RequirementStats.objects.get(pk=stats_id)
+            form = RequirementForm(instance=personal_stat)
+        elif fg.metric_type == FunctionalGroup.LAB:
+            personal_stat = LabStats.objects.get(pk=stats_id)
+            form = LabForm(instance=personal_stat)
+        else:
+            raise ValueError("Fell through stat retrieval table")
+    except Exception as e:
+        print e
+        messages.error(request, 'Failed to load selected scorecard. Please email QEIInnovation@west.com for assistance.')
         return redirect('personals:personals')
 
     context = RequestContext(request, {

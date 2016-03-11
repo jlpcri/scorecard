@@ -1,20 +1,19 @@
 from django.db import models
 from django.utils.timezone import localtime
 
-from scorecard.apps.users.models import FunctionalGroup
-
 
 class BaseMetrics(models.Model):
     """
     Base Metrics for all four different metrics
     """
-    functional_group = models.ForeignKey(FunctionalGroup)
-    created = models.DateTimeField(auto_now_add=True, db_index=True)
+    functional_group = models.ForeignKey('users.FunctionalGroup', blank=True, null=True)
+    subteam = models.ForeignKey('users.Subteam', blank=True, null=True)
+    created = models.DateTimeField(db_index=True)
     confirmed = models.DateTimeField(auto_now=True, db_index=True)
     updated = models.BooleanField(default=False)
 
     # Human Resource
-    staffs = models.PositiveIntegerField(default=0)
+    staffs = models.PositiveIntegerField(default=0, verbose_name='staff')
     contractors = models.PositiveIntegerField(default=0)
     openings = models.PositiveIntegerField(default=0)
 
@@ -24,16 +23,18 @@ class BaseMetrics(models.Model):
     escalations = models.PositiveIntegerField(default=0)
 
     # Quality
-    slas_met = models.DecimalField(max_digits=3, decimal_places=2, default=0)
-    delays_introduced_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    sdis_not_prevented = models.PositiveIntegerField(default=0)
+    slas_met = models.DecimalField(max_digits=3, decimal_places=2, default=0, verbose_name='SLAs met')
+    delays_introduced_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                                 verbose_name='delays introduced (hours)')
+    sdis_not_prevented = models.PositiveIntegerField(default=0, verbose_name='SDIs not prevented')
     resource_swap = models.PositiveIntegerField(default=0)
-    rework_introduced_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+    rework_introduced_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                                 verbose_name='rework introduced (hours)')
 
     # Efficiency
-    avg_team_size = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    overtime_weekday = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    overtime_weekend = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+    avg_team_size = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='average team size')
+    overtime_weekday = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='weekday overtime')
+    overtime_weekend = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='weekend overtime')
     rework_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
     resource_swap_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
 
@@ -48,6 +49,10 @@ class BaseMetrics(models.Model):
         return '{0}: {1}: {2}'.format(self.functional_group.name,
                                       localtime(self.confirmed),
                                       localtime(self.created))
+
+    def table_row(self):
+        fields = self.functional_group.metric_fields()
+        return [self.__dict__[field.name] for field in fields]
 
 
 class TestMetrics(BaseMetrics):
@@ -64,22 +69,26 @@ class TestMetrics(BaseMetrics):
     project_prep = models.PositiveIntegerField(default=0)
     project_execution = models.PositiveIntegerField(default=0)
     project_closed = models.PositiveIntegerField(default=0)
-    tc_manual_dev = models.PositiveIntegerField(default=0)
-    tc_manual_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    tc_manual_execution = models.PositiveIntegerField(default=0)
-    tc_manual_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,)  # in hours
-    tc_auto_dev = models.PositiveIntegerField(default=0)
-    tc_auto_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    tc_auto_execution = models.PositiveIntegerField(default=0)
-    tc_auto_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+    tc_manual_dev = models.PositiveIntegerField(default=0, verbose_name='TCs manually developed')
+    tc_manual_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                             verbose_name='manual TC development time')
+    tc_manual_execution = models.PositiveIntegerField(default=0, verbose_name='TCs manually executed')
+    tc_manual_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                                   verbose_name='manual TC execution time')
+    tc_auto_dev = models.PositiveIntegerField(default=0, verbose_name='TCs developed automatically')
+    tc_auto_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                           verbose_name='automated TC development time')
+    tc_auto_execution = models.PositiveIntegerField(default=0, verbose_name='TCs automatically executed')
+    tc_auto_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                                 verbose_name='automatic TC time savings')
 
     # Quality
-    defect_caught = models.PositiveIntegerField(default=0)
-    uat_defects_not_prevented = models.PositiveIntegerField(default=0)
+    defect_caught = models.PositiveIntegerField(default=0, verbose_name='defects caught')
+    uat_defects_not_prevented = models.PositiveIntegerField(default=0, verbose_name='UAT defects not prevented')
     standards_violated = models.PositiveIntegerField(default=0)
 
     # Efficiency
-    avg_time_frame = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    avg_time_frame = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Average time frame')
 
     # Costs
 
@@ -139,7 +148,7 @@ class TestMetrics(BaseMetrics):
         Different computer formula for Product Quality, Quality Assurance, and Test Engineering
         """
         try:
-            test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=self.functional_group.key)
+            test_metric_config = TestMetricsConfiguration.objects.get(functional_group__abbreviation=self.functional_group.abbreviation)
             hours = test_metric_config.hours_per_week
             costs_staff = test_metric_config.costs_per_hour_staff
             costs_contractor = test_metric_config.costs_per_hour_contractor
@@ -157,14 +166,18 @@ class TestMetrics(BaseMetrics):
         """
         Cost Saved by Automation
         """
-
         try:
-            test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=self.functional_group.key)
+            test_metric_config = TestMetricsConfiguration.objects.get(functional_group__abbreviation=self.functional_group.abbreviation)
             costs_staff = test_metric_config.costs_per_hour_staff
         except TestMetricsConfiguration.DoesNotExist:
             costs_staff = 0
 
         return self.tc_auto_execution_time * costs_staff
+
+    def quality_graph(self):
+        data = self.functional_group.testmetrics_set.all().order_by("-created")[0:9].reverse()
+        return {'title': 'UAT Defects',
+                'data': [{'date': week.created.strftime("%b %-d"), 'value': week.uat_defects_not_prevented} for week in data]}
 
     class Meta:
         verbose_name_plural = "Test Metrics"
@@ -212,6 +225,11 @@ class InnovationMetrics(BaseMetrics):
     def total_operational_cost(self):
         return self.operational_cost + self.license_cost
 
+    @classmethod
+    def quality_graph(cls):
+        data = cls.objects.all().order_by("-created")[0:9].reverse()
+        return {'title': 'Externally Reported Defects',
+                'data': [{'date': week.created.strftime("%b %-d"), 'value': week.uat_defects_not_prevented} for week in data]}
 
     class Meta:
         verbose_name_plural = "Innovation Metrics"
@@ -269,6 +287,12 @@ class RequirementMetrics(BaseMetrics):
     def overall_cost(self):
         return self.total_operational_cost + self.travel_cost
 
+    @classmethod
+    def quality_graph(cls):
+        data = cls.objects.all().order_by("-created")[0:9].reverse()
+        return {'title': 'Revisions',
+                'data': [{'date': week.created.strftime("%b %-d"), 'value': week.revisions} for week in data]}
+
     class Meta:
         verbose_name_plural = "Requirement Metrics"
 
@@ -287,6 +311,12 @@ class LabMetrics(BaseMetrics):
     power_consumption_ups_a = models.PositiveIntegerField(default=0)  # in kw
     power_consumption_ups_b = models.PositiveIntegerField(default=0)  # in kw
 
+    @classmethod
+    def quality_graph(cls):
+        data = cls.objects.all().order_by("-created")[0:9].reverse()
+        return {'title': 'Power Consumption',
+                'data': [{'date': week.created.strftime("%b %-d"), 'value': week.power_consumption_ups_a + week.power_consumption_ups_b} for week in data]}
+
     class Meta:
         verbose_name_plural = "Lab Metrics"
 
@@ -295,7 +325,7 @@ class TestMetricsConfiguration(models.Model):
     """
     Configuration of Test Metric costs
     """
-    functional_group = models.ForeignKey(FunctionalGroup)
+    functional_group = models.ForeignKey('users.FunctionalGroup')
     hours_per_week = models.PositiveSmallIntegerField(default=0)
     costs_per_hour_staff = models.PositiveSmallIntegerField(default=0)
     costs_per_hour_contractor = models.PositiveSmallIntegerField(default=0)
