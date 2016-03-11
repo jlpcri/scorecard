@@ -34,6 +34,19 @@
     </div>
 {% endblock %}
 
+{% block badbody %}
+    <div class="container">
+        <div class="tab-content">
+            {% for user_data in users %}
+            {% ifchanged user_data.functional_group %}
+                <div class="tab-pane{% if user.humanresource.functional_group == user_data.functional_group %} active{% endif %}" id="{{ user.functional_group.abbreviation }}">
+
+            {% endifchanged %}
+            {% endfor %}
+        </div>
+    <.div>
+{% endblock %}
+
 {% block body %}
     <div class="container">
         <div class="tab-content">
@@ -45,7 +58,7 @@
                             <li><a href="#{{ subteam.name|slugify }}" data-toggle="pill">{{ subteam.name }}</a></li>
                         {% endfor %}
                     </ul>
-                    {% include 'personals/quality_assurance.html' %}
+                    {% include 'personals/team.html' %}
                 </div>
             {% endfor %}
             <div class="tab-pane" id="quality_assurance">

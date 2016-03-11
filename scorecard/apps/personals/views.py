@@ -30,13 +30,15 @@ def personals(request):
     tl_personals = []
     current_user_personals = []
 
-    users = HumanResource.objects.filter(functional_group__isnull=False).order_by('functional_group', 'user__last_name')
+    users = HumanResource.objects.filter(functional_group__isnull=False).order_by('functional_group', 'subteam', 'user__last_name')
+    #return render(request, 'personals/personals.html', {'users': users})
 
+    #old
     for function_group in function_groups:
         if function_group.abbreviation == 'QA':
             try:
                 qa = TestStats.objects.latest('created')
-                qa_personals = TestStats.objects.filter(human_resource__functional_group__key='QA',
+                qa_personals = TestStats.objects.filter(human_resource__functional_group__abbreviation='QA',
                                                         created__year=qa.created.year,
                                                         created__month=qa.created.month,
                                                         created__day=qa.created.day)
@@ -45,7 +47,7 @@ def personals(request):
         elif function_group.abbreviation == 'TE':
             try:
                 te = TestStats.objects.latest('created')
-                te_personals = TestStats.objects.filter(human_resource__functional_group__key='TE',
+                te_personals = TestStats.objects.filter(human_resource__functional_group__abbreviation='TE',
                                                         created__year=te.created.year,
                                                         created__month=te.created.month,
                                                         created__day=te.created.day)
