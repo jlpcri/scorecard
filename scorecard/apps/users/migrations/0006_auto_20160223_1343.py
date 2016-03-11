@@ -3,7 +3,8 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-
+import uuid
+from scorecard.apps.users.models import FunctionalGroup
 
 class Migration(migrations.Migration):
 
@@ -11,16 +12,30 @@ class Migration(migrations.Migration):
         ('users', '0005_functionalgroup_metric_type'),
     ]
 
+    def gen_uuid(apps, schema_editor):
+        for row in FunctionalGroup.objects.all():
+            row.abbreviation = uuid.uuid4()
+            row.save()
+
     operations = [
         migrations.RemoveField(
             model_name='functionalgroup',
             name='key',
         ),
+
         migrations.AddField(
             model_name='functionalgroup',
             name='abbreviation',
-            field=models.CharField(default=b'', max_length=4, unique=True),
+            field=models.CharField(default=uuid.uuid4, max_length=4),
+            preserve_default=True
         ),
+        migrations.RunPython(gen_uuid),
+        migrations.AlterField(
+            model_name='functionalgroup',
+            name='abbreviation',
+            field=models.CharField(default=uuid.uuid4, max_length=4, unique=True),
+        ),
+
         migrations.AlterField(
             model_name='functionalgroup',
             name='metric_type',
