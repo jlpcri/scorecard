@@ -13,7 +13,9 @@
                 <br>
                 <input id="collect_data_key" value="{{ metric.functional_group.abbreviation }}" hidden>
                 <input id="collect_data_date" value="{{ metric.created|date:'Y-m-d' }}" hidden>
-                <input id="collect_data_button" class="btn btn-primary" style="width:100%;" type="button" value="Collect Data">
+                {% if metric.subteam %}
+                    <input id="collect_data_button" class="btn btn-primary" style="width:100%;" type="button" value="Collect Data">
+                {% endif %}
             </div>
         </div>
         <form action="{% url 'teams:metric_edit' metric.id %}?key={{ metric.functional_group.abbreviation }}" method="post">
@@ -890,15 +892,17 @@
 
 
             {% csrf_token %}
-            <div class="row" style="margin-top: 30px; margin-bottom: 50px;">
-                <div class="col-md-4"></div>
-                <div class="col-md-2">
-                    <input id="qi_edit" class="btn btn-primary" style="width: 100%;" type="submit" value="Save Metric">
+            {% if metric.subteam %}
+                <div class="row" style="margin-top: 30px; margin-bottom: 50px;">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-2">
+                        <input id="qi_edit" class="btn btn-primary" style="width: 100%;" type="submit" value="Save Metric">
+                    </div>
+                    <div class="col-md-2">
+                        <a href="{% url 'teams:teams' %}" class="btn btn-default" style="width: 100%;">Cancel</a>
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    <a href="{% url 'teams:teams' %}" class="btn btn-default" style="width: 100%;">Cancel</a>
-                </div>
-            </div>
+            {% endif %}
         </form>
     </div>
     {% include 'teams/teams_modal.html' %}

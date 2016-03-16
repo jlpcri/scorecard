@@ -14,7 +14,7 @@ from scorecard.apps.datas.utils import get_week_ending_date
 def weekly_metric_new():
     now = timezone.now()
     if now.isoweekday() == 1:
-        this_friday = now + timedelta(days=4)
+        this_friday = now + timedelta(days=5-now.isoweekday())
         try:
             qi = InnovationMetrics.objects.latest('created')
             if qi.created.date() == this_friday.date():
@@ -53,23 +53,37 @@ def metric_new(created):
                 TestMetrics.objects.create(functional_group=functional_group,
                                            subteam=subteam,
                                            created=created)
+            TestMetrics.objects.create(functional_group=functional_group,
+                                       created=created)  # Team entry
         elif functional_group.abbreviation == 'TE':
             for subteam in functional_group.subteam_set.exclude(name='Legacy'):
                 TestMetrics.objects.create(functional_group=functional_group,
                                            subteam=subteam,
                                            created=created)
+            TestMetrics.objects.create(functional_group=functional_group,
+                                       created=created)  # Team entry
         elif functional_group.abbreviation == 'QE':
+            for subteam in functional_group.subteam_set.all():
+                InnovationMetrics.objects.create(functional_group=functional_group,
+                                                 subteam=subteam,
+                                                 created=created)
             InnovationMetrics.objects.create(functional_group=functional_group,
-                                             subteam=functional_group.subteam_set.all()[0],
-                                             created=created)
+                                             created=created)  # Team Entry
+
         elif functional_group.abbreviation == 'RE':
+            for subteam in functional_group.subteam_set.all():
+                RequirementMetrics.objects.create(functional_group=functional_group,
+                                                  subteam=subteam,
+                                                  created=created)
             RequirementMetrics.objects.create(functional_group=functional_group,
-                                              subteam=functional_group.subteam_set.all()[0],
-                                              created=created)
+                                              created=created)  # Team Entry
         elif functional_group.abbreviation == 'TL':
+            for subteam in functional_group.subteam_set.all():
+                LabMetrics.objects.create(functional_group=functional_group,
+                                          subteam=subteam,
+                                          created=created)
             LabMetrics.objects.create(functional_group=functional_group,
-                                      subteam=functional_group.subteam_set.all()[0],
-                                      created=created)
+                                      created=created)  # Team Entry
 
     weekly_send_email()
 
