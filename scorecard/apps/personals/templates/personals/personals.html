@@ -44,7 +44,7 @@
             {% endifchanged %}
             {% endfor %}
         </div>
-    <.div>
+    </div>
 {% endblock %}
 
 {% block body %}
@@ -58,28 +58,25 @@
                             <li><a href="#{{ subteam.name|slugify }}" data-toggle="pill">{{ subteam.name }}</a></li>
                         {% endfor %}
                     </ul>
-                    {% include 'personals/team.html' %}
+                    <table class="table table-striped table-hover table-condensed table-bordered">
+                    <thead>
+                        <tr><th>Name</th>{% for heading in group.humanresource_set.first.stat_set.last.stat_summary.keys %}<th>{{ heading }}</th>{% endfor %}</tr>
+                    </thead>
+                    {% for user in group.humanresource_set.all %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'personals:personal_stats' user.stat_set.first.id %}?key={{ user.functional_group.abbreviation }}">{{ user.user.last_name | title }}, {{ user.user.first_name | title}}</a>
+                            </td>
+                            {% for value in user.stat_set.last.stat_summary.values %}
+                            <td>
+                                {{ value }}
+                            </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </table>
                 </div>
             {% endfor %}
-            <div class="tab-pane" id="quality_assurance">
-                {% include 'personals/quality_assurance.html' %}
-            </div>
-
-            <div class="tab-pane" id="quality_innovation">
-                {% include 'personals/quality_innovation.html' %}
-            </div>
-
-            <div class="tab-pane" id="requirements_engineering">
-                {% include 'personals/requirements_engineering.html' %}
-            </div>
-
-            <div class="tab-pane" id="test_engineering">
-                {% include 'personals/test_engineering.html' %}
-            </div>
-
-            <div class="tab-pane" id="test_lab">
-                {% include 'personals/test_lab.html' %}
-            </div>
         </div>
     </div>
 {% endblock %}

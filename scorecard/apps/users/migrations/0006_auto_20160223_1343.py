@@ -3,19 +3,22 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import uuid
+import random
 from scorecard.apps.users.models import FunctionalGroup
+
+
+def generate_abbreviation(apps, schema_editor):
+    fgs = FunctionalGroup.objects.all()
+    for fg in fgs:
+        fg.abbreviation = random.choice([chr(i) for i in range(ord('A'), ord('Z'))])
+        fg.save()
+
 
 class Migration(migrations.Migration):
 
     dependencies = [
         ('users', '0005_functionalgroup_metric_type'),
     ]
-
-    def gen_uuid(apps, schema_editor):
-        for row in FunctionalGroup.objects.all():
-            row.abbreviation = uuid.uuid4()
-            row.save()
 
     operations = [
         migrations.RemoveField(
@@ -26,19 +29,22 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='functionalgroup',
             name='abbreviation',
-            field=models.CharField(default=uuid.uuid4, max_length=4),
+            field=models.CharField(default='', max_length=4),
             preserve_default=True
         ),
-        migrations.RunPython(gen_uuid),
+        migrations.RunPython(generate_abbreviation),
         migrations.AlterField(
             model_name='functionalgroup',
             name='abbreviation',
-            field=models.CharField(default=uuid.uuid4, max_length=4, unique=True),
+            field=models.CharField(default='', max_length=4, unique=True),
         ),
 
         migrations.AlterField(
             model_name='functionalgroup',
             name='metric_type',
-            field=models.CharField(choices=[(b'Testing', b'Testing'), (b'Development', b'Development'), (b'Requirements', b'Requirements'), (b'Lab', b'Lab')], default=b'Testing', max_length=13),
+            field=models.CharField(choices=[(b'Testing', b'Testing'),
+                                            (b'Development', b'Development'),
+                                            (b'Requirements', b'Requirements'),
+                                            (b'Lab', b'Lab')], default=b'Testing', max_length=13),
         ),
     ]

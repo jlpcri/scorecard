@@ -31,7 +31,6 @@ def teams(request):
                       'subteams': [{'team': team, 'weeks': team.metrics_set.all().order_by('-created')}
                                    for team in Subteam.objects.filter(parent=group)]}
         groups.append(group_dict)
-        print group_dict
     context.update({'groups': groups})
 
     return render(request, 'teams/teams.html', context)

@@ -21,7 +21,7 @@ class BaseStats(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ['human_resource__user__first_name']
+        ordering = ['-created']
 
     def __unicode__(self):
         return '{0}: {1}: {2}'.format(self.human_resource.user.username,
@@ -42,7 +42,7 @@ class InnovationStats(BaseStats):
     elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
 
     def stat_summary(self):
-        return {'Story Points': self.story_points, 'Unit Tests': self.unit_tests_dev}
+        return {'Story Points': self.story_points_execution, 'Unit Tests': self.unit_tests_dev}
 
 
 

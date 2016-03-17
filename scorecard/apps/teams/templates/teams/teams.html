@@ -52,19 +52,37 @@
                     <ul id="subnav-pills" class="nav nav-pills">
                         <li class="active"><a href="#{{ group.group.abbreviation }}-all" data-toggle="pill">All</a></li>
                         {% for subteam in group.subteams%}
-                            <li><a href="#{{ subteam.team.name }}" data-toggle="pill">{{ subteam.team.name }}</a></li>
+                            <li><a href="#{{ group.group.abbreviation }}-{{ subteam.team.name | slugify }}" data-toggle="pill">{{ subteam.team.name }}</a></li>
                         {% endfor %}
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="{{ group.group.abbreviation }}-all">
                             {% if group.group.metric_type == group.group.TESTING %}
-                                {% include 'teams/quality_assurance.html' %}
+                                {% include 'teams/testing.html' %}
+                            {% endif %}
+                            {% if group.group.metric_type == group.group.DEVELOPMENT %}
+                                {% include 'teams/development.html' %}
+                            {% endif %}
+                            {% if group.group.metric_type == group.group.REQUIREMENTS %}
+                                {% include 'teams/requirements.html' %}
+                            {% endif %}
+                            {% if group.group.metric_type == group.group.LAB %}
+                                {% include 'teams/lab.html' %}
                             {% endif %}
                         </div>
                         {% for subteam in group.subteams %}
-                            <div class="tab-pane" id="{{ subteam.team.name }}">
+                            <div class="tab-pane" id="{{ group.group.abbreviation }}-{{ subteam.team.name | slugify }}">
                             {% if group.group.metric_type == group.group.TESTING %}
                                 {% include 'teams/testing.html' %}
+                            {% endif %}
+                            {% if group.group.metric_type == group.group.DEVELOPMENT %}
+                                {% include 'teams/development.html' %}
+                            {% endif %}
+                            {% if group.group.metric_type == group.group.REQUIREMENTS %}
+                                {% include 'teams/requirements.html' %}
+                            {% endif %}
+                            {% if group.group.metric_type == group.group.LAB %}
+                                {% include 'teams/lab.html' %}
                             {% endif %}
                             </div>
                         {% endfor %}

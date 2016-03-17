@@ -93,8 +93,7 @@
             {% for group in groups %}
             function plot{{ group.abbreviation }}(event) {
                 //var data = [["Jan 7", 0], ["Jan 14", 1], ["Jan 21", 0], ["Jan 28", 0], ["Feb 5", 1], ["Feb 12", 0], ["Feb 19", 1]]
-                var data = [{% for week in group.quality_graph.data %}["{{ week.date }}", {{ week.value }}], {% endfor %}]
-                //var data = [[0, 11], [1, 10], [2, 11], [3, 14], [4, 16], [5, 7], [6, 13]]
+                var data = [{% for week in group.quality_graph.data reversed %}["{{ week.date }}", {{ week.value }}], {% endfor %}]
                 $.plot("#quality-chart-{{ group.abbreviation }}",
                 [data],
                 {
@@ -114,44 +113,52 @@
                         min: 0
                     }
                 })
-                data = [[0, .53], [1, .97], [2, 1.35], [3, 1.03], [4, 0.96], [5, 0.89], [6, 0.81]]
+                //data = [[0, .53], [1, .97], [2, 1.35], [3, 1.03], [4, 0.96], [5, 0.89], [6, 0.81]]
+                data = [{% for week in group.efficiency_graph.data reversed %}[{{ forloop.counter0 }}, {{ week.value }}], {% endfor %}]
                 $.plot("#efficiency-chart-{{ group.abbreviation }}", [data], {
-                    //bars: {show: true}
                     series: {
                         lines: {
                             show: true,
                         },
+                        {% if group.efficiency_graph.thresholds %}{% with group.efficiency_graph.thresholds as thresholds %}
                         threshold: [
                             {
-                                below: 1,
+                                below: {{ thresholds.too_high }},
                                 color: '#eba51f' //yellow-gold
                             }, {
-                                below: 0.85,
-                                color: '#0f0' //green
+                                below: {{ thresholds.upper_ideal }},
+                                color: '#0d1' //green
                             }, {
-                                below: 0.7,
-                                color: '#f00' //red
+                                below: {{ thresholds.lower_ideal }},
+                                color: '#f22' //red
                             }
                         ]
+                        {% endwith %}{% endif %}
                     },
                     xaxis: {
-                        ticks: [[0, "Jan 7"], [1, "Jan 14"], [2, "Jan 21"], [3, "Jan 28"], [4, "Feb 5"], [5, "Feb 12"], [6, "Feb 19"]]
+                        ticks: [{% for week in group.efficiency_graph.data reversed %}[{{ forloop.counter0 }}, "{{ week.date }}"], {% endfor %}]
+                    },
+                    yaxis: {
+                        {% if not group.efficiency_graph.allow_negative %}min: 0{% endif %}
                     },
                     colors: ['#ff751f'],
 
                 })
-                data = [[0, 95.5], [1, 174.5], [2, 242.5], [3, 184.5], [4, 173.5], [5, 160], [6, 145.25]]
+                data = [{% for week in group.throughput_graph.data reversed %}[{{ forloop.counter0 }}, {{ week.value }}], {% endfor %}]
                 $.plot("#throughput-chart-{{ group.abbreviation }}", [data], {
                     lines: {show: true},
                     xaxis: {
-                        ticks: [[0, "Jan 7"], [1, "Jan 14"], [2, "Jan 21"], [3, "Jan 28"], [4, "Feb 5"], [5, "Feb 12"], [6, "Feb 19"]]
+                        ticks: [{% for week in group.throughput_graph.data reversed %}[{{ forloop.counter0 }}, "{{ week.date }}"], {% endfor %}]
+                    },
+                    yaxis: {
+                        {% if not group.throughput_graph.allow_negative %}min: 0{% endif %}
                     },
                     colors: ['#1daff2'] //powder blue
                 })
                 $.plot("#progress-chart-{{ group.abbreviation }}",
                     [
-                        {data: .92, color: 'rgba(256,0,0,.9)', width: 6, label: "Manual"},
-                        {data: .08, color: 'rgba(5,5,220,.9)', stroke: {color:'rgba(5,5,220,1)', width: 5}, label: "Automatic"}
+                        {data: {{ group.progress_graph.data.negative.value }}, color: 'rgba(256,0,0,.9)', width: 6, label: "{{ group.progress_graph.data.negative.label }}"},
+                        {data: {{ group.progress_graph.data.positive.value }}, color: 'rgba(5,5,220,.9)', stroke: {color:'rgba(5,5,220,1)', width: 5}, label: "{{ group.progress_graph.data.positive.label }}"}
                     ],
                     {
                         series: {
@@ -189,33 +196,16 @@
                         <div id="quality-chart-{{ group.abbreviation }}" style="height:260px;width:520px;"></div>
                     </div>
                     <div class="title-wrapper" style="width:520px;float:left">
-                        <h2>Utilization</h2>
+                        <h2>{{ group.efficiency_graph.title }}</h2>
                         <div id="efficiency-chart-{{ group.abbreviation }}" style="height:260px;width:520px;"></div>
                     </div>
                     <div class="title-wrapper" style="width:520px;float:left">
-                        <h2>Analysis Hours</h2>
+                        <h2>{{ group.throughput_graph.title }}</h2>
                         <div id="throughput-chart-{{ group.abbreviation }}" style="height:260px;width:520px;"></div>
                     </div>
                     <div class="title-wrapper" style="width:520px;float:left">
-                        <h2>Requirement Standardization</h2>
+                        <h2>{{ group.progress_graph.title }}</h2>
                         <div id="progress-chart-{{ group.abbreviation }}" style="height:260px;width:520px;"></div>
-                    </div>
-                <br><hr><br>
-                    <div class="dataTables_wrapper no-footer table-responsive">
-                        <table class="display nowrap metrics_table">
-                            <tr>
-                                <th>Date</th>
-                                {% for field in group.metric_fields %}
-                                <th>{{ field.verbose_name | capfirst}}</th>
-                                {% endfor %}
-                            </tr>
-                            {% for row in group.metrics_set.all %}
-                                <td>{{ row.created | date:"m/d/y" }}</td>
-                                {% for field in row.table_row %}
-                                    <td>{{ field }}</td>
-                                {% endfor %}
-                            {% endfor %}
-                        </table>
                     </div>
                 </div>
                 {% endfor %}
