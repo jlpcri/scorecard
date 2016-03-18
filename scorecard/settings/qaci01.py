@@ -23,4 +23,6 @@ DATABASES = {
         'HOST': 'qaci01.wic.west.com',
         # 'PORT': '5432',
         'PORT': '5433'  # another postgres instance
- 
+    }
+}
+
