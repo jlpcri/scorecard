@@ -12,14 +12,15 @@ EMAIL_HOST = 'linux745.wic.west.com'
 EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = 'QEIInnovation@west.com'
 
+DEBUG = True
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'scorecard',
+        'NAME': 'scorecard_subteamed',
         'USER': 'scorecard',
         'PASSWORD': 'scorecard_development',
         'HOST': 'qaci01.wic.west.com',
         # 'PORT': '5432',
         'PORT': '5433'  # another postgres instance
-    }
-}
+ 
