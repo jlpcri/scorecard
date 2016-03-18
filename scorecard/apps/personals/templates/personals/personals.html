@@ -62,14 +62,14 @@
                             <div class="tab-pane{% if subteam == user.humanresource.subteam %} active{% endif %}" id="{{ group.abbreviation }}-{{ subteam.name|slugify }}">
                                 <table class="table table-striped table-hover table-condensed table-bordered">
                                     <thead>
-                                        <tr><th>Name</th>{% for heading in group.humanresource_set.first.stat_set.last.stat_summary.keys %}<th>{{ heading }}</th>{% endfor %}</tr>
+                                        <tr><th>Name</th>{% for heading in group.humanresource_set.first.stat_set.first.stat_summary.keys %}<th>{{ heading }}</th>{% endfor %}</tr>
                                     </thead>
                                 {% for user in subteam.humanresource_set.all %}
                                     <tr>
                                         <td>
                                             <a href="{% url 'personals:personal_stats' user.stat_set.first.id %}?key={{ user.functional_group.abbreviation }}">{{ user.user.last_name | title }}, {{ user.user.first_name | title}}</a>
                                         </td>
-                                        {% for value in user.stat_set.last.stat_summary.values %}
+                                        {% for value in user.stat_set.first.stat_summary.values %}
                                         <td>
                                             {{ value }}
                                         </td>
