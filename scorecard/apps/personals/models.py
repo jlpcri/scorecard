@@ -21,12 +21,15 @@ class BaseStats(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ['human_resource__user__first_name']
+        ordering = ['-created']
 
     def __unicode__(self):
         return '{0}: {1}: {2}'.format(self.human_resource.user.username,
                                       self.human_resource.functional_group.key,
                                       localtime(self.created))
+
+    def stat_summary(self):
+        return {'Overtime': self.overtime_weekday+self.overtime_weekend, 'Rework': self.rework_time}
 
 
 class InnovationStats(BaseStats):
@@ -38,6 +41,10 @@ class InnovationStats(BaseStats):
     unit_tests_dev = models.PositiveIntegerField(default=0)
     elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
 
+    def stat_summary(self):
+        return {'Story Points': self.story_points_execution, 'Unit Tests': self.unit_tests_dev}
+
+
 
 class LabStats(BaseStats):
     """
@@ -45,6 +52,9 @@ class LabStats(BaseStats):
     """
     # Throughput
     tickets_closed = models.PositiveIntegerField(default=0)
+
+    def stat_summary(self):
+        return {'Overtime': self.overtime_weekday+self.overtime_weekend, 'Tickets Closed': self.tickets_closed}
 
 
 class RequirementStats(BaseStats):
@@ -62,6 +72,9 @@ class RequirementStats(BaseStats):
 
     # Costs
     travel_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    def stat_summary(self):
+        return {'Analysis/Elicitation': self.elicitation_analysis_time, 'Overtime': self.overtime_weekday+self.overtime_weekend, 'Rework': self.rework_time}
 
 
 class TestStats(BaseStats):
@@ -85,6 +98,12 @@ class TestStats(BaseStats):
 
     #Efficiency
     resource_swap_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+
+    def stat_summary(self):
+        return {'Manual Tests Developed': self.tc_manual_dev,
+                'Manual Tests Executed': self.tc_manual_execution,
+                'Automatic Tests Developed': self.tc_auto_dev,
+                'Automatic Tests Executed': self.tc_auto_execution}
 
     @property
     def phase_delay_and_duration(self):

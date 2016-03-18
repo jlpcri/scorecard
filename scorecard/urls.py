@@ -17,8 +17,10 @@ from django.conf import settings
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
 
+from scorecard.apps.core.views import landing
+
 urlpatterns = [
-    url(r'^scorecard/$', 'scorecard.apps.core.views.landing', name='landing'),
+    url(r'^scorecard/$', landing, name='landing'),
     url(r'^scorecard/automations/', include('scorecard.apps.automations.urls', namespace='automations')),
     url(r'^scorecard/datas/', include('scorecard.apps.datas.urls', namespace='datas')),
     url(r'^scorecard/help/', include('scorecard.apps.help.urls', namespace='help')),

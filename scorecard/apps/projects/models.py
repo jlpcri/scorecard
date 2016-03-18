@@ -1,7 +1,7 @@
 from django.utils import timezone
 from django.db import models
 
-from scorecard.apps.users.models import FunctionalGroup, HumanResource
+from scorecard.apps.users.models import FunctionalGroup, HumanResource, Subteam
 from utils import calculate_business_day
 
 
@@ -11,30 +11,11 @@ class Project(models.Model):
     def __unicode__(self):
         return self.name
 
-    @property
-    def phases_qa(self):
-        return self.projectphase_set.filter(functional_group__key='QA')
-
-    @property
-    def phases_te(self):
-        return self.projectphase_set.filter(functional_group__key='TE')
-
-    @property
-    def phases_qi(self):
-        return self.projectphase_set.filter(functional_group__key='QI')
-
-    @property
-    def phases_re(self):
-        return self.projectphase_set.filter(functional_group__key='RE')
-
-    @property
-    def phases_tl(self):
-        return self.projectphase_set.filter(functional_group__key='TL')
-
 
 class ProjectPhase(models.Model):
     project = models.ForeignKey(Project)
     functional_group = models.ForeignKey(FunctionalGroup)
+    subteam = models.ForeignKey(Subteam, blank=True, null=True)
     lead = models.ForeignKey(HumanResource)
 
     name = models.CharField(max_length=50)
@@ -49,9 +30,9 @@ class ProjectPhase(models.Model):
         unique_together = ('project', 'name')
 
     def __unicode__(self):
-        return '{0}: {1}: {2}'.format(self.name,
-                                      self.project.name,
-                                      self.functional_group.key)
+        return '{0} {1}: {2}'.format(self.project.name,
+                                      self.name,
+                                      self.functional_group.abbreviation)
 
     @property
     def start_delays(self):
@@ -75,6 +56,7 @@ class ProjectPhase(models.Model):
 
 class Ticket(models.Model):
     functional_group = models.ForeignKey(FunctionalGroup)
+    subteam = models.ForeignKey(Subteam, blank=True, null=True)
     lead = models.ForeignKey(HumanResource)
 
     key = models.CharField(max_length=50)
@@ -85,8 +67,6 @@ class Ticket(models.Model):
     actual_end = models.DateTimeField(null=True, blank=True)
 
     def __unicode__(self):
-        return '{0}: {1}: {2}'.format(self.key,
-                                      self.lead.user,
-                                      self.functional_group.key)
+        return self.key
 
 

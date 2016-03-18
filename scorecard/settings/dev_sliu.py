@@ -16,7 +16,7 @@ if socket.gethostname() == 'sliu-OptiPlex-GX520':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'scorecard',
+            'NAME': 'scorecard_subteamed',
             'USER': 'scorecard',
             'PASSWORD': 'scorecard_development',
             'HOST': 'qaci01.wic.west.com',

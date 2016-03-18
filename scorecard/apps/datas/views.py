@@ -26,7 +26,7 @@ def datas(request):
     data_key = []
     for functional_group in functional_groups:
         data_name.append(functional_group.name)
-        data_key.append(functional_group.key)
+        data_key.append(functional_group.abbreviation)
 
     dates = InnovationMetrics.objects.filter(created__range=(start, end)).values_list('created', flat=True).order_by('-created')
     data['name'] = data_name
@@ -105,29 +105,8 @@ def export_excel(request):
             ws = wb.active
             ws.title = key
             # ws.sheet_properties.tabColor = '1072BA'
-            if key == 'RE':
-                metric = RequirementMetrics.objects.get(functional_group__key=key,
-                                                        created__year=date.year,
-                                                        created__month=date.month,
-                                                        created__day=date.day)
-
-            elif key == 'TL':
-                metric = LabMetrics.objects.get(functional_group__key=key,
-                                                created__year=date.year,
-                                                created__month=date.month,
-                                                created__day=date.day)
-
-            elif key == 'QI':
-                metric = InnovationMetrics.objects.get(functional_group__key=key,
-                                                       created__year=date.year,
-                                                       created__month=date.month,
-                                                       created__day=date.day)
-
-            else:
-                metric = TestMetrics.objects.get(functional_group__key=key,
-                                                 created__year=date.year,
-                                                 created__month=date.month,
-                                                 created__day=date.day)
+            group = FunctionalGroup.objects.get(abbreviation=key)
+            metric = group.metrics_set.get(created__year=date.year, created__month=date.month, created__day=date.day)
 
             if not metric.updated:
                 messages.error(request, 'Team \'{0}\' not updated'.format(metric.functional_group.name))

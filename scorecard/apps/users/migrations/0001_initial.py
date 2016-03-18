@@ -1,9 +1,6 @@
 from __future__ import unicode_literals
 from django.db import migrations, models
 
-from django.contrib.auth.models import User
-from scorecard.apps.users.models import FunctionalGroup
-
 
 class Migration(migrations.Migration):
 
@@ -35,8 +32,8 @@ class Migration(migrations.Migration):
         fields=[
             ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
             # ('name', models.CharField(default=b'', unique=True, max_length=50)),
-            ('functional_group', models.ForeignKey(FunctionalGroup, null=True, blank=True)),
-            ('user', models.OneToOneField(User)),
+            ('functional_group', models.ForeignKey('users.FunctionalGroup', null=True, blank=True)),
+            ('user', models.OneToOneField('auth.User')),
             ('manager', models.BooleanField(default=False)),
             ('contractor', models.BooleanField(default=False))
         ],

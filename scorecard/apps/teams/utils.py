@@ -76,29 +76,33 @@ def get_start_end_from_request(request):
     }
 
 
-def fetch_team_members_per_team_per_date(key, date):
+def fetch_team_members_per_team_per_date(key, date, subteam):
     year = date[:4]
     month = date[6:7]
     day = date[8:10]
     team_personals = []
 
     if key in ['QA', 'TE']:
-        team_personals = TestStats.objects.filter(human_resource__functional_group__key=key,
+        team_personals = TestStats.objects.filter(human_resource__functional_group__abbreviation=key,
+                                                  human_resource__subteam__id=subteam,
                                                   created__year=year,
                                                   created__month=month,
                                                   created__day=day)
-    elif key == 'QI':
-        team_personals = InnovationStats.objects.filter(human_resource__functional_group__key=key,
+    elif key in ['QI', 'QE']:
+        team_personals = InnovationStats.objects.filter(human_resource__functional_group__abbreviation=key,
+                                                        human_resource__subteam__id=subteam,
                                                         created__year=year,
                                                         created__month=month,
                                                         created__day=day)
     elif key == 'RE':
-        team_personals = RequirementStats.objects.filter(human_resource__functional_group__key=key,
+        team_personals = RequirementStats.objects.filter(human_resource__functional_group__abbreviation=key,
+                                                         human_resource__subteam__id=subteam,
                                                          created__year=year,
                                                          created__month=month,
                                                          created__day=day)
     elif key == 'TL':
-        team_personals = LabStats.objects.filter(human_resource__functional_group__key=key,
+        team_personals = LabStats.objects.filter(human_resource__functional_group__abbreviation=key,
+                                                 human_resource__subteam__id=subteam,
                                                  created__year=year,
                                                  created__month=month,
                                                  created__day=day)
@@ -106,9 +110,9 @@ def fetch_team_members_per_team_per_date(key, date):
     return team_personals
 
 
-def fetch_collect_data_per_team_per_date(key, date):
+def fetch_collect_data_per_team_per_date(key, date, subteam):
     form_data = calculate_data = automation_data = {}
-    team_personals = fetch_team_members_per_team_per_date(key, date)
+    team_personals = fetch_team_members_per_team_per_date(key, date, subteam)
 
     # QA, TE
     overtime_weekday = overtime_weekend = rework_time = 0
@@ -127,7 +131,7 @@ def fetch_collect_data_per_team_per_date(key, date):
 
     if key in ['QA', 'TE']:
         try:
-            test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=key)
+            test_metric_config = TestMetricsConfiguration.objects.get(functional_group__abbreviation=key)
             hours = test_metric_config.hours_per_week
             costs_staff = test_metric_config.costs_per_hour_staff
         except TestMetricsConfiguration.DoesNotExist:
@@ -202,7 +206,7 @@ def fetch_collect_data_per_team_per_date(key, date):
 
         automation_data = get_automation_data(key, CHOICES_QA_TE, date)
 
-    elif key == 'QI':
+    elif key in ['QI', 'QE']:
         for person in team_personals:
             overtime_weekday += person.overtime_weekday
             overtime_weekend += person.overtime_weekend
@@ -312,7 +316,7 @@ def get_ytd_data(group, key):
             }
         }
 
-    elif key == 'QI':
+    elif key in ['QI', 'QE']:
         for item in group:
             total_costs += item.total_operational_cost
 
@@ -393,7 +397,7 @@ def get_automation_data(key, choices, date=None):
     data = {}
     for item in choices:
         try:
-            automation = Automation.objects.get(functional_group__key=key,
+            automation = Automation.objects.get(functional_group__abbreviation=key,
                                                 column_field=item[0])
 
             if automation.script_file:

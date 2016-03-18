@@ -12,6 +12,7 @@ from scorecard.apps.core.views import check_user_team
 from scorecard.apps.users.views import user_is_superuser, user_is_manager
 from tasks import weekly_metric_new, weekly_send_email
 from utils import context_teams, fetch_team_members_per_team_per_date, fetch_collect_data_per_team_per_date
+from scorecard.apps.users.models import FunctionalGroup, Subteam
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -22,6 +23,18 @@ def teams(request):
     check_user_team(request)
 
     context = RequestContext(request, context_teams(request))
+
+    groups = []
+    for group in FunctionalGroup.objects.all():
+        group_dict = {'group': group,
+                      'weeks': group.metrics_set.filter(subteam=None).order_by('-created'),
+                      'subteams': [{'team': team, 'weeks': team.metrics_set.all().order_by('-created')}
+                                   for team in Subteam.objects.filter(parent=group)]}
+        groups.append(group_dict)
+        if group.abbreviation == 'TL':
+            print group_dict
+    context.update({'groups': groups})
+
 
     return render(request, 'teams/teams.html', context)
 
@@ -55,14 +68,14 @@ def send_email(request):
 def metric_detail(request, metric_id):
     key = request.GET.get('key', '')
     try:
-        test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=key)
+        test_metric_config = TestMetricsConfiguration.objects.get(functional_group__abbreviation=key)
     except TestMetricsConfiguration.DoesNotExist:
         test_metric_config = ''
 
     if key in ['QA', 'TE']:
         metric = get_object_or_404(TestMetrics, pk=metric_id)
         form = TestForm(instance=metric)
-    elif key == 'QI':
+    elif key in ['QI', 'QE']:
         metric = get_object_or_404(InnovationMetrics, pk=metric_id)
         form = InnovationForm(instance=metric)
     elif key == 'RE':
@@ -131,10 +144,11 @@ def metric_edit(request, metric_id):
 def fetch_team_members_by_date(request):
     key = request.GET.get('key', '')
     date = request.GET.get('date', '')
+    subteam = request.GET.get('subteam', '')
     # print key, date
 
     data = []
-    team_personals = fetch_team_members_per_team_per_date(key, date)
+    team_personals = fetch_team_members_per_team_per_date(key, date, subteam)
 
     for person in team_personals:
         temp = {}
@@ -153,18 +167,19 @@ def collect_data(request):
     metric_id = request.GET.get('metric_id', '')
     key = request.GET.get('key', '')
     date = request.GET.get('date', '')
+    subteam = request.GET.get('subteam', '')
 
-    initial_data = fetch_collect_data_per_team_per_date(key, date)
+    initial_data = fetch_collect_data_per_team_per_date(key, date, subteam)
 
     try:
-        test_metric_config = TestMetricsConfiguration.objects.get(functional_group__key=key)
+        test_metric_config = TestMetricsConfiguration.objects.get(functional_group__abbreviation=key)
     except TestMetricsConfiguration.DoesNotExist:
         test_metric_config = ''
 
     if key in ['QA', 'TE']:
         metric = get_object_or_404(TestMetrics, pk=metric_id)
         form = TestForm(instance=metric, initial=initial_data['form_data'])
-    elif key == 'QI':
+    elif key in ['QI', 'QE']:
         metric = get_object_or_404(InnovationMetrics, pk=metric_id)
         form = InnovationForm(instance=metric, initial=initial_data['form_data'])
     elif key == 'RE':

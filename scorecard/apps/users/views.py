@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.template import RequestContext
 
-from models import HumanResource, FunctionalGroup, ColumnPreference
+from models import HumanResource, FunctionalGroup, ColumnPreference, Subteam
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -20,68 +20,10 @@ from scorecard.apps.core.views import check_user_team
 def home(request):
     check_user_team(request)
 
-    functional_groups = FunctionalGroup.objects.all()
-
-    for functional_group in functional_groups:
-        if functional_group.key == 'QA':
-            qa_metrics = functional_group.testmetrics_set.order_by('-created')
-        elif functional_group.key == 'QI':
-            qi_metrics = functional_group.innovationmetrics_set.order_by('-created')
-        elif functional_group.key == 'RE':
-            re_metrics = functional_group.requirementmetrics_set.order_by('-created')
-        elif functional_group.key == 'TE':
-            te_metrics = functional_group.testmetrics_set.order_by('-created')
-        elif functional_group.key == 'TL':
-            tl_metrics = functional_group.labmetrics_set.order_by('-created')
-
-    # build a list of the user column preferences on a per table basis
-    qa_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Quality Assurance'))
-    qi_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Quality Innovation'))
-    re_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Requirements Engineering'))
-    te_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Test Engineering'))
-    tl_column_preferences = list(ColumnPreference.objects.all().filter(user=request.user, table_name='Test Lab'))
-
-    qa_hide_list = []
-    qi_hide_list = []
-    re_hide_list = []
-    te_hide_list = []
-    tl_hide_list = []
-
-    # the user might have created a ColumnPreferences but the hide list might be empty
-    # this also covers the case where a ColumnPreferences has not been created
-    for e in qa_column_preferences:
-        qa_hide_list = e.hide_list
-
-    for e in qi_column_preferences:
-        qi_hide_list = e.hide_list
-
-    for e in re_column_preferences:
-        re_hide_list = e.hide_list
-
-    for e in te_column_preferences:
-        te_hide_list = e.hide_list
-
-    for e in tl_column_preferences:
-        tl_hide_list = e.hide_list
-
-    qa_user_hide_list = simplejson.dumps(qa_hide_list)
-    qi_user_hide_list = simplejson.dumps(qi_hide_list)
-    re_user_hide_list = simplejson.dumps(re_hide_list)
-    tl_user_hide_list = simplejson.dumps(te_hide_list)
-    te_user_hide_list = simplejson.dumps(tl_hide_list)
-
     return render(request, 'users/home.html',
                   {
-                      'qa_data': qa_metrics,
-                      'qi_data': qi_metrics,
-                      're_data': re_metrics,
-                      'te_data': te_metrics,
-                      'tl_data': tl_metrics,
-                      'qa_user_hide_list': qa_user_hide_list,
-                      'qi_user_hide_list': qi_user_hide_list,
-                      're_user_hide_list': re_user_hide_list,
-                      'te_user_hide_list': te_user_hide_list,
-                      'tl_user_hide_list': tl_user_hide_list,
+                      'groups': FunctionalGroup.objects.all(),
+                      'column_preferences': ColumnPreference.objects.filter(user=request.user)
                   })
 
 
@@ -153,15 +95,15 @@ def user_management(request):
             '-first_name',
             'last_login',
             '-last_login',
-            'humanresource__functional_group__key',
-            '-humanresource__functional_group__key'
+            'humanresource__functional_group__abbreviation',
+            '-humanresource__functional_group__abbreviation'
         ]
         users = ''
         sort = request.GET.get('sort', '')
         sort = sort if sort else 'username'
 
         if sort in sort_types:
-            if sort in ['humanresource__functional_group__key', '-humanresource__functional_group__key']:
+            if sort in ['humanresource__functional_group__abbreviation', '-humanresource__functional_group__abbreviation']:
                 users = User.objects.order_by(sort, 'username')
             else:
                 users = User.objects.order_by(sort)
@@ -218,7 +160,7 @@ def update_user_chart_preferences(request):
 def user_manager_assign(request):
     user = request.user
     try:
-        key = request.user.humanresource.functional_group.key
+        key = request.user.humanresource.functional_group.abbreviation
     except AttributeError:
         key = ''
 
@@ -232,11 +174,12 @@ def user_manager_assign(request):
         if user.is_superuser or not key:
             groups = FunctionalGroup.objects.all().order_by('name')
         else:
-            groups = FunctionalGroup.objects.filter(key=key)
+            groups = FunctionalGroup.objects.filter(abbreviation=key)
 
         context = RequestContext(request, {
             'users': users,
             'groups': groups,
+            'subteams': Subteam.objects.all().order_by('parent'),
             'first_check': first_check
         })
 
@@ -245,10 +188,12 @@ def user_manager_assign(request):
     elif request.method == 'POST':
         user_id = request.POST.get('user_select', '')
         group_id = request.POST.get('group_select', '')
+        subteam_id = request.POST.get('subteam_select', '')
         is_manager = request.POST.get('is_manager', '')
 
         user = User.objects.get(id=user_id)
         user.humanresource.functional_group = FunctionalGroup.objects.get(pk=group_id)
+        user.humanresource.subteam = Subteam.objects.get(pk=subteam_id)
         if is_manager:
             user.humanresource.manager = True
         else:

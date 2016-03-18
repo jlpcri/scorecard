@@ -7,14 +7,18 @@ from django.template import RequestContext
 
 from models import Automation
 from forms import AutomationNewForm, AutomationForm
-from scorecard.apps.users.models import FunctionalGroup
+from scorecard.apps.users.models import FunctionalGroup, Subteam
 
 
 @login_required
 def automations(request):
     qas = qis = res = tes = tls = []
+    groups = []
     functional_groups = FunctionalGroup.objects.all()
     for fg in functional_groups:
+        columns = fg.automation_set.order_by('column_field')
+        subteams = Subteam.objects.filter(parent=fg)
+        groups.append({'group': fg, 'subteams': subteams, 'columns': columns})
         if fg.key == 'QA':
             qas = fg.automation_set.order_by('column_field')
         elif fg.key == 'QI':
@@ -28,10 +32,10 @@ def automations(request):
 
     try:
         automation_new_form = AutomationNewForm(initial={'functional_group': request.user.humanresource.functional_group,
-                                                         'key': request.user.humanresource.functional_group.key})
+                                                         'key': request.user.humanresource.functional_group.abbreviation})
     except AttributeError as e:
         # print e.message, type(e)
-        automation_new_form = AutomationNewForm(initial={'functional_group': FunctionalGroup.objects.get(key='QA'),
+        automation_new_form = AutomationNewForm(initial={'functional_group': FunctionalGroup.objects.get(abbreviation='QA'),
                                                          'key': 'QA'})
 
     context = RequestContext(request, {
@@ -40,7 +44,7 @@ def automations(request):
         'res': res,
         'tes': tes,
         'tls': tls,
-
+        'groups': groups,
         'form': automation_new_form
     })
     return render(request, 'automations/automations.html', context)

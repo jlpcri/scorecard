@@ -11,7 +11,6 @@ from pytz import timezone
 from models import Project, ProjectPhase, Ticket
 from scorecard.apps.core.views import check_user_team
 from scorecard.apps.projects.forms import ProjectNewForm, TicketNewForm, ProjectPhaseNewForm
-from scorecard.apps.projects.utils import get_projects_tickets_from_fg
 from scorecard.apps.users.models import FunctionalGroup, HumanResource
 
 
@@ -20,41 +19,17 @@ def projects(request):
     check_user_team(request)
 
     function_groups = FunctionalGroup.objects.all()
-
-    qas = tes = qis = res = tls = {
-        'fg_projects': [],
-        'fg_tickets': []
-    }
-
-    for function_group in function_groups:
-        if function_group.key == 'QA':
-            qas = get_projects_tickets_from_fg(function_group)
-        elif function_group.key == 'TE':
-            tes = get_projects_tickets_from_fg(function_group)
-        elif function_group.key == 'QI':
-            qis = get_projects_tickets_from_fg(function_group)
-        elif function_group.key == 'RE':
-            res = get_projects_tickets_from_fg(function_group)
-        elif function_group.key == 'TL':
-            tls = get_projects_tickets_from_fg(function_group)
+    groups = []
+    for group in function_groups:
+        groups.append({'group': group,
+                       'tickets': Ticket.objects.filter(functional_group=group),
+                       'projects': ProjectPhase.objects.filter(functional_group=group)})
 
     context = RequestContext(request, {
-        'qa_projects': qas['fg_projects'],
-        'qa_tickets': qas['fg_tickets'],
-        'te_projects': tes['fg_projects'],
-        'te_tickets': tes['fg_tickets'],
-        'qi_projects': qis['fg_projects'],
-        'qi_tickets': qis['fg_tickets'],
-        're_projects': res['fg_projects'],
-        're_tickets': res['fg_tickets'],
-        'tl_projects': tls['fg_projects'],
-        'tl_tickets': tls['fg_tickets'],
-
+        'groups': groups,
         'project_new_form': ProjectNewForm(),
         'project_phase_new_form': ProjectPhaseNewForm(),
         'ticket_new_form': TicketNewForm(),
-
-        'function_groups': function_groups,
         'leads': HumanResource.objects.all(),
         'projects': Project.objects.all()
     })
