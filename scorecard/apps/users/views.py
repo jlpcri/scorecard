@@ -200,8 +200,8 @@ def user_manager_assign(request):
             user.humanresource.manager = False
 
         user.humanresource.save()
-
-        return redirect('users:home')
+        messages.success(request, "Added {0} to {1}".format(user.first_name + " " + user.last_name, unicode(user.humanresource.subteam)))
+        return redirect('users:manager_assign')
 
 
 @login_required
