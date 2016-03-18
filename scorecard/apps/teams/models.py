@@ -190,7 +190,7 @@ class TestMetrics(BaseMetrics):
                 'data': [{'date': week.created.strftime("%b %-d"), 'value': week.defect_caught} for week in data]}
 
     def progress_graph(self):
-        data = self.functional_group.testmetrics_set.all().order_by("-created")[:4]
+        data = self.functional_group.testmetrics_set.filter(updated=True).order_by("-created")[:4]
         automatic = sum([week.tc_auto_execution for week in data])
         manual = sum([week.tc_manual_execution for week in data])
         return {'title': 'Test Case Automation',
