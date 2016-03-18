@@ -1,7 +1,7 @@
 <!-- Collect Data from Personal to Team Modal -->
 <div class="modal fade newProject" id="collect-data-modal">
     <div class="modal-dialog">
-        <form action="{% url 'teams:collect_data' %}?metric_id={{ metric.id }}&key={{ metric.functional_group.key }}&date={{ metric.created|date:'Y-m-d' }}" method="post">
+        <form action="{% url 'teams:collect_data' %}?metric_id={{ metric.id }}&key={{ metric.functional_group.abbreviation }}&date={{ metric.created|date:'Y-m-d' }}&subteam={{ metric.subteam.id }}" method="post">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span> </button>

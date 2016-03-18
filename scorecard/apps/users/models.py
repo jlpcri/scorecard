@@ -44,6 +44,8 @@ class FunctionalGroup(models.Model):
 
     def metric_fields(self):
         metric = self.metrics()
+        if not metric:
+            return None
 
         fields = metric._meta.get_fields()
         EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated', 'subteam']
@@ -60,21 +62,36 @@ class FunctionalGroup(models.Model):
             return LabMetrics.objects.filter(functional_group=self).first()
 
     def quality_graph(self):
-        metrics = self.metrics()
-        return metrics.quality_graph()
+        try:
+            return self.metrics().quality_graph()
+        except AttributeError:  # metrics == None, i.e. no data loaded
+            print self.metrics()
+            return None
 
     def efficiency_graph(self):
-        return self.metrics().efficiency_graph()
+        try:
+            return self.metrics().efficiency_graph()
+        except AttributeError:  # metrics == None, i.e. no data loaded
+            print self.metrics()
+            return None
 
     def throughput_graph(self):
-        return self.metrics().throughput_graph()
+        try:
+            return self.metrics().throughput_graph()
+        except AttributeError:  # metrics == None, i.e. no data loaded
+            print self.metrics()
+            return None
 
     def progress_graph(self):
-        return self.metrics().progress_graph()
+        try:
+            return self.metrics().progress_graph()
+        except AttributeError:  # metrics == None, i.e. no data loaded
+            print self.metrics()
+            return None
 
     @property
     def key(self):
-        return self.abbreviation if self.abbreviation != 'BPO' else 'QI'
+        return self.abbreviation if self.abbreviation not in ['BPO', 'QE'] else 'QI'
 
 
 class Subteam(models.Model):
@@ -84,6 +101,7 @@ class Subteam(models.Model):
     parent = models.ForeignKey(FunctionalGroup)
     name = models.TextField()
     hourly_rate = models.IntegerField(default=50)
+    active = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.parent.abbreviation + " " + self.name
@@ -130,6 +148,9 @@ class HumanResource(models.Model):
             return self.innovationstats_set
         elif self.functional_group.metric_type == FunctionalGroup.LAB:
             return self.labstats_set
+
+    class Meta:
+        ordering = ['user__last_name', ]
 
 
 class ColumnPreference(models.Model):

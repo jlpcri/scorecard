@@ -31,8 +31,10 @@ def teams(request):
                       'subteams': [{'team': team, 'weeks': team.metrics_set.all().order_by('-created')}
                                    for team in Subteam.objects.filter(parent=group)]}
         groups.append(group_dict)
-        print group_dict
+        if group.abbreviation == 'TL':
+            print group_dict
     context.update({'groups': groups})
+
 
     return render(request, 'teams/teams.html', context)
 
@@ -73,7 +75,7 @@ def metric_detail(request, metric_id):
     if key in ['QA', 'TE']:
         metric = get_object_or_404(TestMetrics, pk=metric_id)
         form = TestForm(instance=metric)
-    elif key == 'QI':
+    elif key in ['QI', 'QE']:
         metric = get_object_or_404(InnovationMetrics, pk=metric_id)
         form = InnovationForm(instance=metric)
     elif key == 'RE':
@@ -142,10 +144,11 @@ def metric_edit(request, metric_id):
 def fetch_team_members_by_date(request):
     key = request.GET.get('key', '')
     date = request.GET.get('date', '')
+    subteam = request.GET.get('subteam', '')
     # print key, date
 
     data = []
-    team_personals = fetch_team_members_per_team_per_date(key, date)
+    team_personals = fetch_team_members_per_team_per_date(key, date, subteam)
 
     for person in team_personals:
         temp = {}
@@ -164,8 +167,9 @@ def collect_data(request):
     metric_id = request.GET.get('metric_id', '')
     key = request.GET.get('key', '')
     date = request.GET.get('date', '')
+    subteam = request.GET.get('subteam', '')
 
-    initial_data = fetch_collect_data_per_team_per_date(key, date)
+    initial_data = fetch_collect_data_per_team_per_date(key, date, subteam)
 
     try:
         test_metric_config = TestMetricsConfiguration.objects.get(functional_group__abbreviation=key)
@@ -175,7 +179,7 @@ def collect_data(request):
     if key in ['QA', 'TE']:
         metric = get_object_or_404(TestMetrics, pk=metric_id)
         form = TestForm(instance=metric, initial=initial_data['form_data'])
-    elif key == 'QI':
+    elif key in ['QI', 'QE']:
         metric = get_object_or_404(InnovationMetrics, pk=metric_id)
         form = InnovationForm(instance=metric, initial=initial_data['form_data'])
     elif key == 'RE':

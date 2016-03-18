@@ -23,85 +23,12 @@ def personals(request):
         return render(request, 'personals/nonmanager.html', {'stats': request.user.humanresource.stat_set.all().order_by('-created')})
 
     function_groups = FunctionalGroup.objects.all()
-    qa_personals = []
-    te_personals = []
-    qi_personals = []
-    re_personals = []
-    tl_personals = []
-    current_user_personals = []
-
-    users = HumanResource.objects.filter(functional_group__isnull=False).order_by('functional_group', 'subteam', 'user__last_name')
-    #return render(request, 'personals/personals.html', {'users': users})
-
-    #old
-    for function_group in function_groups:
-        if function_group.abbreviation == 'QA':
-            try:
-                qa = TestStats.objects.latest('created')
-                qa_personals = TestStats.objects.filter(human_resource__functional_group__abbreviation='QA',
-                                                        created__year=qa.created.year,
-                                                        created__month=qa.created.month,
-                                                        created__day=qa.created.day)
-            except TestStats.DoesNotExist:
-                pass
-        elif function_group.abbreviation == 'TE':
-            try:
-                te = TestStats.objects.latest('created')
-                te_personals = TestStats.objects.filter(human_resource__functional_group__abbreviation='TE',
-                                                        created__year=te.created.year,
-                                                        created__month=te.created.month,
-                                                        created__day=te.created.day)
-            except TestStats.DoesNotExist:
-                pass
-        elif function_group.abbreviation == 'QI':
-            try:
-                qi = InnovationStats.objects.latest('created')
-                qi_personals = InnovationStats.objects.filter(created__year=qi.created.year,
-                                                              created__month=qi.created.month,
-                                                              created__day=qi.created.day)
-            except InnovationStats.DoesNotExist:
-                pass
-        elif function_group.abbreviation == 'RE':
-            try:
-                re = RequirementStats.objects.latest('created')
-                re_personals = RequirementStats.objects.filter(created__year=re.created.year,
-                                                               created__month=re.created.month,
-                                                               created__day=re.created.day)
-            except RequirementStats.DoesNotExist:
-                pass
-        elif function_group.abbreviation == 'TL':
-            try:
-                tl = LabStats.objects.latest('created')
-                tl_personals = LabStats.objects.filter(created__year=tl.created.year,
-                                                       created__month=tl.created.month,
-                                                       created__day=tl.created.day)
-            except LabStats.DoesNotExist:
-                pass
-
-    hr = HumanResource.objects.get(user=request.user)
-    if hr.functional_group:
-        if hr.functional_group.abbreviation in ['QA', 'TE']:
-            current_user_personals = hr.teststats_set.order_by('-created')
-        elif hr.functional_group.abbreviation == 'QI':
-            current_user_personals = hr.innovationstats_set.order_by('-created')
-        elif hr.functional_group.abbreviation == 'RE':
-            current_user_personals = hr.requirementstats_set.order_by('-created')
-        elif hr.functional_group.abbreviation == 'TL':
-            current_user_personals = hr.labstats_set.order_by('-created')
-
     dates = get_distinct_dates()
+    print dates
 
     context = RequestContext(request, {
-        'qa_personals': qa_personals,
-        'te_personals': te_personals,
-        'qi_personals': qi_personals,
-        're_personals': re_personals,
-        'tl_personals': tl_personals,
-
-        'current_user_personals': current_user_personals,
         'groups': function_groups,
         'dates': dates,
-        'users': users
     })
 
     return render(request, 'personals/personals.html', context)
