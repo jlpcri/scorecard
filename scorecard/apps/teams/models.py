@@ -399,7 +399,6 @@ class LabMetrics(BaseMetrics):
     @classmethod
     def progress_graph(cls):
         data = cls.objects.all().order_by("-created")[:6]
-        print [week.power_consumption_ups_a for week in data]
         return {'title': 'A vs B',
                 'data': {'positive': {'value': sum([week.power_consumption_ups_a for week in data]), 'label': 'A'},
                          'negative': {'value': sum([week.power_consumption_ups_b for week in data]), 'label': 'B'}}}

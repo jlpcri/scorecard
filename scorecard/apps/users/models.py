@@ -91,7 +91,7 @@ class FunctionalGroup(models.Model):
 
     @property
     def key(self):
-        return self.abbreviation if self.abbreviation != 'BPO' else 'QI'
+        return self.abbreviation if self.abbreviation not in ['BPO', 'QE'] else 'QI'
 
 
 class Subteam(models.Model):
@@ -101,6 +101,7 @@ class Subteam(models.Model):
     parent = models.ForeignKey(FunctionalGroup)
     name = models.TextField()
     hourly_rate = models.IntegerField(default=50)
+    active = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.parent.abbreviation + " " + self.name

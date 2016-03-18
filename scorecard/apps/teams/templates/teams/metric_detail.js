@@ -256,7 +256,7 @@ $('#collect_data_button').click(function(){
     var key = $('#collect_data_key').val(),
         date = $('#collect_data_date').val();
     //console.log(key, date);
-    $.getJSON("{% url 'teams:fetch_team_members_by_date'%}?key={0}&date={1}".format(key, date)).done(function(data){
+    $.getJSON("{% url 'teams:fetch_team_members_by_date'%}?key={0}&date={1}&subteam={{metric.subteam.id}}".format(key, date)).done(function(data){
         //console.log(data);
         $.ajaxSetup({cache: false});
         var contents_head = '<tr><th>Name</th><th>Updated</th></tr>',
