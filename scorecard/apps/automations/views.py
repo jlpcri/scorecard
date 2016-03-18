@@ -12,35 +12,35 @@ from scorecard.apps.users.models import FunctionalGroup, Subteam
 
 @login_required
 def automations(request):
-    qas = qis = res = tes = tls = []
+    qas = qes = res = tes = tls = []
     groups = []
     functional_groups = FunctionalGroup.objects.all()
     for fg in functional_groups:
         columns = fg.automation_set.order_by('column_field')
         subteams = Subteam.objects.filter(parent=fg)
         groups.append({'group': fg, 'subteams': subteams, 'columns': columns})
-        if fg.key == 'QA':
+        if fg.abbreviation == 'QA':
             qas = fg.automation_set.order_by('column_field')
-        elif fg.key == 'QI':
-            qis = fg.automation_set.order_by('column_field')
-        elif fg.key == 'RE':
+        elif fg.abbreviation == 'QE':
+            qes = fg.automation_set.order_by('column_field')
+        elif fg.abbreviation == 'RE':
             res = fg.automation_set.order_by('column_field')
-        elif fg.key == 'TE':
+        elif fg.abbreviation == 'TE':
             tes = fg.automation_set.order_by('column_field')
-        elif fg.key == 'TL':
+        elif fg.abbreviation == 'TL':
             tls = fg.automation_set.order_by('column_field')
 
     try:
         automation_new_form = AutomationNewForm(initial={'functional_group': request.user.humanresource.functional_group,
-                                                         'key': request.user.humanresource.functional_group.abbreviation})
+                                                         'abbreviation': request.user.humanresource.functional_group.abbreviation})
     except AttributeError as e:
-        # print e.message, type(e)
+        print e.message, type(e)
         automation_new_form = AutomationNewForm(initial={'functional_group': FunctionalGroup.objects.get(abbreviation='QA'),
-                                                         'key': 'QA'})
+                                                         'abbreviation': 'QA'})
 
     context = RequestContext(request, {
         'qas': qas,
-        'qis': qis,
+        'qes': qes,
         'res': res,
         'tes': tes,
         'tls': tls,
@@ -58,6 +58,7 @@ def automation_detail(request, automation_id):
         try:
             script_content = automation.script_file.read()
         except IOError:
+            print 'AAA'
             script_content = ''
     else:
         script_content = ''
@@ -94,7 +95,7 @@ def automation_edit(request, automation_id):
 
 def automation_new(request):
     if request.method == 'POST':
-        form = AutomationNewForm(request.POST, request.FILES, initial={'key': request.user.humanresource.functional_group.key})
+        form = AutomationNewForm(request.POST, request.FILES, initial={'abbreviation': request.user.humanresource.functional_group.abbreviation})
         if form.is_valid():
             if request.FILES and not request.FILES['script_file'].name.endswith('.py'):
                 messages.error(request, 'Invalid file type, unable to upload (must be .py)')
