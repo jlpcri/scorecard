@@ -29,7 +29,7 @@ class Automation(models.Model):
         unique_together = (("functional_group", "column_field"), )
 
     def __unicode__(self):
-        return '{0}: {1}: {2}: {3}'.format(self.functional_group.key,
+        return '{0}: {1}: {2}: {3}'.format(self.functional_group.abbreviation,
                                            self.column_field,
                                            self.tests_run,
                                            localtime(self.last_success))
