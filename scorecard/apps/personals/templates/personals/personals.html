@@ -12,16 +12,6 @@
                     </small>
                 {% endif %}
             </div>
-            <div class="col-xs-6 dropdown">
-                {% if user.is_superuser or user.humanresource.manager %}
-                    <button class="btn btn-primary dropdown-toggle pull-right" type="button" data-toggle="dropdown">Select Week Date <span class="caret"></span></button>
-                    <ul class="dropdown-menu pull-right">
-                        {% for date in dates %}
-                            <li><a href="#">{{ date }}</a></li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            </div>
         </div>
 
         <ul id="subnav-tabs" class="nav nav-tabs">
@@ -67,7 +57,7 @@
                                 {% for user in subteam.humanresource_set.all %}
                                     <tr>
                                         <td>
-                                            <a href="{% url 'personals:personal_stats' user.stat_set.first.id %}?key={{ user.functional_group.abbreviation }}">{{ user.user.last_name | title }}, {{ user.user.first_name | title}}</a>
+                                            <a href="{% url 'personals:personals' %}?expand={{ user.id }}">{{ user.user.last_name | title }}, {{ user.user.first_name | title}}</a>
                                         </td>
                                         {% for value in user.stat_set.first.stat_summary.values %}
                                         <td>
