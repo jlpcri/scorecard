@@ -9,21 +9,21 @@ class AutomationNewForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(AutomationNewForm, self).__init__(*args, **kwargs)
         try:
-            key = kwargs.pop('initial')['key']
+            abbreviation = kwargs.pop('initial')['abbreviation']
         except KeyError:
-            key = ''
-        if key == 'QI':
+            abbreviation = ''
+        if abbreviation == 'QE':
             choices = CHOICES_QI
-        elif key == 'TL':
+        elif abbreviation == 'TL':
             choices = CHOICES_TL
-        elif key == 'RE':
+        elif abbreviation == 'RE':
             choices = CHOICES_RE
-        elif key in ['QA', 'TE']:
+        elif abbreviation in ['QA', 'TE']:
             choices = CHOICES_QA_TE
         else:
             choices = ''
         self.fields['functional_group'] = forms.ModelChoiceField(widget=forms.Select(attrs={'class': 'form-control'}),
-                                                                 queryset=FunctionalGroup.objects.filter(abbreviation=key))
+                                                                 queryset=FunctionalGroup.objects.filter(abbreviation=abbreviation))
         self.fields['column_field'] = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}),
                                                         choices=choices)
 
@@ -44,7 +44,7 @@ class AutomationForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(AutomationForm, self).__init__(*args, **kwargs)
         if self.instance:
-            self.fields['functional_group'] = forms.ModelChoiceField(queryset=FunctionalGroup.objects.filter(abbreviation=self.instance.functional_group.abberviation),
+            self.fields['functional_group'] = forms.ModelChoiceField(queryset=FunctionalGroup.objects.filter(abbreviation=self.instance.functional_group.abbreviation),
                                                                      widget=forms.Select(attrs={'class': 'form-control',
                                                                                                 'readonly': True}))
 
