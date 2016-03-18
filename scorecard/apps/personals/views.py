@@ -21,11 +21,11 @@ def personals(request):
     check_user_team(request)
     if not (request.user.is_superuser or request.user.humanresource.manager):
         return render(request, 'personals/nonmanager.html', {'stats': request.user.humanresource.stat_set.all().order_by('-created')})
+    if request.GET.get('expand', None) and (request.user.is_superuser or request.user.humanresource.manager):
+        return render(request, 'personals/nonmanager.html', {'stats': HumanResource.objects.get(id=request.GET.get('expand', None)).stat_set.all().order_by('-created')})
 
     function_groups = FunctionalGroup.objects.all()
     dates = get_distinct_dates()
-    print dates
-
     context = RequestContext(request, {
         'groups': function_groups,
         'dates': dates,
@@ -132,17 +132,17 @@ def fetch_personals_by_date(request):
     tl_personals = []
 
     functional_groups = FunctionalGroup.objects.all()
-    for functional_gruop in functional_groups:
-        if functional_gruop.key == 'QA':
-            qa_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
-        elif functional_gruop.key == 'TE':
-            te_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
-        elif functional_gruop.key == 'QI':
-            qi_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
-        elif functional_gruop.key == 'RE':
-            re_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
-        elif functional_gruop.key == 'TL':
-            tl_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
+    for group in functional_groups:
+        if group.key == 'QA':
+            qa_personals = fetch_personals_per_team_per_date(group.key, date)
+        elif group.key == 'TE':
+            te_personals = fetch_personals_per_team_per_date(group.key, date)
+        elif group.key == 'QI':
+            qi_personals = fetch_personals_per_team_per_date(group.key, date)
+        elif group.key == 'RE':
+            re_personals = fetch_personals_per_team_per_date(group.key, date)
+        elif group.key == 'TL':
+            tl_personals = fetch_personals_per_team_per_date(group.key, date)
 
     data['qa_personals'] = qa_personals
     data['te_personals'] = te_personals
