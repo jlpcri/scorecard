@@ -1,6 +1,6 @@
 import socket
 from django.utils import timezone
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 
