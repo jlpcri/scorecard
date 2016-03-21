@@ -8,7 +8,7 @@ from scorecard.apps.personals.models import TestStats, RequirementStats, LabStat
 from scorecard.apps.personals.models import InnovationStats
 from scorecard.apps.users.models import FunctionalGroup
 from models import TestMetricsConfiguration
-from scorecard.apps.automations.utils import CHOICES_QI, CHOICES_RE, CHOICES_TL, CHOICES_QA_TE
+from scorecard.apps.automations.utils import CHOICES_QE, CHOICES_RE, CHOICES_TL, CHOICES_QA_TE
 
 
 def context_teams(request):
@@ -228,7 +228,7 @@ def fetch_collect_data_per_team_per_date(key, date, subteam):
             'operational_cost': len(team_personals) * 40 * 45,
             'total_cost': len(team_personals) * 40 * 45
         }
-        automation_data = get_automation_data(key, CHOICES_QI, date)
+        automation_data = get_automation_data(key, CHOICES_QE, date)
 
     elif key == 'RE':
         for person in team_personals:
