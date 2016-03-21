@@ -122,8 +122,8 @@ def weekly_send_email():
     msg = EmailMultiAlternatives(subject, content, from_email, to_email)
     msg.content_subtype = 'html'
 
-    if socket.gethostname() == 'sliu-OptiPlex-GX520':
-        msg.send()
+    # if socket.gethostname() == 'sliu-OptiPlex-GX520':
+    msg.send()
 
 
 def err_message_send_email(err_message):
