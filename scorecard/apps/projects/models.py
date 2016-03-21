@@ -30,7 +30,7 @@ class ProjectPhase(models.Model):
         unique_together = ('project', 'name')
 
     def __unicode__(self):
-        return '{0} {1}: {2}'.format(self.project.name,
+        return '{0}: {1}: {2}'.format(self.project.name,
                                       self.name,
                                       self.functional_group.abbreviation)
 
@@ -67,6 +67,8 @@ class Ticket(models.Model):
     actual_end = models.DateTimeField(null=True, blank=True)
 
     def __unicode__(self):
-        return self.key
+        return '{0}: {1}: {2}'.format(self.key,
+                                      self.lead.user,
+                                      self.functional_group.abbreviation)
 
 

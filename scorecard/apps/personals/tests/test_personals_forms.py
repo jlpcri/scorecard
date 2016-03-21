@@ -1,6 +1,7 @@
 import random
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.utils import timezone
 
 from scorecard.apps.personals.models import InnovationStats, LabStats, RequirementStats, TestStats
 from scorecard.apps.personals.forms import InnovationForm, LabForm, RequirementForm, TestForm
@@ -11,7 +12,7 @@ class InnovationFormTest(TestCase):
     def setUp(self):
         self.fg_qi = FunctionalGroup.objects.create(
             name='Quality Innovation',
-            key='QI'
+            abbreviation='QI'
         )
         self.user_account = {
             'username': 'UserName',
@@ -27,7 +28,8 @@ class InnovationFormTest(TestCase):
             manager=True
         )
         self.personal_stat = InnovationStats.objects.create(
-            human_resource=self.hr
+            human_resource=self.hr,
+            created=timezone.now()
         )
 
     def test_innovation_form_valid_with_valid_params(self):
@@ -59,7 +61,7 @@ class LabFormTest(TestCase):
     def setUp(self):
         self.fg_tl = FunctionalGroup.objects.create(
             name='Test Lab',
-            key='TL'
+            abbreviation='TL'
         )
         self.user_account = {
             'username': 'UserName',
@@ -75,7 +77,8 @@ class LabFormTest(TestCase):
             manager=True
         )
         self.personal_stat = LabStats.objects.create(
-            human_resource=self.hr
+            human_resource=self.hr,
+            created=timezone.now()
         )
 
     def test_lab_form_valid_with_valid_params(self):
@@ -103,7 +106,7 @@ class RequirementFormTest(TestCase):
     def setUp(self):
         self.fg_re = FunctionalGroup.objects.create(
             name='Requirment Engineering',
-            key='RE'
+            abbreviation='RE'
         )
         self.user_account = {
             'username': 'UserName',
@@ -119,7 +122,8 @@ class RequirementFormTest(TestCase):
             manager=True
         )
         self.personal_stat = RequirementStats.objects.create(
-            human_resource=self.hr
+            human_resource=self.hr,
+            created=timezone.now()
         )
 
     def test_requirement_form_valid_with_valid_params(self):
@@ -153,7 +157,7 @@ class TestFormTest(TestCase):
     def setUp(self):
         self.fg_qa = FunctionalGroup.objects.create(
             name='Quality Assurance',
-            key='QA'
+            abbreviation='QA'
         )
         self.user_account = {
             'username': 'UserName',
@@ -169,7 +173,8 @@ class TestFormTest(TestCase):
             manager=True
         )
         self.personal_stat = LabStats.objects.create(
-            human_resource=self.hr
+            human_resource=self.hr,
+            created=timezone.now()
         )
 
     def test_test_form_valid_with_valid_params(self):

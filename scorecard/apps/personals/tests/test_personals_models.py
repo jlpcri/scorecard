@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils.timezone import localtime
+from django.utils import timezone
 
 from scorecard.apps.personals.models import InnovationStats, TestStats, LabStats, RequirementStats
 from scorecard.apps.users.models import FunctionalGroup, HumanResource
@@ -10,7 +11,7 @@ class InnovationStatsModelTest(TestCase):
     def setUp(self):
         self.fg_qi = FunctionalGroup.objects.create(
             name='Quality Innovation',
-            key='QI'
+            abbreviation='QI'
         )
         self.user_account = {
             'username': 'UserName',
@@ -26,7 +27,8 @@ class InnovationStatsModelTest(TestCase):
             manager=True
         )
         self.personal = InnovationStats.objects.create(
-            human_resource=self.hr
+            human_resource=self.hr,
+            created=timezone.now()
         )
 
     def test_string_representations(self):
@@ -42,7 +44,7 @@ class LabStatsModelTest(TestCase):
     def setUp(self):
         self.fg_tl = FunctionalGroup.objects.create(
             name='Test Lab',
-            key='TL'
+            abbreviation='TL'
         )
         self.user_account = {
             'username': 'UserName',
@@ -58,7 +60,8 @@ class LabStatsModelTest(TestCase):
             manager=True
         )
         self.personal = LabStats.objects.create(
-            human_resource=self.hr
+            human_resource=self.hr,
+            created=timezone.now()
         )
 
     def test_string_representations(self):
@@ -74,7 +77,7 @@ class RequirementStatsModelTest(TestCase):
     def setUp(self):
         self.fg_re = FunctionalGroup.objects.create(
             name='Requirment Engineering',
-            key='RE'
+            abbreviation='RE'
         )
         self.user_account = {
             'username': 'UserName',
@@ -90,7 +93,8 @@ class RequirementStatsModelTest(TestCase):
             manager=True
         )
         self.personal = RequirementStats.objects.create(
-            human_resource=self.hr
+            human_resource=self.hr,
+            created=timezone.now()
         )
 
     def test_string_representations(self):
@@ -106,7 +110,7 @@ class TestStatsModelTest(TestCase):
     def setUp(self):
         self.fg_qa = FunctionalGroup.objects.create(
             name='Quality Assurance',
-            key='QA'
+            abbreviation='QA'
         )
         self.user_account = {
             'username': 'UserName',
@@ -122,7 +126,8 @@ class TestStatsModelTest(TestCase):
             manager=True
         )
         self.personal = TestStats.objects.create(
-            human_resource=self.hr
+            human_resource=self.hr,
+            created=timezone.now()
         )
 
     def test_string_representations(self):

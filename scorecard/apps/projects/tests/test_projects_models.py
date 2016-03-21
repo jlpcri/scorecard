@@ -25,7 +25,7 @@ class ProjectPhaseModelTest(TestCase):
         )
         self.fg = FunctionalGroup.objects.create(
             name='Quality Innovation',
-            key='QI'
+            abbreviation='QI'
         )
         self.user = User.objects.create(
             username='UserName',
@@ -44,8 +44,8 @@ class ProjectPhaseModelTest(TestCase):
         )
 
     def test_string_representations(self):
-        self.assertEqual(str(self.project_phase), '{0}: {1}: {2}'.format(self.project_phase.name,
-                                                                         self.project_phase.project.name,
+        self.assertEqual(str(self.project_phase), '{0}: {1}: {2}'.format(self.project_phase.project.name,
+                                                                         self.project_phase.name,
                                                                          self.project_phase.functional_group.key))
 
     def test_verbose_name_plural(self):
@@ -56,7 +56,7 @@ class TicketModelTest(TestCase):
     def setUp(self):
         self.fg = FunctionalGroup.objects.create(
             name='Quality Innovation',
-            key='QI'
+            abbreviation='QI'
         )
         self.user = User.objects.create(
             username='UserName',
@@ -75,7 +75,7 @@ class TicketModelTest(TestCase):
     def test_string_representations(self):
         self.assertEqual(str(self.ticket), '{0}: {1}: {2}'.format(self.ticket.key,
                                                                   self.ticket.lead.user,
-                                                                  self.ticket.functional_group.key))
+                                                                  self.ticket.functional_group.abbreviation))
 
     def test_verbose_name_plural(self):
         self.assertEqual(str(Ticket._meta.verbose_name_plural), 'tickets')
