@@ -36,7 +36,7 @@ def weekly_metric_new():
                 'valid': True
             }
     else:
-        err_message = 'Today is not Friday'
+        err_message = 'Today is not Monday'
         err_message_send_email(err_message)
 
         return {
