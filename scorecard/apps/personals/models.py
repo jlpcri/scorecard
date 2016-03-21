@@ -10,7 +10,7 @@ class BaseStats(models.Model):
     Base Individual Status for all teams
     """
     human_resource = models.ForeignKey(HumanResource)
-    created = models.DateTimeField(auto_now_add=True, db_index=True)
+    created = models.DateTimeField(db_index=True)
     confirmed = models.DateTimeField(auto_now=True, db_index=True)
     updated = models.BooleanField(default=False)
 

@@ -1,5 +1,4 @@
 import json
-import socket
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
@@ -9,7 +8,7 @@ from django.template import RequestContext
 from scorecard.apps.core.views import check_user_team
 
 from scorecard.apps.personals.tasks import weekly_personal_stats_new
-from scorecard.apps.personals.utils import get_distinct_dates, check_new_login_on_friday
+from scorecard.apps.personals.utils import get_distinct_dates
 from scorecard.apps.users.models import FunctionalGroup, HumanResource
 from models import InnovationStats, LabStats, RequirementStats, TestStats
 from scorecard.apps.users.views import user_is_superuser
@@ -21,11 +20,11 @@ def personals(request):
     check_user_team(request)
     if not (request.user.is_superuser or request.user.humanresource.manager):
         return render(request, 'personals/nonmanager.html', {'stats': request.user.humanresource.stat_set.all().order_by('-created')})
+    if request.GET.get('expand', None) and (request.user.is_superuser or request.user.humanresource.manager):
+        return render(request, 'personals/nonmanager.html', {'stats': HumanResource.objects.get(id=request.GET.get('expand', None)).stat_set.all().order_by('-created')})
 
     function_groups = FunctionalGroup.objects.all()
     dates = get_distinct_dates()
-    print dates
-
     context = RequestContext(request, {
         'groups': function_groups,
         'dates': dates,
@@ -41,8 +40,6 @@ def weekly_personal_stats_new_manually(request):
     :param request:
     :return: result valid or error
     """
-    if socket.gethostname() == 'sliu-OptiPlex-GX520':
-        check_new_login_on_friday()
 
     result = weekly_personal_stats_new()
     if not result['valid']:
@@ -132,17 +129,17 @@ def fetch_personals_by_date(request):
     tl_personals = []
 
     functional_groups = FunctionalGroup.objects.all()
-    for functional_gruop in functional_groups:
-        if functional_gruop.key == 'QA':
-            qa_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
-        elif functional_gruop.key == 'TE':
-            te_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
-        elif functional_gruop.key == 'QI':
-            qi_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
-        elif functional_gruop.key == 'RE':
-            re_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
-        elif functional_gruop.key == 'TL':
-            tl_personals = fetch_personals_per_team_per_date(functional_gruop.key, date)
+    for group in functional_groups:
+        if group.key == 'QA':
+            qa_personals = fetch_personals_per_team_per_date(group.key, date)
+        elif group.key == 'TE':
+            te_personals = fetch_personals_per_team_per_date(group.key, date)
+        elif group.key == 'QI':
+            qi_personals = fetch_personals_per_team_per_date(group.key, date)
+        elif group.key == 'RE':
+            re_personals = fetch_personals_per_team_per_date(group.key, date)
+        elif group.key == 'TL':
+            tl_personals = fetch_personals_per_team_per_date(group.key, date)
 
     data['qa_personals'] = qa_personals
     data['te_personals'] = te_personals

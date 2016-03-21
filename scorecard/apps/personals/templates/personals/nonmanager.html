@@ -2,6 +2,7 @@
 
 {% block body %}
     <div class="container">
+        <h3>{{ stats.0.human_resource.user.first_name | title}} {{ stats.0.human_resource.user.last_name | title }} Personal Scorecards</h3>
         <div class="row">
             <table class="table">
             <thead>
@@ -9,7 +10,7 @@
             </thead>
             {% for stat in stats %}
             <tr>
-                <td><a href="{% url 'personals:personal_stats' stat.id %}?key={{ user.humanresource.functional_group.abbreviation }}">{{ stat.created | date:"DATE_FORMAT" }}</a></td>
+                <td><a href="{% url 'personals:personal_stats' stat.id %}?key={{ stat.human_resource.functional_group.abbreviation }}">{{ stat.created | date:"DATE_FORMAT" }}</a></td>
                 {% for value in stat.stat_summary.values %}
                     <td>{{ value }}</td>
                 {% endfor %}

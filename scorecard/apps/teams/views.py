@@ -108,7 +108,7 @@ def metric_edit(request, metric_id):
         if key in ['QA', 'TE']:
             metric = get_object_or_404(TestMetrics, pk=metric_id)
             form = TestForm(request.POST, instance=metric)
-        elif key == 'QI':
+        elif key in ['QI', 'QE']:
             metric = get_object_or_404(InnovationMetrics, pk=metric_id)
             form = InnovationForm(request.POST, instance=metric)
         elif key == 'RE':

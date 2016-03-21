@@ -95,15 +95,15 @@ def user_management(request):
             '-first_name',
             'last_login',
             '-last_login',
-            'humanresource__functional_group__key',
-            '-humanresource__functional_group__key'
+            'humanresource__functional_group__abbreviation',
+            '-humanresource__functional_group__abbreviation'
         ]
         users = ''
         sort = request.GET.get('sort', '')
         sort = sort if sort else 'username'
 
         if sort in sort_types:
-            if sort in ['humanresource__functional_group__key', '-humanresource__functional_group__key']:
+            if sort in ['humanresource__functional_group__abbreviation', '-humanresource__functional_group__abbreviation']:
                 users = User.objects.order_by(sort, 'username')
             else:
                 users = User.objects.order_by(sort)
@@ -174,7 +174,7 @@ def user_manager_assign(request):
         if user.is_superuser or not key:
             groups = FunctionalGroup.objects.all().order_by('name')
         else:
-            groups = FunctionalGroup.objects.filter(key=key)
+            groups = FunctionalGroup.objects.filter(abbreviation=key)
 
         context = RequestContext(request, {
             'users': users,
@@ -200,8 +200,8 @@ def user_manager_assign(request):
             user.humanresource.manager = False
 
         user.humanresource.save()
-
-        return redirect('users:home')
+        messages.success(request, "Added {0} to {1}".format(user.first_name + " " + user.last_name, unicode(user.humanresource.subteam)))
+        return redirect('users:manager_assign')
 
 
 @login_required
