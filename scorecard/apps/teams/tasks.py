@@ -77,6 +77,11 @@ def metric_new(created):
 def weekly_send_email():
 
     today = datetime.today()
+    today_weekday = today.isoweekday()
+    if today_weekday != 5:
+        this_friday = today + timedelta(days=5-today_weekday)
+    else:
+        this_friday = today
     functional_groups = FunctionalGroup.objects.all()
 
     subject = 'Weekly ScoreCard Data'
@@ -92,9 +97,9 @@ def weekly_send_email():
         'pjneuberger@west.com',  # TL: Paul Neuberger
         'CAHeyden@west.com'  # QI
     ]
-    # to_email = ['sliu@west.com', 'QEIInnovation@west.com'] + managers_email
-    to_email = ['sliu@west.com']
-    content = '<p>Following are the links to access the week <strong>{0}</strong> Scorecard manager input:</p>'.format(get_week_ending_date(today))
+    to_email = ['sliu@west.com', 'QEIInnovation@west.com'] + managers_email
+    # to_email = ['sliu@west.com']
+    content = '<p>Following are the links to access the week <strong>{0}</strong> Scorecard manager input:</p>'.format(get_week_ending_date(this_friday))
     content += '<ul>'
 
     for functional_group in functional_groups:
@@ -122,7 +127,6 @@ def weekly_send_email():
     msg = EmailMultiAlternatives(subject, content, from_email, to_email)
     msg.content_subtype = 'html'
 
-    # if socket.gethostname() == 'sliu-OptiPlex-GX520':
     msg.send()
 
 
@@ -136,5 +140,4 @@ def err_message_send_email(err_message):
     msg = EmailMultiAlternatives(subject, content, from_email, to_email)
     msg.content_subtype = 'html'
 
-    if socket.gethostname() == 'sliu-OptiPlex-GX520':
-        msg.send()
+    msg.send()
