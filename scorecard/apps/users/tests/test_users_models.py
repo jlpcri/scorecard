@@ -8,9 +8,9 @@ class FunctionalGroupModelTest(TestCase):
     def test_string_representations(self):
         functional_group = FunctionalGroup.objects.create(
             name='Test Team Engineering',
-            key='TTE'
+            abbreviation='TTE'
         )
-        self.assertEqual(str(functional_group), '{0}: {1}'.format(functional_group.name, functional_group.key))
+        self.assertEqual(str(functional_group), '{0}: {1}'.format(functional_group.name, functional_group.abbreviation))
 
     def test_verbose_name_plural(self):
         self.assertEqual(str(FunctionalGroup._meta.verbose_name_plural), 'Functional Groups')

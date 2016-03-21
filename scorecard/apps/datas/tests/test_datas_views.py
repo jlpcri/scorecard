@@ -12,23 +12,23 @@ class DatasViewTest(TestCase):
 
         self.fg_qa = FunctionalGroup.objects.create(
             name='Quality Assurance',
-            key='QA'
+            abbreviation='QA'
         )
         self.fg_te = FunctionalGroup.objects.create(
             name='Test Engineering',
-            key='TE'
+            abbreviation='TE'
         )
         self.fg_qi = FunctionalGroup.objects.create(
             name='Quality Innovation',
-            key='QI'
+            abbreviation='QI'
         )
         self.fg_re = FunctionalGroup.objects.create(
             name='Requirment Engineering',
-            key='RE'
+            abbreviation='RE'
         )
         self.fg_tl = FunctionalGroup.objects.create(
             name='Test Lab',
-            key='TL'
+            abbreviation='TL'
         )
 
         self.user_account = {
