@@ -1,5 +1,6 @@
 import socket
-from datetime import date, datetime
+from django.utils import timezone
+from datetime import date, datetime, timedelta
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 
@@ -11,11 +12,12 @@ from scorecard.apps.datas.utils import get_week_ending_date
 
 @app.task
 def weekly_metric_new():
-    today = date.today()
-    if today.isoweekday() == 5:
+    now = timezone.now()
+    if now.isoweekday() == 1:
+        this_friday = now + timedelta(days=4)
         try:
             qi = InnovationMetrics.objects.latest('created')
-            if qi.created.date() == today:
+            if qi.created.date() == this_friday.date():
                 err_message = 'Metric is already exist'
                 err_message_send_email(err_message)
 
@@ -24,12 +26,12 @@ def weekly_metric_new():
                     'message': err_message
                 }
             else:
-                metric_new()
+                metric_new(this_friday)
                 return {
                     'valid': True
                 }
         except InnovationMetrics.DoesNotExist:
-            metric_new()
+            metric_new(this_friday)
             return {
                 'valid': True
             }
@@ -43,17 +45,31 @@ def weekly_metric_new():
         }
 
 
-def metric_new():
+def metric_new(created):
     functional_groups = FunctionalGroup.objects.all()
     for functional_group in functional_groups:
-        if functional_group.key in ['QA', 'TE']:
-            TestMetrics.objects.create(functional_group=functional_group)
-        elif functional_group.key == 'QI':
-            InnovationMetrics.objects.create(functional_group=functional_group)
-        elif functional_group.key == 'RE':
-            RequirementMetrics.objects.create(functional_group=functional_group)
-        elif functional_group.key == 'TL':
-            LabMetrics.objects.create(functional_group=functional_group)
+        if functional_group.abbreviation == 'QA':
+            for subteam in functional_group.subteam_set.exclude(name='Legacy'):
+                TestMetrics.objects.create(functional_group=functional_group,
+                                           subteam=subteam,
+                                           created=created)
+        elif functional_group.abbreviation == 'TE':
+            for subteam in functional_group.subteam_set.exclude(name='Legacy'):
+                TestMetrics.objects.create(functional_group=functional_group,
+                                           subteam=subteam,
+                                           created=created)
+        elif functional_group.abbreviation == 'QE':
+            InnovationMetrics.objects.create(functional_group=functional_group,
+                                             subteam=functional_group.subteam_set.all()[0],
+                                             created=created)
+        elif functional_group.abbreviation == 'RE':
+            RequirementMetrics.objects.create(functional_group=functional_group,
+                                              subteam=functional_group.subteam_set.all()[0],
+                                              created=created)
+        elif functional_group.abbreviation == 'TL':
+            LabMetrics.objects.create(functional_group=functional_group,
+                                      subteam=functional_group.subteam_set.all()[0],
+                                      created=created)
 
     weekly_send_email()
 
@@ -82,16 +98,24 @@ def weekly_send_email():
     content += '<ul>'
 
     for functional_group in functional_groups:
-        if functional_group.key == 'QI':
+        if functional_group.abbreviation == 'QE':
             metric = InnovationMetrics.objects.latest('created')
-        elif functional_group.key == 'RE':
-            metric = RequirementMetrics.objects.latest('created')
-        elif functional_group.key == 'TL':
-            metric = LabMetrics.objects.latest('created')
-        else:
-            metric = TestMetrics.objects.filter(functional_group=functional_group).latest('created')
+            content += '<li><a href=\'{0}teams/metric_detail/{1}/?key={2}\'>{3}</a></li>'.format(settings.HOST_URL, metric.id, functional_group.abbreviation, functional_group.name)
 
-        content += '<li><a href=\'{0}teams/metric_detail/{1}/?key={2}\'>{3}</a></li>'.format(settings.HOST_URL, metric.id, functional_group.key, functional_group.name)
+        elif functional_group.abbreviation == 'RE':
+            metric = RequirementMetrics.objects.latest('created')
+            content += '<li><a href=\'{0}teams/metric_detail/{1}/?key={2}\'>{3}</a></li>'.format(settings.HOST_URL, metric.id, functional_group.abbreviation, functional_group.name)
+
+        elif functional_group.abbreviation == 'TL':
+            metric = LabMetrics.objects.latest('created')
+            content += '<li><a href=\'{0}teams/metric_detail/{1}/?key={2}\'>{3}</a></li>'.format(settings.HOST_URL, metric.id, functional_group.abbreviation, functional_group.name)
+
+        elif functional_group.abbreviation in ['QA', 'TE']:
+            content += '<li>{0}</li><ul>'.format(functional_group.name)
+            for subteam in functional_group.subteam_set.exclude(name='Legacy'):
+                metric = TestMetrics.objects.filter(subteam=subteam).latest('created')
+                content += '<li><a href=\'{0}teams/metric_detail/{1}/?key={2}\'>{3}</a></li>'.format(settings.HOST_URL, metric.id, functional_group.abbreviation, subteam.name)
+            content += '</ul>'
 
     content += '</ul>'
 
