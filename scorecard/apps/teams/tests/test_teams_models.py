@@ -4,14 +4,14 @@ from django.test import TestCase
 from django.utils.timezone import localtime
 import pytz
 
-from scorecard.apps.teams.models import InnovationMetrics, LabMetrics, RequirementMetrics, TestMetrics, FunctionalGroup, TestMetricsConfiguration
-
+from scorecard.apps.teams.models import InnovationMetrics, LabMetrics, RequirementMetrics, TestMetrics, TestMetricsConfiguration
+from scorecard.apps.users.models import FunctionalGroup
 
 class InnovationMetricsModelTest(TestCase):
     def setUp(self):
         self.functional_group = FunctionalGroup.objects.create(
             name='Quality Innovation',
-            key='QI'
+            abbreviation='QI'
         )
         self.innovation = InnovationMetrics(
             functional_group=self.functional_group,
@@ -63,7 +63,7 @@ class RequirementMetricsModelTest(TestCase):
     def setUp(self):
         self.functional_group = FunctionalGroup.objects.create(
             name='Requirement Engineering',
-            key='RE'
+            abbreviation='RE'
         )
         self.requirement = RequirementMetrics.objects.create(
             functional_group=self.functional_group,
@@ -150,7 +150,7 @@ class LabMetricsModelTest(TestCase):
     def setUp(self):
         self.functional_group = FunctionalGroup.objects.create(
             name='Test Lab',
-            key='TL'
+            abbreviation='TL'
         )
         self.lab = LabMetrics.objects.create(
             functional_group=self.functional_group,
@@ -171,15 +171,15 @@ class TestMetricsModelTest(TestCase):
     def setUp(self):
         self.functional_group = FunctionalGroup.objects.create(
             name='Quality Assurance',
-            key='QA'
+            abbreviation='QA'
         )
         self.functional_group_te = FunctionalGroup.objects.create(
             name='Test Engineering',
-            key='TE'
+            abbreviation='TE'
         )
         self.functional_group_others = FunctionalGroup.objects.create(
             name='Other Group',
-            key='OG'
+            abbreviation='OG'
         )
         self.test_metric_config_qa = TestMetricsConfiguration.objects.create(
             functional_group=self.functional_group,
@@ -433,7 +433,7 @@ class TestMetricsConfigurationModelTest(TestCase):
     def setUp(self):
         self.functional_group = FunctionalGroup.objects.create(
             name='Quality Innovation',
-            key='QI'
+            abbreviation='QI'
         )
         self.test_config = TestMetricsConfiguration.objects.create(
             functional_group=self.functional_group,

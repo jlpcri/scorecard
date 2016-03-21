@@ -26,7 +26,7 @@ class FunctionalGroup(models.Model):
     metric_type = models.CharField(max_length=13, choices=METRIC_CHOICES, default=TESTING)
 
     def __unicode__(self):
-        return self.name
+        return '{0}: {1}'.format(self.name, self.abbreviation)
 
     class Meta:
         verbose_name_plural = "Functional Groups"

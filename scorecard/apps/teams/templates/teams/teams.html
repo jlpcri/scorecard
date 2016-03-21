@@ -13,11 +13,9 @@
                     </small>
                 </div>
                 <div class="col-xs-2">
-                    {% if user.is_superuser %}
-                        <small>
-                            <a  href="{% url 'teams:send_email' %}"><i class="fa fa-envelope-o fa-fw"></i> Send Email</a>
-                        </small>
-                    {% endif %}
+                    <small>
+                        <a  href="{% url 'teams:send_email' %}"><i class="fa fa-envelope-o fa-fw"></i> Send Email</a>
+                    </small>
                 </div>
                 <div class="col-xs-8">
                     <div id="date-range" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">

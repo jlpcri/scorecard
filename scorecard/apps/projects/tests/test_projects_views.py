@@ -14,23 +14,23 @@ class ProjectViewTest(TestCase):
 
         self.fg_qa = FunctionalGroup.objects.create(
             name='Quality Assurance',
-            key='QA'
+            abbreviation='QA'
         )
         self.fg_te = FunctionalGroup.objects.create(
             name='Test Engineering',
-            key='TE'
+            abbreviation='TE'
         )
         self.fg_qi = FunctionalGroup.objects.create(
-            name='Quality Innovation',
-            key='QI'
+            name='Quality Engineering',
+            abbreviation='QE'
         )
         self.fg_re = FunctionalGroup.objects.create(
-            name='Requirment Engineering',
-            key='RE'
+            name='Requirements Engineering',
+            abbreviation='RE'
         )
         self.fg_tl = FunctionalGroup.objects.create(
             name='Test Lab',
-            key='TL'
+            abbreviation='TL'
         )
 
         self.user_account = {
@@ -72,19 +72,17 @@ class ProjectViewTest(TestCase):
         response = self.client.get(reverse('projects:projects'), follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'No Projects')
-        self.assertQuerysetEqual(response.context['qa_projects'], []),
-        self.assertQuerysetEqual(response.context['te_projects'], []),
-        self.assertQuerysetEqual(response.context['qi_projects'], []),
-        self.assertQuerysetEqual(response.context['re_projects'], []),
-        self.assertQuerysetEqual(response.context['tl_projects'], [])
+        for item in response.context['groups']:
+            self.assertQuerysetEqual(item['tickets'], [])
+            self.assertQuerysetEqual(item['projects'], [])
 
     def test_projects_view_contains_one_tab_per_manager(self):
         response = self.client.get(reverse('projects:projects'))
-        self.assertContains(response, '<a href="#quality_innovation" data-toggle="tab">Quality Innovation</a>')
-        self.assertNotContains(response, '<a href="#quality_assurance" data-toggle="tab">Quality Assurance</a>')
-        self.assertNotContains(response, '<a href="#requirements_engineering" data-toggle="tab">Requirements Engineering</a>')
-        self.assertNotContains(response, '<a href="#test_engineering" data-toggle="tab">Test Engineering</a>')
-        self.assertNotContains(response, '<a href="#test_lab" data-toggle="tab">Test Lab</a>')
+        self.assertContains(response, '<a href="#QE" data-toggle="tab">Quality Engineering</a>')
+        self.assertContains(response, '<a href="#QA" data-toggle="tab">Quality Assurance</a>')
+        self.assertContains(response, '<a href="#RE" data-toggle="tab">Requirements Engineering</a>')
+        self.assertContains(response, '<a href="#TE" data-toggle="tab">Test Engineering</a>')
+        self.assertContains(response, '<a href="#TL" data-toggle="tab">Test Lab</a>')
 
     def test_projects_view_contains_5_tabs_per_superuser(self):
         self.client.logout()
@@ -93,11 +91,11 @@ class ProjectViewTest(TestCase):
             password=self.superuser_account['password']
         )
         response = self.client.get(reverse('projects:projects'))
-        self.assertContains(response, '<a href="#quality_innovation" data-toggle="tab">Quality Innovation</a>')
-        self.assertContains(response, '<a href="#quality_assurance" data-toggle="tab">Quality Assurance</a>')
-        self.assertContains(response, '<a href="#requirements_engineering" data-toggle="tab">Requirements Engineering</a>')
-        self.assertContains(response, '<a href="#test_engineering" data-toggle="tab">Test Engineering</a>')
-        self.assertContains(response, '<a href="#test_lab" data-toggle="tab">Test Lab</a>')
+        self.assertContains(response, '<a href="#QE" data-toggle="tab">Quality Engineering</a>')
+        self.assertContains(response, '<a href="#QA" data-toggle="tab">Quality Assurance</a>')
+        self.assertContains(response, '<a href="#RE" data-toggle="tab">Requirements Engineering</a>')
+        self.assertContains(response, '<a href="#TE" data-toggle="tab">Test Engineering</a>')
+        self.assertContains(response, '<a href="#TL" data-toggle="tab">Test Lab</a>')
 
     def test_projects_view_contains_project_new_form(self):
         response = self.client.get(reverse('projects:projects'))
@@ -124,23 +122,23 @@ class ProjectNewTest(TestCase):
 
         self.fg_qa = FunctionalGroup.objects.create(
             name='Quality Assurance',
-            key='QA'
+            abbreviation='QA'
         )
         self.fg_te = FunctionalGroup.objects.create(
             name='Test Engineering',
-            key='TE'
+            abbreviation='TE'
         )
         self.fg_qi = FunctionalGroup.objects.create(
             name='Quality Innovation',
-            key='QI'
+            abbreviation='QI'
         )
         self.fg_re = FunctionalGroup.objects.create(
             name='Requirment Engineering',
-            key='RE'
+            abbreviation='RE'
         )
         self.fg_tl = FunctionalGroup.objects.create(
             name='Test Lab',
-            key='TL'
+            abbreviation='TL'
         )
         self.user_account = {
             'username': 'UserName',
@@ -190,23 +188,23 @@ class ProjectPhaseNewTest(TestCase):
         )
         self.fg_qa = FunctionalGroup.objects.create(
             name='Quality Assurance',
-            key='QA'
+            abbreviation='QA'
         )
         self.fg_te = FunctionalGroup.objects.create(
             name='Test Engineering',
-            key='TE'
+            abbreviation='TE'
         )
         self.fg_qi = FunctionalGroup.objects.create(
             name='Quality Innovation',
-            key='QI'
+            abbreviation='QI'
         )
         self.fg_re = FunctionalGroup.objects.create(
             name='Requirment Engineering',
-            key='RE'
+            abbreviation='RE'
         )
         self.fg_tl = FunctionalGroup.objects.create(
             name='Test Lab',
-            key='TL'
+            abbreviation='TL'
         )
         self.user_account = {
             'username': 'UserName',
@@ -257,23 +255,23 @@ class TicketNewTest(TestCase):
 
         self.fg_qa = FunctionalGroup.objects.create(
             name='Quality Assurance',
-            key='QA'
+            abbreviation='QA'
         )
         self.fg_te = FunctionalGroup.objects.create(
             name='Test Engineering',
-            key='TE'
+            abbreviation='TE'
         )
         self.fg_qi = FunctionalGroup.objects.create(
             name='Quality Innovation',
-            key='QI'
+            abbreviation='QI'
         )
         self.fg_re = FunctionalGroup.objects.create(
             name='Requirment Engineering',
-            key='RE'
+            abbreviation='RE'
         )
         self.fg_tl = FunctionalGroup.objects.create(
             name='Test Lab',
-            key='TL'
+            abbreviation='TL'
         )
         self.user_account = {
             'username': 'UserName',
