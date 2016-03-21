@@ -56,7 +56,7 @@ PROJECT_CLOSED = 'project_closed'
 
 AVERAGE_TIME_FRAME = 'avg_time_frame'
 
-CHOICES_QI = (
+CHOICES_QE = (
     (COMPLIMENTS, 'Compliments'),
     (COMPLAINTS, 'Complaints'),
     (ESCALATIONS, 'Escalations'),

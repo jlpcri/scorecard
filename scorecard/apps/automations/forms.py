@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 
 from models import Automation, FunctionalGroup
-from utils import CHOICES_QI, CHOICES_TL, CHOICES_RE, CHOICES_QA_TE
+from utils import CHOICES_QE, CHOICES_TL, CHOICES_RE, CHOICES_QA_TE
 
 
 class AutomationNewForm(ModelForm):
@@ -13,7 +13,7 @@ class AutomationNewForm(ModelForm):
         except KeyError:
             abbreviation = ''
         if abbreviation == 'QE':
-            choices = CHOICES_QI
+            choices = CHOICES_QE
         elif abbreviation == 'TL':
             choices = CHOICES_TL
         elif abbreviation == 'RE':
