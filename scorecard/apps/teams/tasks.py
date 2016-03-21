@@ -36,7 +36,7 @@ def weekly_metric_new():
                 'valid': True
             }
     else:
-        err_message = 'Today is not Friday'
+        err_message = 'Today is not Monday'
         err_message_send_email(err_message)
 
         return {
@@ -122,8 +122,8 @@ def weekly_send_email():
     msg = EmailMultiAlternatives(subject, content, from_email, to_email)
     msg.content_subtype = 'html'
 
-    if socket.gethostname() == 'sliu-OptiPlex-GX520':
-        msg.send()
+    # if socket.gethostname() == 'sliu-OptiPlex-GX520':
+    msg.send()
 
 
 def err_message_send_email(err_message):

@@ -1,5 +1,4 @@
 import json
-import socket
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
@@ -9,7 +8,7 @@ from django.template import RequestContext
 from scorecard.apps.core.views import check_user_team
 
 from scorecard.apps.personals.tasks import weekly_personal_stats_new
-from scorecard.apps.personals.utils import get_distinct_dates, check_new_login_on_friday
+from scorecard.apps.personals.utils import get_distinct_dates
 from scorecard.apps.users.models import FunctionalGroup, HumanResource
 from models import InnovationStats, LabStats, RequirementStats, TestStats
 from scorecard.apps.users.views import user_is_superuser
@@ -41,8 +40,6 @@ def weekly_personal_stats_new_manually(request):
     :param request:
     :return: result valid or error
     """
-    if socket.gethostname() == 'sliu-OptiPlex-GX520':
-        check_new_login_on_friday()
 
     result = weekly_personal_stats_new()
     if not result['valid']:

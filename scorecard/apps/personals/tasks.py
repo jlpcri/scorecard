@@ -31,7 +31,7 @@ def weekly_personal_stats_new():
                 'valid': True
             }
     else:
-        err_message = 'Today is not Friday'
+        err_message = 'Today is not Monday'
 
         return {
             'valid': False,
