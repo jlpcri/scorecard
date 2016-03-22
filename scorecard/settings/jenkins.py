@@ -28,5 +28,5 @@ JENKINS_TASKS = (
 
 TEST_COVERAGE_EXCLUDES_FOLDERS = [
     '/usr/local/*',
-    'scrorecard/apps/*/tests/*',
+    'scorecard/apps/*/tests/*',
 ]
