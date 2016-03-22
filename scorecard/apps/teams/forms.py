@@ -21,7 +21,7 @@ class InnovationForm(ModelForm):
 
     class Meta:
         model = InnovationMetrics
-        exclude = ['created', 'confirmed', 'updated', 'functional_group', 'subteam']
+        exclude = ['created', 'confirmed', 'updated', 'functional_group', 'subteam', 'table_row']
 
 
 class LabForm(ModelForm):
@@ -79,7 +79,7 @@ class TestForm(ModelForm):
 
     class Meta:
         model = TestMetrics
-        exclude = ['created', 'confirmed', 'updated', 'functional_group', 'subteam']
+        exclude = ['created', 'confirmed', 'updated', 'functional_group', 'subteam', 'table_row']
         # widgets = {
         #     'functional_group': forms.Select(attrs={
         #         'class': 'form-control',
