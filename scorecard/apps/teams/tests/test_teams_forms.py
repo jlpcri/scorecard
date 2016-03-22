@@ -1,3 +1,4 @@
+from datetime import datetime
 import random
 from django.test import TestCase
 
@@ -40,6 +41,20 @@ class InnovationFormTest(TestCase):
             'pheme_auto_tests': random.randint(1, 100),
             'visilog_txl_parsed': random.randint(1, 100),
             'visilog_txl_schema_violation': random.randint(1, 100),
+
+            'table_row': [random.randint(1, 10)],
+            'quality_graph': {'title': 'UAT Defects',
+                              'data': [{'date': datetime.now().strftime("%b %-d")}],
+                              'value': random.randint(1, 10)},
+            'efficiency_graph': {'title': 'Average Throughput',
+                                 'data': [{'date': datetime.now().strftime("%b %-d")}],
+                                 'value': random.randint(1, 10)},
+            'throughput_graph': {'title': 'Defects Found',
+                                 'data': [{'date': datetime.now().strftime("%b %-d")}],
+                                 'value': random.randint(1, 10)},
+            'progress_graph': {'title': 'Test Case Automation',
+                               'data': [{'date': datetime.now().strftime("%b %-d")}],
+                               'value': random.randint(1, 10)},
         }
         form = InnovationForm(data=data)
         self.assertTrue(form.is_valid())
@@ -216,7 +231,21 @@ class TestFormTest(TestCase):
             'defect_caught': random.randint(1, 100),
             'uat_defects_not_prevented': random.randint(1, 100),
             'standards_violated': random.randint(1, 100),
-            'avg_time_frame': random.randint(1, 100)
+            'avg_time_frame': random.randint(1, 100),
+
+            'table_row': [random.randint(1, 10)],
+            'quality_graph': {'title': 'UAT Defects',
+                              'data': [{'date': datetime.now().strftime("%b %-d")}],
+                              'value': random.randint(1, 10)},
+            'efficiency_graph': {'title': 'Average Throughput',
+                                 'data': [{'date': datetime.now().strftime("%b %-d")}],
+                                 'value': random.randint(1, 10)},
+            'throughput_graph': {'title': 'Defects Found',
+                                 'data': [{'date': datetime.now().strftime("%b %-d")}],
+                                 'value': random.randint(1, 10)},
+            'progress_graph': {'title': 'Test Case Automation',
+                               'data': [{'date': datetime.now().strftime("%b %-d")}],
+                               'value': random.randint(1, 10)},
         }
         form = TestForm(data=data)
         self.assertTrue(form.is_valid())
