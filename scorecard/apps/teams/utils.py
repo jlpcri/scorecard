@@ -517,4 +517,6 @@ def aggregate_save_to_team(team, subteams, exclusion_list):
 
     for field in aggregate_fields:
         team.__dict__[field.get_attname()] = subteams.aggregate(Sum(field.get_attname())).values()[0]
+    if not team.updated:
+        team.updated = True
     team.save()
