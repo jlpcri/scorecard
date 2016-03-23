@@ -175,22 +175,22 @@ class TestMetrics(BaseMetrics):
         return self.tc_auto_execution_time * costs_staff
 
     def quality_graph(self):
-        data = self.functional_group.testmetrics_set.all().order_by("-created")[:12]
+        data = self.functional_group.testmetrics_set.filter(subteam=None).order_by("-created")[:12]
         return {'title': 'UAT Defects',
                 'data': [{'date': week.created.strftime("%b %-d"), 'value': week.uat_defects_not_prevented} for week in data]}
 
     def efficiency_graph(self):
-        data = self.functional_group.testmetrics_set.all().order_by("-created")[:12]
+        data = self.functional_group.testmetrics_set.filter(subteam=None).order_by("-created")[:12]
         return {'title': 'Average Throughput',
                 'data': [{'date': week.created.strftime("%b %-d"), 'value': week.avg_throughput} for week in data]}
 
     def throughput_graph(self):
-        data = self.functional_group.testmetrics_set.all().order_by("-created")[:12]
+        data = self.functional_group.testmetrics_set.filter(subteam=None).order_by("-created")[:12]
         return {'title': 'Defects Found',
                 'data': [{'date': week.created.strftime("%b %-d"), 'value': week.defect_caught} for week in data]}
 
     def progress_graph(self):
-        data = self.functional_group.testmetrics_set.filter(updated=True).order_by("-created")[:4]
+        data = self.functional_group.testmetrics_set.filter(updated=True, subteam=None).order_by("-created")[:4]
         automatic = sum([week.tc_auto_execution for week in data])
         manual = sum([week.tc_manual_execution for week in data])
         return {'title': 'Test Case Automation',
@@ -245,19 +245,19 @@ class InnovationMetrics(BaseMetrics):
 
     @classmethod
     def quality_graph(cls):
-        data = cls.objects.all().order_by("-created")[:12]
+        data = cls.objects.filter(subteam=None).order_by("-created")[:12]
         return {'title': 'Externally Reported Defects',
                 'data': [{'date': week.created.strftime("%b %-d"), 'value': week.uat_defects_not_prevented} for week in data]}
 
     @classmethod
     def efficiency_graph(cls):
-        data = cls.objects.all().order_by("-created")[:12]
+        data = cls.objects.filter(subteam=None).order_by("-created")[:12]
         return {'title': 'Story Point Backlog',
                 'data': [{'date': week.created.strftime("%b %-d"), 'value': week.story_points_backlog} for week in data]}
 
     @classmethod
     def throughput_graph(cls):
-        data = cls.objects.all().order_by("-created")[:12]
+        data = cls.objects.filter(subteam=None).order_by("-created")[:12]
         return {'title': 'Savings',
                 'data': [{'date': week.created.strftime("%b %-d"),
                           'value': week.pheme_auto_tests * 1.97 + week.pheme_manual_tests * 1.79 + float(week.other_savings)}
@@ -265,7 +265,7 @@ class InnovationMetrics(BaseMetrics):
 
     @classmethod
     def progress_graph(cls):
-        data = cls.objects.all().order_by("-created")[:4]
+        data = cls.objects.filter(subteam=None).order_by("-created")[:4]
         print [week.unit_tests_coverage for week in data]
         return {'title': 'Unit Test Coverage',
                 'data': {'positive': {'value': sum([week.unit_tests_coverage for week in data]), 'label': 'Covered'},
@@ -329,13 +329,13 @@ class RequirementMetrics(BaseMetrics):
 
     @classmethod
     def quality_graph(cls):
-        data = cls.objects.all().order_by("-created")[:12]
+        data = cls.objects.filter(subteam=None).order_by("-created")[:12]
         return {'title': 'Revisions',
                 'data': [{'date': week.created.strftime("%b %-d"), 'value': week.revisions} for week in data]}
 
     @classmethod
     def efficiency_graph(cls):
-        data = cls.objects.all().order_by("-created")[:12]
+        data = cls.objects.filter(subteam=None).order_by("-created")[:12]
         return {'title': 'Utilization',
                 'data': [{'date': week.created.strftime("%b %-d"), 'value': week.efficiency} for week in data],
                 'thresholds': {'too_high': 1,
@@ -344,13 +344,13 @@ class RequirementMetrics(BaseMetrics):
 
     @classmethod
     def throughput_graph(cls):
-        data = cls.objects.all().order_by("-created")[:12]
+        data = cls.objects.filter(subteam=None).order_by("-created")[:12]
         return {'title': 'Backlog',
                 'data': [{'date': week.created.strftime("%b %-d"), 'value': week.backlog} for week in data]}
 
     @classmethod
     def progress_graph(cls):
-        data = cls.objects.all().order_by("-created")[:12]
+        data = cls.objects.filter(subteam=None).order_by("-created")[:12]
         return {'title': 'Requirement Standardization',
                 'data': {'positive': {'value': 0, 'label': 'Automatic'},
                          'negative': {'value': 1, 'label': 'Manual'}}}
@@ -375,13 +375,13 @@ class LabMetrics(BaseMetrics):
 
     @classmethod
     def quality_graph(cls):
-        data = cls.objects.all().order_by("-created")[:12]
+        data = cls.objects.filter(subteam=None).order_by("-created")[:12]
         return {'title': 'Power Consumption',
                 'data': [{'date': week.created.strftime("%b %-d"), 'value': week.power_consumption_ups_a + week.power_consumption_ups_b} for week in data]}
 
     @classmethod
     def efficiency_graph(cls):
-        data = cls.objects.all().order_by("-created")[:12]
+        data = cls.objects.filter(subteam=None).order_by("-created")[:12]
         return {'title': 'Ticket Handling',
                 'data': [{'date': week.created.strftime("%b %-d"),
                           'value': week.tickets_closed - week.tickets_received} for week in data],
@@ -392,13 +392,13 @@ class LabMetrics(BaseMetrics):
 
     @classmethod
     def throughput_graph(cls):
-        data = cls.objects.all().order_by("-created")[:12]
+        data = cls.objects.filter(subteam=None).order_by("-created")[:12]
         return {'title': 'Lab Machines',
                 'data': [{'date': week.created.strftime("%b %-d"), 'value': week.virtual_machines + week.physical_machines} for week in data]}
 
     @classmethod
     def progress_graph(cls):
-        data = cls.objects.all().order_by("-created")[:6]
+        data = cls.objects.filter(subteam=None).order_by("-created")[:6]
         return {'title': 'A vs B',
                 'data': {'positive': {'value': sum([week.power_consumption_ups_a for week in data]), 'label': 'A'},
                          'negative': {'value': sum([week.power_consumption_ups_b for week in data]), 'label': 'B'}}}

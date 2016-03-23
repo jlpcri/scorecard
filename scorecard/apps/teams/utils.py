@@ -68,7 +68,7 @@ def get_start_end_from_request(request):
         start = end - timedelta(days=60)
 
     start = timezone(settings.TIME_ZONE).localize(start)
-    end = timezone(settings.TIME_ZONE).localize(end)
+    end = timezone(settings.TIME_ZONE).localize(end) + timedelta(days=7)
 
     return {
         'start': start,
