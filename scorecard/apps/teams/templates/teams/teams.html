@@ -33,7 +33,7 @@
                     </li>
                 {% endfor %}
             {% elif user.humanresource.manager  %}
-                <li class="active"><a href="#{{ group.group.abbreviation }}" data-toggle="tab">{{ group.group.name }}</a></li>
+                <li class="active"><a href="#{{ user.humanresource.functional_group.abbreviation }}" data-toggle="tab">{{ user.humanresource.functional_group.name }}</a></li>
             {% else %}
                 You have not been authorized to enter team-level data.
             {% endif %}
