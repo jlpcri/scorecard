@@ -28,7 +28,7 @@ def datas(request):
         data_name.append(functional_group.name)
         data_key.append(functional_group.abbreviation)
 
-    dates = InnovationMetrics.objects.filter(created__range=(start, end)).values_list('created', flat=True).order_by('-created')
+    dates = InnovationMetrics.objects.filter(created__range=(start, end), subteam=None).values_list('created', flat=True).order_by('-created')
     data['name'] = data_name
     data['key'] = data_key
     data['dates'] = dates
@@ -69,22 +69,26 @@ def export_excel(request):
             for functional_group in functional_groups:
                 ws = wb.create_sheet(functional_group.name)
                 if functional_group.key == 'RE':
-                    metric = functional_group.requirementmetrics_set.get(created__year=date.year,
+                    metric = functional_group.requirementmetrics_set.get(subteam=None,
+                                                                         created__year=date.year,
                                                                          created__month=date.month,
                                                                          created__day=date.day)
 
                 elif functional_group.key == 'TL':
-                    metric = functional_group.labmetrics_set.get(created__year=date.year,
+                    metric = functional_group.labmetrics_set.get(subteam=None,
+                                                                 created__year=date.year,
                                                                  created__month=date.month,
                                                                  created__day=date.day)
 
                 elif functional_group.key == 'QI':
-                    metric = functional_group.innovationmetrics_set.get(created__year=date.year,
+                    metric = functional_group.innovationmetrics_set.get(subteam=None,
+                                                                        created__year=date.year,
                                                                         created__month=date.month,
                                                                         created__day=date.day)
 
                 else:
-                    metric = functional_group.testmetrics_set.get(created__year=date.year,
+                    metric = functional_group.testmetrics_set.get(subteam=None,
+                                                                  created__year=date.year,
                                                                   created__month=date.month,
                                                                   created__day=date.day)
                 if not metric.updated:
@@ -106,7 +110,11 @@ def export_excel(request):
             ws.title = key
             # ws.sheet_properties.tabColor = '1072BA'
             group = FunctionalGroup.objects.get(abbreviation=key)
-            metric = group.metrics_set.get(created__year=date.year, created__month=date.month, created__day=date.day)
+            metric = group.metrics_set.get(subteam=None,
+                                           created__year=date.year,
+                                           created__month=date.month,
+                                           created__day=date.day)
+            print metric.id
 
             if not metric.updated:
                 messages.error(request, 'Team \'{0}\' not updated'.format(metric.functional_group.name))
@@ -117,7 +125,7 @@ def export_excel(request):
 
     else:
         export_file_name += 'All-' + today
-        dates = InnovationMetrics.objects.filter(created__range=(start, end)).values_list('created', flat=True)
+        dates = InnovationMetrics.objects.filter(created__range=(start, end), subteam=None).values_list('created', flat=True)
 
         # export formula to Testing Summar
         ws = wb.active
@@ -131,13 +139,17 @@ def export_excel(request):
         for functional_group in functional_groups:
             ws = wb.create_sheet(functional_group.name)
             if functional_group.key == 'RE':
-                metrics = RequirementMetrics.objects.filter(created__range=(start, end))
+                metrics = RequirementMetrics.objects.filter(subteam=None,
+                                                            created__range=(start, end))
             elif functional_group.key == 'TL':
-                metrics = LabMetrics.objects.filter(created__range=(start, end))
+                metrics = LabMetrics.objects.filter(subteam=None,
+                                                    created__range=(start, end))
             elif functional_group.key == 'QI':
-                metrics = InnovationMetrics.objects.filter(created__range=(start, end))
+                metrics = InnovationMetrics.objects.filter(subteam=None,
+                                                           created__range=(start, end))
             else:
-                metrics = TestMetrics.objects.filter(functional_group=functional_group,
+                metrics = TestMetrics.objects.filter(subteam=None,
+                                                     functional_group=functional_group,
                                                      created__range=(start, end))
 
             result = check_metrics_updated(metrics)

@@ -10,7 +10,7 @@ from models import InnovationStats, LabStats, RequirementStats, TestStats
 def weekly_personal_stats_new():
     now = timezone.now()
     if now.isoweekday() == 1:
-        this_friday = now + timedelta(days=4)
+        this_friday = now + timedelta(days=5-now.isoweekday())
         try:
             qi = InnovationStats.objects.latest('created')
             if qi.created.date() == this_friday.date():

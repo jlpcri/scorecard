@@ -6,8 +6,8 @@ from scorecard.apps.automations.models import Automation
 
 from scorecard.apps.personals.models import TestStats, RequirementStats, LabStats
 from scorecard.apps.personals.models import InnovationStats
-from scorecard.apps.users.models import FunctionalGroup
-from models import TestMetricsConfiguration
+from scorecard.apps.users.models import FunctionalGroup, Subteam
+from models import TestMetricsConfiguration, InnovationMetrics, TestMetrics, RequirementMetrics, LabMetrics
 from scorecard.apps.automations.utils import CHOICES_QE, CHOICES_RE, CHOICES_TL, CHOICES_QA_TE
 
 
@@ -68,7 +68,7 @@ def get_start_end_from_request(request):
         start = end - timedelta(days=60)
 
     start = timezone(settings.TIME_ZONE).localize(start)
-    end = timezone(settings.TIME_ZONE).localize(end)
+    end = timezone(settings.TIME_ZONE).localize(end) + timedelta(days=7)
 
     return {
         'start': start,
@@ -416,3 +416,107 @@ def get_automation_data(key, choices, date=None):
             continue
 
     return data
+
+
+def aggregate_subteam_to_team(subteam):
+    # print subteam.created.date(), subteam.subteam
+    year = subteam.created.date().year
+    month = subteam.created.date().month
+    day = subteam.created.date().day
+
+    if subteam.functional_group.abbreviation == 'QE':
+        try:
+            team = InnovationMetrics.objects.get(functional_group__abbreviation=subteam.functional_group.abbreviation,
+                                                 subteam__isnull=True,
+                                                 created__year=year,
+                                                 created__month=month,
+                                                 created__day=day)
+            subteams = InnovationMetrics.objects.filter(functional_group__abbreviation=subteam.functional_group.abbreviation,
+                                                        subteam__isnull=False,
+                                                        created__year=year,
+                                                        created__month=month,
+                                                        created__day=day)
+            exclusion_list = ['id', 'created', 'confirmed', 'updated', 'functional_group', 'subteam',
+                              'avg_throughput', 'operational_cost', 'total_operational_cost']
+            aggregate_save_to_team(team, subteams, exclusion_list)
+
+        except InnovationMetrics.DoesNotExist:
+            pass
+
+    elif subteam.functional_group.abbreviation == 'RE':
+        try:
+            team = RequirementMetrics.objects.get(functional_group__abbreviation=subteam.functional_group.abbreviation,
+                                                  subteam__isnull=True,
+                                                  created__year=year,
+                                                  created__month=month,
+                                                  created__day=day)
+            subteams = RequirementMetrics.objects.filter(functional_group__abbreviation=subteam.functional_group.abbreviation,
+                                                         subteam__isnull=False,
+                                                         created__year=year,
+                                                         created__month=month,
+                                                         created__day=day)
+            exclusion_list = ['id', 'created', 'confirmed', 'updated', 'functional_group', 'subteam',
+                              'avg_throughput', 'gross_available_time', 'efficiency',
+                              'operational_cost', 'total_operational_cost']
+            aggregate_save_to_team(team, subteams, exclusion_list)
+
+        except RequirementMetrics.DoesNotExist:
+            pass
+
+    elif subteam.functional_group.abbreviation == 'TL':
+        try:
+            team = LabMetrics.objects.get(functional_group__abbreviation=subteam.functional_group.abbreviation,
+                                          subteam__isnull=True,
+                                          created__year=year,
+                                          created__month=month,
+                                          created__day=day)
+            subteams = LabMetrics.objects.filter(functional_group__abbreviation=subteam.functional_group.abbreviation,
+                                                 subteam__isnull=False,
+                                                 created__year=year,
+                                                 created__month=month,
+                                                 created__day=day)
+            exclusion_list = ['id', 'created', 'confirmed', 'updated', 'functional_group', 'subteam']
+            aggregate_save_to_team(team, subteams, exclusion_list)
+
+        except LabMetrics.DoesNotExist:
+            pass
+
+    elif subteam.functional_group.abbreviation in ['QA', 'TE']:
+        try:
+            team = TestMetrics.objects.get(functional_group__abbreviation=subteam.functional_group.abbreviation,
+                                           subteam__isnull=True,
+                                           created__year=year,
+                                           created__month=month,
+                                           created__day=day)
+
+            subteams = TestMetrics.objects.filter(functional_group__abbreviation=subteam.functional_group.abbreviation,
+                                                  subteam__isnull=False,
+                                                  created__year=year,
+                                                  created__month=month,
+                                                  created__day=day)
+            exclusion_list = ['id', 'created', 'confirmed', 'updated', 'functional_group', 'subteam',
+                              'auto_footprint_dev_age', 'auto_footprint_execution_age', 'avg_throughput',
+                              'active_tickets', 'active_projects', 'auto_and_execution_time',
+                              'gross_available_time', 'efficiency',
+                              'operational_cost', 'total_operational_cost', 'auto_savings']
+            # team_fields = team._meta.get_fields()
+            # aggregate_fields = [field for field in team_fields if field.name not in exclusion_list]
+            #
+            # for field in aggregate_fields:
+            #     team.__dict__[field.get_attname()] = subteams.aggregate(Sum(field.get_attname())).values()[0]
+            # team.save()
+            aggregate_save_to_team(team, subteams, exclusion_list)
+
+        except TestMetrics.DoesNotExist:
+            pass
+
+
+def aggregate_save_to_team(team, subteams, exclusion_list):
+    team_fields = team._meta.get_fields()
+    aggregate_fields = [field for field in team_fields if field.name not in exclusion_list]
+
+    for field in aggregate_fields:
+        team.__dict__[field.get_attname()] = subteams.aggregate(Sum(field.get_attname())).values()[0]
+    if not team.updated:
+        team.updated = True
+    team.save()

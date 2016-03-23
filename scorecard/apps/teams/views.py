@@ -11,7 +11,8 @@ from forms import InnovationForm, LabForm, RequirementForm, TestForm
 from scorecard.apps.core.views import check_user_team
 from scorecard.apps.users.views import user_is_superuser, user_is_manager
 from tasks import weekly_metric_new, weekly_send_email
-from utils import context_teams, fetch_team_members_per_team_per_date, fetch_collect_data_per_team_per_date
+from utils import context_teams, fetch_team_members_per_team_per_date, fetch_collect_data_per_team_per_date, \
+    aggregate_subteam_to_team
 from scorecard.apps.users.models import FunctionalGroup, Subteam
 
 from django.http import HttpResponse
@@ -126,6 +127,9 @@ def metric_edit(request, metric_id):
             if not metric.updated:
                 metric.updated = True
                 metric.save()
+
+            # Aggregate Subteam to Team
+            aggregate_subteam_to_team(metric)
 
             context = context_teams(request)
             context['key'] = key
