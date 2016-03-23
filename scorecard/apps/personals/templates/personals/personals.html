@@ -19,6 +19,8 @@
                 {% for group in groups %}
                     <li{% if group == user.humanresource.functional_group %} class="active"{% endif %}><a href="#{{ group.abbreviation }}" data-toggle="tab">{{ group.name }}</a></li>
                 {% endfor %}
+            {% elif user.humanresource.manager  %}
+                <li class="active"><a href="#{{ user.humanresource.functional_group.abbreviation }}" data-toggle="tab">{{ user.humanresource.functional_group.name }}</a></li>
             {% endif %}
         </ul>
     </div>
