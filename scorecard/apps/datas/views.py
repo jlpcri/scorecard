@@ -133,7 +133,7 @@ def export_excel(request):
         write_to_excel_test_summary(ws, dates)
 
         # export formula to Innovation+Lab Summary
-        ws = wb.create_sheet('Innovation + Lab Summary')
+        ws = wb.create_sheet('QE and Lab Summary')
         write_to_excel_qi_tl_summary(ws, dates)
 
         for functional_group in functional_groups:

@@ -879,25 +879,25 @@ def get_formula_avg_from_qa_te(row, col):
 def get_cell_value_from_qi(row, col):
     row = str(row)
 
-    return '=\'Quality Innovation\'!{0}'.format(get_column_letter(col) + row)
+    return '=\'Quality Engineering\'!{0}'.format(get_column_letter(col) + row)
 
 
 def get_formula_sum_from_qi(row, col):
     row = str(row)
 
-    return '=SUM(\'Quality Innovation\'!{0}:{1})'.format(get_column_letter(col) + row, get_column_letter(col + 2) + row)
+    return '=SUM(\'Quality Engineering\'!{0}:{1})'.format(get_column_letter(col) + row, get_column_letter(col + 2) + row)
 
 
 def get_formula_savings_from_qi(row, col):
     row = str(row)
 
-    return '=(\'Quality Innovation\'!{0}*1.73)+(\'Quality Innovation\'!{1}*1.97)'.format(get_column_letter(col) + row, get_column_letter(col + 1) + row)
+    return '=(\'Quality Engineering\'!{0}*1.73)+(\'Quality Engineering\'!{1}*1.97)'.format(get_column_letter(col) + row, get_column_letter(col + 1) + row)
 
 
 def get_formula_value_add_from_qi(row, col):
     row = str(row)
 
-    return '=(\'Quality Innovation\'!{0}*0.33)'.format(get_column_letter(col) + row)
+    return '=(\'Quality Engineering\'!{0}*0.33)'.format(get_column_letter(col) + row)
 
 
 def get_cell_value_from_tl(row, col):
