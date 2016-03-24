@@ -96,11 +96,11 @@ class TeamsViewTest(TestCase):
         responses = self.client.get(reverse('teams:teams'))
         self.assertEqual(responses.status_code, 200)
         self.assertContains(responses, 'No Contents')
-        self.assertQuerysetEqual(responses.context['qas'], []),
-        self.assertQuerysetEqual(responses.context['tes'], []),
-        self.assertQuerysetEqual(responses.context['qis'], []),
-        self.assertQuerysetEqual(responses.context['res'], []),
-        self.assertQuerysetEqual(responses.context['tls'], [])
+        groups = responses.context['groups']
+        for i in range(len(groups)):
+            group = groups[i]
+            for j in range(len(group['subteams'])):
+                self.assertQuerysetEqual(group['subteams'][j]['weeks'], [])
 
     def test_teams_view_contains_one_tab_per_manager(self):
         response = self.client.get(reverse('teams:teams'))
