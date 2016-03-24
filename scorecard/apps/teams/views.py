@@ -25,32 +25,6 @@ def teams(request):
 
     context = RequestContext(request, context_teams(request))
 
-    groups = []
-    for group in FunctionalGroup.objects.all():
-        group_dict = {'group': group,
-                      'weeks': group.metrics_set.filter(subteam=None).order_by('-created'),
-                      'subteams': [{'team': team, 'weeks': team.metrics_set.all().order_by('-created')}
-                                   for team in Subteam.objects.filter(parent=group)]}
-        if request.user.is_superuser:
-            if group.abbreviation == 'QE':
-                metrics_set = InnovationMetrics.objects.filter(subteam=None).order_by('-created')
-            elif group.abbreviation == 'RE':
-                metrics_set = RequirementMetrics.objects.filter(subteam=None).order_by('-created')
-            elif group.abbreviation == 'TL':
-                metrics_set = LabMetrics.objects.filter(subteam=None).order_by('-created')
-            elif group.abbreviation in ['QA', 'TE']:
-                metrics_set = TestMetrics.objects.filter(functional_group=group, subteam=None).order_by('-created')
-
-            group_dict['subteams'].append({
-                'team': {'name': 'Team'},
-                'weeks': metrics_set
-            })
-
-        groups.append(group_dict)
-        # if group.abbreviation == 'TL':
-        #     print group_dict
-    context.update({'groups': groups})
-
     return render(request, 'teams/teams.html', context)
 
 

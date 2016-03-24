@@ -15,40 +15,42 @@ def context_teams(request):
     start_end = get_start_end_from_request(request)
     start = start_end['start']
     end = start_end['end']
-    qas = qis = res = tes = tls = []
-    qas_ytd = qis_ytd = res_ytd = tes_ytd = tls_ytd = {}
 
-    functional_groups = FunctionalGroup.objects.all()
-    for functional_group in functional_groups:
-        if functional_group.key == 'QA':
-            qas = functional_group.testmetrics_set.filter(created__range=(start, end)).order_by('-created')
-            qas_ytd = get_ytd_data(qas, functional_group.key)
-        elif functional_group.key == 'QI':
-            qis = functional_group.innovationmetrics_set.filter(created__range=(start, end)).order_by('-created')
-            qis_ytd = get_ytd_data(qis, functional_group.key)
-        elif functional_group.key == 'RE':
-            res = functional_group.requirementmetrics_set.filter(created__range=(start, end)).order_by('-created')
-            res_ytd = get_ytd_data(res, functional_group.key)
-        elif functional_group.key == 'TE':
-            tes = functional_group.testmetrics_set.filter(created__range=(start, end)).order_by('-created')
-            tes_ytd = get_ytd_data(tes, functional_group.key)
-        elif functional_group.key == 'TL':
-            tls = functional_group.labmetrics_set.filter(created__range=(start, end)).order_by('-created')
-            tls_ytd = get_ytd_data(tls, functional_group.key)
+    groups = []
+    for group in FunctionalGroup.objects.all():
+        group_dict = {'group': group,
+                      'weeks': group.metrics_set.filter(subteam=None).order_by('-created'),
+                      'subteams': [{'team': team, 'weeks': team.metrics_set.filter(created__range=(start, end)).order_by('-created')}
+                                   for team in Subteam.objects.filter(parent=group)]}
+        if request.user.is_superuser:
+            metrics_set = group.metrics_set.filter(created__range=(start, end), subteam=None).order_by('-created')
+
+            group_dict['subteams'].append({
+                'team': {'name': 'Team'},
+                'weeks': metrics_set
+            })
+
+        groups.append(group_dict)
+
+    # for functional_group in functional_groups:
+    #     if functional_group.key == 'QA':
+    #         qas = functional_group.testmetrics_set.filter(created__range=(start, end)).order_by('-created')
+    #         qas_ytd = get_ytd_data(qas, functional_group.key)
+    #     elif functional_group.key == 'QI':
+    #         qis = functional_group.innovationmetrics_set.filter(created__range=(start, end)).order_by('-created')
+    #         qis_ytd = get_ytd_data(qis, functional_group.key)
+    #     elif functional_group.key == 'RE':
+    #         res = functional_group.requirementmetrics_set.filter(created__range=(start, end)).order_by('-created')
+    #         res_ytd = get_ytd_data(res, functional_group.key)
+    #     elif functional_group.key == 'TE':
+    #         tes = functional_group.testmetrics_set.filter(created__range=(start, end)).order_by('-created')
+    #         tes_ytd = get_ytd_data(tes, functional_group.key)
+    #     elif functional_group.key == 'TL':
+    #         tls = functional_group.labmetrics_set.filter(created__range=(start, end)).order_by('-created')
+    #         tls_ytd = get_ytd_data(tls, functional_group.key)
 
     context = {
-        'qas': qas,
-        'qis': qis,
-        'res': res,
-        'tes': tes,
-        'tls': tls,
-
-        'qas_ytd': qas_ytd,
-        'qis_ytd': qis_ytd,
-        'res_ytd': res_ytd,
-        'tes_ytd': tes_ytd,
-        'tls_ytd': tls_ytd,
-
+        'groups': groups,
         'start': start,
         'end': end
     }
