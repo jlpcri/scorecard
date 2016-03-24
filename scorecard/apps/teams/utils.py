@@ -17,7 +17,7 @@ def context_teams(request):
     end = start_end['end']
 
     groups = []
-    for group in FunctionalGroup.objects.all():
+    for group in FunctionalGroup.objects.all().order_by('name'):
         group_dict = {'group': group,
                       'weeks': group.metrics_set.filter(subteam=None).order_by('-created'),
                       'subteams': [{'team': team, 'weeks': team.metrics_set.filter(created__range=(start, end)).order_by('-created')}
