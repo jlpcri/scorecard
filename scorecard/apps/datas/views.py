@@ -68,32 +68,14 @@ def export_excel(request):
             wb.active.title = 'Testing Summary'
             for functional_group in functional_groups:
                 ws = wb.create_sheet(functional_group.name)
-                if functional_group.key == 'RE':
-                    metric = functional_group.requirementmetrics_set.get(subteam=None,
-                                                                         created__year=date.year,
-                                                                         created__month=date.month,
-                                                                         created__day=date.day)
 
-                elif functional_group.key == 'TL':
-                    metric = functional_group.labmetrics_set.get(subteam=None,
-                                                                 created__year=date.year,
-                                                                 created__month=date.month,
-                                                                 created__day=date.day)
-
-                elif functional_group.key == 'QI':
-                    metric = functional_group.innovationmetrics_set.get(subteam=None,
-                                                                        created__year=date.year,
-                                                                        created__month=date.month,
-                                                                        created__day=date.day)
-
-                else:
-                    metric = functional_group.testmetrics_set.get(subteam=None,
-                                                                  created__year=date.year,
-                                                                  created__month=date.month,
-                                                                  created__day=date.day)
+                metric = functional_group.metrics_set.get(subteam=None,
+                                                          created__year=date.year,
+                                                          created__month=date.month,
+                                                          created__day=date.day)
                 if not metric.updated:
                     update_error = True
-                    update_error_list.append(str(functional_group.key))
+                    update_error_list.append(str(functional_group.abbreviation))
                 else:
                     write_to_excel(metric, ws)
                     export_date = metric.created
@@ -114,7 +96,7 @@ def export_excel(request):
                                            created__year=date.year,
                                            created__month=date.month,
                                            created__day=date.day)
-            print metric.id
+            # print metric.id
 
             if not metric.updated:
                 messages.error(request, 'Team \'{0}\' not updated'.format(metric.functional_group.name))
@@ -138,24 +120,13 @@ def export_excel(request):
 
         for functional_group in functional_groups:
             ws = wb.create_sheet(functional_group.name)
-            if functional_group.key == 'RE':
-                metrics = RequirementMetrics.objects.filter(subteam=None,
-                                                            created__range=(start, end))
-            elif functional_group.key == 'TL':
-                metrics = LabMetrics.objects.filter(subteam=None,
-                                                    created__range=(start, end))
-            elif functional_group.key == 'QI':
-                metrics = InnovationMetrics.objects.filter(subteam=None,
-                                                           created__range=(start, end))
-            else:
-                metrics = TestMetrics.objects.filter(subteam=None,
-                                                     functional_group=functional_group,
-                                                     created__range=(start, end))
 
+            metrics = functional_group.metrics_set.filter(subteam=None,
+                                                          created__range=(start, end))
             result = check_metrics_updated(metrics)
 
             if result['valid']:
-                write_to_excel_all(metrics, ws, functional_group.key)
+                write_to_excel_all(metrics, ws, functional_group.abbreviation)
             else:
                 update_error = True
                 update_error_list.append(result['team'])
@@ -174,7 +145,7 @@ def check_metrics_updated(metrics):
         if not metric.updated:
             result = {
                 'valid': False,
-                'team': str(metric.functional_group.key)
+                'team': str(metric.functional_group.abbreviation)
             }
             break
     else:

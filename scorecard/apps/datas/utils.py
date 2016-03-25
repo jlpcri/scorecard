@@ -2,7 +2,7 @@ from openpyxl.styles import PatternFill, Font, colors, Alignment
 from openpyxl.styles.borders import Border, Side
 from openpyxl.utils import get_column_letter
 
-HEAD_QI = [
+HEAD_QE = [
     'Week Ending',
     'Quality Innovation',
     'Staff',
@@ -193,7 +193,7 @@ HEAD_TESTING_SUMMARY = [
     'Total Savings'
 ]
 
-HEAD_QI_TL_SUMMARY = [
+HEAD_QE_TL_SUMMARY = [
     'Week Ending',
     'Quality Innovation',
     'Staff',
@@ -282,32 +282,32 @@ mediumBorder = Border(left=Side(style='medium'),
 
 ROW_START_INDEX = 4
 
-COL_EXCLUDE_QI = [2, 6, 17, 25, 32, 36]
+COL_EXCLUDE_QE = [2, 6, 17, 25, 32, 36]
 COL_EXCLUDE_RE = [2, 6, 11, 19, 25]
 COL_EXCLUDE_TL = [2, 6, 11]
 COL_EXCLUDE_QA_TE = [2, 6, 27, 37, 49]
 COL_EXCLUDE_TEST_SUMMARY = [2, 6, 11]
-COL_EXCLUDE_QI_TL_SUMMARY = [2, 6, 13, 17, 21, 26]
+COL_EXCLUDE_QE_TL_SUMMARY = [2, 6, 13, 17, 21, 26]
 
 
 def write_to_excel(metric, ws):
     row_start = ROW_START_INDEX
 
-    if metric.functional_group.key == 'QI':
+    if metric.functional_group.abbreviation == 'QE':
         # write head title
-        write_head_title(ws, HEAD_QI)
+        write_head_title(ws, HEAD_QE)
 
         # apply header style
-        apply_header_style(ws, len(HEAD_QI) + 1, metric.functional_group.key)
+        apply_header_style(ws, len(HEAD_QE) + 1, metric.functional_group.abbreviation)
 
         # apply border style
-        apply_border_style(ws, row_start + 1, len(HEAD_QI) + 1)
+        apply_border_style(ws, row_start + 1, len(HEAD_QE) + 1)
 
-        write_ytd(ws, len(HEAD_QI) + 1, row_start, row_start, COL_EXCLUDE_QI)
+        write_ytd(ws, len(HEAD_QE) + 1, row_start, row_start, COL_EXCLUDE_QE)
 
         write_body_qi(ws, row_start, metric)
 
-    elif metric.functional_group.key == 'TL':
+    elif metric.functional_group.abbreviation == 'TL':
         # write head title
         write_head_title(ws, HEAD_TL)
 
@@ -318,10 +318,10 @@ def write_to_excel(metric, ws):
 
         write_body_tl(ws, row_start, metric)
 
-    elif metric.functional_group.key == 'RE':
+    elif metric.functional_group.abbreviation == 'RE':
         write_head_title(ws, HEAD_RE)
 
-        apply_header_style(ws, len(HEAD_RE) + 1, metric.functional_group.key)
+        apply_header_style(ws, len(HEAD_RE) + 1, metric.functional_group.abbreviation)
 
         apply_border_style(ws, row_start + 1, len(HEAD_RE) + 1)
 
@@ -331,14 +331,14 @@ def write_to_excel(metric, ws):
 
     else:
         head = []
-        if metric.functional_group.key == 'QA':
+        if metric.functional_group.abbreviation == 'QA':
             head = HEAD_QA + HEAD_TESTING
-        elif metric.functional_group.key == 'TE':
+        elif metric.functional_group.abbreviation == 'TE':
             head = HEAD_TE + HEAD_TESTING
 
         write_head_title(ws, head)
 
-        apply_header_style(ws, len(head) + 1, metric.functional_group.key)
+        apply_header_style(ws, len(head) + 1, metric.functional_group.abbreviation)
 
         apply_border_style(ws, row_start + 1, len(head) + 1)
 
@@ -626,14 +626,14 @@ def add_dollar_symbol(ws, row, col_start, col_end):
 def write_to_excel_all(metrics, ws, key):
     row_start = ROW_START_INDEX
 
-    if key == 'QI':
-        write_head_title(ws, HEAD_QI)
+    if key == 'QE':
+        write_head_title(ws, HEAD_QE)
 
-        apply_header_style(ws, len(HEAD_QI) + 1, key)
+        apply_header_style(ws, len(HEAD_QE) + 1, key)
 
-        apply_border_style(ws, row_start + len(metrics), len(HEAD_QI) + 1)
+        apply_border_style(ws, row_start + len(metrics), len(HEAD_QE) + 1)
 
-        write_ytd(ws, len(HEAD_QI) + 1, row_start, row_start + len(metrics) - 1, COL_EXCLUDE_QI)
+        write_ytd(ws, len(HEAD_QE) + 1, row_start, row_start + len(metrics) - 1, COL_EXCLUDE_QE)
 
         for metric in metrics:
             write_body_qi(ws, row_start, metric)
@@ -780,13 +780,13 @@ def write_to_excel_test_summary(ws, dates):
 def write_to_excel_qi_tl_summary(ws, dates):
     row_start = ROW_START_INDEX
 
-    write_head_title(ws, HEAD_QI_TL_SUMMARY)
+    write_head_title(ws, HEAD_QE_TL_SUMMARY)
 
-    apply_header_style(ws, len(HEAD_QI_TL_SUMMARY) + 1, 'QI_TL_SUMMARY')
+    apply_header_style(ws, len(HEAD_QE_TL_SUMMARY) + 1, 'QE_TL_SUMMARY')
 
-    apply_border_style(ws, row_start + len(dates), len(HEAD_QI_TL_SUMMARY) + 1)
+    apply_border_style(ws, row_start + len(dates), len(HEAD_QE_TL_SUMMARY) + 1)
 
-    write_ytd(ws, len(HEAD_QI_TL_SUMMARY) + 1, row_start, row_start + len(dates) - 1, COL_EXCLUDE_QI_TL_SUMMARY)
+    write_ytd(ws, len(HEAD_QE_TL_SUMMARY) + 1, row_start, row_start + len(dates) - 1, COL_EXCLUDE_QE_TL_SUMMARY)
 
     for date in dates:
         # column 1
@@ -909,7 +909,7 @@ def get_cell_value_from_tl(row, col):
 def apply_header_style(ws, cols, key):
     pale_green = []
     corn_silk = []
-    if key == 'QI':
+    if key == 'QE':
         pale_green = [4, 11, 12, 19, 26, 34, 37, 38, 39, 40, 41]
         corn_silk = [33, 35]
     elif key == 'RE':
@@ -921,7 +921,7 @@ def apply_header_style(ws, cols, key):
     elif key == 'TEST_SUMMARY':
         pale_green = [4, 10, 18, 22, 28, 29]
         corn_silk = [23, 24]
-    elif key == 'QI_TL_SUMMARY':
+    elif key == 'QE_TL_SUMMARY':
         pale_green = [4, 19, 24, 25, 27, 28, 29]
         corn_silk = [10]
 

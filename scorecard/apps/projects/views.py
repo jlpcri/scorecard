@@ -18,7 +18,7 @@ from scorecard.apps.users.models import FunctionalGroup, HumanResource
 def projects(request):
     check_user_team(request)
 
-    function_groups = FunctionalGroup.objects.all()
+    function_groups = FunctionalGroup.objects.all().order_by('name')
     groups = []
     for group in function_groups:
         groups.append({'group': group,

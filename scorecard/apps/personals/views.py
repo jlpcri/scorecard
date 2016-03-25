@@ -23,7 +23,7 @@ def personals(request):
     if request.GET.get('expand', None) and (request.user.is_superuser or request.user.humanresource.manager):
         return render(request, 'personals/nonmanager.html', {'stats': HumanResource.objects.get(id=request.GET.get('expand', None)).stat_set.all().order_by('-created')})
 
-    function_groups = FunctionalGroup.objects.all()
+    function_groups = FunctionalGroup.objects.all().order_by('name')
     dates = get_distinct_dates()
     context = RequestContext(request, {
         'groups': function_groups,

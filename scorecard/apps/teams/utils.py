@@ -17,7 +17,7 @@ def context_teams(request):
     end = start_end['end']
 
     groups = []
-    for group in FunctionalGroup.objects.all():
+    for group in FunctionalGroup.objects.all().order_by('name'):
         group_dict = {'group': group,
                       'weeks': group.metrics_set.filter(subteam=None).order_by('-created'),
                       'subteams': [{'team': team, 'weeks': team.metrics_set.filter(created__range=(start, end)).order_by('-created')}
@@ -62,7 +62,8 @@ def get_start_end_from_request(request):
     try:
         end = datetime.strptime(request.GET.get('end'), '%Y-%m-%d') + timedelta(seconds=24 * 60 * 60 -1)
     except (TypeError, ValueError):
-        end = datetime.now()
+        now = datetime.now()
+        end = datetime(now.year, now.month, now.day) + timedelta(seconds=24 * 60 * 60 - 1)
 
     try:
         start = datetime.strptime(request.GET.get('start'), '%Y-%m-%d')
