@@ -266,7 +266,7 @@ class InnovationMetrics(BaseMetrics):
     @classmethod
     def progress_graph(cls):
         data = cls.objects.filter(subteam=None).order_by("-created")[:4]
-        print [week.unit_tests_coverage for week in data]
+        # print [week.unit_tests_coverage for week in data]
         return {'title': 'Unit Test Coverage',
                 'data': {'positive': {'value': sum([week.unit_tests_coverage for week in data]), 'label': 'Covered'},
                          'negative': {'value': sum([1-week.unit_tests_coverage for week in data]), 'label': 'Uncovered'}}}
