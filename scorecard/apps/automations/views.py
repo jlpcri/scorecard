@@ -12,23 +12,18 @@ from scorecard.apps.users.models import FunctionalGroup, Subteam
 
 @login_required
 def automations(request):
-    qas = qes = res = tes = tls = []
     groups = []
     functional_groups = FunctionalGroup.objects.all()
-    for fg in functional_groups:
-        columns = fg.automation_set.order_by('column_field')
-        subteams = Subteam.objects.filter(parent=fg)
-        groups.append({'group': fg, 'subteams': subteams, 'columns': columns})
-        if fg.abbreviation == 'QA':
-            qas = fg.automation_set.order_by('column_field')
-        elif fg.abbreviation == 'QE':
-            qes = fg.automation_set.order_by('column_field')
-        elif fg.abbreviation == 'RE':
-            res = fg.automation_set.order_by('column_field')
-        elif fg.abbreviation == 'TE':
-            tes = fg.automation_set.order_by('column_field')
-        elif fg.abbreviation == 'TL':
-            tls = fg.automation_set.order_by('column_field')
+    for group in functional_groups:
+        group_dict = {
+            'group': group,
+            'subteams': [{
+                'team': team,
+                'columns': team.automation_set.order_by('column_field')
+            }
+             for team in Subteam.objects.filter(parent=group).exclude(name='Legacy')]
+        }
+        groups.append(group_dict)
 
     try:
         automation_new_form = AutomationNewForm(initial={'functional_group': request.user.humanresource.functional_group,
@@ -39,11 +34,6 @@ def automations(request):
                                                          'abbreviation': 'QA'})
 
     context = RequestContext(request, {
-        'qas': qas,
-        'qes': qes,
-        'res': res,
-        'tes': tes,
-        'tls': tls,
         'groups': groups,
         'form': automation_new_form
     })

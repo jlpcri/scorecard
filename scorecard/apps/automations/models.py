@@ -14,6 +14,9 @@ class Automation(models.Model):
     Let user upload python script to automatically fetch data from Server: JIRA, ISR, Confluence, Pheme etc.
     """
     functional_group = models.ForeignKey('users.FunctionalGroup')
+    subteam = models.ForeignKey('users.Subteam', blank=True, null=True)
+    human_resource = models.ForeignKey('users.HumanResource', blank=True, null=True)
+
     tests_run = models.PositiveIntegerField(default=0)  # how many times to click Tested button
     last_success = models.DateTimeField(auto_now=True, db_index=True)
     last_failure = models.DateTimeField(auto_now=True, db_index=True)
