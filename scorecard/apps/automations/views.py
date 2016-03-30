@@ -80,9 +80,13 @@ def automation_detail(request, automation_id):
 
 
 def automation_edit(request, automation_id):
+    automation_type = request.GET.get('type', '')
     automation = get_object_or_404(Automation, pk=automation_id)
     if request.method == 'POST':
-        form = AutomationForm(request.POST, request.FILES, instance=automation)
+        if automation_type == 'personal':
+            form = AutomationPersonalForm(request.POST, request.FILES, instance=automation)
+        else:
+            form = AutomationForm(request.POST, request.FILES, instance=automation)
         if form.is_valid():
             if request.FILES and not request.FILES['script_file'].name.endswith('.py'):
                 messages.error(request, 'Invalid file type, unable to upload (must be .py)')

@@ -7,7 +7,7 @@
         <legend>Automation Tests</legend>
         <div class="row">
             <div class="col-xs-6">
-                <form action="{% url 'automations:automation_edit' automation.id %}" method="post" enctype="multipart/form-data">
+                <form action="{% url 'automations:automation_edit' automation.id %}?type={% if automation.human_resource %}personal{% else %}team{% endif %}" method="post" enctype="multipart/form-data">
                     {{ form }}
                     {% csrf_token %}
                     <br>
