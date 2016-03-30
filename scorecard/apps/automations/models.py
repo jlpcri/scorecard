@@ -13,7 +13,7 @@ class Automation(models.Model):
     """
     Let user upload python script to automatically fetch data from Server: JIRA, ISR, Confluence, Pheme etc.
     """
-    functional_group = models.ForeignKey('users.FunctionalGroup')
+    # functional_group = models.ForeignKey('users.FunctionalGroup')
     subteam = models.ForeignKey('users.Subteam', blank=True, null=True)
     human_resource = models.ForeignKey('users.HumanResource', blank=True, null=True)
 
@@ -29,10 +29,10 @@ class Automation(models.Model):
     column_field = models.CharField(max_length=50)
 
     class Meta:
-        unique_together = (("functional_group", "column_field"), )
+        unique_together = (("subteam", "column_field"), ("human_resource", "column_field"), )
 
     def __unicode__(self):
-        return '{0}: {1}: {2}: {3}'.format(self.functional_group.abbreviation,
+        return '{0}: {1}: {2}: {3}'.format(self.subteam.parent.abbreviation,
                                            self.column_field,
                                            self.tests_run,
                                            localtime(self.last_success))

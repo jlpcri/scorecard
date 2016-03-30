@@ -207,7 +207,7 @@ def fetch_collect_data_per_team_per_date(key, date, subteam):
             'auto_savings': tc_auto_execution_time * costs_staff
         }
 
-        automation_data = get_automation_data(key, CHOICES_QA_TE, date)
+        automation_data = get_automation_data(subteam, CHOICES_QA_TE, date)
 
     elif key in ['QI', 'QE']:
         for person in team_personals:
@@ -231,7 +231,7 @@ def fetch_collect_data_per_team_per_date(key, date, subteam):
             'operational_cost': len(team_personals) * 40 * 45,
             'total_cost': len(team_personals) * 40 * 45
         }
-        automation_data = get_automation_data(key, CHOICES_QE, date)
+        automation_data = get_automation_data(subteam, CHOICES_QE, date)
 
     elif key == 'RE':
         for person in team_personals:
@@ -258,7 +258,7 @@ def fetch_collect_data_per_team_per_date(key, date, subteam):
             'operational_cost': len(team_personals) * 30 * 50,
             'rework_external_cost': rework_external_time * 50
         }
-        automation_data = get_automation_data(key, CHOICES_RE, date)
+        automation_data = get_automation_data(subteam, CHOICES_RE, date)
 
     elif key == 'TL':
         for person in team_personals:
@@ -273,7 +273,7 @@ def fetch_collect_data_per_team_per_date(key, date, subteam):
             'rework_time': rework_time,
             'tickets_closed': tickets_closed
         }
-        automation_data = get_automation_data(key, CHOICES_TL, date)
+        automation_data = get_automation_data(subteam, CHOICES_TL, date)
 
     form_data['staffs'] = len(team_personals)
 
@@ -396,11 +396,11 @@ def get_ytd_data(group, key):
     return data
 
 
-def get_automation_data(key, choices, date=None):
+def get_automation_data(subteam, choices, date=None):
     data = {}
     for item in choices:
         try:
-            automation = Automation.objects.get(functional_group__abbreviation=key,
+            automation = Automation.objects.get(subteam__id=subteam,
                                                 column_field=item[0])
 
             if automation.script_file:
