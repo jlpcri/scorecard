@@ -26,16 +26,19 @@ def automations(request):
         groups.append(group_dict)
 
     try:
-        automation_new_form = AutomationNewForm(initial={'functional_group': request.user.humanresource.functional_group,
+        automation_new_form = AutomationNewForm(initial={'subteam': request.user.humanresource.subteam,
                                                          'abbreviation': request.user.humanresource.functional_group.abbreviation})
+
     except AttributeError as e:
         print e.message, type(e)
-        automation_new_form = AutomationNewForm(initial={'functional_group': FunctionalGroup.objects.get(abbreviation='QA'),
+        automation_new_form = AutomationNewForm(initial={'subteam': Subteam.objects.filter(parent__abbreviation='QA'),
                                                          'abbreviation': 'QA'})
 
+    personals = request.user.humanresource.automation_set.order_by('column_field')
     context = RequestContext(request, {
         'groups': groups,
-        'form': automation_new_form
+        'form': automation_new_form,
+        'personals': personals
     })
     return render(request, 'automations/automations.html', context)
 
@@ -48,7 +51,6 @@ def automation_detail(request, automation_id):
         try:
             script_content = automation.script_file.read()
         except IOError:
-            print 'AAA'
             script_content = ''
     else:
         script_content = ''

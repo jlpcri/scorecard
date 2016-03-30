@@ -1,4 +1,4 @@
-<!-- Automation New Modal -->
+<!-- Team Automation New Modal -->
 <div class="modal fade newAutomation" id="automation-new-modal">
     <div class="modal-dialog">
         <form action="{% url 'automations:automation_new' %}" method="post" enctype="multipart/form-data">
@@ -7,7 +7,39 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span> </button>
                     <div class="row">
                         <div class="col-xs-6">
-                            <h4 class="modal-title">Automation New</h4>
+                            <h4 class="modal-title">Team Automation New</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    {{ form }}
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div id="newAutomationErrMessage">&nbsp;</div>
+                        </div>
+                    </div>
+                    {% csrf_token %}
+                </div>
+                <div class="modal-footer">
+                    <input id="automation_new" class="btn btn-primary" type="submit" value="New Automation">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Personal Automation New Modal -->
+<div class="modal fade newAutomation" id="automation-personal-new-modal">
+    <div class="modal-dialog">
+        <form action="{% url 'automations:automation_new' %}" method="post" enctype="multipart/form-data">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span> </button>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <h4 class="modal-title">Personal Automation New</h4>
                         </div>
                     </div>
                 </div>
