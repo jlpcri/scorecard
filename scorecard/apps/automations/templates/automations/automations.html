@@ -16,11 +16,6 @@
         {% endif %}
         <ul id="subnav-tabs" class="nav nav-tabs">
             {% if user.is_superuser %}
-{#                <li><a href="#quality_assurance" data-toggle="tab">Quality Assurance</a> </li>#}
-{#                <li><a href="#quality_innovation" data-toggle="tab">Quality Innovation</a> </li>#}
-{#                <li><a href="#requirements_engineering" data-toggle="tab">Requirements Engineering</a> </li>#}
-{#                <li><a href="#test_engineering" data-toggle="tab">Test Engineering</a> </li>#}
-{#                <li><a href="#test_lab" data-toggle="tab">Test Lab</a> </li>#}
                 {% for group in groups %}
                     <li {% if user.humanresource.functional_group == group.group %} class="active" {% endif %}>
                         <a href="#{{ group.group.abbreviation }}" data-toggle="tab">{{ group.group.name }}</a>
@@ -28,9 +23,8 @@
                 {% endfor %}
             {% elif user.humanresource.manager  %}
                 <li class="active"><a href="#{{ user.humanresource.functional_group.abbreviation }}" data-toggle="tab">{{ user.humanresource.functional_group.name }}</a></li>
-            {% else %}
-                You have not been authorized to enter team-level data.
             {% endif %}
+            <li><a href="#personal" data-toggle="tab">Personal</a></li>
         </ul>
     </div>
 {% endblock %}
@@ -78,6 +72,10 @@
                     </div>
                 </div>
             {% endfor %}
+
+            <div class="tab-pane" id="personal">
+                {% include 'automations/automations_personal.html' %}
+            </div>
 
         </div>
 

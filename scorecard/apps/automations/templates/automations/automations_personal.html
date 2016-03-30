@@ -1,0 +1,28 @@
+<div class="tab-content" id="iv-content">
+    {% if ivs %}
+        <div class="table-responsive">
+            <table id="qi_table" class="table table-striped table-hover table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th class="col-md-3"><strong>Field</strong></th>
+                        <th class="col-md-3"><strong>Script Name</strong></th>
+                        <th class="col-md-3"><strong>Last Success</strong></th>
+                        <th class="col-md-3"><strong>Tests Run</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in ivs %}
+                        <tr>
+                            <td><a href="{% url 'automations:automation_detail' item.id %}">{{ item.column_field }}</a></td>
+                            <td>{{ item.script_name }}</td>
+                            <td>{{ item.last_success }}</td>
+                            <td>{{ item.tests_run }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        No Contents.
+    {% endif %}
+</div>
