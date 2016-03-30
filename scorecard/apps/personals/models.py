@@ -44,6 +44,14 @@ class InnovationStats(BaseStats):
     def stat_summary(self):
         return {'Story Points': self.story_points_execution, 'Unit Tests': self.unit_tests_dev}
 
+    @classmethod
+    def automation_fields(cls):
+        data = (
+            ('story_points_execution', 'Story Points Execution'),
+            ('unit_tests_dev', 'Unit Tests Dev'),
+            ('elicitation_analysis_time', 'Elicitation Analysis Time')
+        )
+        return data
 
 
 class LabStats(BaseStats):
@@ -55,6 +63,13 @@ class LabStats(BaseStats):
 
     def stat_summary(self):
         return {'Overtime': self.overtime_weekday+self.overtime_weekend, 'Tickets Closed': self.tickets_closed}
+
+    @classmethod
+    def automation_fields(cls):
+        data = (
+            ('tickets_closed', 'Tickets Closed'),
+        )
+        return data
 
 
 class RequirementStats(BaseStats):
@@ -75,6 +90,16 @@ class RequirementStats(BaseStats):
 
     def stat_summary(self):
         return {'Analysis/Elicitation': self.elicitation_analysis_time, 'Overtime': self.overtime_weekday+self.overtime_weekend, 'Rework': self.rework_time}
+
+    @classmethod
+    def automation_fields(cls):
+        data = (
+            ('elicitation_analysis_time', 'Elicitation Analysis Time'),
+            ('revisions', 'Revisions'),
+            ('rework_external_time', 'Rework External Time'),
+            ('travel_cost', 'Travel Cost')
+        )
+        return data
 
 
 class TestStats(BaseStats):
@@ -134,5 +159,23 @@ class TestStats(BaseStats):
         tickets = self.human_resource.ticket_set.all()
 
         return len(tickets)
+
+    @classmethod
+    def automation_fields(cls):
+        data = (
+            ('tc_manual_dev', 'TC Manual Dev'),
+            ('tc_manual_dev_time', 'TC Manual Dev Time'),
+            ('tc_manual_execution', 'TC Manual Execution'),
+            ('tc_manual_execution_time', 'TC Manual Execution Time'),
+            ('tc_auto_dev', 'TC Auto Dev'),
+            ('tc_auto_dev_time', 'TC Auto Dev Time'),
+            ('tc_auto_execution', 'TC Auto Execution'),
+            ('tc_auto_execution_time', 'TC Auto Execution Time'),
+            ('defect_caught', 'Defect Caught'),
+            ('uat_defects_not_prevented', 'Uat Defects Not Prevented'),
+            ('standards_violated', 'Standards Violated'),
+            ('resource_swap_time', 'Resrouce Swap Time')
+        )
+        return data
 
 

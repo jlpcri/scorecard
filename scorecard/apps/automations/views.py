@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
 
 from models import Automation
-from forms import AutomationNewForm, AutomationForm
+from forms import AutomationNewForm, AutomationPersonalNewForm, AutomationForm, AutomationPersonalForm
 from scorecard.apps.users.models import FunctionalGroup, Subteam
 
 
@@ -26,18 +26,29 @@ def automations(request):
         groups.append(group_dict)
 
     try:
-        automation_new_form = AutomationNewForm(initial={'subteam': request.user.humanresource.subteam,
-                                                         'abbreviation': request.user.humanresource.functional_group.abbreviation})
+        automation_new_form = AutomationNewForm(initial={
+            'subteam': request.user.humanresource.subteam,
+            'abbreviation': request.user.humanresource.functional_group.abbreviation})
+        automation_personal_new_form = AutomationPersonalNewForm(initial={
+            'human_resource': request.user.humanresource,
+            'abbreviation': request.user.humanresource.functional_group.abbreviation
+        })
 
     except AttributeError as e:
         print e.message, type(e)
-        automation_new_form = AutomationNewForm(initial={'subteam': Subteam.objects.filter(parent__abbreviation='QA'),
-                                                         'abbreviation': 'QA'})
+        automation_new_form = AutomationNewForm(initial={
+            'subteam': Subteam.objects.filter(parent__abbreviation='QA'),
+            'abbreviation': 'QA'})
+        automation_personal_new_form = AutomationPersonalNewForm(initial={
+            'human_resource': request.user.humanresource,
+            'abbreviation': 'QA'
+        })
 
     personals = request.user.humanresource.automation_set.order_by('column_field')
     context = RequestContext(request, {
         'groups': groups,
         'form': automation_new_form,
+        'form_personal': automation_personal_new_form,
         'personals': personals
     })
     return render(request, 'automations/automations.html', context)
@@ -45,7 +56,11 @@ def automations(request):
 
 def automation_detail(request, automation_id):
     automation = get_object_or_404(Automation, pk=automation_id)
-    form = AutomationForm(instance=automation)
+    automation_type = request.GET.get('type', '')
+    if automation_type == 'personal':
+        form = AutomationPersonalForm(instance=automation)
+    else:
+        form = AutomationForm(instance=automation)
 
     if automation.script_file:
         try:
@@ -86,8 +101,17 @@ def automation_edit(request, automation_id):
 
 
 def automation_new(request):
+    automation_type = request.GET.get('type', '')
+
     if request.method == 'POST':
-        form = AutomationNewForm(request.POST, request.FILES, initial={'abbreviation': request.user.humanresource.functional_group.abbreviation})
+        if automation_type == 'team':
+            form = AutomationNewForm(request.POST, request.FILES, initial={'abbreviation': request.user.humanresource.functional_group.abbreviation})
+        elif automation_type == 'personal':
+            form = AutomationPersonalNewForm(request.POST, request.FILES, initial={'abbreviation': request.user.humanresource.functional_group.abbreviation,
+                                                                                   'human_resource': request.user.humanresource})
+        else:
+            form = ''
+
         if form.is_valid():
             if request.FILES and not request.FILES['script_file'].name.endswith('.py'):
                 messages.error(request, 'Invalid file type, unable to upload (must be .py)')

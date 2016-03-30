@@ -132,11 +132,10 @@ class HumanResource(models.Model):
 
     def __unicode__(self):
         if self.functional_group:
-            return '{0}: {1}: {2}'.format(self.user.username,
-                                          self.functional_group.abbreviation,
-                                          self.manager)
+            return '{0}: {1}'.format(self.user.username,
+                                          self.functional_group.abbreviation)
         else:
-            return '{0}: {1}: {2}'.format(self.user.username, 'No Team',  self.manager)
+            return '{0}: {1}'.format(self.user.username, 'No Team')
 
     @property
     def stat_set(self):

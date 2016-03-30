@@ -32,10 +32,16 @@ class Automation(models.Model):
         unique_together = (("subteam", "column_field"), ("human_resource", "column_field"), )
 
     def __unicode__(self):
-        return '{0}: {1}: {2}: {3}'.format(self.subteam.parent.abbreviation,
-                                           self.column_field,
-                                           self.tests_run,
-                                           localtime(self.last_success))
+        if self.subteam:
+            return '{0}: {1}: {2}: {3}'.format(self.subteam.parent.abbreviation,
+                                               self.column_field,
+                                               self.tests_run,
+                                               localtime(self.last_success))
+        else:
+            return '{0}: {1}: {2}: {3}'.format(self.human_resource,
+                                               self.column_field,
+                                               self.tests_run,
+                                               localtime(self.last_success))
 
 
 
