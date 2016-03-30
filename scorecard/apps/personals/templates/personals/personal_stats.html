@@ -4,7 +4,14 @@
 
 {% block body %}
     <div class="container">
-        <h2>{{ personal_stat.human_resource.user.first_name }} {{ personal_stat.human_resource.user.last_name }}, Personal Status - {{ personal_stat.created|date }}</h2>
+        <div class="col-sm-8">
+            <h2>{{ personal_stat.human_resource.user.first_name }} {{ personal_stat.human_resource.user.last_name }}, Personal Status - {{ personal_stat.created|date }}</h2>
+        </div>
+        <div class="col-sm-2">
+            <br>
+            <a href="{% url 'personals:collect_data' %}?key={{ personal_stat.human_resource.functional_group.abbreviation }}&stats_id={{ personal_stat.id }}&date={{ personal_stat.created|date:'Y-m-d' }}" class="btn btn-primary" style="width: 100%">Collect Data</a>
+
+        </div>
         <br>
         <form action="{% url 'personals:personal_stats_edit' personal_stat.id %}?key={{ personal_stat.human_resource.functional_group.key }}" method="post">
             <div class="row">
@@ -12,7 +19,15 @@
                     {% for field in form %}
                         <div class="row">
                             <div class="col-sm-6"><label>{{ field.label_tag }}</label></div>
-                            <div class="col-sm-6">{{ field }}</div>
+                            <div class="col-sm-6">
+                                {% with f_name=field.html_name %}
+                                    {% if f_name in automation_data %}
+                                        <input id="{{ field.auto_id }}" value="{{ automation_data.f_name }}">
+                                    {% else %}
+                                        {{ field }}
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
                         </div>
                     {% endfor %}
 

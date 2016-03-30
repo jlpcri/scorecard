@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^personal_stats/(?P<stats_id>\d+)/$', views.personal_stats, name='personal_stats'),
     url(r'^personal_stats_edit/(?P<stats_id>\d+)/$', views.personal_stats_edit, name='personal_stats_edit'),
     url(r'fetch_personals_by_date/$', views.fetch_personals_by_date, name='fetch_personals_by_date'),
+    url(r'collect_data/$', views.collect_data, name='collect_data'),
 
 ]
 
