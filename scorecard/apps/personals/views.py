@@ -221,25 +221,17 @@ def fetch_personals_per_team_per_date(key, date):
 def collect_data(request):
     key = request.GET.get('key', '')
     stats_id = request.GET.get('stats_id', '')
-    date = request.GET.get('date', '')
-
-    automation_data = get_automation_data(request, date)
-    print automation_data
 
     try:
         fg = FunctionalGroup.objects.get(abbreviation=key)
         if fg.metric_type == FunctionalGroup.TESTING:
             personal_stat = TestStats.objects.get(pk=stats_id)
-            form = TestForm(instance=personal_stat)
         elif fg.metric_type == FunctionalGroup.DEVELOPMENT:
             personal_stat = InnovationStats.objects.get(pk=stats_id)
-            form = InnovationForm(instance=personal_stat)
         elif fg.metric_type == FunctionalGroup.REQUIREMENTS:
             personal_stat = RequirementStats.objects.get(pk=stats_id)
-            form = RequirementForm(instance=personal_stat)
         elif fg.metric_type == FunctionalGroup.LAB:
             personal_stat = LabStats.objects.get(pk=stats_id)
-            form = LabForm(instance=personal_stat)
         else:
             raise ValueError("Fell through stat retrieval table")
     except Exception as e:
@@ -247,10 +239,6 @@ def collect_data(request):
         messages.error(request, 'Failed to load selected scorecard. Please email QEIInnovation@west.com for assistance.')
         return redirect('personals:personals')
 
-    context = RequestContext(request, {
-        'personal_stat': personal_stat,
-        'form': form,
-        'automation_data': automation_data
-    })
+    automation_data = get_automation_data(request, personal_stat)
 
-    return render(request, 'personals/personal_stats.html', context)
+    return HttpResponse(json.dumps(automation_data), content_type="application/json")

@@ -19,9 +19,11 @@ def extract_date(qi):
     return get_week_ending_date(qi.created)
 
 
-def get_automation_data(request, date=None):
+def get_automation_data(request, personal_stat):
     data = {}
-    key = request.user.humanresource.functional_group.abbreviation
+    key = personal_stat.human_resource.functional_group.abbreviation
+    date = personal_stat.created.strftime('%Y-%m-%d')
+
     if key == 'QE':
         choices = InnovationStats.automation_fields()
     elif key == 'TL':
@@ -33,7 +35,7 @@ def get_automation_data(request, date=None):
 
     for item in choices:
         try:
-            automation = Automation.objects.get(human_resource=request.user.humanresource,
+            automation = Automation.objects.get(human_resource=personal_stat.human_resource,
                                                 column_field=item[0])
             if automation.script_file:
                 try:

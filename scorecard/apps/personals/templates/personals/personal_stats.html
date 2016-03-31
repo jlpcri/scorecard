@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load staticfiles %}
 
 {% block title %} Personal Status{% endblock %}
 
@@ -9,8 +10,11 @@
         </div>
         <div class="col-sm-2">
             <br>
-            <a href="{% url 'personals:collect_data' %}?key={{ personal_stat.human_resource.functional_group.abbreviation }}&stats_id={{ personal_stat.id }}&date={{ personal_stat.created|date:'Y-m-d' }}" class="btn btn-primary" style="width: 100%">Collect Data</a>
-
+            <input id="collect-data-button" class="btn btn-primary" style="width:100%;" type="button" value="Collect Data">
+        </div>
+        <div class="col-sm-1">
+            <br>
+            <img id="collect-data-progress" src="{% static 'scorecard/floating.gif' %}" height="42" width="42" hidden>
         </div>
         <br>
         <form action="{% url 'personals:personal_stats_edit' personal_stat.id %}?key={{ personal_stat.human_resource.functional_group.key }}" method="post">
@@ -19,17 +23,22 @@
                     {% for field in form %}
                         <div class="row">
                             <div class="col-sm-6"><label>{{ field.label_tag }}</label></div>
-                            <div class="col-sm-6">
-                                {% with f_name=field.html_name %}
-                                    {% if f_name in automation_data %}
-                                        <input id="{{ field.auto_id }}" value="{{ automation_data.f_name }}">
-                                    {% else %}
-                                        {{ field }}
-                                    {% endif %}
-                                {% endwith %}
-                            </div>
+                            <div class="col-sm-6">{{ field }}</div>
                         </div>
                     {% endfor %}
+
+{#                    <div class="row">#}
+{#                        <div class="col-sm-6"><label>Overtime Weekday:</label></div>#}
+{#                        <div class="col-sm-6">{{ form.overtime_weekday }}</div>#}
+{#                    </div>#}
+{#                    <div class="row">#}
+{#                        <div class="col-sm-6"><label>Overtime Weekend:</label></div>#}
+{#                        <div class="col-sm-6">{{ form.overtime_weekend }}</div>#}
+{#                    </div>#}
+{#                    <div class="row">#}
+{#                        <div class="col-sm-6"><label>Rework Time:</label></div>#}
+{#                        <div class="col-sm-6">{{ form.rework_time }}</div>#}
+{#                    </div>#}
 
                     <br>
                     <div class="row">
@@ -91,4 +100,10 @@
             {% csrf_token %}
         </form>
     </div>
+{% endblock %}
+
+{% block footer %}
+    <script>
+        {% include 'personals/personal_stats.js' %}
+    </script>
 {% endblock %}
