@@ -1,5 +1,7 @@
+from decimal import Decimal
 from django.db import models
 from django.utils.timezone import localtime
+from django.core.validators import MinValueValidator
 
 
 class BaseMetrics(models.Model):
@@ -24,19 +26,22 @@ class BaseMetrics(models.Model):
 
     # Quality
     slas_met = models.DecimalField(max_digits=3, decimal_places=2, default=0, verbose_name='SLAs met')
-    delays_introduced_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                                 verbose_name='delays introduced (hours)')
+    # delays_introduced_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+    #                                              verbose_name='delays introduced (hours)')
     sdis_not_prevented = models.PositiveIntegerField(default=0, verbose_name='SDIs not prevented')
     resource_swap = models.PositiveIntegerField(default=0)
     rework_introduced_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                                  verbose_name='rework introduced (hours)')
 
     # Efficiency
-    avg_team_size = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='average team size')
+    # avg_team_size = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='average team size')
     overtime_weekday = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='weekday overtime')
     overtime_weekend = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='weekend overtime')
     rework_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
     resource_swap_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+    pto_holiday_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                           validators=[MinValueValidator(Decimal(0.01))],
+                                           verbose_name='PTO/Holiday hours')
 
     # Costs
     license_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -59,6 +64,9 @@ class TestMetrics(BaseMetrics):
     """
     Metrics for groups: Quality Assurance, Test Engineering, Product Quality
     """
+    # Human Resource
+    testers = models.PositiveIntegerField(default=0, verbose_name='tester')
+
     # Throughput
     team_initiative = models.PositiveIntegerField(default=0)
     ticket_backlog = models.PositiveIntegerField(default=0)
@@ -81,6 +89,12 @@ class TestMetrics(BaseMetrics):
     tc_auto_execution = models.PositiveIntegerField(default=0, verbose_name='TCs automatically executed')
     tc_auto_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                                  verbose_name='automatic TC time savings')
+    estimate_auto_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                             validators=[MinValueValidator(Decimal(0.01))],
+                                             verbose_name='Estimated manual time for automation')
+    standard_work_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                             validators=[MinValueValidator(Decimal(0.01))],
+                                             verbose_name='Standard work time')  #  hours spent doing test documentation and associated overhead
 
     # Quality
     defect_caught = models.PositiveIntegerField(default=0, verbose_name='defects caught')
@@ -88,7 +102,9 @@ class TestMetrics(BaseMetrics):
     standards_violated = models.PositiveIntegerField(default=0)
 
     # Efficiency
-    avg_time_frame = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Average time frame')
+    # avg_time_frame = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Average time frame')
+    loe_deviation = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                        verbose_name='LOE deviation (hours)')
 
     # Costs
 
@@ -132,8 +148,19 @@ class TestMetrics(BaseMetrics):
                + self.tc_auto_execution_time
 
     @property
+    def productive_hours(self):
+        return self.auto_and_execution_time + self.standard_work_time
+
+    @property
     def gross_available_time(self):
-        return (self.staffs + self.contractors) * 30
+        return self.testers * 30
+
+    @property
+    def utilization(self):
+        if (self.testers * 40 - self.pto_holiday_time) != 0:
+            return self.productive_hours / (self.testers * 40 - self.pto_holiday_time)
+        else:
+            return 0
 
     @property
     def efficiency(self):
@@ -212,20 +239,31 @@ class InnovationMetrics(BaseMetrics):
     story_points_execution = models.PositiveIntegerField(default=0)
     unit_tests_dev = models.PositiveIntegerField(default=0)
     unit_tests_coverage = models.DecimalField(max_digits=3, decimal_places=2, default=0)
-    documentation_coverage = models.DecimalField(max_digits=3, decimal_places=2, default=0)
+    # documentation_coverage = models.DecimalField(max_digits=3, decimal_places=2, default=0)
     defects_in_dev = models.PositiveIntegerField(default=0)
-    elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    revisions = models.PositiveIntegerField(default=0)
-    active_projects = models.PositiveIntegerField(default=0)
+    elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                                    verbose_name='Research hours')  # in hours
+    # revisions = models.PositiveIntegerField(default=0)
+    # active_projects = models.PositiveIntegerField(default=0)
+    customer_facing_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                               validators=[MinValueValidator(Decimal(0.01))],
+                                               verbose_name='Customer facing hours')
+    documentation_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                             validators=[MinValueValidator(Decimal(0.01))],
+                                             verbose_name='Documentation hours')
+    ticketless_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                              validators=[MinValueValidator(Decimal(0.01))],
+                                              verbose_name='Ticketless development hours')
 
     # Quality
-    uat_defects_not_prevented = models.PositiveIntegerField(default=0)
+    uat_defects_not_prevented = models.PositiveIntegerField(default=0, verbose_name='Externally reported defects')
 
     # Usage
     pheme_manual_tests = models.PositiveIntegerField(default=0)
     pheme_auto_tests = models.PositiveIntegerField(default=0)
     visilog_txl_parsed = models.PositiveIntegerField(default=0)
     visilog_txl_schema_violation = models.PositiveIntegerField(default=0)
+    ceeq_daily_summaries = models.PositiveIntegerField(default=0)
 
     @property
     def avg_throughput(self):
@@ -242,6 +280,14 @@ class InnovationMetrics(BaseMetrics):
     @property
     def total_operational_cost(self):
         return self.operational_cost + self.license_cost
+
+    @property
+    def external_savings(self):
+        return self.visilog_txl_parsed * 0.33 + self.pheme_manual_tests * 1.79 + self.pheme_auto_tests * 1.97
+
+    @property
+    def internal_savings(self):
+        return self.ceeq_daily_summaries * 20 + self.other_savings
 
     @classmethod
     def quality_graph(cls):
@@ -368,10 +414,48 @@ class LabMetrics(BaseMetrics):
     tickets_closed = models.PositiveIntegerField(default=0)
     virtual_machines = models.PositiveIntegerField(default=0)
     physical_machines = models.PositiveIntegerField(default=0)
+    monitor_machines = models.PositiveIntegerField(default=0,
+                                                   verbose_name='Machines under monitoring')
+    administration_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                              validators=[MinValueValidator(Decimal(0.01))],
+                                              verbose_name='Project hours')
+    project_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                       validators=[MinValueValidator(Decimal(0.01))],
+                                       verbose_name='Project hours')
+    ticket_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                      validators=[MinValueValidator(Decimal(0.01))],
+                                      verbose_name='Project hours')
+
+    # Quality
+    builds_submitted = models.PositiveIntegerField(default=0)
+    builds_accepted = models.PositiveIntegerField(default=0)
+    platform_drift_violations = models.PositiveIntegerField(default=0)
+    updates_install_docs = models.PositiveIntegerField(default=0,
+                                                       verbose_name='Updates to install documents')
 
     # Costs
-    power_consumption_ups_a = models.PositiveIntegerField(default=0)  # in kw
-    power_consumption_ups_b = models.PositiveIntegerField(default=0)  # in kw
+    power_consumption_ups_a = models.PositiveIntegerField(default=0,
+                                                          verbose_name='Power Consumption UPS A')  # in kw
+    power_consumption_ups_b = models.PositiveIntegerField(default=0,
+                                                          verbose_name='Power Consumption UPS B')  # in kw
+
+    @property
+    def utilization(self):
+        if (self.staffs * 40 - self.pto_holiday_time) != 0:
+            return self.productive_hours / (self.staffs * 40 - self.pto_holiday_time)
+        else:
+            return 0
+
+    @property
+    def efficiency(self):
+        if self.staffs != 0:
+            return (self.administration_time + self.project_time + self.ticket_time) / (self.staffs * 30)
+        else:
+            return 0
+
+    @property
+    def builds_rejected(self):
+        return self.builds_submitted - self.builds_accepted
 
     @classmethod
     def quality_graph(cls):
