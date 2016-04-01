@@ -113,7 +113,7 @@ def fetch_team_members_per_team_per_date(key, date, subteam):
     return team_personals
 
 
-def fetch_collect_data_per_team_per_date(key, date, subteam):
+def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
     form_data = calculate_data = automation_data = {}
     team_personals = fetch_team_members_per_team_per_date(key, date, subteam)
 
@@ -226,12 +226,26 @@ def fetch_collect_data_per_team_per_date(key, date, subteam):
             'unit_tests_dev': unit_tests_dev,
             'elicitation_analysis_time': elicitation_analysis_time
         }
+
+        automation_data = get_automation_data(subteam, CHOICES_QE, date)
+        external_savings = internal_savings = 0
+        metric = InnovationMetrics.objects.get(pk=metric_id)
+        if automation_data['visilog_txl_parsed']:
+            external_savings += automation_data['visilog_txl_parsed'] * 0.33
+        if automation_data['pheme_manual_tests']:
+            external_savings += automation_data['pheme_manual_tests'] * 1.79
+        if automation_data['pheme_auto_tests']:
+            external_savings += automation_data['pheme_auto_tests'] * 1.97
+        if automation_data['ceeq_daily_summaries']:
+            internal_savings += automation_data['ceeq_daily_summaries'] * 20 + metric.other_savings
+
         calculate_data = {
             'avg_throughput': float(story_points_execution) / len(team_personals) if len(team_personals) > 0 else 0,
             'operational_cost': len(team_personals) * 40 * 45,
-            'total_cost': len(team_personals) * 40 * 45
+            'total_cost': len(team_personals) * 40 * 45,
+            'external_savings': external_savings,
+            'internal_savings': internal_savings
         }
-        automation_data = get_automation_data(subteam, CHOICES_QE, date)
 
     elif key == 'RE':
         for person in team_personals:

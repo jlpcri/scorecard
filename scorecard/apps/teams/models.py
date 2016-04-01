@@ -199,7 +199,7 @@ class TestMetrics(BaseMetrics):
         except TestMetricsConfiguration.DoesNotExist:
             costs_staff = 0
 
-        return self.tc_auto_execution_time * costs_staff
+        return (self.estimate_auto_time - self.tc_auto_execution_time) * costs_staff
 
     def quality_graph(self):
         data = self.functional_group.testmetrics_set.filter(subteam=None).order_by("-created")[:12]

@@ -439,16 +439,16 @@
                     <div class="row">
                         <div class="col-sm-2">
                             <input id="id_estimate_auto_time" name="estimate_auto_time"
-                               {% if calculate_data %}
-                                   value="{{ calculate_data.estimate_auto_time }}" class="gentle"
+                               {% if automation_data.estimate_auto_time %}
+                                   value="{{ automation_data.estimate_auto_time }}" class="gentle"
                                {% else %}
                                    value="{{ metric.estimate_auto_time }}"
                                {% endif %}/>
                         </div>
 						<div class="col-sm-2">
                             <input id="id_standard_work_time" name="standard_work_time"
-                               {% if calculate_data %}
-                                   value="{{ calculate_data.standard_work_time }}" class="gentle"
+                               {% if automation_data.standard_work_time %}
+                                   value="{{ automation_data.standard_work_time }}" class="gentle"
                                {% else %}
                                    value="{{ metric.standard_work_time }}"
                                {% endif %}/>
@@ -803,28 +803,16 @@
                                {% endif %} disabled/>
                         </div>
                         <div class="col-sm-2">
-                            <input class="gentle" id="gross_available_time" title="Testers * 30"
-                               {% if calculate_data %}
-                                   value="{{ calculate_data.gross_available_time|floatformat:2 }}"
-                               {% else %}
-                                   value="{{ metric.gross_available_time|floatformat:2 }}"
-                               {% endif %} disabled/>
+                            <input class="gentle" id="active_projects" title="Testers * 30"
+                                   value="{{ metric.gross_available_time }}" disabled/>
                         </div>
                         <div class="col-sm-2">
                             <input class="gentle" id="id_test_efficiency" title="AutoExecTime / GrossAvaiTime"
-                               {% if calculate_data %}
-                                   value="{{ calculate_data.efficiency|percentage_format }}"
-                               {% else %}
-                                   value="{{ metric.efficiency|percentage_format }}"
-                               {% endif %} disabled/>
+                                   value="{{ metric.efficiency|percentage_format }}" disabled/>
                         </div>
                         <div class="col-sm-2">
                             <input class="gentle" id="id_test_utilization" title="Productive Time / (Testers * 40 - PTO Time)"
-                               {% if calculate_data %}
-                                   value="{{ calculate_data.utilization|percentage_format }}"
-                               {% else %}
-                                   value="{{ metric.utilization|percentage_format }}"
-                               {% endif %} disabled/>
+                               value="{{ metric.utilization|percentage_format }}" disabled/>
                         </div>
                     </div>
                 {% endif %}
@@ -999,7 +987,7 @@
                                 {% endif %}disabled />
                         </div>
                         <div class="col-sm-2">
-                            <input class="gentle" id="auto_savings" title="AutoExecTime * CostPerHourPerStaff"
+                            <input class="gentle" id="auto_savings" title="(Estimated Manual Time for Automation- AutoExecTime) * CostPerHourPerStaff"
                                 {% if calculate_data %}
                                    value="{{ calculate_data.auto_savings|floatformat:2 }}"
                                 {% else %}

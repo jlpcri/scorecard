@@ -9,6 +9,8 @@ STORY_POINTS_PREP = 'story_points_prep'
 UNIT_TESTS_COVER = 'unit_tests_coverage'
 DOCUMENT_COVER = 'documentation_coverage'
 DEFECTS_IN_DEV = 'defects_in_dev'
+CUSTOMER_FACING_TIME = 'customer_facing_time'
+DOCUMENTATION_TIME = 'documentation_time'
 REVISIONS = 'revisions'
 ACTIVE_PROJECTS = 'active_projects'
 
@@ -29,6 +31,7 @@ PHEME_MANUAL_TESTS = 'pheme_manual_tests'
 PHEME_AUTO_TESTS = 'pheme_auto_tests'
 VISILOG_TXL_PARSED = 'visilog_txl_parsed'
 VISILOG_TXL_VIOLATION = 'visilog_txl_schema_violation'
+CEEQ_DAILY_SUMMARIES = 'ceeq_daily_summaries'
 
 # Test Lab
 TICKETS_RECEIVED = 'tickets_received'
@@ -63,24 +66,20 @@ CHOICES_QE = (
     (BACKLOG_STORY, 'Story Points Backlog'),
     (STORY_POINTS_PREP, 'Story Points Prep'),
     (UNIT_TESTS_COVER, 'Unit Tests Coverage'),
-    (DOCUMENT_COVER, 'Documentation Coverage'),
     (DEFECTS_IN_DEV, 'Defects In Dev'),
-    (REVISIONS, 'Revisions'),
-    (ACTIVE_PROJECTS, 'Active Projects'),
     (SLAS_MET, 'SLAs Met'),
-    (DELAYS_INTRODUCED_TIME, 'Delays Introduced Time'),
-    (SDIS_NOT_PREVENTED, 'SDIs Not Prevented'),
     (UAT_DEFECTS_NOT_PREVENTED, 'Uat Defects Not Prevented'),
     (RESOURCE_SWAP, 'Resource Swap'),
-    (REWORK_INTRODUCED_TIME, 'Rework Introduced Time'),
-    (AVERAGE_TEAM_SIZE, 'Average Team Size'),
     (RESOURCE_SWAP_TIME, 'Resource Swap Time'),
+    (CUSTOMER_FACING_TIME, 'Customer Facing Time'),
+    (DOCUMENTATION_TIME, 'Documentation Time'),
     (LICENSE_COST, 'License Cost'),
     (OTHER_SAVINGS, 'Other Savings'),
     (PHEME_MANUAL_TESTS, 'Pheme Manual Tests'),
     (PHEME_AUTO_TESTS, 'Pheme Auto Tests'),
     (VISILOG_TXL_PARSED, 'Visilog TXL Parsed'),
-    (VISILOG_TXL_VIOLATION, 'Visilog TXL Schema Violation')
+    (VISILOG_TXL_VIOLATION, 'Visilog TXL Schema Violation'),
+    (CEEQ_DAILY_SUMMARIES, 'CEEQ Daily Summaries'),
 )
 
 CHOICES_TL = (
@@ -105,7 +104,6 @@ CHOICES_RE = (
     (REWORK_INTRO_TIME, 'Rework Introduced Time'),
     (SLAS_MET, 'SLAs Met'),
     (SLAS_MISSED, 'SLAs Missed'),
-    (DELAYS_INTRO_TIME, 'Delays Introduced Time')
 )
 
 CHOICES_QA_TE = (
@@ -122,12 +120,9 @@ CHOICES_QA_TE = (
     (PROJECT_EXECUTION, 'Project Execution'),
     (PROJECT_CLOSED, 'Project Closed'),
     (SLAS_MET, 'SLAs Met'),
-    (DELAYS_INTRO_TIME, 'Delays Introduced Time'),
     (SDIS_NOT_PREVENTED, 'SDIs Not Prevented'),
     (RESOURCE_SWAP, 'Resource Swap'),
     (REWORK_INTRO_TIME, 'Rework Introduced Time'),
-    (AVERAGE_TEAM_SIZE, 'Average Team Size'),
-    (AVERAGE_TIME_FRAME, 'Average Time Frame'),
     (LICENSE_COST, 'License Cost'),
     (OTHER_SAVINGS, 'Other Savings')
 )
