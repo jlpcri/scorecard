@@ -201,10 +201,10 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
             'avg_throughput': avg_throughput,
             'auto_and_execution_time': auto_and_execution_time,
             'gross_available_time': gross_available_time,
-            'efficiency':  efficiency,
+            # 'efficiency':  efficiency,
             'operational_cost': len(team_personals) * hours * costs_staff,
             'total_cost': len(team_personals) * hours * costs_staff,
-            'auto_savings': tc_auto_execution_time * costs_staff
+            # 'auto_savings': tc_auto_execution_time * costs_staff
         }
 
         automation_data = get_automation_data(subteam, CHOICES_QA_TE, date)

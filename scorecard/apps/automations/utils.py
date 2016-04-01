@@ -2,6 +2,7 @@
 COMPLIMENTS = 'compliments'
 COMPLAINTS = 'complaints'
 ESCALATIONS = 'escalations'
+PTO_TIME = 'pto_holiday_time'
 
 # Innovation
 BACKLOG_STORY = 'story_points_backlog'
@@ -56,8 +57,9 @@ PROJECT_BACKLOG = 'project_backlog'
 PROJECT_PREP = 'project_prep'
 PROJECT_EXECUTION = 'project_execution'
 PROJECT_CLOSED = 'project_closed'
-
-AVERAGE_TIME_FRAME = 'avg_time_frame'
+ESTIMATED_MANUAL_TIME = 'estimate_auto_time'
+STANDARD_WORK_TIME = 'standard_work_time'
+LOE_DEVIATION_TIME = 'loe_deviation'
 
 CHOICES_QE = (
     (COMPLIMENTS, 'Compliments'),
@@ -80,6 +82,7 @@ CHOICES_QE = (
     (VISILOG_TXL_PARSED, 'Visilog TXL Parsed'),
     (VISILOG_TXL_VIOLATION, 'Visilog TXL Schema Violation'),
     (CEEQ_DAILY_SUMMARIES, 'CEEQ Daily Summaries'),
+    (PTO_TIME, 'PTO Holiday time')
 )
 
 CHOICES_TL = (
@@ -91,7 +94,9 @@ CHOICES_TL = (
     (PHYSICAL_MACHINES, 'Physical Machines'),
     (POWER_UPS_A, 'Power Consumption UPS A'),
     (POWER_UPS_B, 'Power Consumption UPS B'),
-    (LICENSE_COST, 'License Cost')
+    (LICENSE_COST, 'License Cost'),
+    (PTO_TIME, 'PTO Holiday time')
+
 )
 
 CHOICES_RE = (
@@ -124,5 +129,9 @@ CHOICES_QA_TE = (
     (RESOURCE_SWAP, 'Resource Swap'),
     (REWORK_INTRO_TIME, 'Rework Introduced Time'),
     (LICENSE_COST, 'License Cost'),
-    (OTHER_SAVINGS, 'Other Savings')
+    (OTHER_SAVINGS, 'Other Savings'),
+    (ESTIMATED_MANUAL_TIME, 'Estimated Manual Time for Automation'),
+    (STANDARD_WORK_TIME, 'Standard Work Time'),
+    (LOE_DEVIATION_TIME, 'LOE Deviation Time'),
+    (PTO_TIME, 'PTO Holiday time')
 )
