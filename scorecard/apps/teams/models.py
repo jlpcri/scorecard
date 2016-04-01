@@ -40,7 +40,7 @@ class BaseMetrics(models.Model):
     rework_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
     resource_swap_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
     pto_holiday_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                           validators=[MinValueValidator(Decimal(0.01))],
+                                           validators=[MinValueValidator(Decimal(0))],
                                            verbose_name='PTO/Holiday hours')
 
     # Costs
@@ -90,10 +90,10 @@ class TestMetrics(BaseMetrics):
     tc_auto_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                                  verbose_name='automatic TC time savings')
     estimate_auto_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                             validators=[MinValueValidator(Decimal(0.01))],
+                                             validators=[MinValueValidator(Decimal(0))],
                                              verbose_name='Estimated manual time for automation')
     standard_work_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                             validators=[MinValueValidator(Decimal(0.01))],
+                                             validators=[MinValueValidator(Decimal(0))],
                                              verbose_name='Standard work time')  #  hours spent doing test documentation and associated overhead
 
     # Quality
@@ -246,13 +246,13 @@ class InnovationMetrics(BaseMetrics):
     # revisions = models.PositiveIntegerField(default=0)
     # active_projects = models.PositiveIntegerField(default=0)
     customer_facing_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                               validators=[MinValueValidator(Decimal(0.01))],
+                                               validators=[MinValueValidator(Decimal(0))],
                                                verbose_name='Customer facing hours')
     documentation_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                             validators=[MinValueValidator(Decimal(0.01))],
+                                             validators=[MinValueValidator(Decimal(0))],
                                              verbose_name='Documentation hours')
     ticketless_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                              validators=[MinValueValidator(Decimal(0.01))],
+                                              validators=[MinValueValidator(Decimal(0))],
                                               verbose_name='Ticketless development hours')
 
     # Quality
@@ -417,13 +417,13 @@ class LabMetrics(BaseMetrics):
     monitor_machines = models.PositiveIntegerField(default=0,
                                                    verbose_name='Machines under monitoring')
     administration_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                              validators=[MinValueValidator(Decimal(0.01))],
+                                              validators=[MinValueValidator(Decimal(0))],
                                               verbose_name='Project hours')
     project_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                       validators=[MinValueValidator(Decimal(0.01))],
+                                       validators=[MinValueValidator(Decimal(0))],
                                        verbose_name='Project hours')
     ticket_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                      validators=[MinValueValidator(Decimal(0.01))],
+                                      validators=[MinValueValidator(Decimal(0))],
                                       verbose_name='Project hours')
 
     # Quality

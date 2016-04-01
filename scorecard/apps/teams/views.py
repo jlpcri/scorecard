@@ -123,6 +123,7 @@ def metric_edit(request, metric_id):
             context['key'] = key
             return render(request, 'teams/teams.html', context)
         else:
+            # print form.errors
             messages.error(request, 'Correct errors in the form')
             context = RequestContext(request, {
                 'metric': metric,

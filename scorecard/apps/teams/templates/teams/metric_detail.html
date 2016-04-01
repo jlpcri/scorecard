@@ -207,6 +207,9 @@
                 <legend style="margin-top: 30px;">Human Resource</legend>
                 <div class="row">
                     <div class="col-sm-2"><label>Staffs</label></div>
+                    {% if metric.functional_group.abbreviation in 'QA, TE' %}
+                        <div class="col-sm-2"><label>Testers</label></div>
+                    {% endif %}
                     <div class="col-sm-2"><label>Openings</label></div>
                     <div class="col-sm-2"><label>Contractors</label></div>
                     <div class="col-sm-2"><label>Compliments</label></div>
@@ -214,6 +217,9 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-2">{{ form.staffs }}</div>
+                    {% if metric.functional_group.abbreviation in 'QA, TE' %}
+                        <div class="col-sm-2">{{ form.testers }}</div>
+                    {% endif %}
                     <div class="col-sm-2">{{ form.openings }}</div>
                     <div class="col-sm-2">{{ form.contractors }}</div>
                     <div class="col-sm-2">
@@ -227,7 +233,7 @@
                 </div>
 
                 <legend style="margin-top: 30px;">Throughput</legend>
-                {% if metric.functional_group.key == 'QI' %}  <!-- Throughput -->
+                {% if metric.functional_group.abbreviation == 'QE' %}  <!-- Throughput QE -->
                     <div class="row">
                         <div class="col-sm-2"><label>Backlog Story</label></div>
                         <div class="col-sm-2"><label>Story Points Prep</label></div>
@@ -305,7 +311,7 @@
                                 {% endif %}>
                         </div>
                     </div>
-                {% elif metric.functional_group.key == 'RE' %}
+                {% elif metric.functional_group.abbreviation == 'RE' %}  <!-- Throughput RE -->
                     <div class="row">
                         <div class="col-sm-2"><label>Backlog</label></div>
                         <div class="col-sm-2"><label>Active Projects</label></div>
@@ -339,7 +345,7 @@
                         </div>
                         <div class="col-sm-2">{{ form.elicitation_analysis_time }}</div>
                     </div>
-                {% else %}  <!-- For TE, QA -->
+                {% else %}  <!-- Throughput QA TE -->
                     <div class="row">
                         <div class="col-sm-2"><label>Team Initiatives</label></div>
                         <div class="col-sm-2"><label>Tickets Backlog</label></div>
@@ -450,11 +456,29 @@
                         <div class="col-sm-2">{{ form.tc_manual_execution_time }}</div>
                     </div>
                     <div class="row">
+                        <div class="col-sm-2"><label>Estimated Manual Time For Automation</label></div>
+                        <div class="col-sm-2"><label>Standard Work Time</label></div>
                         <div class="col-sm-2"><label>Auto Footprint Dev</label></div>
                         <div class="col-sm-2"><label>Auto Footprint Execut</label></div>
                         <div class="col-sm-2"><label>Avg Throughput</label></div>
                     </div>
                     <div class="row">
+                        <div class="col-sm-2">
+                            <input id="id_estimate_auto_time" name="estimate_auto_time"
+                               {% if calculate_data %}
+                                   value="{{ calculate_data.estimate_auto_time }}" class="gentle"
+                               {% else %}
+                                   value="{{ metric.estimate_auto_time }}"
+                               {% endif %}/>
+                        </div>
+						<div class="col-sm-2">
+                            <input id="id_standard_work_time" name="standard_work_time"
+                               {% if calculate_data %}
+                                   value="{{ calculate_data.standard_work_time }}" class="gentle"
+                               {% else %}
+                                   value="{{ metric.standard_work_time }}"
+                               {% endif %}/>
+                        </div>
                         <div class="col-sm-2">
                             <input class="gentle" id="auto_footprint_dev" title="AutoTCsDev /(ManualTCsDev + AutoTCsDev)"
                                {% if calculate_data %}
@@ -483,7 +507,7 @@
                 {% endif %}
 
                 <legend style="margin-top: 30px;">Quality</legend>
-                {% if metric.functional_group.key == 'QI' %}  <!-- Quality QI-->
+                {% if metric.functional_group.abbreviation == 'QE' %}  <!-- Quality QE-->
                     <div class="row">
                         <div class="col-sm-2"><label>SLAs Met</label></div>
                         <div class="col-sm-2"><label>Delays Intro Time</label></div>
@@ -555,7 +579,7 @@
                                 {% endif %}>
                         </div>
                     </div>
-                {% elif metric.functional_group.key == 'RE' %}  <!--Quality RE -->
+                {% elif metric.functional_group.abbreviation == 'RE' %}  <!--Quality RE -->
                     <div class="row">
                         <div class="col-sm-2"><label>Revisions</label></div>
                         <div class="col-sm-2"><label>Rework Intro Time</label></div>
@@ -612,7 +636,7 @@
                 {% else %}  <!--Quality QA, TE -->
                     <div class="row">
                         <div class="col-sm-2"><label>SLAs Met</label></div>
-                        <div class="col-sm-2"><label>Delays Intro Time</label></div>
+                        <div class="col-sm-2"><label>LOE Deviation Time</label></div>
                         <div class="col-sm-2"><label>Defects Caught</label></div>
                         <div class="col-sm-3"><label>UAT defects not prevented</label></div>
                     </div>
@@ -626,11 +650,11 @@
                                 {% endif %}>
                         </div>
                         <div class="col-sm-2">
-                            <input id="id_delays_introduced_time" name="delays_introduced_time"
-                                {% if automation_data.delays_introduced_time%}
-                                   value="{{ automation_data.delays_introduced_time}}" class="gentle"
+                            <input id="id_loe_deviation" name="loe_deviation"
+                                {% if automation_data.loe_deviation%}
+                                   value="{{ automation_data.loe_deviation}}" class="gentle"
                                 {% else %}
-                                   value="{{ metric.delays_introduced_time}}"
+                                   value="{{ metric.loe_deviation}}"
                                 {% endif %}>
                         </div>
                         <div class="col-sm-2">{{ form.defect_caught }}</div>
@@ -681,7 +705,7 @@
                 {% endif %}
 
                 <legend style="margin-top: 30px;">Efficiency</legend>
-                {% if metric.functional_group.key == 'QI' %}  <!-- Efficiency -->
+                {% if metric.functional_group.abbreviation == 'QE' %}  <!-- Efficiency -->
                     <div class="row">
                         <div class="col-sm-2"><label>Average Team Size</label></div>
                         <div class="col-sm-2"><label>Overtime Weekday</label></div>
@@ -719,7 +743,7 @@
                                 {% endif %}>
                         </div>
                     </div>
-                {% elif metric.functional_group.key == 'RE' %}
+                {% elif metric.functional_group.abbreviation == 'RE' %}
                     <div class="row">
                         <div class="col-sm-2"><label>Gross Available</label></div>
                         <div class="col-sm-2"><label>Efficiency</label></div>
@@ -750,34 +774,23 @@
                     </div>
                 {% else %}  <!--Efficiency QA, TE -->
                     <div class="row">
-                        <div class="col-sm-2"><label>Average Team Size</label></div>
-                        <div class="col-sm-2"><label>Average TimeFrame</label></div>
                         <div class="col-sm-2"><label>Overtime Weekday</label></div>
                         <div class="col-sm-2"><label>Overtime Weekend</label></div>
                         <div class="col-sm-2"><label>Rework Time</label></div>
                         <div class="col-sm-2"><label>Resource Swap time</label></div>
+                        <div class="col-sm-2"><label>PTO Time</label></div>
+                        <div class="col-sm-2"><label>Productive Time</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2">
-                            <input id="id_avg_team_size" name="avg_team_size"
-                                {% if automation_data.avg_team_size%}
-                                   value="{{ automation_data.avg_team_size}}" class="gentle"
-                                {% else %}
-                                   value="{{ metric.avg_team_size}}"
-                                {% endif %}>
-                        </div>
-                        <div class="col-sm-2">
-                            <input id="id_avg_time_frame" name="avg_time_frame"
-                                {% if automation_data.avg_time_frame%}
-                                   value="{{ automation_data.avg_time_frame}}" class="gentle"
-                                {% else %}
-                                   value="{{ metric.avg_time_frame}}"
-                                {% endif %}>
-                        </div>
                         <div class="col-sm-2">{{ form.overtime_weekday }}</div>
                         <div class="col-sm-2">{{ form.overtime_weekend }}</div>
                         <div class="col-sm-2">{{ form.rework_time }}</div>
                         <div class="col-sm-2">{{ form.resource_swap_time }}</div>
+                        <div class="col-sm-2">{{ form.pto_holiday_time }}</div>
+                        <div class="col-sm-2">
+                            <input class="gentle" id="id_productive_hours" title="AutoExec Time + Standard Work Time"
+                                   value="{{ metric.productive_hours }}" disabled/>
+                        </div>
                     </div>
 
                     <div class="row">
@@ -786,6 +799,7 @@
                         <div class="col-sm-2"><label>AutoExec Time</label></div>
                         <div class="col-sm-2"><label>GrossAvai time</label></div>
                         <div class="col-sm-2"><label>Efficiency</label></div>
+                        <div class="col-sm-2"><label>Utilization</label></div>
                     </div>
                     <div class="row">
                         <div class="col-sm-2">
@@ -805,7 +819,7 @@
                                {% endif %} disabled/>
                         </div>
                         <div class="col-sm-2">
-                            <input class="gentle" id="gross_available_time" title="(Staffs + Contractors) * 30"
+                            <input class="gentle" id="gross_available_time" title="Testers * 30"
                                {% if calculate_data %}
                                    value="{{ calculate_data.gross_available_time|floatformat:2 }}"
                                {% else %}
@@ -820,11 +834,19 @@
                                    value="{{ metric.efficiency|percentage_format }}"
                                {% endif %} disabled/>
                         </div>
+                        <div class="col-sm-2">
+                            <input class="gentle" id="id_test_utilization" title="Productive Time / (Testers * 40 - PTO Time)"
+                               {% if calculate_data %}
+                                   value="{{ calculate_data.utilization|percentage_format }}"
+                               {% else %}
+                                   value="{{ metric.utilization|percentage_format }}"
+                               {% endif %} disabled/>
+                        </div>
                     </div>
                 {% endif %}
 
                 <legend style="margin-top: 30px;">Costs</legend>
-                {% if metric.functional_group.key == 'RE' %} <!-- Cost and Usage-->
+                {% if metric.functional_group.abbreviation == 'RE' %} <!-- Cost and Usage-->
                     <div class="row">
                         <div class="col-sm-2"><label>Travel Cost</label></div>
                         <div class="col-sm-2"><label>Operational Cost</label></div>
@@ -849,7 +871,7 @@
                                 {% endif %} disabled/>
                         </div>
                     </div>
-                {% elif metric.functional_group.key == 'QI' %} <!-- QI Cost and Usage -->
+                {% elif metric.functional_group.abbreviation == 'QE' %} <!-- QI Cost and Usage -->
                     <div class="row">
                         <div class="col-sm-2"><label>License Cost</label></div>
                         <div class="col-sm-2"><label>Operational Cost</label></div>
