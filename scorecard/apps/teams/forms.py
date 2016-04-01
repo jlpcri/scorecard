@@ -8,8 +8,8 @@ class InnovationForm(ModelForm):
         super(InnovationForm, self).__init__(*args, **kwargs)
         for field in self.fields:
             if field in ['elicitation_analysis_time',
-                         'delays_introduced_time', 'rework_introduced_time',
-                         'avg_team_size', 'overtime_weekday', 'overtime_weekend', 'rework_time', 'resource_swap_time',
+                         'rework_introduced_time',
+                         'overtime_weekday', 'overtime_weekend', 'rework_time', 'resource_swap_time',
                          'license_cost', 'other_savings',
                          ]:
                 self.fields[field] = forms.DecimalField(widget=forms.NumberInput(attrs={'min': '0'}))
@@ -21,7 +21,7 @@ class InnovationForm(ModelForm):
 
     class Meta:
         model = InnovationMetrics
-        exclude = ['created', 'confirmed', 'updated', 'functional_group']
+        exclude = ['created', 'confirmed', 'updated', 'functional_group', 'sdis_not_prevented']
 
 
 class LabForm(ModelForm):
@@ -65,12 +65,11 @@ class TestForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(TestForm, self).__init__(*args, **kwargs)
         for field in self.fields:
-            if field in ['delays_introduced_time', 'rework_introduced_time', 'avg_team_size',
+            if field in ['rework_introduced_time',
                          'overtime_weekday', 'overtime_weekend', 'rework_time', 'resource_swap_time',
                          'license_cost', 'other_savings',
                          'tc_manual_dev_time', 'tc_manual_execution_time',
                          'tc_auto_dev_time', 'tc_auto_execution_time',
-                         'avg_time_frame'
                          ]:
                 self.fields[field] = forms.DecimalField(widget=forms.NumberInput(attrs={'min': '0'}))
 

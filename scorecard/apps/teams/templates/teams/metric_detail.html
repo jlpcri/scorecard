@@ -270,21 +270,10 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2"><label>Document Cover</label></div>
                         <div class="col-sm-2"><label>Defects in Dev</label></div>
-                        <div class="col-sm-2"><label>Elicitation Analysis</label></div>
-                        <div class="col-sm-2"><label>Revisions</label></div>
-                        <div class="col-sm-2"><label>Active Projects</label></div>
+                        <div class="col-sm-2"><label>Research Time</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2">
-                            <input id="id_documentation_coverage" name="documentation_coverage"
-                                {% if automation_data.documentation_coverage%}
-                                   value="{{ automation_data.documentation_coverage}}" class="gentle"
-                                {% else %}
-                                   value="{{ metric.documentation_coverage}}"
-                                {% endif %}>
-                        </div>
                         <div class="col-sm-2">
                             <input id="id_defects_in_dev" name="defects_in_dev"
                                 {% if automation_data.defects_in_dev%}
@@ -294,22 +283,7 @@
                                 {% endif %}>
                         </div>
                         <div class="col-sm-2">{{ form.elicitation_analysis_time }}</div>
-                        <div class="col-sm-2">
-                            <input id="id_revisions" name="revisions"
-                                {% if automation_data.revisions%}
-                                   value="{{ automation_data.revisions}}" class="gentle"
-                                {% else %}
-                                   value="{{ metric.revisions}}"
-                                {% endif %}>
-                        </div>
-                        <div class="col-sm-2">
-                            <input id="id_active_projects" name="active_projects"
-                                {% if automation_data.active_projects%}
-                                   value="{{ automation_data.active_projects}}" class="gentle"
-                                {% else %}
-                                   value="{{ metric.active_projects}}"
-                                {% endif %}>
-                        </div>
+
                     </div>
                 {% elif metric.functional_group.abbreviation == 'RE' %}  <!-- Throughput RE -->
                     <div class="row">
@@ -510,9 +484,10 @@
                 {% if metric.functional_group.abbreviation == 'QE' %}  <!-- Quality QE-->
                     <div class="row">
                         <div class="col-sm-2"><label>SLAs Met</label></div>
-                        <div class="col-sm-2"><label>Delays Intro Time</label></div>
-                        <div class="col-sm-2"><label>SDIs not Prevented</label></div>
-                        <div class="col-sm-4"><label>UAT Defects not Prevented</label></div>
+                        <div class="col-sm-2"><label>Resource Swap</label></div>
+                        <div class="col-sm-2"><label>Escalations</label></div>
+                        <div class="col-sm-2"><label>Rework Intro Time</label></div>
+                        <div class="col-sm-4"><label>Externally Reported Defects</label></div>
                     </div>
                     <div class="row">
                         <div class="col-sm-2">
@@ -523,37 +498,6 @@
                                    value="{{ metric.slas_met}}"
                                 {% endif %}>
                         </div>
-                        <div class="col-sm-2">
-                            <input id="id_delays_introduced_time" name="delays_introduced_time"
-                                {% if automation_data.delays_introduced_time%}
-                                   value="{{ automation_data.delays_introduced_time}}" class="gentle"
-                                {% else %}
-                                   value="{{ metric.delays_introduced_time}}"
-                                {% endif %}>
-                        </div>
-                        <div class="col-sm-2">
-                            <input id="id_sdis_not_prevented" name="sdis_not_prevented"
-                                {% if automation_data.sdis_not_prevented%}
-                                   value="{{ automation_data.sdis_not_prevented}}" class="gentle"
-                                {% else %}
-                                   value="{{ metric.sdis_not_prevented}}"
-                                {% endif %}>
-                        </div>
-                        <div class="col-sm-4">
-                            <input id="id_uat_defects_not_prevented" name="uat_defects_not_prevented"
-                                {% if automation_data.uat_defects_not_prevented%}
-                                   value="{{ automation_data.uat_defects_not_prevented}}" class="gentle"
-                                {% else %}
-                                   value="{{ metric.uat_defects_not_prevented}}"
-                                {% endif %}>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-2"><label>Resource Swap</label></div>
-                        <div class="col-sm-2"><label>Escalations</label></div>
-                        <div class="col-sm-2"><label>Rework Intro Time</label></div>
-                    </div>
-                    <div class="row">
                         <div class="col-sm-2">
                             <input id="id_resource_swap" name="resource_swap"
                                 {% if automation_data.resource_swap%}
@@ -578,7 +522,16 @@
                                    value="{{ metric.rework_introduced_time}}"
                                 {% endif %}>
                         </div>
+                        <div class="col-sm-4">
+                            <input id="id_uat_defects_not_prevented" name="uat_defects_not_prevented"
+                                {% if automation_data.uat_defects_not_prevented%}
+                                   value="{{ automation_data.uat_defects_not_prevented}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.uat_defects_not_prevented}}"
+                                {% endif %}>
+                        </div>
                     </div>
+
                 {% elif metric.functional_group.abbreviation == 'RE' %}  <!--Quality RE -->
                     <div class="row">
                         <div class="col-sm-2"><label>Revisions</label></div>
@@ -707,22 +660,14 @@
                 <legend style="margin-top: 30px;">Efficiency</legend>
                 {% if metric.functional_group.abbreviation == 'QE' %}  <!-- Efficiency -->
                     <div class="row">
-                        <div class="col-sm-2"><label>Average Team Size</label></div>
                         <div class="col-sm-2"><label>Overtime Weekday</label></div>
                         <div class="col-sm-2"><label>Overtime Weekend</label></div>
                         <div class="col-sm-2"><label>Average Throughput</label></div>
                         <div class="col-sm-2"><label>Rework Time</label></div>
                         <div class="col-sm-2"><label>Resource Swap time</label></div>
+                        <div class="col-sm-2"><label>PTO Time</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2">
-                            <input id="id_avg_team_size" name="avg_team_size"
-                                {% if automation_data.avg_team_size%}
-                                   value="{{ automation_data.avg_team_size}}" class="gentle"
-                                {% else %}
-                                   value="{{ metric.avg_team_size}}"
-                                {% endif %}>
-                        </div>
                         <div class="col-sm-2">{{ form.overtime_weekday }}</div>
                         <div class="col-sm-2">{{ form.overtime_weekend }}</div>
                         <div class="col-sm-2">
@@ -740,6 +685,45 @@
                                    value="{{ automation_data.resource_swap_time}}" class="gentle"
                                 {% else %}
                                    value="{{ metric.resource_swap_time}}"
+                                {% endif %}>
+                        </div>
+                        <div class="col-sm-2">
+                            <input id="id_pto_holiday_time" name="pto_holiday_time"
+                                {% if automation_data.pto_holiday_time%}
+                                   value="{{ automation_data.pto_holiday_time}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.pto_holiday_time}}"
+                                {% endif %}>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2"><label>Customer Facing Time</label></div>
+                        <div class="col-sm-2"><label>Documentation Time</label></div>
+                        <div class="col-sm-2"><label>Ticketless Dev Time</label></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <input id="id_customer_facing_time" name="customer_facing_time"
+                                {% if automation_data.customer_facing_time%}
+                                   value="{{ automation_data.customer_facing_time}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.customer_facing_time}}"
+                                {% endif %}>
+                        </div>
+                        <div class="col-sm-2">
+                            <input id="id_documentation_time" name="documentation_time"
+                                {% if automation_data.documentation_time%}
+                                   value="{{ automation_data.documentation_time}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.documentation_time}}"
+                                {% endif %}>
+                        </div>
+                        <div class="col-sm-2">
+                            <input id="id_ticketless_dev_time" name="ticketless_dev_time"
+                                {% if automation_data.dticketless_dev_time%}
+                                   value="{{ automation_data.ticketless_dev_time}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.ticketless_dev_time}}"
                                 {% endif %}>
                         </div>
                     </div>
@@ -877,6 +861,8 @@
                         <div class="col-sm-2"><label>Operational Cost</label></div>
                         <div class="col-sm-2"><label>Total Cost</label></div>
                         <div class="col-sm-2"><label>Other Savings</label></div>
+                        <div class="col-sm-2"><label>External Savings</label></div>
+                        <div class="col-sm-2"><label>Internal Savings</label></div>
                     </div>
                     <div class="row">
                         <div class="col-sm-2">
@@ -911,6 +897,22 @@
                                    value="{{ metric.other_savings}}"
                                 {% endif %}>
                         </div>
+                        <div class="col-sm-2">
+                            <input class="gentle" id="external_savings" title="Visilog Parsed * .33 + Pheme Manual * 1.79 + Pheme Auto * 1.97"
+                                {% if calculate_data %}
+                                   value="{{ calculate_data.external_savings|floatformat:2 }}"
+                                {% else %}
+                                   value="{{ metric.external_savings }}"
+                                {% endif %}disabled />
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="gentle" id="internal_savings" title="Ceeq * 20 + Other Savings"
+                                {% if calculate_data %}
+                                   value="{{ calculate_data.internal_savings|floatformat:2 }}"
+                                {% else %}
+                                   value="{{ metric.internal_savings }}"
+                                {% endif %}disabled />
+                        </div>
                     </div>
                     <!-- Usage -->
                     <legend style="margin-top: 30px;">Usage</legend>
@@ -919,6 +921,7 @@
                         <div class="col-sm-2"><label>Pheme Auto Tests</label></div>
                         <div class="col-sm-2"><label>Visilog TXL Parsed</label></div>
                         <div class="col-sm-2"><label>Visilog TXL Violation</label></div>
+                        <div class="col-sm-2"><label>CEEQ Daily Summaries</label></div>
                     </div>
                     <div class="row">
                         <div class="col-sm-2">
@@ -951,6 +954,14 @@
                                    value="{{ automation_data.visilog_txl_schema_violation}}" class="gentle"
                                 {% else %}
                                    value="{{ metric.visilog_txl_schema_violation}}"
+                                {% endif %}>
+                        </div>
+                        <div class="col-sm-2">
+                            <input id="id_ceeq_daily_summaries" name="ceeq_daily_summaries"
+                                {% if automation_data.ceeq_daily_summaries%}
+                                   value="{{ automation_data.ceeq_daily_summaries}}" class="gentle"
+                                {% else %}
+                                   value="{{ metric.ceeq_daily_summaries}}"
                                 {% endif %}>
                         </div>
                     </div>
