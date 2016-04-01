@@ -42,12 +42,14 @@
                             {% if automation_data.complaints %} value="{{ automation_data.complaints }}" class="gentle" {% else %} value="{{ metric.complaints }}" {% endif %}>
                     </div>
                 </div>
+
                 <legend style="margin-top: 30px;">Throughput</legend>
                 <div class="row">
                     <div class="col-sm-2"><label>Tickets Received</label></div>
                     <div class="col-sm-2"><label>Tickets Closed</label></div>
                     <div class="col-sm-2"><label>Virtual Machines</label></div>
                     <div class="col-sm-2"><label>Physical Machines</label></div>
+                    <div class="col-sm-2"><label>Monitor Machines</label></div>
                 </div>
                 <div class="row">
                     <div class="col-sm-2">
@@ -75,11 +77,104 @@
                                value="{{ metric.physical_machines}}"
                             {% endif %}>
                     </div>
+                    <div class="col-sm-2">
+                        <input id="id_monitor_machines" name="monitor_machines"
+                            {% if automation_data.monitor_machines%}
+                               value="{{ automation_data.monitor_machines}}" class="gentle"
+                            {% else %}
+                               value="{{ metric.monitor_machines}}"
+                            {% endif %}>
+                    </div>
                 </div>
+
+                <legend style="margin-top: 30px;">Quality</legend>
+                <div class="row">
+                    <div class="col-sm-2"><label>Builds Submitted</label></div>
+                    <div class="col-sm-2"><label>Builds Accepted</label></div>
+                    <div class="col-sm-2"><label>Builds Rejected</label></div>
+                    <div class="col-sm-2"><label>Platform Drift Violations</label></div>
+					<div class="col-sm-2"><label>Updates Install Docs</label></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <input id="id_builds_submitted" name="builds_submitted"
+                            {% if automation_data.builds_submitted %} value="{{ automation_data.builds_submitted }}" class="gentle" {% else %} value="{{ metric.builds_submitted }}" {% endif %}>
+                    </div>
+                    <div class="col-sm-2">
+                        <input id="id_builds_accepted" name="builds_accepted"
+                            {% if automation_data.builds_accepted %} value="{{ automation_data.builds_accepted }}" class="gentle" {% else %} value="{{ metric.builds_accepted }}" {% endif %}>
+                    </div>
+					<div class="col-sm-2">
+                        <input class="gentle" id="id_builds_rejected" name="builds_rejected" title="Builds Submitted - Builds Accepted"
+                            {% if calculate_data.builds_rejected %} value="{{ calculate_data.builds_rejected }}" {% else %} value="{{ metric.builds_rejected }}" {% endif %} disabled/>
+                    </div>
+					<div class="col-sm-2">
+                        <input id="id_platform_drift_violations" name="platform_drift_violations"
+                            {% if automation_data.platform_drift_violations %} value="{{ automation_data.platform_drift_violations }}" class="gentle" {% else %} value="{{ metric.platform_drift_violations }}" {% endif %}>
+                    </div>
+					<div class="col-sm-2">
+                        <input id="id_updates_install_docs" name="updates_install_docs"
+                            {% if automation_data.updates_install_docs %} value="{{ automation_data.updates_install_docs }}" class="gentle" {% else %} value="{{ metric.updates_install_docs }}" {% endif %}>
+                    </div>
+                </div>
+
+                <legend style="margin-top: 30px;">Efficiency</legend>
+                <div class="row">
+                    <div class="col-sm-2"><label>Administration Time</label></div>
+                    <div class="col-sm-2"><label>Project Time</label></div>
+                    <div class="col-sm-2"><label>Ticket Time</label></div>
+                    <div class="col-sm-2"><label>SLAs Met</label></div>
+                    <div class="col-sm-2"><label>PTO Time</label></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <input id="id_administration_time" name="administration_time"
+                            {% if automation_data.administration_time %} value="{{ automation_data.administration_time }}" class="gentle" {% else %} value="{{ metric.administration_time }}" {% endif %}>
+                    </div>
+                    <div class="col-sm-2">
+                        <input id="id_project_time" name="project_time"
+                            {% if automation_data.project_time %} value="{{ automation_data.project_time }}" class="gentle" {% else %} value="{{ metric.project_time }}" {% endif %}>
+                    </div>
+					<div class="col-sm-2">
+                        <input id="id_ticket_time" name="ticket_time"
+                            {% if automation_data.ticket_time %} value="{{ automation_data.ticket_time }}" class="gentle" {% else %} value="{{ metric.ticket_time }}" {% endif %}>
+                    </div>
+					<div class="col-sm-2">
+                        <input id="id_slas_met" name="slas_met"
+                            {% if automation_data.slas_met %} value="{{ automation_data.slas_met }}" class="gentle" {% else %} value="{{ metric.slas_met }}" {% endif %}>
+                    </div>
+                    <div class="col-sm-2">
+                        <input id="id_pto_holiday_time" name="pto_holiday_time"
+                            {% if automation_data.pto_holiday_time %} value="{{ automation_data.pto_holiday_time }}" class="gentle" {% else %} value="{{ metric.pto_holiday_time }}" {% endif %}>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2"><label>Utilization</label></div>
+                    <div class="col-sm-2"><label>Efficiency</label></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <input class="gentle" id="id_lab_utilization" title="(Administration Time + Project Time + Ticket Time) / (Staffs * 40 - PTO Holiday Time)"
+                           {% if calculate_data %}
+                               value="{{ calculate_data.utilization|percentage_format }}"
+                           {% else %}
+                               value="{{ metric.utilization|percentage_format }}"
+                           {% endif %} disabled/>
+                    </div>
+                    <div class="col-sm-2">
+                        <input class="gentle" id="id_lab_efficiency" title="(Administration Time + Project Time + Ticket Time) / (Staffs * 30)"
+                           {% if calculate_data %}
+                               value="{{ calculate_data.efficiency|percentage_format }}"
+                           {% else %}
+                               value="{{ metric.efficiency|percentage_format }}"
+                           {% endif %} disabled/>
+                    </div>
+                </div>
+
                 <legend style="margin-top: 30px;">Costs</legend>
                 <div class="row">
                     <div class="col-sm-2"><label>Power Consumption UPS A</label></div>
-                    <div class="col-sm-2"><label>Power Consumption UPS A</label></div>
+                    <div class="col-sm-2"><label>Power Consumption UPS B</label></div>
                     <div class="col-sm-2"><label>License Cost</label></div>
                 </div>
                 <div class="row">

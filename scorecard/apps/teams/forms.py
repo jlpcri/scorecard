@@ -28,7 +28,9 @@ class LabForm(ModelForm):
     class Meta:
         model = LabMetrics
         fields = ['staffs', 'openings', 'contractors', 'compliments', 'complaints',
-                  'tickets_received', 'tickets_closed', 'virtual_machines', 'physical_machines',
+                  'tickets_received', 'tickets_closed', 'virtual_machines', 'physical_machines', 'monitor_machines',
+                  'builds_submitted', 'builds_accepted', 'platform_drift_violations', 'updates_install_docs',
+                  'administration_time', 'project_time', 'ticket_time', 'slas_met', 'pto_holiday_time',
                   'power_consumption_ups_a', 'power_consumption_ups_b', 'license_cost'
                   ]
 
@@ -38,7 +40,7 @@ class RequirementForm(ModelForm):
         super(RequirementForm, self).__init__(*args, **kwargs)
         for field in self.fields:
             if field in ['elicitation_analysis_time',
-                         'slas_missed', 'delays_introduced_time', 'rework_introduced_time',
+                         'slas_missed', 'rework_introduced_time',
                          'overtime_weekday', 'overtime_weekend', 'rework_external_time', 'resource_swap_time',
                          'travel_cost'
                          ]:
@@ -53,7 +55,7 @@ class RequirementForm(ModelForm):
         model = RequirementMetrics
         fields = ['staffs', 'openings', 'contractors', 'compliments', 'complaints',
                   'backlog', 'team_initiative', 'active_projects', 'elicitation_analysis_time',
-                  'revisions', 'rework_introduced_time', 'slas_met', 'slas_missed', 'delays_introduced_time', 'escalations',
+                  'revisions', 'rework_introduced_time', 'slas_met', 'slas_missed', 'escalations',
                   'overtime_weekday', 'overtime_weekend', 'rework_external_time',
                   'travel_cost'
                   ]

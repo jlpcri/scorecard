@@ -442,7 +442,7 @@ class LabMetrics(BaseMetrics):
     @property
     def utilization(self):
         if (self.staffs * 40 - self.pto_holiday_time) != 0:
-            return self.productive_hours / (self.staffs * 40 - self.pto_holiday_time)
+            return (self.administration_time + self.project_time + self.ticket_time) / (self.staffs * 40 - self.pto_holiday_time)
         else:
             return 0
 
