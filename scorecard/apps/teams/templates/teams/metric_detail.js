@@ -1,4 +1,4 @@
-var key = '{{metric.functional_group.key}}';
+var key = '{{metric.functional_group.abbreviation}}';
 var hours,
     hourly_rate, hourly_rate_contractor,
     hourly_rate_auto;
@@ -8,10 +8,11 @@ var staff = $('#id_staffs'),
     license_cost = $('#id_license_cost');
 
 switch (key) {
-    case 'QI':
+    case 'QE':
         hours = 40;
         hourly_rate = 45;
         costCal();
+        autoCal();
         avgThroughputCal();
         break;
     case 'TL':
@@ -86,14 +87,36 @@ function costReworkCal() {
     });
 }
 
-// Cost of automation calculation for QA, TE
+// Cost of autoSavings calculation for QA/TE, External/Internal savings for QE
 function autoCal() {
-    $('#id_tc_auto_execution_time').on('input', function(){
-        $('#auto_savings').val(autoSavingsCal($('#id_estimate_auto_time').val(), this.value, hourly_rate_auto));
-    });
-    $('#id_estimate_auto_time').on('input', function(){
-        $('#auto_savings').val(autoSavingsCal(this.value, $('#id_tc_auto_execution_time').val(), hourly_rate_auto))
-    })
+    switch (key) {
+        case 'TE':
+        case 'QA':
+            $('#id_tc_auto_execution_time').on('input', function () {
+                $('#auto_savings').val(autoSavingsCal($('#id_estimate_auto_time').val(), this.value, hourly_rate_auto));
+            });
+            $('#id_estimate_auto_time').on('input', function () {
+                $('#auto_savings').val(autoSavingsCal(this.value, $('#id_tc_auto_execution_time').val(), hourly_rate_auto))
+            });
+            break;
+        case 'QE':
+            $('#id_other_savings').on('input', function(){
+                qeInternalSavingsCal();
+            });
+            $('#id_ceeq_daily_summaries').on('input', function(){
+                qeInternalSavingsCal();
+            });
+            $('#id_visilog_txl_parsed').on('input', function(){
+                qeExternalSavingsCal();
+            });
+            $('#id_pheme_manual_tests').on('input', function(){
+                qeExternalSavingsCal();
+            });
+            $('#id_pheme_auto_tests').on('input', function(){
+                qeExternalSavingsCal();
+            });
+            break;
+    }
 }
 
 // Cost of operational calculation
@@ -113,7 +136,7 @@ function autoSavingsCal(estimate_time, tc_auto_time, hourly_rate_auto) {
 // Calculation of average throughput for RE, 'QA, TE'
 function avgThroughputCal() {
     switch (key) {
-        case 'QI':
+        case 'QE':
             staff.on('input', function(){
                 var avg_throughput = parseFloat($('#id_story_points_execution').val()) / parseFloat(this.value)
                 $('#avg_throughput_qi').val(avg_throughput.toFixed(2));
@@ -286,3 +309,15 @@ $('#collect_data_button').click(function(){
     });
     $('#collect-data-modal').modal('show');
 });
+
+function qeInternalSavingsCal(){
+    var value = $('#id_ceeq_daily_summaries').val() * 20 + parseFloat($('#id_other_savings').val());
+    $('#internal_savings').val(value);
+}
+
+function qeExternalSavingsCal(){
+    var value = $('#id_visilog_txl_parsed').val() * .33
+        + $('#id_pheme_manual_tests').val() * 1.79
+        + $('#id_pheme_auto_tests').val() * 1.97;
+    $('#external_savings').val(value.toFixed(2));
+}
