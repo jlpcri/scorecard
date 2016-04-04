@@ -192,7 +192,7 @@ HEAD_TESTING_SUMMARY = [
     'Active Tickets',
     'Avg Throughput per week',
     'Quality',
-    'Delays Introduced',
+    'LOE Deviation Time',
     'Defects identified',
     'UAT defects not prevented',
     'SDIs not prevented',
@@ -219,12 +219,12 @@ HEAD_QE_TL_SUMMARY = [
     'Opening Positions (Recruiting, Pending start etc.)',
     'Contractors',
     'Throughput',
-    'Active Projects',
+    'Backlog Story Points',
     'Elicitation and Analysis Hours',
     'Rework Hours',
     'Avg Throughput per developer',
-    'Delays introduced (Hours)',
-    '# of revisions',
+    'External Savings',
+    'Internal Savings',
     'Costs',
     'Tests executed on platform',
     'Savings',
@@ -795,7 +795,7 @@ def write_to_excel_test_summary(ws, dates):
         ws.column_dimensions[get_column_letter(11)].width = 4
 
         # column 12
-        ws.cell(row=row_start, column=12).value = get_formula_sum_from_qa_te(row_start, 29)  # delays introduced
+        ws.cell(row=row_start, column=12).value = get_formula_sum_from_qa_te(row_start, 29)  # LOE deviation time
         ws.cell(row=row_start, column=13).value = get_formula_sum_from_qa_te(row_start, 30)  # defects identified
         ws.cell(row=row_start, column=14).value = get_formula_sum_from_qa_te(row_start, 31)  # uat defects not prevented
         ws.cell(row=row_start, column=15).value = get_formula_sum_from_qa_te(row_start, 32)  # SDIs not prevented
@@ -854,12 +854,12 @@ def write_to_excel_qi_tl_summary(ws, dates):
         ws.column_dimensions[get_column_letter(6)].width = 4
 
         # column 7
-        ws.cell(row=row_start, column=7).value = get_cell_value_from_qi(row_start, 14)   # active projects
+        ws.cell(row=row_start, column=7).value = get_cell_value_from_qi(row_start, 7)   # Backlog Story points
         ws.cell(row=row_start, column=8).value = get_cell_value_from_qi(row_start, 15)   # elicitation analysis
         ws.cell(row=row_start, column=9).value = get_cell_value_from_qi(row_start, 30)   # rework hours
         ws.cell(row=row_start, column=10).value = get_cell_value_from_qi(row_start, 29)  # avg throughput
-        ws.cell(row=row_start, column=11).value = get_cell_value_from_qi(row_start, 19)  # delays introduced hours
-        ws.cell(row=row_start, column=12).value = get_cell_value_from_qi(row_start, 16)  # revisions
+        ws.cell(row=row_start, column=11).value = get_cell_value_from_qi(row_start, 35)  # External Savings
+        ws.cell(row=row_start, column=12).value = get_cell_value_from_qi(row_start, 36)  # Internal Savings
 
         # column 13
         background_color_fill(ws, row_start, col=13, background_color=oliveDrabFill)
