@@ -93,10 +93,26 @@ HEAD_TL = [
     'Tickets Closed',
     'Virtual Machines',
     'Physical Machines',
+    'Monitor Machines',
+    'Quality',
+    'Builds Submitted',
+    'Builds Accepted',
+    'Builds Rejected',
+    'Platform Drift Violations',
+    'Updates to Install Docs',
+    'Efficiency',
+    'Administration Time',
+    'Project Time',
+    'Ticket Time',
+    'SLAs Met',
+    'PTO Holiday',
+    'Utilization',
+    'Efficiency',
     'Costs',
     'Power Consumption - UPS A(KW)',
     'Power Consumption - UPS B(KW)',
-    'Licensing Costs'
+    'Licensing Costs',
+    'Other Savings'
 ]
 
 HEAD_QA = [
@@ -287,7 +303,7 @@ ROW_START_INDEX = 4
 
 COL_EXCLUDE_QE = [2, 6, 14, 21, 31, 37]
 COL_EXCLUDE_RE = [2, 6, 11, 18, 25]
-COL_EXCLUDE_TL = [2, 6, 11]
+COL_EXCLUDE_TL = [2, 6, 12, 18, 26]
 COL_EXCLUDE_QA_TE = [2, 6, 27, 37, 49]
 COL_EXCLUDE_TEST_SUMMARY = [2, 6, 11]
 COL_EXCLUDE_QE_TL_SUMMARY = [2, 6, 13, 17, 21, 26]
@@ -441,16 +457,42 @@ def write_body_tl(ws, row, metric):
     ws.cell(row=row, column=8).value = metric.tickets_closed
     ws.cell(row=row, column=9).value = metric.virtual_machines
     ws.cell(row=row, column=10).value = metric.physical_machines
+    ws.cell(row=row, column=11).value = metric.monitor_machines
 
-    # column 11
-    background_color_fill(ws, row, col=11, background_color=rebeccaPurpleFill)
-    ws.column_dimensions[get_column_letter(11)].width = 4
+    # column 12
+    background_color_fill(ws, row, col=12, background_color=rebeccaPurpleFill)
+    ws.column_dimensions[get_column_letter(12)].width = 4
 
-    ws.cell(row=row, column=12).value = metric.power_consumption_ups_a
-    ws.cell(row=row, column=13).value = metric.power_consumption_ups_b
-    ws.cell(row=row, column=14).value = metric.license_cost
+    # column 13
+    ws.cell(row=row, column=13).value = metric.builds_submitted
+    ws.cell(row=row, column=14).value = metric.builds_accepted
+    ws.cell(row=row, column=15).value = metric.builds_rejected
+    ws.cell(row=row, column=16).value = metric.platform_drift_violations
+    ws.cell(row=row, column=17).value = metric.updates_install_docs
 
-    add_dollar_symbol(ws, row, col_start=14, col_end=14)
+    # column 18
+    background_color_fill(ws, row, col=18, background_color=saddleBrownFill)
+    ws.column_dimensions[get_column_letter(18)].width = 4
+
+    # column 19
+    ws.cell(row=row, column=19).value = metric.administration_time
+    ws.cell(row=row, column=20).value = metric.project_time
+    ws.cell(row=row, column=21).value = metric.ticket_time
+    ws.cell(row=row, column=22).value = metric.slas_met
+    ws.cell(row=row, column=23).value = metric.pto_holiday_time
+    ws.cell(row=row, column=24).value = metric.utilization
+    ws.cell(row=row, column=25).value = metric.efficiency
+
+    # column 26
+    background_color_fill(ws, row, col=26, background_color=darkGreenFill)
+    ws.column_dimensions[get_column_letter(26)].width = 4
+
+    ws.cell(row=row, column=27).value = metric.power_consumption_ups_a
+    ws.cell(row=row, column=28).value = metric.power_consumption_ups_b
+    ws.cell(row=row, column=29).value = metric.license_cost
+    ws.cell(row=row, column=30).value = metric.other_savings
+
+    add_dollar_symbol(ws, row, col_start=29, col_end=30)
 
 
 def write_body_re(ws, row, metric):
