@@ -31,7 +31,7 @@ class LabForm(ModelForm):
                   'tickets_received', 'tickets_closed', 'virtual_machines', 'physical_machines', 'monitor_machines',
                   'builds_submitted', 'builds_accepted', 'platform_drift_violations', 'updates_install_docs',
                   'administration_time', 'project_time', 'ticket_time', 'slas_met', 'pto_holiday_time',
-                  'power_consumption_ups_a', 'power_consumption_ups_b', 'license_cost'
+                  'power_consumption_ups_a', 'power_consumption_ups_b', 'license_cost', 'other_savings'
                   ]
 
 
@@ -56,8 +56,8 @@ class RequirementForm(ModelForm):
         fields = ['staffs', 'openings', 'contractors', 'compliments', 'complaints',
                   'backlog', 'team_initiative', 'active_projects', 'elicitation_analysis_time',
                   'revisions', 'rework_introduced_time', 'slas_met', 'slas_missed', 'escalations',
-                  'overtime_weekday', 'overtime_weekend', 'rework_external_time',
-                  'travel_cost'
+                  'overtime_weekday', 'overtime_weekend', 'rework_external_time', 'pto_holiday_time',
+                  'travel_cost', 'other_savings'
                   ]
 
 
