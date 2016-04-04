@@ -65,9 +65,9 @@ HEAD_RE = [
     'Avg Throughput = Active Projects + Team initiatives',
     'SLAs met (%age)',
     'SLAs missed (%age)',
-    'Delays introduced',
     'Escalations',
     'Efficiency',
+    'PTO Holiday',
     'Gross Available Hours',
     'Efficiency - (Elicitation & Analysis hrs)/Gross Available',
     'Overtime Weekend in Hours (from PARTE)',
@@ -78,7 +78,8 @@ HEAD_RE = [
     'Resource Swap (Hours)',
     'Operational Costs',
     'Travel Costs',
-    'Overall Operating Costs'
+    'Overall Operating Costs',
+    'Other Savings'
 ]
 
 HEAD_TL = [
@@ -285,7 +286,7 @@ mediumBorder = Border(left=Side(style='medium'),
 ROW_START_INDEX = 4
 
 COL_EXCLUDE_QE = [2, 6, 14, 21, 31, 37]
-COL_EXCLUDE_RE = [2, 6, 11, 19, 25]
+COL_EXCLUDE_RE = [2, 6, 11, 18, 25]
 COL_EXCLUDE_TL = [2, 6, 11]
 COL_EXCLUDE_QA_TE = [2, 6, 27, 37, 49]
 COL_EXCLUDE_TEST_SUMMARY = [2, 6, 11]
@@ -472,14 +473,15 @@ def write_body_re(ws, row, metric):
     ws.cell(row=row, column=14).value = metric.avg_throughput
     ws.cell(row=row, column=15).value = metric.slas_met
     ws.cell(row=row, column=16).value = metric.slas_missed
-    ws.cell(row=row, column=17).value = metric.delays_introduced_time
-    ws.cell(row=row, column=18).value = metric.escalations
+    # ws.cell(row=row, column=17).value = metric.delays_introduced_time
+    ws.cell(row=row, column=17).value = metric.escalations
+
+    # column 18
+    background_color_fill(ws, row, col=18, background_color=saddleBrownFill)
+    ws.column_dimensions[get_column_letter(18)].width = 4
 
     # column 19
-    background_color_fill(ws, row, col=19, background_color=saddleBrownFill)
-    ws.column_dimensions[get_column_letter(19)].width = 4
-
-    # column 20
+    ws.cell(row=row, column=19).value = metric.pto_holiday_time
     ws.cell(row=row, column=20).value = metric.gross_available_time
     ws.cell(row=row, column=21).value = metric.efficiency
     ws.cell(row=row, column=21).number_format = '0.00%'
@@ -493,13 +495,14 @@ def write_body_re(ws, row, metric):
 
     # column 26
     add_dollar_symbol(ws, row, col_start=26, col_end=26)
-    add_dollar_symbol(ws, row, col_start=28, col_end=30)
+    add_dollar_symbol(ws, row, col_start=28, col_end=31)
 
     ws.cell(row=row, column=26).value = metric.rework_external_cost
     ws.cell(row=row, column=27).value = metric.resource_swap_time
     ws.cell(row=row, column=28).value = metric.operational_cost
     ws.cell(row=row, column=29).value = metric.travel_cost
     ws.cell(row=row, column=30).value = metric.overall_cost
+    ws.cell(row=row, column=31).value = metric.other_savings
 
 
 def write_body_qa_te(ws, row, metric):
