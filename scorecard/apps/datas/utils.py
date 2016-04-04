@@ -14,35 +14,37 @@ HEAD_QE = [
     'Story Points Execution',
     'Unit Tests Dev',
     'Unit Testing Coverage (%age)',
-    'Documentation (%age)',
     'Defects due to Dev',
-    'Active Projects',
     'Elicitation Analysis',
-    'Revisions',
     'Quality',
     'SLAS met (%age) - Goal=100%',
-    'Delays Introduced',
     'UAT defects not prevented',
     'SDIs not prevented',
     'Resource swap',
     'Escalations',
     'Rework introduced (Hours)',
     'Efficiency',
-    'Average team size',
     'Overtime Weekday',
     'Overtime Weekend',
     'Average Throughput = Story Points / Developers',
     'Rework Hours',
     'Resource swap (Hours)',
+    'PTO',
+    'Customer Facing Time',
+    'Documentation Time',
+    'Ticketless Dev Time',
     'Costs',
     'Coding Operational Costs',
     'Licensing Costs',
     'Total Operational Costs',
+    'External Savings',
+    'Internal Savings',
     'Usage',
     'Pheme manual tests',
     'Pheme automatic tests',
     'Visilog TXL parsed',
     'Visilog TXL schema violation found',
+    'CEEQ Daily Summaries',
     'Other savings'
 ]
 
@@ -133,7 +135,7 @@ HEAD_TESTING = [
     'Average Throughput = (TCs dev + TCs Exec)/testers',
     'Quality',
     'SLAs met (%age) - Goal=100%',
-    'Delays Introduced (Hours)',
+    'LOE Deviation (Hours)',
     'Defects Caught',
     'UAT defects not prevented',
     'SDIs not prevented',
@@ -142,8 +144,8 @@ HEAD_TESTING = [
     'Standard violated',
     'Rework Introduced (Hours)',
     'Efficiency',
-    'Average Team size',
-    'Avg timeframe (tickets)',
+    'PTO Holiday (Hours)',
+    'Productive Time (Hours)',
     'Active Tickets',
     'Active Projects',
     'Automation + Execution (Hours)',
@@ -282,7 +284,7 @@ mediumBorder = Border(left=Side(style='medium'),
 
 ROW_START_INDEX = 4
 
-COL_EXCLUDE_QE = [2, 6, 17, 25, 32, 36]
+COL_EXCLUDE_QE = [2, 6, 14, 21, 31, 37]
 COL_EXCLUDE_RE = [2, 6, 11, 19, 25]
 COL_EXCLUDE_TL = [2, 6, 11]
 COL_EXCLUDE_QA_TE = [2, 6, 27, 37, 49]
@@ -375,58 +377,59 @@ def write_body_qi(ws, row, metric):
         ws.cell(row=row, column=10).value = metric.unit_tests_dev
         ws.cell(row=row, column=11).value = metric.unit_tests_coverage
         ws.cell(row=row, column=11).number_format = '0.00%'
-        ws.cell(row=row, column=12).value = metric.documentation_coverage
-        ws.cell(row=row, column=12).number_format = '0.00%'
-        ws.cell(row=row, column=13).value = metric.defects_in_dev
-        ws.cell(row=row, column=14).value = metric.active_projects
-        ws.cell(row=row, column=15).value = metric.elicitation_analysis_time
-        ws.cell(row=row, column=16).value = metric.revisions
+        ws.cell(row=row, column=12).value = metric.defects_in_dev
+        ws.cell(row=row, column=13).value = metric.elicitation_analysis_time
 
-        # column 17
-        background_color_fill(ws, row, col=17, background_color=rebeccaPurpleFill)
-        ws.column_dimensions[get_column_letter(17)].width = 4
+        # column 14
+        background_color_fill(ws, row, col=14, background_color=rebeccaPurpleFill)
+        ws.column_dimensions[get_column_letter(14)].width = 4
 
-        ws.cell(row=row, column=18).value = metric.slas_met
-        ws.cell(row=row, column=19).value = metric.delays_introduced_time
-        ws.cell(row=row, column=20).value = metric.uat_defects_not_prevented
-        ws.cell(row=row, column=21).value = metric.sdis_not_prevented
-        ws.cell(row=row, column=22).value = metric.resource_swap
-        ws.cell(row=row, column=23).value = metric.escalations
-        ws.cell(row=row, column=24).value = metric.rework_introduced_time
+        ws.cell(row=row, column=15).value = metric.slas_met
+        ws.cell(row=row, column=16).value = metric.uat_defects_not_prevented
+        ws.cell(row=row, column=17).value = metric.sdis_not_prevented
+        ws.cell(row=row, column=18).value = metric.resource_swap
+        ws.cell(row=row, column=19).value = metric.escalations
+        ws.cell(row=row, column=20).value = metric.rework_introduced_time
 
-        # column 25
-        background_color_fill(ws, row, col=25, background_color=saddleBrownFill)
-        ws.column_dimensions[get_column_letter(25)].width = 4
+        # column 21
+        background_color_fill(ws, row, col=21, background_color=saddleBrownFill)
+        ws.column_dimensions[get_column_letter(21)].width = 4
 
-        ws.cell(row=row, column=26).value = metric.avg_team_size
-        ws.cell(row=row, column=27).value = metric.overtime_weekday
-        ws.cell(row=row, column=28).value = metric.overtime_weekend
-        ws.cell(row=row, column=29).value = metric.avg_throughput
-        ws.cell(row=row, column=30).value = metric.rework_time
-        ws.cell(row=row, column=31).value = metric.resource_swap_time
+        ws.cell(row=row, column=22).value = metric.overtime_weekday
+        ws.cell(row=row, column=23).value = metric.overtime_weekend
+        ws.cell(row=row, column=24).value = metric.avg_throughput
+        ws.cell(row=row, column=25).value = metric.rework_time
+        ws.cell(row=row, column=26).value = metric.resource_swap_time
+        ws.cell(row=row, column=27).value = metric.pto_holiday_time
+        ws.cell(row=row, column=28).value = metric.customer_facing_time
+        ws.cell(row=row, column=29).value = metric.documentation_time
+        ws.cell(row=row, column=30).value = metric.ticketless_dev_time
 
-        # column 32
-        background_color_fill(ws, row, col=32, background_color=oliveDrabFill)
-        ws.column_dimensions[get_column_letter(32)].width = 4
+        # column 31
+        background_color_fill(ws, row, col=31, background_color=oliveDrabFill)
+        ws.column_dimensions[get_column_letter(31)].width = 4
 
         # add $ symbol
-        add_dollar_symbol(ws, row, col_start=33, col_end=35)
+        add_dollar_symbol(ws, row, col_start=32, col_end=36)
 
-        ws.cell(row=row, column=33).value = metric.operational_cost
-        ws.cell(row=row, column=34).value = metric.license_cost
-        ws.cell(row=row, column=35).value = metric.total_operational_cost
+        ws.cell(row=row, column=32).value = metric.operational_cost
+        ws.cell(row=row, column=33).value = metric.license_cost
+        ws.cell(row=row, column=34).value = metric.total_operational_cost
+        ws.cell(row=row, column=35).value = metric.external_savings
+        ws.cell(row=row, column=36).value = metric.internal_savings
 
-        # column 36
-        background_color_fill(ws, row, col=36, background_color=darkGreenFill)
-        ws.column_dimensions[get_column_letter(36)].width = 4
+        # column 37
+        background_color_fill(ws, row, col=37, background_color=darkGreenFill)
+        ws.column_dimensions[get_column_letter(37)].width = 4
 
-        ws.cell(row=row, column=37).value = metric.pheme_manual_tests
-        ws.cell(row=row, column=38).value = metric.pheme_auto_tests
-        ws.cell(row=row, column=39).value = metric.visilog_txl_parsed
-        ws.cell(row=row, column=40).value = metric.visilog_txl_schema_violation
+        ws.cell(row=row, column=38).value = metric.pheme_manual_tests
+        ws.cell(row=row, column=39).value = metric.pheme_auto_tests
+        ws.cell(row=row, column=40).value = metric.visilog_txl_parsed
+        ws.cell(row=row, column=41).value = metric.visilog_txl_schema_violation
+        ws.cell(row=row, column=42).value = metric.ceeq_daily_summaries
 
-        add_dollar_symbol(ws, row, col_start=41, col_end=41)
-        ws.cell(row=row, column=41).value = metric.other_savings
+        add_dollar_symbol(ws, row, col_start=43, col_end=43)
+        ws.cell(row=row, column=43).value = metric.other_savings
 
 
 def write_body_tl(ws, row, metric):
@@ -537,7 +540,7 @@ def write_body_qa_te(ws, row, metric):
 
     # column 28
     ws.cell(row=row, column=28).value = metric.slas_met
-    ws.cell(row=row, column=29).value = metric.delays_introduced_time
+    ws.cell(row=row, column=29).value = metric.loe_deviation
     ws.cell(row=row, column=30).value = metric.defect_caught
     ws.cell(row=row, column=31).value = metric.uat_defects_not_prevented
     ws.cell(row=row, column=32).value = metric.sdis_not_prevented
@@ -551,8 +554,8 @@ def write_body_qa_te(ws, row, metric):
     ws.column_dimensions[get_column_letter(37)].width = 4
 
     # column 38
-    ws.cell(row=row, column=38).value = metric.avg_team_size
-    ws.cell(row=row, column=39).value = metric.avg_time_frame
+    ws.cell(row=row, column=38).value = metric.pto_holiday_time
+    ws.cell(row=row, column=39).value = metric.productive_hours
     ws.cell(row=row, column=40).value = metric.active_tickets
     ws.cell(row=row, column=41).value = metric.active_projects
     ws.cell(row=row, column=42).value = metric.auto_and_execution_time
