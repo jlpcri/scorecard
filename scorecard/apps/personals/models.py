@@ -1,4 +1,6 @@
 from operator import itemgetter
+from decimal import Decimal
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.timezone import localtime
 
@@ -18,6 +20,7 @@ class BaseStats(models.Model):
     overtime_weekday = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
     overtime_weekend = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
     rework_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+    pto_holiday_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
 
     class Meta:
         abstract = True
@@ -40,6 +43,15 @@ class InnovationStats(BaseStats):
     story_points_execution = models.PositiveIntegerField(default=0)
     unit_tests_dev = models.PositiveIntegerField(default=0)
     elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+    customer_facing_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                               validators=[MinValueValidator(Decimal(0))],
+                                               verbose_name='Customer facing hours')
+    documentation_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                             validators=[MinValueValidator(Decimal(0))],
+                                             verbose_name='Documentation hours')
+    ticketless_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                              validators=[MinValueValidator(Decimal(0))],
+                                              verbose_name='Ticketless development hours')
 
     def stat_summary(self):
         return {'Story Points': self.story_points_execution, 'Unit Tests': self.unit_tests_dev}
@@ -60,6 +72,21 @@ class LabStats(BaseStats):
     """
     # Throughput
     tickets_closed = models.PositiveIntegerField(default=0)
+    administration_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                              validators=[MinValueValidator(Decimal(0))],
+                                              verbose_name='Administration hours')
+    project_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                       validators=[MinValueValidator(Decimal(0))],
+                                       verbose_name='Project hours')
+    ticket_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                      validators=[MinValueValidator(Decimal(0))],
+                                      verbose_name='Ticket hours')
+
+    # Quality
+    builds_submitted = models.PositiveIntegerField(default=0)
+    builds_accepted = models.PositiveIntegerField(default=0)
+    updates_install_docs = models.PositiveIntegerField(default=0,
+                                                       verbose_name='Updates to install documents')
 
     def stat_summary(self):
         return {'Overtime': self.overtime_weekday+self.overtime_weekend, 'Tickets Closed': self.tickets_closed}
@@ -115,14 +142,22 @@ class TestStats(BaseStats):
     tc_auto_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
     tc_auto_execution = models.PositiveIntegerField(default=0)
     tc_auto_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+    estimate_auto_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                             validators=[MinValueValidator(Decimal(0))],
+                                             verbose_name='Estimated manual time for automation')
+    standard_work_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                             validators=[MinValueValidator(Decimal(0))],
+                                             verbose_name='Standard work time')  #  hours spent doing test documentation and associated overhead
 
     # Quality
     defect_caught = models.PositiveIntegerField(default=0)
     uat_defects_not_prevented = models.PositiveIntegerField(default=0)
     standards_violated = models.PositiveIntegerField(default=0)
 
-    #Efficiency
+    # Efficiency
     resource_swap_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+    loe_deviation = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                        verbose_name='LOE deviation (hours)')
 
     def stat_summary(self):
         return {'Manual Tests Developed': self.tc_manual_dev,

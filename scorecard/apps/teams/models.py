@@ -418,13 +418,13 @@ class LabMetrics(BaseMetrics):
                                                    verbose_name='Machines under monitoring')
     administration_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                               validators=[MinValueValidator(Decimal(0))],
-                                              verbose_name='Project hours')
+                                              verbose_name='Administration hours')
     project_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                        validators=[MinValueValidator(Decimal(0))],
                                        verbose_name='Project hours')
     ticket_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                       validators=[MinValueValidator(Decimal(0))],
-                                      verbose_name='Project hours')
+                                      verbose_name='Ticket hours')
 
     # Quality
     builds_submitted = models.PositiveIntegerField(default=0)
