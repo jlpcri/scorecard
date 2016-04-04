@@ -24,3 +24,14 @@ HOST_URL = 'http://10.6.20.106:8000' + LOGIN_URL
 #             'PORT': '5433'  # another postgres instance
 #         }
 #     }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'scorecard',
+        'USER': 'visilog',
+        'PASSWORD': '6ewuON0>;wHTe(DttOwjg#5NY)U497xKVwOxmQt60A1%}r:@qC&`7OdSP8u[.l[',
+        'HOST': 'linux6437.wic.west.com',
+        'PORT': '5432'
+    }
+}
