@@ -315,9 +315,12 @@ function efficiencyEfficiencyCal(){
             $('#id_test_efficiency').val(effi.toFixed(2) + '%');
             break;
         case 'TL':
-            var effi = (parseFloat($('#id_administration_time').val())
-                + parseFloat($('#id_project_time').val())
-                + parseFloat($('#id_ticket_time').val())) / ($('#id_staffs').val() * 30) * 100;
+            var effi = 0;
+            if ($('#id_staffs').val() != 0) {
+                effi = (parseFloat($('#id_administration_time').val())
+                    + parseFloat($('#id_project_time').val())
+                    + parseFloat($('#id_ticket_time').val())) / ($('#id_staffs').val() * 30) * 100;
+            }
             $('#id_efficiency').val(effi.toFixed(2) + '%');
     }
 }
