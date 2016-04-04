@@ -117,20 +117,26 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
     form_data = calculate_data = automation_data = {}
     team_personals = fetch_team_members_per_team_per_date(key, date, subteam)
 
+    pto_holiday_time = 0
+
     # QA, TE
     overtime_weekday = overtime_weekend = rework_time = 0
     tc_manual_dev = tc_manual_dev_time = tc_manual_execution = tc_manual_execution_time = 0
     tc_auto_dev = tc_auto_dev_time = tc_auto_execution = tc_auto_execution_time = 0
     defect_caught = uat_defects_not_prevented = standards_violated = resource_swap_time = 0
+    estimate_auto_time = standard_work_time = loe_deviation = 0
 
     # QI
     story_points_execution = unit_tests_dev = elicitation_analysis_time = 0
+    customer_facing_time = documentation_time = ticketless_dev_time = 0
 
     # RE
     revisions = rework_external_time = travel_cost = 0
 
     # TL
     tickets_closed = 0
+    administration_time = project_time = ticket_time = 0
+    builds_submitted = builds_accepted = updates_install_docs = 0
 
     if key in ['QA', 'TE']:
         try:
@@ -160,6 +166,11 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
             standards_violated += person.standards_violated
             resource_swap_time += person.resource_swap_time
 
+            pto_holiday_time += person.pto_holiday_time
+            estimate_auto_time += person.estimate_auto_time
+            standard_work_time += person.standard_work_time
+            loe_deviation += person.loe_deviation
+
         form_data = {
             'overtime_weekday': overtime_weekday,
             'overtime_weekend': overtime_weekend,
@@ -175,7 +186,12 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
             'defect_caught': defect_caught,
             'uat_defects_not_prevented': uat_defects_not_prevented,
             'standards_violated': standards_violated,
-            'resource_swap_time': resource_swap_time
+            'resource_swap_time': resource_swap_time,
+
+            'pto_holiday_time': pto_holiday_time,
+            'estimate_auto_time': estimate_auto_time,
+            'standard_work_time': standard_work_time,
+            'loe_deviation': loe_deviation
         }
 
         if (tc_manual_dev + tc_auto_dev) > 0:
@@ -218,13 +234,23 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
             unit_tests_dev += person.unit_tests_dev
             elicitation_analysis_time += person.elicitation_analysis_time
 
+            pto_holiday_time += person.pto_holiday_time
+            customer_facing_time += person.customer_facing_time
+            documentation_time += person.documentation_time
+            ticketless_dev_time += person.ticketless_dev_time
+
         form_data = {
             'overtime_weekday': overtime_weekday,
             'overtime_weekend': overtime_weekend,
             'rework_time': rework_time,
             'story_points_execution': story_points_execution,
             'unit_tests_dev': unit_tests_dev,
-            'elicitation_analysis_time': elicitation_analysis_time
+            'elicitation_analysis_time': elicitation_analysis_time,
+
+            'pto_holiday_time': pto_holiday_time,
+            'customer_facing_time': customer_facing_time,
+            'documentation_time': documentation_time,
+            'ticketless_dev_time': ticketless_dev_time
         }
 
         automation_data = get_automation_data(subteam, CHOICES_QE, date)
@@ -281,12 +307,35 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
             rework_time += person.rework_time
             tickets_closed += person.tickets_closed
 
+            pto_holiday_time += person.pto_holiday_time
+            administration_time += person.administration_time
+            project_time += person.project_time
+            ticket_time += person.ticket_time
+            builds_submitted += person.builds_submitted
+            builds_accepted += person.builds_accepted
+            updates_install_docs += person.updates_install_docs
+
         form_data = {
             'overtime_weekday': overtime_weekday,
             'overtime_weekend': overtime_weekend,
             'rework_time': rework_time,
-            'tickets_closed': tickets_closed
+            'tickets_closed': tickets_closed,
+
+            'pto_holiday_time': pto_holiday_time,
+            'administration_time': administration_time,
+            'project_time': project_time,
+            'ticket_time': ticket_time,
+            'builds_submitted': builds_submitted,
+            'builds_accepted': builds_accepted,
+            'updates_install_docs': updates_install_docs
         }
+
+        calculate_data = {
+            'builds_rejected': builds_submitted - builds_accepted,
+            'utilization': (administration_time + project_time + ticket_time) / (len(team_personals) * 30),
+            'efficiency': (administration_time + project_time + ticket_time) / (len(team_personals) * 40 - pto_holiday_time)
+        }
+
         automation_data = get_automation_data(subteam, CHOICES_TL, date)
 
     form_data['staffs'] = len(team_personals)
