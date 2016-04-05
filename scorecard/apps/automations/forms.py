@@ -1,27 +1,29 @@
 from django import forms
 from django.forms import ModelForm
 
-from models import Automation, FunctionalGroup
+from models import Automation
 from scorecard.apps.users.models import Subteam, HumanResource
 from scorecard.apps.personals.models import InnovationStats, LabStats, RequirementStats, TestStats
-from utils import CHOICES_QE, CHOICES_TL, CHOICES_RE, CHOICES_QA_TE
+from scorecard.apps.teams.models import InnovationMetrics, LabMetrics, RequirementMetrics, TestMetrics
+from utils import get_model_fields
 
 
 class AutomationNewForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(AutomationNewForm, self).__init__(*args, **kwargs)
+        level = 'team'
         try:
             abbreviation = kwargs.pop('initial')['abbreviation']
         except KeyError:
             abbreviation = ''
         if abbreviation == 'QE':
-            choices = CHOICES_QE
+            choices = get_model_fields(InnovationMetrics, abbreviation, level=level)
         elif abbreviation == 'TL':
-            choices = CHOICES_TL
+            choices = get_model_fields(LabMetrics, abbreviation, level=level)
         elif abbreviation == 'RE':
-            choices = CHOICES_RE
+            choices = get_model_fields(RequirementMetrics, abbreviation, level=level)
         elif abbreviation in ['QA', 'TE']:
-            choices = CHOICES_QA_TE
+            choices = get_model_fields(TestStats, abbreviation, level=level)
         else:
             choices = ''
         self.fields['subteam'] = forms.ModelChoiceField(widget=forms.Select(attrs={'class': 'form-control'}),
@@ -50,14 +52,15 @@ class AutomationPersonalNewForm(ModelForm):
         except KeyError:
             abbreviation = ''
 
+        level = 'person'
         if abbreviation == 'QE':
-            choices = InnovationStats.automation_fields
+            choices = get_model_fields(InnovationStats, abbreviation, level=level)
         elif abbreviation == 'TL':
-            choices = LabStats.automation_fields
+            choices = get_model_fields(LabStats, abbreviation, level=level)
         elif abbreviation == 'RE':
-            choices = RequirementStats.automation_fields
+            choices = get_model_fields(RequirementStats, abbreviation, level=level)
         elif abbreviation in ['QA', 'TE']:
-            choices = TestStats.automation_fields
+            choices = get_model_fields(TestStats, abbreviation, level=level)
         else:
             choices = ''
         self.fields['human_resource'] = forms.ModelChoiceField(widget=forms.Select(attrs={'class': 'form-control'}),

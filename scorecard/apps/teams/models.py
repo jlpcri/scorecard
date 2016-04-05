@@ -15,37 +15,40 @@ class BaseMetrics(models.Model):
     updated = models.BooleanField(default=False)
 
     # Human Resource
-    staffs = models.PositiveIntegerField(default=0, verbose_name='staff')
-    contractors = models.PositiveIntegerField(default=0)
-    openings = models.PositiveIntegerField(default=0)
+    staffs = models.PositiveIntegerField(default=0, verbose_name='Staff')
+    contractors = models.PositiveIntegerField(default=0, verbose_name='Contractor')
+    openings = models.PositiveIntegerField(default=0, verbose_name='Opening')
 
     # Awards and Punish
-    compliments = models.PositiveIntegerField(default=0)
-    complaints = models.PositiveIntegerField(default=0)
-    escalations = models.PositiveIntegerField(default=0)
+    compliments = models.PositiveIntegerField(default=0, verbose_name='Compliment')
+    complaints = models.PositiveIntegerField(default=0, verbose_name='Complaint')
+    escalations = models.PositiveIntegerField(default=0, verbose_name='Escalation')
 
     # Quality
-    slas_met = models.DecimalField(max_digits=3, decimal_places=2, default=0, verbose_name='SLAs met')
-    # delays_introduced_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-    #                                              verbose_name='delays introduced (hours)')
-    sdis_not_prevented = models.PositiveIntegerField(default=0, verbose_name='SDIs not prevented')
-    resource_swap = models.PositiveIntegerField(default=0)
+    slas_met = models.DecimalField(max_digits=3, decimal_places=2, default=0, verbose_name='SLAs Met')
+    sdis_not_prevented = models.PositiveIntegerField(default=0, verbose_name='SDIs not Prevented')
+    resource_swap = models.PositiveIntegerField(default=0, verbose_name='Resource Swap')
     rework_introduced_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                                 verbose_name='rework introduced (hours)')
+                                                 verbose_name='Rework Introduced Time')  # in hours
 
     # Efficiency
-    # avg_team_size = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='average team size')
-    overtime_weekday = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='weekday overtime')
-    overtime_weekend = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='weekend overtime')
-    rework_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    resource_swap_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+    overtime_weekday = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                           verbose_name='Overtime Weekday')
+    overtime_weekend = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                           verbose_name='Overtime Weekend')
+    rework_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                      verbose_name='Rework Time')  # in hours
+    resource_swap_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                             verbose_name='Resource Swap Time')  # in hours
     pto_holiday_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                            validators=[MinValueValidator(Decimal(0))],
-                                           verbose_name='PTO/Holiday hours')
+                                           verbose_name='PTO/Holiday Time')  # in hours
 
     # Costs
-    license_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    other_savings = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    license_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                       verbose_name='License Cost')
+    other_savings = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                        verbose_name='Other Saving')
 
     class Meta:
         abstract = True
@@ -234,36 +237,34 @@ class InnovationMetrics(BaseMetrics):
     """
 
     # Throughput
-    story_points_backlog = models.PositiveIntegerField(default=0)
-    story_points_prep = models.PositiveIntegerField(default=0)
-    story_points_execution = models.PositiveIntegerField(default=0)
-    unit_tests_dev = models.PositiveIntegerField(default=0)
-    unit_tests_coverage = models.DecimalField(max_digits=3, decimal_places=2, default=0)
-    # documentation_coverage = models.DecimalField(max_digits=3, decimal_places=2, default=0)
-    defects_in_dev = models.PositiveIntegerField(default=0)
+    story_points_backlog = models.PositiveIntegerField(default=0, verbose_name='Story Points Backlog')
+    story_points_prep = models.PositiveIntegerField(default=0, verbose_name='Story Points Prep')
+    story_points_execution = models.PositiveIntegerField(default=0, verbose_name='Story Points Exec')
+    unit_tests_dev = models.PositiveIntegerField(default=0, verbose_name='Unit Tests Dev')
+    unit_tests_coverage = models.DecimalField(max_digits=3, decimal_places=2, default=0,
+                                              verbose_name='Unit Tests Coverage')
+    defects_in_dev = models.PositiveIntegerField(default=0, verbose_name='Defects in Dev')
     elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                                    verbose_name='Research hours')  # in hours
-    # revisions = models.PositiveIntegerField(default=0)
-    # active_projects = models.PositiveIntegerField(default=0)
+                                                    verbose_name='Research Time')  # in hours
     customer_facing_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                                validators=[MinValueValidator(Decimal(0))],
-                                               verbose_name='Customer facing hours')
+                                               verbose_name='Customer Facing Time')  # in hours
     documentation_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                              validators=[MinValueValidator(Decimal(0))],
-                                             verbose_name='Documentation hours')
+                                             verbose_name='Documentation Time')  # in hours
     ticketless_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                               validators=[MinValueValidator(Decimal(0))],
-                                              verbose_name='Ticketless development hours')
+                                              verbose_name='Ticketless Development Time')  # in hours
 
     # Quality
-    uat_defects_not_prevented = models.PositiveIntegerField(default=0, verbose_name='Externally reported defects')
+    uat_defects_not_prevented = models.PositiveIntegerField(default=0, verbose_name='Externally Reported Defects')
 
     # Usage
-    pheme_manual_tests = models.PositiveIntegerField(default=0)
-    pheme_auto_tests = models.PositiveIntegerField(default=0)
-    visilog_txl_parsed = models.PositiveIntegerField(default=0)
-    visilog_txl_schema_violation = models.PositiveIntegerField(default=0)
-    ceeq_daily_summaries = models.PositiveIntegerField(default=0)
+    pheme_manual_tests = models.PositiveIntegerField(default=0, verbose_name='Pheme Manual Tests')
+    pheme_auto_tests = models.PositiveIntegerField(default=0, verbose_name='Pheme Auto Tests')
+    visilog_txl_parsed = models.PositiveIntegerField(default=0, verbose_name='Visilog TXL Parsed')
+    visilog_txl_schema_violation = models.PositiveIntegerField(default=0, verbose_name='Visilog Schema Violatoin')
+    ceeq_daily_summaries = models.PositiveIntegerField(default=0, verbose_name='CEEQ Daily Summaries')
 
     @property
     def avg_throughput(self):

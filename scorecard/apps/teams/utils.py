@@ -8,7 +8,7 @@ from scorecard.apps.personals.models import TestStats, RequirementStats, LabStat
 from scorecard.apps.personals.models import InnovationStats
 from scorecard.apps.users.models import FunctionalGroup, Subteam
 from models import TestMetricsConfiguration, InnovationMetrics, TestMetrics, RequirementMetrics, LabMetrics
-from scorecard.apps.automations.utils import CHOICES_QE, CHOICES_RE, CHOICES_TL, CHOICES_QA_TE
+from scorecard.apps.automations.utils import get_model_fields
 
 
 def context_teams(request):
@@ -223,7 +223,8 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
             # 'auto_savings': tc_auto_execution_time * costs_staff
         }
 
-        automation_data = get_automation_data(subteam, CHOICES_QA_TE, date)
+        automation_fields = get_model_fields(TestMetrics, key, level='team')
+        automation_data = get_automation_data(subteam, automation_fields, date)
 
     elif key in ['QI', 'QE']:
         for person in team_personals:
@@ -253,7 +254,8 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
             'ticketless_dev_time': ticketless_dev_time
         }
 
-        automation_data = get_automation_data(subteam, CHOICES_QE, date)
+        automation_fields = get_model_fields(InnovationMetrics, key, level='team')
+        automation_data = get_automation_data(subteam, automation_fields, date)
         external_savings = internal_savings = 0
         metric = InnovationMetrics.objects.get(pk=metric_id)
         if automation_data['visilog_txl_parsed']:
@@ -298,7 +300,8 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
             'operational_cost': len(team_personals) * 30 * 50,
             'rework_external_cost': rework_external_time * 50
         }
-        automation_data = get_automation_data(subteam, CHOICES_RE, date)
+        automation_fields = get_model_fields(RequirementMetrics, key, level='team')
+        automation_data = get_automation_data(subteam, automation_fields, date)
 
     elif key == 'TL':
         for person in team_personals:
@@ -336,7 +339,8 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
             'efficiency': (administration_time + project_time + ticket_time) / (len(team_personals) * 40 - pto_holiday_time)
         }
 
-        automation_data = get_automation_data(subteam, CHOICES_TL, date)
+        automation_fields = get_model_fields(LabMetrics, key, level='team')
+        automation_data = get_automation_data(subteam, automation_fields, date)
 
     form_data['staffs'] = len(team_personals)
 

@@ -61,10 +61,6 @@ class InnovationStats(BaseStats):
     def stat_summary(self):
         return {'Story Points': self.story_points_execution, 'Unit Tests': self.unit_tests_dev}
 
-    @classmethod
-    def automation_fields(cls):
-        return get_model_fields(cls)
-
 
 class LabStats(BaseStats):
     """
@@ -91,10 +87,6 @@ class LabStats(BaseStats):
     def stat_summary(self):
         return {'Overtime': self.overtime_weekday+self.overtime_weekend, 'Tickets Closed': self.tickets_closed}
 
-    @classmethod
-    def automation_fields(cls):
-        return get_model_fields(cls)
-
 
 class RequirementStats(BaseStats):
     """
@@ -117,10 +109,6 @@ class RequirementStats(BaseStats):
 
     def stat_summary(self):
         return {'Analysis/Elicitation': self.elicitation_analysis_time, 'Overtime': self.overtime_weekday+self.overtime_weekend, 'Rework': self.rework_time}
-
-    @classmethod
-    def automation_fields(cls):
-        return get_model_fields(cls)
 
 
 class TestStats(BaseStats):
@@ -201,17 +189,3 @@ class TestStats(BaseStats):
 
         return len(tickets)
 
-    @classmethod
-    def automation_fields(cls):
-        return get_model_fields(cls)
-
-
-def get_model_fields(cls):
-    EXCLUSION_LIST = ['id', 'human_resource', 'created', 'confirmed', 'updated']
-    data = ()
-    fields = cls._meta.get_fields()
-    for field in fields:
-        if field.name not in EXCLUSION_LIST:
-            data += ((field.name, field.verbose_name),)
-
-    return data
