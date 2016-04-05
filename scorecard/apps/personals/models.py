@@ -17,10 +17,14 @@ class BaseStats(models.Model):
     updated = models.BooleanField(default=False)
 
     # Efficiency
-    overtime_weekday = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    overtime_weekend = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    rework_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    pto_holiday_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+    overtime_weekday = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                           verbose_name='Overtime Weekday')  # in hours
+    overtime_weekend = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                           verbose_name='Overtime Weekend')  # in hours
+    rework_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                      verbose_name='Rework Time')  # in hours
+    pto_holiday_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                           verbose_name='PTO/Holiday Time')  # in hours
 
     class Meta:
         abstract = True
@@ -40,30 +44,26 @@ class InnovationStats(BaseStats):
     Personal Performance status for QI team
     """
     # Throughput
-    story_points_execution = models.PositiveIntegerField(default=0)
-    unit_tests_dev = models.PositiveIntegerField(default=0)
-    elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+    story_points_execution = models.PositiveIntegerField(default=0, verbose_name='Story Points Execution')
+    unit_tests_dev = models.PositiveIntegerField(default=0, verbose_name='Unit Tests Dev')
+    elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                                    verbose_name='Research Time')  # in hours
     customer_facing_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                                validators=[MinValueValidator(Decimal(0))],
-                                               verbose_name='Customer facing hours')
+                                               verbose_name='Customer Facing Time')
     documentation_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                              validators=[MinValueValidator(Decimal(0))],
-                                             verbose_name='Documentation hours')
+                                             verbose_name='Documentation Time')
     ticketless_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                               validators=[MinValueValidator(Decimal(0))],
-                                              verbose_name='Ticketless development hours')
+                                              verbose_name='Ticketless Development Time')
 
     def stat_summary(self):
         return {'Story Points': self.story_points_execution, 'Unit Tests': self.unit_tests_dev}
 
     @classmethod
     def automation_fields(cls):
-        data = (
-            ('story_points_execution', 'Story Points Execution'),
-            ('unit_tests_dev', 'Unit Tests Dev'),
-            ('elicitation_analysis_time', 'Elicitation Analysis Time')
-        )
-        return data
+        return get_model_fields(cls)
 
 
 class LabStats(BaseStats):
@@ -71,7 +71,7 @@ class LabStats(BaseStats):
     Personal Performance status for TL team
     """
     # Throughput
-    tickets_closed = models.PositiveIntegerField(default=0)
+    tickets_closed = models.PositiveIntegerField(default=0, verbose_name='Ticket Closed')
     administration_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                               validators=[MinValueValidator(Decimal(0))],
                                               verbose_name='Administration hours')
@@ -83,8 +83,8 @@ class LabStats(BaseStats):
                                       verbose_name='Ticket hours')
 
     # Quality
-    builds_submitted = models.PositiveIntegerField(default=0)
-    builds_accepted = models.PositiveIntegerField(default=0)
+    builds_submitted = models.PositiveIntegerField(default=0, verbose_name='Builds Submitted')
+    builds_accepted = models.PositiveIntegerField(default=0, verbose_name='Builds Accepted')
     updates_install_docs = models.PositiveIntegerField(default=0,
                                                        verbose_name='Updates to install documents')
 
@@ -93,10 +93,7 @@ class LabStats(BaseStats):
 
     @classmethod
     def automation_fields(cls):
-        data = (
-            ('tickets_closed', 'Tickets Closed'),
-        )
-        return data
+        return get_model_fields(cls)
 
 
 class RequirementStats(BaseStats):
@@ -104,29 +101,26 @@ class RequirementStats(BaseStats):
     Personal Performance status for RE team
     """
     # Throughput
-    elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+    elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                                    verbose_name='Research Time')  # in hours
 
     # Quality
-    revisions = models.PositiveIntegerField(default=0)
+    revisions = models.PositiveIntegerField(default=0, verbose_name='Revisions')
 
     # Efficiency
-    rework_external_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    rework_external_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                               verbose_name='Rework External Time')
 
     # Costs
-    travel_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    travel_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                      verbose_name='Travel Costs')
 
     def stat_summary(self):
         return {'Analysis/Elicitation': self.elicitation_analysis_time, 'Overtime': self.overtime_weekday+self.overtime_weekend, 'Rework': self.rework_time}
 
     @classmethod
     def automation_fields(cls):
-        data = (
-            ('elicitation_analysis_time', 'Elicitation Analysis Time'),
-            ('revisions', 'Revisions'),
-            ('rework_external_time', 'Rework External Time'),
-            ('travel_cost', 'Travel Cost')
-        )
-        return data
+        return get_model_fields(cls)
 
 
 class TestStats(BaseStats):
@@ -134,30 +128,42 @@ class TestStats(BaseStats):
     Personal Performance status for QA, TE team
     """
     # Throughput
-    tc_manual_dev = models.PositiveIntegerField(default=0)
-    tc_manual_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    tc_manual_execution = models.PositiveIntegerField(default=0)
-    tc_manual_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,)  # in hours
-    tc_auto_dev = models.PositiveIntegerField(default=0)
-    tc_auto_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
-    tc_auto_execution = models.PositiveIntegerField(default=0)
-    tc_auto_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+    tc_manual_dev = models.PositiveIntegerField(default=0,
+                                                verbose_name='TC Manual Dev')
+    tc_manual_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                             verbose_name='TC Manual Dev Time')  # in hours
+    tc_manual_execution = models.PositiveIntegerField(default=0,
+                                                      verbose_name='TC Manual Exec')
+    tc_manual_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                                   verbose_name='TC Manual Exec Time')  # in hours
+    tc_auto_dev = models.PositiveIntegerField(default=0,
+                                              verbose_name='TC Auto Dev')
+    tc_auto_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                           verbose_name='TC Auto Dev Time')  # in hours
+    tc_auto_execution = models.PositiveIntegerField(default=0,
+                                                    verbose_name='TC Auto Exec')
+    tc_auto_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                                 verbose_name='TC Auto Exec Time')  # in hours
     estimate_auto_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                              validators=[MinValueValidator(Decimal(0))],
-                                             verbose_name='Estimated manual time for automation')
+                                             verbose_name='Estimated Manual Time for Automation')
     standard_work_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                              validators=[MinValueValidator(Decimal(0))],
-                                             verbose_name='Standard work time')  #  hours spent doing test documentation and associated overhead
+                                             verbose_name='Standard Work Time')  #  hours spent doing test documentation and associated overhead
 
     # Quality
-    defect_caught = models.PositiveIntegerField(default=0)
-    uat_defects_not_prevented = models.PositiveIntegerField(default=0)
-    standards_violated = models.PositiveIntegerField(default=0)
+    defect_caught = models.PositiveIntegerField(default=0,
+                                                verbose_name='Defects Caught')
+    uat_defects_not_prevented = models.PositiveIntegerField(default=0,
+                                                            verbose_name='UAT Defects not Prevented')
+    standards_violated = models.PositiveIntegerField(default=0,
+                                                     verbose_name='Standard Violated')
 
     # Efficiency
-    resource_swap_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+    resource_swap_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                             verbose_name='Resrouce Swap Time')  # in hours
     loe_deviation = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                        verbose_name='LOE deviation (hours)')
+                                        verbose_name='LOE deviation Time')  #  in hours
 
     def stat_summary(self):
         return {'Manual Tests Developed': self.tc_manual_dev,
@@ -197,20 +203,15 @@ class TestStats(BaseStats):
 
     @classmethod
     def automation_fields(cls):
-        data = (
-            ('tc_manual_dev', 'TC Manual Dev'),
-            ('tc_manual_dev_time', 'TC Manual Dev Time'),
-            ('tc_manual_execution', 'TC Manual Execution'),
-            ('tc_manual_execution_time', 'TC Manual Execution Time'),
-            ('tc_auto_dev', 'TC Auto Dev'),
-            ('tc_auto_dev_time', 'TC Auto Dev Time'),
-            ('tc_auto_execution', 'TC Auto Execution'),
-            ('tc_auto_execution_time', 'TC Auto Execution Time'),
-            ('defect_caught', 'Defect Caught'),
-            ('uat_defects_not_prevented', 'Uat Defects Not Prevented'),
-            ('standards_violated', 'Standards Violated'),
-            ('resource_swap_time', 'Resrouce Swap Time')
-        )
-        return data
+        return get_model_fields(cls)
 
 
+def get_model_fields(cls):
+    EXCLUSION_LIST = ['id', 'human_resource', 'created', 'confirmed', 'updated']
+    data = ()
+    fields = cls._meta.get_fields()
+    for field in fields:
+        if field.name not in EXCLUSION_LIST:
+            data += ((field.name, field.verbose_name),)
+
+    return data
