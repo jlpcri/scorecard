@@ -258,14 +258,25 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
         automation_data = get_automation_data(subteam, automation_fields, date)
         external_savings = internal_savings = 0
         metric = InnovationMetrics.objects.get(pk=metric_id)
-        if automation_data['visilog_txl_parsed']:
+        try:
             external_savings += automation_data['visilog_txl_parsed'] * 0.33
-        if automation_data['pheme_manual_tests']:
+        except KeyError:
+            pass
+
+        try:
             external_savings += automation_data['pheme_manual_tests'] * 1.79
-        if automation_data['pheme_auto_tests']:
+        except KeyError:
+            pass
+
+        try:
             external_savings += automation_data['pheme_auto_tests'] * 1.97
-        if automation_data['ceeq_daily_summaries']:
+        except KeyError:
+            pass
+
+        try:
             internal_savings += automation_data['ceeq_daily_summaries'] * 20 + metric.other_savings
+        except KeyError:
+            internal_savings += metric.other_savings
 
         calculate_data = {
             'avg_throughput': float(story_points_execution) / len(team_personals) if len(team_personals) > 0 else 0,
