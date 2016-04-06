@@ -32,9 +32,8 @@ class HumanResourceModelTest(TestCase):
             functional_group=self.functional_group,
             user=self.user
         )
-        self.assertEqual(str(human), '{0}: {1}: {2}'.format(human.user.username,
-                                                            human.functional_group.key,
-                                                            human.manager))
+        self.assertEqual(str(human), '{0}: {1}'.format(human.user.username,
+                                                       human.functional_group.key))
 
     def test_verbose_name_plural(self):
         self.assertEqual(str(HumanResource._meta.verbose_name_plural), 'human resources')
