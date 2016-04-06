@@ -145,11 +145,11 @@ class TestStats(BaseStats):
     uat_defects_not_prevented = models.PositiveIntegerField(default=0,
                                                             verbose_name='UAT Defects not Prevented')
     standards_violated = models.PositiveIntegerField(default=0,
-                                                     verbose_name='Standard Violated')
+                                                     verbose_name='Standards Violated')
 
     # Efficiency
     resource_swap_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                             verbose_name='Resrouce Swap Time')  # in hours
+                                             verbose_name='Resource Swap Time')  # in hours
     loe_deviation = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                         verbose_name='LOE deviation Time')  #  in hours
 

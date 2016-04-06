@@ -71,43 +71,42 @@ class TestMetrics(BaseMetrics):
     testers = models.PositiveIntegerField(default=0, verbose_name='tester')
 
     # Throughput
-    team_initiative = models.PositiveIntegerField(default=0)
-    ticket_backlog = models.PositiveIntegerField(default=0)
-    ticket_prep = models.PositiveIntegerField(default=0)
-    ticket_execution = models.PositiveIntegerField(default=0)
-    ticket_closed = models.PositiveIntegerField(default=0)
-    project_backlog = models.PositiveIntegerField(default=0)
-    project_prep = models.PositiveIntegerField(default=0)
-    project_execution = models.PositiveIntegerField(default=0)
-    project_closed = models.PositiveIntegerField(default=0)
-    tc_manual_dev = models.PositiveIntegerField(default=0, verbose_name='TCs manually developed')
+    team_initiative = models.PositiveIntegerField(default=0, verbose_name='Team Initiative')
+    ticket_backlog = models.PositiveIntegerField(default=0, verbose_name='Ticket Backlog')
+    ticket_prep = models.PositiveIntegerField(default=0, verbose_name='Ticket Prep')
+    ticket_execution = models.PositiveIntegerField(default=0, verbose_name='Ticket Exec')
+    ticket_closed = models.PositiveIntegerField(default=0, verbose_name='Ticket Closed')
+    project_backlog = models.PositiveIntegerField(default=0, verbose_name='Project Backlog')
+    project_prep = models.PositiveIntegerField(default=0, verbose_name='Project Prep')
+    project_execution = models.PositiveIntegerField(default=0, verbose_name='Project Exec')
+    project_closed = models.PositiveIntegerField(default=0, verbose_name='Project Closed')
+    tc_manual_dev = models.PositiveIntegerField(default=0, verbose_name='TC Manually Dev')
     tc_manual_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                             verbose_name='manual TC development time')
-    tc_manual_execution = models.PositiveIntegerField(default=0, verbose_name='TCs manually executed')
+                                             verbose_name='TC Manually Dev Time')
+    tc_manual_execution = models.PositiveIntegerField(default=0, verbose_name='TC Manually Exec')
     tc_manual_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                                   verbose_name='manual TC execution time')
-    tc_auto_dev = models.PositiveIntegerField(default=0, verbose_name='TCs developed automatically')
+                                                   verbose_name='TC Manually Exec Time')
+    tc_auto_dev = models.PositiveIntegerField(default=0, verbose_name='TC Auto Dev')
     tc_auto_dev_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                           verbose_name='automated TC development time')
-    tc_auto_execution = models.PositiveIntegerField(default=0, verbose_name='TCs automatically executed')
+                                           verbose_name='TC Auto Dev Time')
+    tc_auto_execution = models.PositiveIntegerField(default=0, verbose_name='TC Auto Exec')
     tc_auto_execution_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                                 verbose_name='automatic TC time savings')
+                                                 verbose_name='TC Auto Exec Time')
     estimate_auto_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                              validators=[MinValueValidator(Decimal(0))],
                                              verbose_name='Estimated manual time for automation')
     standard_work_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                              validators=[MinValueValidator(Decimal(0))],
-                                             verbose_name='Standard work time')  #  hours spent doing test documentation and associated overhead
+                                             verbose_name='Standard Work Time')  #  hours spent doing test documentation and associated overhead
 
     # Quality
-    defect_caught = models.PositiveIntegerField(default=0, verbose_name='defects caught')
-    uat_defects_not_prevented = models.PositiveIntegerField(default=0, verbose_name='UAT defects not prevented')
-    standards_violated = models.PositiveIntegerField(default=0)
+    defect_caught = models.PositiveIntegerField(default=0, verbose_name='Eefects Caught')
+    uat_defects_not_prevented = models.PositiveIntegerField(default=0, verbose_name='UAT Defects not Prevented')
+    standards_violated = models.PositiveIntegerField(default=0, verbose_name='Standards Violated')
 
     # Efficiency
-    # avg_time_frame = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Average time frame')
     loe_deviation = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                        verbose_name='LOE deviation (hours)')
+                                        verbose_name='LOE Deviation Time')  # in hours
 
     # Costs
 
@@ -328,20 +327,24 @@ class RequirementMetrics(BaseMetrics):
     """
 
     # Throughput
-    backlog = models.PositiveIntegerField(default=0)
-    team_initiative = models.PositiveIntegerField(default=0)
-    active_projects = models.PositiveIntegerField(default=0)
-    elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # in hours
+    backlog = models.PositiveIntegerField(default=0, verbose_name='Backlog')
+    team_initiative = models.PositiveIntegerField(default=0, verbose_name='Team Initiative')
+    active_projects = models.PositiveIntegerField(default=0, verbose_name='Active Project')
+    elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                                    verbose_name='Research Time')  # in hours
 
     # Quality
-    revisions = models.PositiveIntegerField(default=0)
-    slas_missed = models.DecimalField(max_digits=3, decimal_places=2, default=0)
+    revisions = models.PositiveIntegerField(default=0, verbose_name='Revisions')
+    slas_missed = models.DecimalField(max_digits=3, decimal_places=2, default=0,
+                                      verbose_name='SLAs Missed')
 
     # Efficiency
-    rework_external_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    rework_external_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                               verbose_name='Rework External Time')
 
     # Costs
-    travel_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    travel_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                      verbose_name='Travel Costs')
 
     @property
     def avg_throughput(self):
@@ -411,28 +414,29 @@ class LabMetrics(BaseMetrics):
     Metrics for group: Test Lab
     """
     # Throughput
-    tickets_received = models.PositiveIntegerField(default=0)
-    tickets_closed = models.PositiveIntegerField(default=0)
-    virtual_machines = models.PositiveIntegerField(default=0)
-    physical_machines = models.PositiveIntegerField(default=0)
+    tickets_received = models.PositiveIntegerField(default=0, verbose_name='Tickets Received')
+    tickets_closed = models.PositiveIntegerField(default=0, verbose_name='Tickets Closed')
+    virtual_machines = models.PositiveIntegerField(default=0, verbose_name='Virtual Machines')
+    physical_machines = models.PositiveIntegerField(default=0, verbose_name='Physical Machines')
     monitor_machines = models.PositiveIntegerField(default=0,
-                                                   verbose_name='Machines under monitoring')
+                                                   verbose_name='Machines under Monitoring')
     administration_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                               validators=[MinValueValidator(Decimal(0))],
-                                              verbose_name='Administration hours')
+                                              verbose_name='Administration Time')  # in hours
     project_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                        validators=[MinValueValidator(Decimal(0))],
-                                       verbose_name='Project hours')
+                                       verbose_name='Project Time')  # in hours
     ticket_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                       validators=[MinValueValidator(Decimal(0))],
-                                      verbose_name='Ticket hours')
+                                      verbose_name='Ticket Time')  # in hours
 
     # Quality
-    builds_submitted = models.PositiveIntegerField(default=0)
-    builds_accepted = models.PositiveIntegerField(default=0)
-    platform_drift_violations = models.PositiveIntegerField(default=0)
+    builds_submitted = models.PositiveIntegerField(default=0, verbose_name='Builds Submitted')
+    builds_accepted = models.PositiveIntegerField(default=0, verbose_name='Builds Accepted')
+    platform_drift_violations = models.PositiveIntegerField(default=0,
+                                                            verbose_name='Platform Drift Violations')
     updates_install_docs = models.PositiveIntegerField(default=0,
-                                                       verbose_name='Updates to install documents')
+                                                       verbose_name='Updates to Install Docs')
 
     # Costs
     power_consumption_ups_a = models.PositiveIntegerField(default=0,

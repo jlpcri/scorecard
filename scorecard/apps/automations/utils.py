@@ -4,7 +4,7 @@ def get_model_fields(cls, key, level):
         exclusion_list = ['id', 'human_resource', 'created', 'confirmed', 'updated']
     elif level == 'team':
         exclusion_list = ['id', 'functional_group', 'subteam', 'created', 'confirmed', 'updated',
-                          'staffs', 'contractors', 'openings']
+                          'staffs', 'contractors', 'openings', 'testers']
     data = ()
     fields = cls._meta.get_fields()
     for field in fields:

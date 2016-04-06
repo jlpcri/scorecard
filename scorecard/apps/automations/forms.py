@@ -23,7 +23,7 @@ class AutomationNewForm(ModelForm):
         elif abbreviation == 'RE':
             choices = get_model_fields(RequirementMetrics, abbreviation, level=level)
         elif abbreviation in ['QA', 'TE']:
-            choices = get_model_fields(TestStats, abbreviation, level=level)
+            choices = get_model_fields(TestMetrics, abbreviation, level=level)
         else:
             choices = ''
         self.fields['subteam'] = forms.ModelChoiceField(widget=forms.Select(attrs={'class': 'form-control'}),
