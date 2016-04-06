@@ -4,6 +4,7 @@ from itertools import groupby
 from models import InnovationStats, TestStats, RequirementStats, LabStats
 from scorecard.apps.automations.models import Automation
 from scorecard.apps.datas.utils import get_week_ending_date
+from scorecard.apps.automations.utils import get_model_fields
 
 
 def get_distinct_dates():
@@ -21,17 +22,18 @@ def extract_date(qi):
 
 def get_automation_data(request, personal_stat):
     data = {}
+    level = 'person'
     key = personal_stat.human_resource.functional_group.abbreviation
     date = personal_stat.created.strftime('%Y-%m-%d')
 
     if key == 'QE':
-        choices = InnovationStats.automation_fields()
+        choices = get_model_fields(InnovationStats, key, level)
     elif key == 'TL':
-        choices = LabStats.automation_fields()
+        choices = get_model_fields(LabStats, key, level)
     elif key == 'RE':
-        choices = RequirementStats.automation_fields()
+        choices = get_model_fields(RequirementStats, key, level)
     else:
-        choices = TestStats.automation_fields()
+        choices = get_model_fields(TestStats, key, level)
 
     for item in choices:
         try:
