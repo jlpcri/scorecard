@@ -1,10 +1,21 @@
 {% extends 'core/base.html' %}
+{% load staticfiles %}
 
 {% block title %} Personal Status{% endblock %}
 
 {% block body %}
     <div class="container">
-        <h2>{{ personal_stat.human_resource.user.first_name }} {{ personal_stat.human_resource.user.last_name }}, Personal Status - {{ personal_stat.created|date }}</h2>
+        <div class="col-sm-8">
+            <h2>{{ personal_stat.human_resource.user.first_name }} {{ personal_stat.human_resource.user.last_name }}, Personal Status - {{ personal_stat.created|date }}</h2>
+        </div>
+        <div class="col-sm-2">
+            <br>
+            <input id="collect-data-button" class="btn btn-primary" style="width:100%;" type="button" value="Collect Data">
+        </div>
+        <div class="col-sm-1">
+            <br>
+            <img id="collect-data-progress" src="{% static 'scorecard/floating.gif' %}" height="42" width="42" hidden>
+        </div>
         <br>
         <form action="{% url 'personals:personal_stats_edit' personal_stat.id %}?key={{ personal_stat.human_resource.functional_group.key }}" method="post">
             <div class="row">
@@ -15,6 +26,19 @@
                             <div class="col-sm-6">{{ field }}</div>
                         </div>
                     {% endfor %}
+
+{#                    <div class="row">#}
+{#                        <div class="col-sm-6"><label>Overtime Weekday:</label></div>#}
+{#                        <div class="col-sm-6">{{ form.overtime_weekday }}</div>#}
+{#                    </div>#}
+{#                    <div class="row">#}
+{#                        <div class="col-sm-6"><label>Overtime Weekend:</label></div>#}
+{#                        <div class="col-sm-6">{{ form.overtime_weekend }}</div>#}
+{#                    </div>#}
+{#                    <div class="row">#}
+{#                        <div class="col-sm-6"><label>Rework Time:</label></div>#}
+{#                        <div class="col-sm-6">{{ form.rework_time }}</div>#}
+{#                    </div>#}
 
                     <br>
                     <div class="row">
@@ -76,4 +100,10 @@
             {% csrf_token %}
         </form>
     </div>
+{% endblock %}
+
+{% block footer %}
+    <script>
+        {% include 'personals/personal_stats.js' %}
+    </script>
 {% endblock %}

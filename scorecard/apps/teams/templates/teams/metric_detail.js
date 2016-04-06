@@ -1,4 +1,4 @@
-var key = '{{metric.functional_group.key}}';
+var key = '{{metric.functional_group.abbreviation}}';
 var hours,
     hourly_rate, hourly_rate_contractor,
     hourly_rate_auto;
@@ -8,26 +8,26 @@ var staff = $('#id_staffs'),
     license_cost = $('#id_license_cost');
 
 switch (key) {
-    case 'QI':
+    case 'QE':
         hours = 40;
         hourly_rate = 45;
         costCal();
-        avgThroughputCal();
+        autoCal();
+        qualityCal();
         break;
     case 'TL':
-        //console.log('tl, nothing to do');
+        qualityCal();
+        efficiencyCal();
         break;
     case 'RE':
         hours = 30;
         hourly_rate = 50;
         costCal();
         costReworkCal();
-        avgThroughputCal();
+        qualityCal();
         efficiencyCal();
         break;
     case 'QA':
-        bundleTestMetricCal();
-        break;
     case 'TE':
         bundleTestMetricCal();
 }
@@ -41,7 +41,7 @@ function bundleTestMetricCal() {
 
     costCal();
     autoCal();
-    avgThroughputCal();
+    qualityCal();
     efficiencyCal();
 }
 
@@ -86,11 +86,36 @@ function costReworkCal() {
     });
 }
 
-// Cost of automation calculation for QA, TE
+// Cost of autoSavings calculation for QA/TE, External/Internal savings for QE
 function autoCal() {
-    $('#id_tc_auto_execution_time').on('input', function(){
-        $('#auto_savings').val(autoSavingsCal(this.value, hourly_rate_auto));
-    })
+    switch (key) {
+        case 'TE':
+        case 'QA':
+            $('#id_tc_auto_execution_time').on('input', function () {
+                $('#auto_savings').val(autoSavingsCal($('#id_estimate_auto_time').val(), this.value, hourly_rate_auto));
+            });
+            $('#id_estimate_auto_time').on('input', function () {
+                $('#auto_savings').val(autoSavingsCal(this.value, $('#id_tc_auto_execution_time').val(), hourly_rate_auto))
+            });
+            break;
+        case 'QE':
+            $('#id_other_savings').on('input', function(){
+                qeInternalSavingsCal();
+            });
+            $('#id_ceeq_daily_summaries').on('input', function(){
+                qeInternalSavingsCal();
+            });
+            $('#id_visilog_txl_parsed').on('input', function(){
+                qeExternalSavingsCal();
+            });
+            $('#id_pheme_manual_tests').on('input', function(){
+                qeExternalSavingsCal();
+            });
+            $('#id_pheme_auto_tests').on('input', function(){
+                qeExternalSavingsCal();
+            });
+            break;
+    }
 }
 
 // Cost of operational calculation
@@ -99,18 +124,18 @@ function operationalCal(staffs_or_contractors, hours, hourly_rate) {
 }
 
 // Cost of automation calculation for QA, TE
-function autoSavingsCal(tc_auto_time, hourly_rate_auto) {
+function autoSavingsCal(estimate_time, tc_auto_time, hourly_rate_auto) {
     switch (key) {
         case 'TE':
         case 'QA':
-            return tc_auto_time * hourly_rate_auto;
+            return (estimate_time - tc_auto_time) * hourly_rate_auto;
     }
 }
 
 // Calculation of average throughput for RE, 'QA, TE'
-function avgThroughputCal() {
+function qualityCal() {
     switch (key) {
-        case 'QI':
+        case 'QE':
             staff.on('input', function(){
                 var avg_throughput = parseFloat($('#id_story_points_execution').val()) / parseFloat(this.value)
                 $('#avg_throughput_qi').val(avg_throughput.toFixed(2));
@@ -128,15 +153,25 @@ function avgThroughputCal() {
                 $('#avg_throughput').val(parseFloat(this.value) + parseFloat($('#id_active_projects').val()));
             });
             break;
+        case 'TL':
+            $('#id_builds_submitted').on('input', function(){
+                tlBuildRejectedCal();
+            });
+            $('#id_builds_accepted').on('input', function(){
+                tlBuildRejectedCal();
+            });
+            break;
         case 'QA':
         case 'TE':
             $('#id_staffs').on('input', function(){
                 avgThroughputTestMetric();
-                grossAvailableTimeCal();
             });
             $('#id_contractors').on('input', function() {
                 avgThroughputTestMetric();
+            });
+            $('#id_testers').on('input', function(){
                 grossAvailableTimeCal();
+                efficiencyUtilizationCal();
             });
             $('#id_tc_manual_dev').on('input', function() {
                 avgThroughputTestMetric();
@@ -193,6 +228,27 @@ function efficiencyCal() {
                 $('#id_efficiency').val(efficiency + '%');
             });
             break;
+        case 'TL':
+            $('#id_administration_time').on('input', function(){
+                efficiencyEfficiencyCal();
+                efficiencyUtilizationCal();
+            });
+            $('#id_project_time').on('input', function(){
+                efficiencyEfficiencyCal();
+                efficiencyUtilizationCal();
+            });
+            $('#id_ticket_time').on('input', function(){
+                efficiencyEfficiencyCal();
+                efficiencyUtilizationCal();
+            });
+            $('#id_staffs').on('input', function(){
+                efficiencyEfficiencyCal();
+                efficiencyUtilizationCal();
+            });
+            $('#id_pto_holiday_time').on('input', function(){
+                efficiencyUtilizationCal();
+            });
+            break;
         case 'QA':
         case 'TE':
             $('#id_ticket_prep').on('input', function(){
@@ -208,17 +264,20 @@ function efficiencyCal() {
                 activeProjectsCal();
             });
             $('#id_tc_manual_dev_time').on('input', function(){
-                autoExecTimeCal();
+                autoAndExecTimeCal();
             });
             $('#id_tc_manual_execution_time').on('input', function(){
-                autoExecTimeCal();
+                autoAndExecTimeCal();
             });
             $('#id_tc_auto_dev_time').on('input', function(){
-                autoExecTimeCal();
+                autoAndExecTimeCal();
             });
             $('#id_tc_auto_execution_time').on('input', function(){
-                autoExecTimeCal();
+                autoAndExecTimeCal();
             });
+            $('#id_standard_work_time').on('input', function(){
+                productiveTimeCal();
+            })
     }
 }
 
@@ -232,24 +291,44 @@ function activeProjectsCal(){
     $('#active_projects').val(projects);
 }
 
-function autoExecTimeCal(){
+function autoAndExecTimeCal(){
     var time = parseFloat($('#id_tc_manual_dev_time').val())
         + parseFloat($('#id_tc_manual_execution_time').val())
         + parseFloat($('#id_tc_auto_dev_time').val())
         + parseFloat($('#id_tc_auto_execution_time').val());
     $('#auto_and_execution_time').val(time.toFixed(2));
-    efficiencyTestMetricCal();
+    productiveTimeCal();
+    efficiencyEfficiencyCal();
 }
 
 function grossAvailableTimeCal(){
-    var gross = (parseFloat(staff.val()) + parseFloat($('#id_contractors').val())) * 30;
+    var gross = parseFloat($('#id_testers').val()) * 30;
     $('#gross_available_time').val(gross.toFixed(2));
-    efficiencyTestMetricCal();
+    efficiencyEfficiencyCal();
 }
 
-function efficiencyTestMetricCal(){
-    var effi = parseFloat($('#auto_and_execution_time').val()) / parseFloat($('#gross_available_time').val()) * 100;
-    $('#id_test_efficiency').val(effi.toFixed(2) + '%');
+function efficiencyEfficiencyCal(){
+    switch (key) {
+        case 'QA':
+        case 'TE':
+            var effi = parseFloat($('#auto_and_execution_time').val()) / parseFloat($('#gross_available_time').val()) * 100;
+            $('#id_test_efficiency').val(effi.toFixed(2) + '%');
+            break;
+        case 'TL':
+            var effi = 0;
+            if ($('#id_staffs').val() != 0) {
+                effi = (parseFloat($('#id_administration_time').val())
+                    + parseFloat($('#id_project_time').val())
+                    + parseFloat($('#id_ticket_time').val())) / ($('#id_staffs').val() * 30) * 100;
+            }
+            $('#id_efficiency').val(effi.toFixed(2) + '%');
+    }
+}
+
+function productiveTimeCal(){
+    var productive_time = parseFloat($('#auto_and_execution_time').val()) + parseFloat($('#id_standard_work_time').val());
+    $('#productive_hours').val(productive_time.toFixed(2));
+    efficiencyUtilizationCal();
 }
 
 $('#collect_data_button').click(function(){
@@ -273,3 +352,37 @@ $('#collect_data_button').click(function(){
     });
     $('#collect-data-modal').modal('show');
 });
+
+function qeInternalSavingsCal(){
+    var value = $('#id_ceeq_daily_summaries').val() * 20 + parseFloat($('#id_other_savings').val());
+    $('#internal_savings').val(value);
+}
+
+function qeExternalSavingsCal(){
+    var value = $('#id_visilog_txl_parsed').val() * .33
+        + $('#id_pheme_manual_tests').val() * 1.79
+        + $('#id_pheme_auto_tests').val() * 1.97;
+    $('#external_savings').val(value.toFixed(2));
+}
+
+function efficiencyUtilizationCal(){
+    var value = 0;
+    switch (key){
+        case 'QA':
+        case 'TE':
+            value = $('#productive_hours').val() / ($('#id_testers').val() * 40 - parseFloat($('#id_pto_holiday_time').val())) * 100;
+            $('#id_test_utilization').val(value.toFixed(2) + '%');
+            break;
+        case 'TL':
+            value = (parseFloat($('#id_administration_time').val())
+                + parseFloat($('#id_project_time').val())
+                + parseFloat($('#id_ticket_time').val())) / ($('#id_staffs').val() * 40 - parseFloat($('#id_pto_holiday_time').val())) * 100;
+            $('#id_utilization').val(value.toFixed(2) + '%');
+            break;
+    }
+}
+
+function tlBuildRejectedCal(){
+    var value = parseFloat($('#id_builds_submitted').val()) - parseFloat($('#id_builds_accepted').val());
+    $('#id_builds_rejected').val(value);
+}

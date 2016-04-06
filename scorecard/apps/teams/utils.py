@@ -8,7 +8,7 @@ from scorecard.apps.personals.models import TestStats, RequirementStats, LabStat
 from scorecard.apps.personals.models import InnovationStats
 from scorecard.apps.users.models import FunctionalGroup, Subteam
 from models import TestMetricsConfiguration, InnovationMetrics, TestMetrics, RequirementMetrics, LabMetrics
-from scorecard.apps.automations.utils import CHOICES_QE, CHOICES_RE, CHOICES_TL, CHOICES_QA_TE
+from scorecard.apps.automations.utils import get_model_fields
 
 
 def context_teams(request):
@@ -113,24 +113,30 @@ def fetch_team_members_per_team_per_date(key, date, subteam):
     return team_personals
 
 
-def fetch_collect_data_per_team_per_date(key, date, subteam):
+def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
     form_data = calculate_data = automation_data = {}
     team_personals = fetch_team_members_per_team_per_date(key, date, subteam)
+
+    pto_holiday_time = 0
 
     # QA, TE
     overtime_weekday = overtime_weekend = rework_time = 0
     tc_manual_dev = tc_manual_dev_time = tc_manual_execution = tc_manual_execution_time = 0
     tc_auto_dev = tc_auto_dev_time = tc_auto_execution = tc_auto_execution_time = 0
     defect_caught = uat_defects_not_prevented = standards_violated = resource_swap_time = 0
+    estimate_auto_time = standard_work_time = loe_deviation = 0
 
     # QI
     story_points_execution = unit_tests_dev = elicitation_analysis_time = 0
+    customer_facing_time = documentation_time = ticketless_dev_time = 0
 
     # RE
     revisions = rework_external_time = travel_cost = 0
 
     # TL
     tickets_closed = 0
+    administration_time = project_time = ticket_time = 0
+    builds_submitted = builds_accepted = updates_install_docs = 0
 
     if key in ['QA', 'TE']:
         try:
@@ -160,6 +166,11 @@ def fetch_collect_data_per_team_per_date(key, date, subteam):
             standards_violated += person.standards_violated
             resource_swap_time += person.resource_swap_time
 
+            pto_holiday_time += person.pto_holiday_time
+            estimate_auto_time += person.estimate_auto_time
+            standard_work_time += person.standard_work_time
+            loe_deviation += person.loe_deviation
+
         form_data = {
             'overtime_weekday': overtime_weekday,
             'overtime_weekend': overtime_weekend,
@@ -175,7 +186,12 @@ def fetch_collect_data_per_team_per_date(key, date, subteam):
             'defect_caught': defect_caught,
             'uat_defects_not_prevented': uat_defects_not_prevented,
             'standards_violated': standards_violated,
-            'resource_swap_time': resource_swap_time
+            'resource_swap_time': resource_swap_time,
+
+            'pto_holiday_time': pto_holiday_time,
+            'estimate_auto_time': estimate_auto_time,
+            'standard_work_time': standard_work_time,
+            'loe_deviation': loe_deviation
         }
 
         if (tc_manual_dev + tc_auto_dev) > 0:
@@ -201,13 +217,14 @@ def fetch_collect_data_per_team_per_date(key, date, subteam):
             'avg_throughput': avg_throughput,
             'auto_and_execution_time': auto_and_execution_time,
             'gross_available_time': gross_available_time,
-            'efficiency':  efficiency,
+            # 'efficiency':  efficiency,
             'operational_cost': len(team_personals) * hours * costs_staff,
             'total_cost': len(team_personals) * hours * costs_staff,
-            'auto_savings': tc_auto_execution_time * costs_staff
+            # 'auto_savings': tc_auto_execution_time * costs_staff
         }
 
-        automation_data = get_automation_data(key, CHOICES_QA_TE, date)
+        automation_fields = get_model_fields(TestMetrics, key, level='team')
+        automation_data = get_automation_data(subteam, automation_fields, date)
 
     elif key in ['QI', 'QE']:
         for person in team_personals:
@@ -218,20 +235,45 @@ def fetch_collect_data_per_team_per_date(key, date, subteam):
             unit_tests_dev += person.unit_tests_dev
             elicitation_analysis_time += person.elicitation_analysis_time
 
+            pto_holiday_time += person.pto_holiday_time
+            customer_facing_time += person.customer_facing_time
+            documentation_time += person.documentation_time
+            ticketless_dev_time += person.ticketless_dev_time
+
         form_data = {
             'overtime_weekday': overtime_weekday,
             'overtime_weekend': overtime_weekend,
             'rework_time': rework_time,
             'story_points_execution': story_points_execution,
             'unit_tests_dev': unit_tests_dev,
-            'elicitation_analysis_time': elicitation_analysis_time
+            'elicitation_analysis_time': elicitation_analysis_time,
+
+            'pto_holiday_time': pto_holiday_time,
+            'customer_facing_time': customer_facing_time,
+            'documentation_time': documentation_time,
+            'ticketless_dev_time': ticketless_dev_time
         }
+
+        automation_fields = get_model_fields(InnovationMetrics, key, level='team')
+        automation_data = get_automation_data(subteam, automation_fields, date)
+        external_savings = internal_savings = 0
+        metric = InnovationMetrics.objects.get(pk=metric_id)
+        if automation_data['visilog_txl_parsed']:
+            external_savings += automation_data['visilog_txl_parsed'] * 0.33
+        if automation_data['pheme_manual_tests']:
+            external_savings += automation_data['pheme_manual_tests'] * 1.79
+        if automation_data['pheme_auto_tests']:
+            external_savings += automation_data['pheme_auto_tests'] * 1.97
+        if automation_data['ceeq_daily_summaries']:
+            internal_savings += automation_data['ceeq_daily_summaries'] * 20 + metric.other_savings
+
         calculate_data = {
             'avg_throughput': float(story_points_execution) / len(team_personals) if len(team_personals) > 0 else 0,
             'operational_cost': len(team_personals) * 40 * 45,
-            'total_cost': len(team_personals) * 40 * 45
+            'total_cost': len(team_personals) * 40 * 45,
+            'external_savings': external_savings,
+            'internal_savings': internal_savings
         }
-        automation_data = get_automation_data(key, CHOICES_QE, date)
 
     elif key == 'RE':
         for person in team_personals:
@@ -258,7 +300,8 @@ def fetch_collect_data_per_team_per_date(key, date, subteam):
             'operational_cost': len(team_personals) * 30 * 50,
             'rework_external_cost': rework_external_time * 50
         }
-        automation_data = get_automation_data(key, CHOICES_RE, date)
+        automation_fields = get_model_fields(RequirementMetrics, key, level='team')
+        automation_data = get_automation_data(subteam, automation_fields, date)
 
     elif key == 'TL':
         for person in team_personals:
@@ -267,13 +310,37 @@ def fetch_collect_data_per_team_per_date(key, date, subteam):
             rework_time += person.rework_time
             tickets_closed += person.tickets_closed
 
+            pto_holiday_time += person.pto_holiday_time
+            administration_time += person.administration_time
+            project_time += person.project_time
+            ticket_time += person.ticket_time
+            builds_submitted += person.builds_submitted
+            builds_accepted += person.builds_accepted
+            updates_install_docs += person.updates_install_docs
+
         form_data = {
             'overtime_weekday': overtime_weekday,
             'overtime_weekend': overtime_weekend,
             'rework_time': rework_time,
-            'tickets_closed': tickets_closed
+            'tickets_closed': tickets_closed,
+
+            'pto_holiday_time': pto_holiday_time,
+            'administration_time': administration_time,
+            'project_time': project_time,
+            'ticket_time': ticket_time,
+            'builds_submitted': builds_submitted,
+            'builds_accepted': builds_accepted,
+            'updates_install_docs': updates_install_docs
         }
-        automation_data = get_automation_data(key, CHOICES_TL, date)
+
+        calculate_data = {
+            'builds_rejected': builds_submitted - builds_accepted,
+            'utilization': (administration_time + project_time + ticket_time) / (len(team_personals) * 30),
+            'efficiency': (administration_time + project_time + ticket_time) / (len(team_personals) * 40 - pto_holiday_time)
+        }
+
+        automation_fields = get_model_fields(LabMetrics, key, level='team')
+        automation_data = get_automation_data(subteam, automation_fields, date)
 
     form_data['staffs'] = len(team_personals)
 
@@ -396,11 +463,11 @@ def get_ytd_data(group, key):
     return data
 
 
-def get_automation_data(key, choices, date=None):
+def get_automation_data(subteam, choices, date=None):
     data = {}
     for item in choices:
         try:
-            automation = Automation.objects.get(functional_group__abbreviation=key,
+            automation = Automation.objects.get(subteam__id=subteam,
                                                 column_field=item[0])
 
             if automation.script_file:

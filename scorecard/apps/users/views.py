@@ -22,7 +22,7 @@ def home(request):
 
     return render(request, 'users/home.html',
                   {
-                      'groups': FunctionalGroup.objects.all(),
+                      'groups': FunctionalGroup.objects.all().order_by('name'),
                       'column_preferences': ColumnPreference.objects.filter(user=request.user)
                   })
 

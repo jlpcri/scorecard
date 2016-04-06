@@ -123,6 +123,7 @@ def metric_edit(request, metric_id):
             context['key'] = key
             return render(request, 'teams/teams.html', context)
         else:
+            # print form.errors
             messages.error(request, 'Correct errors in the form')
             context = RequestContext(request, {
                 'metric': metric,
@@ -161,7 +162,7 @@ def collect_data(request):
     date = request.GET.get('date', '')
     subteam = request.GET.get('subteam', '')
 
-    initial_data = fetch_collect_data_per_team_per_date(key, date, subteam)
+    initial_data = fetch_collect_data_per_team_per_date(key, date, subteam, metric_id)
 
     try:
         test_metric_config = TestMetricsConfiguration.objects.get(functional_group__abbreviation=key)
