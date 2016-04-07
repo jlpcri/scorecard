@@ -15,10 +15,12 @@ $('.newProject form').on('submit', function(event){
 
 $('.editProject').on('show.bs.modal', function(e){
     var project_id = $(e.relatedTarget).data('project-id'),
-        project_name = $(e.relatedTarget).data('project-name');
+        project_name = $(e.relatedTarget).data('project-name'),
+        project_revenue = $(e.relatedTarget).data('project-revenue');
 
     $(e.currentTarget).find('input[name="editProjectId"]').val(project_id);
     $(e.currentTarget).find('input[name="editProjectName"]').val(project_name);
+    $(e.currentTarget).find('select[name="editProjectRevenue"]').val(project_revenue);
 
     $('.editProject .modal-title').html('Project Edit - ' + project_name);
 });

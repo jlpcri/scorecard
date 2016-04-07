@@ -54,7 +54,9 @@
                                                         <h6 class="panel-title">
                                                             <a data-toggle="collapse" href="#collapse_{{group.group.abbreviation}}_{{ project.grouper.name|slugify }}">{{ project.grouper.name }}</a>
                                                             <a href="#editProject" data-toggle="modal"
-                                                               data-project-id="{{ project.grouper.id }}" data-project-name="{{ project.grouper.name }}"
+                                                               data-project-id="{{ project.grouper.id }}"
+                                                               data-project-name="{{ project.grouper.name }}"
+                                                               data-project-revenue="{{ project.grouper.revenue_scale }}"
                                                                class="project_edit">
                                                                 <i class="fa fa-edit fa-fw"></i>
                                                             </a>

@@ -27,11 +27,14 @@ def projects(request):
 
     context = RequestContext(request, {
         'groups': groups,
+
         'project_new_form': ProjectNewForm(),
         'project_phase_new_form': ProjectPhaseNewForm(),
         'ticket_new_form': TicketNewForm(),
-        'leads': HumanResource.objects.all(),
-        'projects': Project.objects.all()
+
+        'hrs': HumanResource.objects.all(),
+        'projects': Project.objects.all(),
+        'revenues': Project.REVENUE_SCALE_CHOICES
     })
 
     return render(request, 'projects/projects.html', context)
@@ -55,10 +58,12 @@ def project_edit(request):
     if request.method == 'POST':
         project_id = request.POST.get('editProjectId', '')
         project_name = request.POST.get('editProjectName', '')
+        project_revenue = request.POST.get('editProjectRevenue', '')
 
         project = get_object_or_404(Project, pk=project_id)
         try:
             project.name = project_name
+            project.revenue_scale = project_revenue
             project.save()
         except (ValidationError, IntegrityError):
             messages.error(request, 'Edit Project Name Error')
