@@ -6,7 +6,18 @@ from utils import calculate_business_day
 
 
 class Project(models.Model):
+    # Revenue Scale Options
+    LARGE_REVENUE = 1
+    MEDIUM_REVENUE = 2
+    SMALL_REVENUE = 3
+    REVENUE_SCALE_CHOICES = (
+        (LARGE_REVENUE, 'Greater than 1M'),
+        (MEDIUM_REVENUE, 'Between 250K and 1M'),
+        (SMALL_REVENUE, 'Less than 250K')
+    )
+
     name = models.CharField(max_length=50, unique=True, default='')
+    revenue_scale = models.IntegerField(choices=REVENUE_SCALE_CHOICES, default=SMALL_REVENUE)
 
     def __unicode__(self):
         return self.name
@@ -16,7 +27,9 @@ class ProjectPhase(models.Model):
     project = models.ForeignKey(Project)
     functional_group = models.ForeignKey(FunctionalGroup)
     subteam = models.ForeignKey(Subteam, blank=True, null=True)
-    lead = models.ForeignKey(HumanResource)
+
+    lead = models.ForeignKey(HumanResource, related_name='phase_lead')  # lead on ProjectPhase
+    worker = models.ManyToManyField(HumanResource, related_name='phase_worker')  # humanResources on ProjectPhase
 
     name = models.CharField(max_length=50)
     key = models.CharField(max_length=50, null=True, blank=True)
@@ -57,7 +70,10 @@ class ProjectPhase(models.Model):
 class Ticket(models.Model):
     functional_group = models.ForeignKey(FunctionalGroup)
     subteam = models.ForeignKey(Subteam, blank=True, null=True)
-    lead = models.ForeignKey(HumanResource)
+
+    lead = models.ForeignKey(HumanResource, related_name='ticket_lead')
+    worker = models.ManyToManyField(HumanResource, related_name='ticket_worker')
+    revenue_scale = models.IntegerField(choices=Project.REVENUE_SCALE_CHOICES, default=Project.SMALL_REVENUE)
 
     key = models.CharField(max_length=50)
 
