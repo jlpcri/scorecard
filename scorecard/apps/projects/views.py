@@ -1,9 +1,11 @@
 from datetime import datetime
+import json
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
 from pytz import timezone
@@ -97,6 +99,7 @@ def project_phase_edit(request):
         phase_estimate_end = request.POST.get('editPhaseEstimateEnd', '')
         phase_actual_start = request.POST.get('editPhaseActualStart', '')
         phase_actual_end = request.POST.get('editPhaseActualEnd', '')
+        phase_worker = request.POST.getlist('editPhaseWorker', '')
 
         phase = get_object_or_404(ProjectPhase, pk=phase_id)
         try:
@@ -105,6 +108,11 @@ def project_phase_edit(request):
             phase.lead = get_object_or_404(HumanResource, pk=phase_lead)
             phase.name = phase_name
             phase.key = phase_key
+
+            phase.worker.clear()
+            for hr_id in phase_worker:
+                phase.worker.add(hr_id)
+
             if phase_estimate_start:
                 phase.estimate_start = timezone(settings.TIME_ZONE).localize(datetime.strptime(phase_estimate_start, '%m/%d/%Y'))
             if phase_estimate_end:
@@ -116,7 +124,8 @@ def project_phase_edit(request):
 
             phase.save()
             messages.success(request, 'Project Phase is updated')
-        except (ValidationError, IntegrityError):
+        except Exception as e:
+            print e.message
             messages.error(request, 'Project Phase edit error')
 
         return redirect('projects:projects')
@@ -127,18 +136,25 @@ def ticket_edit(request):
     if request.method == 'POST':
         ticket_id = request.POST.get('editTicketId', '')
         ticket_fg = request.POST.get('editTicketFunctionalGroup', '')
+        ticket_revenue = request.POST.get('editTicketRevenue', '')
         ticket_lead = request.POST.get('editTicketLead', '')
         ticket_key = request.POST.get('editTicketKey', '')
         ticket_estimate_start = request.POST.get('editTicketEstimateStart', '')
         ticket_estimate_end = request.POST.get('editTicketEstimateEnd', '')
         ticket_actual_start = request.POST.get('editTicketActualStart', '')
         ticket_actual_end = request.POST.get('editTicketActualEnd', '')
+        ticket_worker = request.POST.getlist('editTicketWorker', '')
 
         ticket = get_object_or_404(Ticket, pk=ticket_id)
         try:
             ticket.key = ticket_key
             ticket.functional_group = get_object_or_404(FunctionalGroup, pk=ticket_fg)
+            ticket.revenue_scale = ticket_revenue
             ticket.lead = get_object_or_404(HumanResource, pk=ticket_lead)
+            ticket.worker.clear()
+            for hr_id in ticket_worker:
+                ticket.worker.add(hr_id)
+
             if ticket_estimate_start:
                 ticket.estimate_start = timezone(settings.TIME_ZONE).localize(datetime.strptime(ticket_estimate_start, '%m/%d/%Y'))
             if ticket_estimate_end:
@@ -167,3 +183,18 @@ def ticket_new(request):
             messages.error(request, 'Errors found')
 
         return redirect('projects:projects')
+
+
+def fetch_workers(request):
+    data = []
+    id = request.GET.get('id', '')
+    type = request.GET.get('type', '')
+    if type == 'phase':
+        item = ProjectPhase.objects.get(pk=id)
+    elif type == 'ticket':
+        item = Ticket.objects.get(pk=id)
+
+    for hr in item.worker.all():
+        data.append(hr.id)
+
+    return HttpResponse(json.dumps(data), content_type='application/json')

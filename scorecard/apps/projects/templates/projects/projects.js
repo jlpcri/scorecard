@@ -78,15 +78,21 @@ $('.editTicket').on('show.bs.modal', function(e){
     var ticket_id = $(e.relatedTarget).data('ticket-id'),
         ticket_key = $(e.relatedTarget).data('ticket-key'),
         ticket_fg = $(e.relatedTarget).data('ticket-fg'),
+        ticket_revenue = $(e.relatedTarget).data('ticket-revenue'),
         ticket_lead = $(e.relatedTarget).data('ticket-lead'),
         ticket_estimate_start = $(e.relatedTarget).data('ticket-estimate-start'),
         ticket_estimate_end = $(e.relatedTarget).data('ticket-estimate-end'),
         ticket_actual_start = $(e.relatedTarget).data('ticket-actual-start'),
         ticket_actual_end = $(e.relatedTarget).data('ticket-actual-end');
 
+    $.getJSON("{% url 'projects:fetch_workers' %}?id={0}&type=ticket".format(ticket_id)).done(function(data){
+        $('#editTicketWorker').val(data);
+    });
+
     $(e.currentTarget).find('input[name="editTicketId"]').val(ticket_id);
     $(e.currentTarget).find('input[name="editTicketKey"]').val(ticket_key);
     $('#editTicketFunctionalGroup').val(ticket_fg);
+    $('#editTicketRevenue').val(ticket_revenue);
     $('#editTicketLead').val(ticket_lead);
     $('#editTicketEstimateStart').val(ticket_estimate_start);
     $('#editTicketEstimateEnd').val(ticket_estimate_end);
@@ -132,6 +138,10 @@ $('.editPhase').on('show.bs.modal', function(e) {
         phase_estimate_end = $(e.relatedTarget).data('phase-estimate-end'),
         phase_actual_start = $(e.relatedTarget).data('phase-actual-start'),
         phase_actual_end = $(e.relatedTarget).data('phase-actual-end');
+
+    $.getJSON("{% url 'projects:fetch_workers' %}?id={0}&type=phase".format(phase_id)).done(function(data){
+        $('#editPhaseWorker').val(data);
+    });
 
     $('#editPhaseProject').val(phase_project);
     $('#editPhaseFunctionalGroup').val(phase_fg);
