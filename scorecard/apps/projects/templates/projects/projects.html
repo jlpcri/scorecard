@@ -16,7 +16,6 @@
         </div>
 
         <ul id="subnav-tabs" class="nav nav-tabs">
-            <li><a href="#overview" data-toggle="tab">Overview</a></li>
             {% for group in groups %}
                 <li{% if group.group == user.humanresource.functional_group %} class="active"{% endif %}>
                     <a href="#{{ group.group.abbreviation }}" data-toggle="tab">{{ group.group.name }}</a>
@@ -29,9 +28,6 @@
 {% block body %}
     <div class="container">
         <div class="tab-content">
-            <div class="tab-pane" id="overview">
-                {% include 'projects/projects_overview.html' %}
-            </div>
             {% for group in groups %}
                 <div class="tab-pane{% if user.humanresource.functional_group == group.group %} active{% endif %}" id="{{ group.group.abbreviation }}">
                     <ul id="subnav-pills" class="nav nav-pills">
