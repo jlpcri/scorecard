@@ -13,7 +13,7 @@ from pytz import timezone
 from models import Project, ProjectPhase, Ticket
 from scorecard.apps.core.views import check_user_team
 from scorecard.apps.projects.forms import ProjectNewForm, TicketNewForm, ProjectPhaseNewForm
-from scorecard.apps.users.models import FunctionalGroup, HumanResource
+from scorecard.apps.users.models import FunctionalGroup, HumanResource, Subteam
 
 
 @login_required
@@ -23,9 +23,16 @@ def projects(request):
     function_groups = FunctionalGroup.objects.all().order_by('name')
     groups = []
     for group in function_groups:
-        groups.append({'group': group,
-                       'tickets': Ticket.objects.filter(functional_group=group),
-                       'projects': ProjectPhase.objects.filter(functional_group=group)})
+        groups.append({
+            'group': group,
+            'tickets': Ticket.objects.filter(functional_group=group),
+            'projects': ProjectPhase.objects.filter(functional_group=group),
+            'subteams': [{
+                'team': team,
+                'tickets': Ticket.objects.filter(subteam=team),
+                'phases': ProjectPhase.objects.filter(subteam=team)
+             } for team in Subteam.objects.filter(parent=group)]
+        })
 
     context = RequestContext(request, {
         'groups': groups,

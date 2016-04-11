@@ -31,7 +31,7 @@ class ProjectPhase(models.Model):
     subteam = models.ForeignKey(Subteam, blank=True, null=True)
 
     lead = models.ForeignKey(HumanResource, related_name='phase_lead')  # lead on ProjectPhase
-    worker = models.ManyToManyField(HumanResource, related_name='phase_worker')  # humanResources on ProjectPhase
+    worker = models.ManyToManyField(HumanResource, related_name='phase_worker', blank=True)  # humanResources on ProjectPhase
 
     name = models.CharField(max_length=50)
     key = models.CharField(max_length=50, null=True, blank=True)
@@ -74,7 +74,7 @@ class Ticket(models.Model):
     subteam = models.ForeignKey(Subteam, blank=True, null=True)
 
     lead = models.ForeignKey(HumanResource, related_name='ticket_lead')
-    worker = models.ManyToManyField(HumanResource, related_name='ticket_worker')
+    worker = models.ManyToManyField(HumanResource, related_name='ticket_worker', blank=True)
     revenue_scale = models.IntegerField(choices=Project.REVENUE_SCALE_CHOICES, default=Project.SMALL_REVENUE)
 
     key = models.CharField(max_length=50)
