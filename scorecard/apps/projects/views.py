@@ -31,7 +31,7 @@ def projects(request):
                 'team': team,
                 'tickets': Ticket.objects.filter(subteam=team),
                 'phases': ProjectPhase.objects.filter(subteam=team)
-             } for team in Subteam.objects.filter(parent=group)]
+             } for team in Subteam.objects.filter(parent=group).exclude(name='Legacy')]
         })
 
     context = RequestContext(request, {
