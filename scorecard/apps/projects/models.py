@@ -1,4 +1,3 @@
-from django.utils import timezone
 from django.db import models
 
 from scorecard.apps.users.models import FunctionalGroup, HumanResource, Subteam
@@ -27,8 +26,7 @@ class Project(models.Model):
 
 class ProjectPhase(models.Model):
     project = models.ForeignKey(Project)
-    functional_group = models.ForeignKey(FunctionalGroup)
-    subteam = models.ForeignKey(Subteam, blank=True, null=True)
+    subteam = models.ForeignKey(Subteam)
 
     lead = models.ForeignKey(HumanResource, related_name='phase_lead')  # lead on ProjectPhase
     worker = models.ManyToManyField(HumanResource, related_name='phase_worker', blank=True)  # humanResources on ProjectPhase
@@ -47,7 +45,7 @@ class ProjectPhase(models.Model):
     def __unicode__(self):
         return '{0}: {1}: {2}'.format(self.project.name,
                                       self.name,
-                                      self.functional_group.abbreviation)
+                                      self.subteam)
 
     @property
     def start_delays(self):
@@ -70,8 +68,7 @@ class ProjectPhase(models.Model):
 
 
 class Ticket(models.Model):
-    functional_group = models.ForeignKey(FunctionalGroup)
-    subteam = models.ForeignKey(Subteam, blank=True, null=True)
+    subteam = models.ForeignKey(Subteam)
 
     lead = models.ForeignKey(HumanResource, related_name='ticket_lead')
     worker = models.ManyToManyField(HumanResource, related_name='ticket_worker', blank=True)
@@ -87,6 +84,6 @@ class Ticket(models.Model):
     def __unicode__(self):
         return '{0}: {1}: {2}'.format(self.key,
                                       self.lead.user,
-                                      self.functional_group.abbreviation)
+                                      self.subteam)
 
 

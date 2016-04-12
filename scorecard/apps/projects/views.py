@@ -25,8 +25,8 @@ def projects(request):
     for group in function_groups:
         groups.append({
             'group': group,
-            'tickets': Ticket.objects.filter(functional_group=group),
-            'projects': ProjectPhase.objects.filter(functional_group=group),
+            'tickets': Ticket.objects.filter(subteam__parent=group),
+            'projects': ProjectPhase.objects.filter(subteam__parent=group).order_by('project'),
             'subteams': [{
                 'team': team,
                 'tickets': Ticket.objects.filter(subteam=team),
