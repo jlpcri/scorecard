@@ -43,6 +43,7 @@ def projects(request):
 
         'hrs': HumanResource.objects.all(),
         'projects': Project.objects.all(),
+        'subteams': Subteam.objects.all(),
         'revenues': Project.REVENUE_SCALE_CHOICES
     })
 
@@ -98,7 +99,7 @@ def project_phase_edit(request):
     if request.method == 'POST':
         phase_id = request.POST.get('editPhaseId', '')
         phase_project = request.POST.get('editPhaseProject', '')
-        phase_fg = request.POST.get('editPhaseFunctionalGroup', '')
+        phase_subteam = request.POST.get('editPhaseSubteam', '')
         phase_lead = request.POST.get('editPhaseLead', '')
         phase_name = request.POST.get('editPhaseName', '')
         phase_key = request.POST.get('editPhaseKey', '')
@@ -111,7 +112,7 @@ def project_phase_edit(request):
         phase = get_object_or_404(ProjectPhase, pk=phase_id)
         try:
             phase.project = get_object_or_404(Project, pk=phase_project)
-            phase.functional_group = get_object_or_404(FunctionalGroup, pk=phase_fg)
+            phase.subteam = get_object_or_404(Subteam, pk=phase_subteam)
             phase.lead = get_object_or_404(HumanResource, pk=phase_lead)
             phase.name = phase_name
             phase.key = phase_key
@@ -142,7 +143,7 @@ def project_phase_edit(request):
 def ticket_edit(request):
     if request.method == 'POST':
         ticket_id = request.POST.get('editTicketId', '')
-        ticket_fg = request.POST.get('editTicketFunctionalGroup', '')
+        ticket_subteam = request.POST.get('editTicketSubteam', '')
         ticket_revenue = request.POST.get('editTicketRevenue', '')
         ticket_lead = request.POST.get('editTicketLead', '')
         ticket_key = request.POST.get('editTicketKey', '')
@@ -155,7 +156,7 @@ def ticket_edit(request):
         ticket = get_object_or_404(Ticket, pk=ticket_id)
         try:
             ticket.key = ticket_key
-            ticket.functional_group = get_object_or_404(FunctionalGroup, pk=ticket_fg)
+            ticket.subteam = get_object_or_404(Subteam, pk=ticket_subteam)
             ticket.revenue_scale = ticket_revenue
             ticket.lead = get_object_or_404(HumanResource, pk=ticket_lead)
             ticket.worker.clear()

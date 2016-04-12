@@ -65,7 +65,7 @@
                                                                     <a href="#editPhase" data-toggle="modal"
                                                                        data-phase-id="{{ phase.id }}"
                                                                        data-phase-project="{{ phase.project.id }}"
-                                                                       data-phase-fg="{{ phase.functional_group.id }}"
+                                                                       data-phase-subteam="{{ phase.subteam.id }}"
                                                                        data-phase-lead="{{ phase.lead.id }}"
                                                                        data-phase-name="{{ phase.name }}"
                                                                        data-phase-key="{{ phase.key }}"
@@ -105,7 +105,7 @@
                                                         <tr>
                                                             <td><a href="#editTicket" data-toggle="modal"
                                                                    data-ticket-id="{{ item.id }}"
-                                                                   data-ticket-fg="{{ item.functional_group.id }}"
+                                                                   data-ticket-subteam="{{ item.subteam.id }}"
                                                                    data-ticket-revenue="{{ item.revenue_scale }}"
                                                                    data-ticket-lead="{{ item.lead.id }}"
                                                                    data-ticket-key="{{ item.key }}"
@@ -117,7 +117,7 @@
                                                                 {{ item.key }}</a>
                                                             </td>
                                                             <td>{{ item.lead.user.first_name }} {{ item.lead.user.last_name }}</td>
-                                                            <td>{{ item.functional_group.key }}</td>
+                                                            <td>{{ item.subteam }}</td>
                                                         </tr>
                                                     {% endfor %}
                                                 </tbody>
@@ -131,7 +131,6 @@
                         </div>
                         {% for subteam in group.subteams %}
                             <div class="tab-pane" id="{{ group.group.abbreviation }}_{{ subteam.team.name|slugify }}">
-{#                                {{ subteam.team.name }} {{ subteam.phases }}#}
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <h1>Projects</h1>
@@ -160,7 +159,7 @@
                                                                         <a href="#editPhase" data-toggle="modal"
                                                                            data-phase-id="{{ phase.id }}"
                                                                            data-phase-project="{{ phase.project.id }}"
-                                                                           data-phase-fg="{{ phase.functional_group.id }}"
+                                                                           data-phase-subteam="{{ phase.subteam.id }}"
                                                                            data-phase-lead="{{ phase.lead.id }}"
                                                                            data-phase-name="{{ phase.name }}"
                                                                            data-phase-key="{{ phase.key }}"
@@ -201,7 +200,7 @@
                                                         <tr>
                                                             <td><a href="#editTicket" data-toggle="modal"
                                                                    data-ticket-id="{{ item.id }}"
-                                                                   data-ticket-fg="{{ item.functional_group.id }}"
+                                                                   data-ticket-subteam="{{ item.subteam.id }}"
                                                                    data-ticket-revenue="{{ item.revenue_scale }}"
                                                                    data-ticket-lead="{{ item.lead.id }}"
                                                                    data-ticket-key="{{ item.key }}"
@@ -213,7 +212,7 @@
                                                                 {{ item.key }}</a>
                                                             </td>
                                                             <td>{{ item.lead.user.first_name }} {{ item.lead.user.last_name }}</td>
-                                                            <td>{{ item.functional_group.key }}</td>
+                                                            <td>{{ item.subteam }}</td>
                                                         </tr>
                                                     {% endfor %}
                                                 </tbody>

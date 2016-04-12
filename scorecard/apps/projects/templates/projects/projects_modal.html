@@ -127,10 +127,10 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12">
-                            <label for="editPhaseFunctionalGroup">Functional Group:</label>
-                            <select id="editPhaseFunctionalGroup" name="editPhaseFunctionalGroup" class="form-control">
-                                {% for item in groups %}
-                                    <option value="{{ item.group.id }}">{{ item.group.name }}</option>
+                            <label for="editPhaseSubteam">Subteam:</label>
+                            <select id="editPhaseSubteam" name="editPhaseSubteam" class="form-control">
+                                {% for item in subteams %}
+                                    <option value="{{ item.id }}">{{ item.parent.abbreviation }} {{ item.name }}</option>
                                 {% endfor %}
                             </select>
                             </div>
@@ -249,10 +249,10 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xs-12">
-                            <label for="editTicketFunctionalGroup">Functional Group:</label>
-                            <select id="editTicketFunctionalGroup" name="editTicketFunctionalGroup" class="form-control">
-                                {% for item in groups %}
-                                    <option value="{{ item.group.id }}">{{ item.group.name }}</option>
+                            <label for="editTicketSubteam">Subteam:</label>
+                            <select id="editTicketSubteam" name="editTicketSubteam" class="form-control">
+                                {% for item in subteams %}
+                                    <option value="{{ item.id }}">{{ item.parent.abbreviation }} {{ item.name }}</option>
                                 {% endfor %}
                             </select>
                             </div>

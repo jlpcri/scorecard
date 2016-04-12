@@ -35,15 +35,15 @@ $('.editProject form').on('submit', function(event){
 
 $('.newPhase form').on('submit', function(event){
     var project = $('.newPhase form #id_project').val(),
-        fg = $('.newPhase form #id_functional_group').val(),
+        subteam = $('.newPhase form #id_subteam').val(),
         lead = $('.newPhase form #id_lead').val(),
         name = $('.newPhase form #id_name').val();
     if (project == '') {
         showErrMsg('#newPhaseErrMessage', 'Project is not selected');
         return false;
     }
-    if (fg == '') {
-        showErrMsg('#newPhaseErrMessage', 'Functional Group is not selected');
+    if (subteam == '') {
+        showErrMsg('#newPhaseErrMessage', 'Subteam is not selected');
         return false;
     }
     if (lead == '') {
@@ -57,11 +57,11 @@ $('.newPhase form').on('submit', function(event){
 });
 
 $('.newTicket form').on('submit', function(event){
-    var fg = $('.newTicket form #id_functional_group').val(),
+    var subteam = $('.newTicket form #id_subteam').val(),
         lead = $('.newTicket form #id_lead').val(),
         key = $('.newTicket form #id_key').val();
-    if (fg == '') {
-        showErrMsg('#newTicketErrMessage', 'Functional Group is not selected');
+    if (subteam == '') {
+        showErrMsg('#newTicketErrMessage', 'Subteam is not selected');
         return false;
     }
     if (lead == '') {
@@ -77,7 +77,7 @@ $('.newTicket form').on('submit', function(event){
 $('.editTicket').on('show.bs.modal', function(e){
     var ticket_id = $(e.relatedTarget).data('ticket-id'),
         ticket_key = $(e.relatedTarget).data('ticket-key'),
-        ticket_fg = $(e.relatedTarget).data('ticket-fg'),
+        ticket_subteam = $(e.relatedTarget).data('ticket-subteam'),
         ticket_revenue = $(e.relatedTarget).data('ticket-revenue'),
         ticket_lead = $(e.relatedTarget).data('ticket-lead'),
         ticket_estimate_start = $(e.relatedTarget).data('ticket-estimate-start'),
@@ -91,7 +91,7 @@ $('.editTicket').on('show.bs.modal', function(e){
 
     $(e.currentTarget).find('input[name="editTicketId"]').val(ticket_id);
     $(e.currentTarget).find('input[name="editTicketKey"]').val(ticket_key);
-    $('#editTicketFunctionalGroup').val(ticket_fg);
+    $('#editTicketSubteam').val(ticket_subteam);
     $('#editTicketRevenue').val(ticket_revenue);
     $('#editTicketLead').val(ticket_lead);
     $('#editTicketEstimateStart').val(ticket_estimate_start);
@@ -130,7 +130,7 @@ $('.editTicket form').on('submit', function(event){
 $('.editPhase').on('show.bs.modal', function(e) {
     var phase_id = $(e.relatedTarget).data('phase-id'),
         phase_project = $(e.relatedTarget).data('phase-project'),
-        phase_fg = $(e.relatedTarget).data('phase-fg'),
+        phase_subteam = $(e.relatedTarget).data('phase-subteam'),
         phase_lead = $(e.relatedTarget).data('phase-lead'),
         phase_name = $(e.relatedTarget).data('phase-name'),
         phase_key = $(e.relatedTarget).data('phase-key'),
@@ -144,7 +144,7 @@ $('.editPhase').on('show.bs.modal', function(e) {
     });
 
     $('#editPhaseProject').val(phase_project);
-    $('#editPhaseFunctionalGroup').val(phase_fg);
+    $('#editPhaseSubteam').val(phase_subteam);
     $('#editPhaseLead').val(phase_lead);
     $(e.currentTarget).find('input[name="editPhaseId"]').val(phase_id);
     $(e.currentTarget).find('input[name="editPhaseName"]').val(phase_name);
