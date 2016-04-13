@@ -133,6 +133,10 @@
                         {% for subteam in group.subteams %}
                             <div class="tab-pane" id="{{ group.group.abbreviation }}_{{ subteam.team.name|slugify }}">
                                 <div class="row">
+                                    <div id="{{ group.group.abbreviation }}_{{ subteam.team.name|slugify }}_gantt">
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-xs-6">
                                         <h1>Projects</h1>
                                         {% if subteam.phases %}
@@ -239,9 +243,43 @@
 
 
 {% block footer %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script>
-        $("div.panel").has("ul.list-group:empty").hide()
+        $("div.panel").has("ul.list-group:empty").hide();
         {% include 'projects/projects.js' %}
+
+        google.charts.load('current', {'packages':['gantt']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function toMilliseconds(minutes) {
+            return minutes * 60 * 1000;
+        }
+
+        function daysToMilliseconds(days) {
+            return days * 24 * 60 * 60 * 1000;
+        }
+
+        function drawChart() {
+            {% for subteam in subteams %}
+                var {{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_data = new google.visualization.DataTable();
+                add_column_to_data({{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_data);
+
+                console.log('{{ subteam.gantt_phases }}');
+                {{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_data.addRows([]);
+
+            {% endfor %}
+
+            var options = {
+                //height: 400,
+                width: 600,
+            };
+
+            {% for subteam in subteams %}
+                var {{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_chart = new google.visualization.Gantt(document.getElementById('{{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_gantt'));
+                {{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_chart.draw({{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_data, options);
+            {% endfor %}
+
+        }
     </script>
 
 {% endblock %}

@@ -199,3 +199,27 @@ function showErrMsg(location, msg) {
     });
     $(location).html('Error: ' + msg);
 }
+
+function add_column_to_data(data){
+    data.addColumn('string', 'Task ID');
+    data.addColumn('string', 'Task Name');
+    data.addColumn('string', 'Resource');
+    data.addColumn('date', 'Start');
+    data.addColumn('date', 'End');
+    data.addColumn('number', 'Duration');
+    data.addColumn('number', 'Percent Complete');
+    data.addColumn('string', 'Dependencies');
+}
+
+var gantt_row_data = [
+    ['Research', 'Find sources', null,
+     new Date(2015, 0, 1), new Date(2015, 0, 5), null,  100,  null],
+    ['Write', 'Write paper', 'write',
+     null, new Date(2015, 0, 9), daysToMilliseconds(3), 25, 'Research,Outline'],
+    ['Cite', 'Create bibliography', 'write',
+     null, new Date(2015, 0, 7), daysToMilliseconds(1), 20, 'Research'],
+    ['Complete', 'Hand in paper', 'complete',
+     null, new Date(2015, 0, 10), daysToMilliseconds(1), 0, 'Cite,Write'],
+    ['Outline', 'Outline paper', 'write',
+     null, new Date(2015, 0, 6), daysToMilliseconds(1), 100, 'Research']
+];

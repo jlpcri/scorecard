@@ -38,12 +38,16 @@ def projects(request):
         'groups': groups,
 
         'project_new_form': ProjectNewForm(),
-        'project_phase_new_form': ProjectPhaseNewForm(),
-        'ticket_new_form': TicketNewForm(),
+        'project_phase_new_form': ProjectPhaseNewForm(initial={
+            'subteam': request.user.humanresource.subteam
+        }),
+        'ticket_new_form': TicketNewForm(initial={
+            'subteam': request.user.humanresource.subteam
+        }),
 
-        'hrs': HumanResource.objects.all(),
-        'projects': Project.objects.all(),
-        'subteams': Subteam.objects.all(),
+        'hrs': HumanResource.objects.all(),  # for ProjectPhase/Ticket edition
+        'projects': Project.objects.all(),  # for ProjectPhase/Ticket edition
+        'subteams': Subteam.objects.all().exclude(name='Legacy'),  # for ProjectPhase/Ticket edition
         'revenues': Project.REVENUE_SCALE_CHOICES
     })
 
@@ -206,3 +210,4 @@ def fetch_workers(request):
         data.append(hr.id)
 
     return HttpResponse(json.dumps(data), content_type='application/json')
+

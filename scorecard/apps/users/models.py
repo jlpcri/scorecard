@@ -118,6 +118,41 @@ class Subteam(models.Model):
         elif parent_metric_type == self.parent.LAB:
             return self.labmetrics_set
 
+    @property
+    def gantt_phases(self):
+        data = []
+        for item in self.projectphase_set.all():
+            data.append({
+                'id': item.id,
+                'name': item.name,
+                'resource': item.project.name,
+                'start': item.actual_start.strftime('%b %-d'),
+                'end': item.actual_end.strftime('%b %-d'),
+                'duration': None,
+                'percent_complete': None,
+                'dependencies': None
+            })
+
+        return data
+
+    @property
+    def gantt_tickets(self):
+        data = []
+        for item in self.ticket_set.all():
+            temp = []
+            temp.append(item.id)
+            temp.append(item.key)
+            temp.append(item.revenue_scale)
+            temp.append(str(item.actual_start))
+            temp.append(str(item.actual_end))
+            temp.append(None)  # Duration
+            temp.append(None)  # Percent complete
+            temp.append(None)  # Dependencies
+
+            data.append(temp)
+
+        return data
+
 
 class HumanResource(models.Model):
     """
