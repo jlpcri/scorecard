@@ -1,9 +1,9 @@
 from django.contrib.auth.models import User
 from django.db import models
-
 import simplejson
 
 from scorecard.apps.teams.models import TestMetrics, LabMetrics, InnovationMetrics, RequirementMetrics
+from scorecard.apps.projects.utils import REVENUE_SCALE_CHOICES
 
 
 class FunctionalGroup(models.Model):
@@ -121,12 +121,17 @@ class Subteam(models.Model):
     @property
     def gantt_phases(self):
         data = []
+        dependencies = ''
         for item in self.projectphase_set.all():
             if not item.actual_end:
+                for scale in REVENUE_SCALE_CHOICES:
+                    if item.project.revenue_scale == scale[0]:
+                        dependencies = scale[1]
+
                 data.append({
                     'id': item.id,
-                    'name': item.name,
-                    'resource': item.project.name,
+                    'name': 'Phase: ' + item.name,
+                    'resource': 'Workers: ' + str(item.worker.count()) + ', Revenue: ' + dependencies,
                     'start': item.estimate_start.strftime('%Y-%m-%d') if item.estimate_start else None,
                     'end': item.estimate_end.strftime('%Y-%m-%d') if item.estimate_end else None,
                     'duration': None,
@@ -139,12 +144,16 @@ class Subteam(models.Model):
     @property
     def gantt_tickets(self):
         data = []
+        dependencies = ''
         for item in self.ticket_set.all():
             if not item.actual_end:
+                for scale in REVENUE_SCALE_CHOICES:
+                    if item.revenue_scale == scale[0]:
+                        dependencies = scale[1]
                 data.append({
                     'id': item.id,
-                    'name': item.key,
-                    'resource': item.revenue_scale,
+                    'name': 'Ticket: ' + item.key,
+                    'resource': 'Workers: ' + str(item.worker.count()) + ', Revenue: ' + dependencies,
                     'start': item.estimate_start.strftime('%Y-%m-%d') if item.estimate_start else None,
                     'end': item.estimate_end.strftime('%Y-%m-%d') if item.estimate_end else None,
                     'duration': None,
@@ -153,6 +162,10 @@ class Subteam(models.Model):
                 })
 
         return data
+
+    @property
+    def gantt_chart_data(self):
+        return self.gantt_phases + self.gantt_tickets
 
 
 class HumanResource(models.Model):

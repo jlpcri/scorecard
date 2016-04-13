@@ -1,22 +1,10 @@
 from django.db import models
 
 from scorecard.apps.users.models import FunctionalGroup, HumanResource, Subteam
-from utils import calculate_business_day
+from utils import calculate_business_day, REVENUE_SCALE_CHOICES, SMALL_REVENUE
 
 
 class Project(models.Model):
-    # Revenue Scale Options
-    LARGE_REVENUE = 1
-    MEDIUM_REVENUE = 2
-    SMALL_REVENUE = 3
-    INTERNAL = 4
-    REVENUE_SCALE_CHOICES = (
-        (LARGE_REVENUE, 'Greater than 1M'),
-        (MEDIUM_REVENUE, 'Between 250K and 1M'),
-        (SMALL_REVENUE, 'Less than 250K'),
-        (INTERNAL, 'Internal')
-    )
-
     name = models.CharField(max_length=50, unique=True, default='')
     revenue_scale = models.IntegerField(choices=REVENUE_SCALE_CHOICES, default=SMALL_REVENUE)
 
@@ -72,7 +60,7 @@ class Ticket(models.Model):
 
     lead = models.ForeignKey(HumanResource, related_name='ticket_lead')
     worker = models.ManyToManyField(HumanResource, related_name='ticket_worker', blank=True)
-    revenue_scale = models.IntegerField(choices=Project.REVENUE_SCALE_CHOICES, default=Project.SMALL_REVENUE)
+    revenue_scale = models.IntegerField(choices=REVENUE_SCALE_CHOICES, default=SMALL_REVENUE)
 
     key = models.CharField(max_length=50)
 

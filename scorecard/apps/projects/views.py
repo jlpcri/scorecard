@@ -14,6 +14,7 @@ from models import Project, ProjectPhase, Ticket
 from scorecard.apps.core.views import check_user_team
 from scorecard.apps.projects.forms import ProjectNewForm, TicketNewForm, ProjectPhaseNewForm
 from scorecard.apps.users.models import FunctionalGroup, HumanResource, Subteam
+from utils import REVENUE_SCALE_CHOICES
 
 
 @login_required
@@ -48,7 +49,7 @@ def projects(request):
         'hrs': HumanResource.objects.all(),  # for ProjectPhase/Ticket edition
         'projects': Project.objects.all(),  # for ProjectPhase/Ticket edition
         'subteams': Subteam.objects.all().exclude(name='Legacy'),  # for ProjectPhase/Ticket edition
-        'revenues': Project.REVENUE_SCALE_CHOICES
+        'revenues': REVENUE_SCALE_CHOICES
     })
 
     return render(request, 'projects/projects.html', context)

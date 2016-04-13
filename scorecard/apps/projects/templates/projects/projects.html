@@ -266,12 +266,7 @@
                 add_column_to_data(window[location + '_data']);
 
                 var data = [];
-                {% for item in subteam.gantt_phases %}
-                    if ('{{ item.start }}' != 'None' && '{{ item.end }}' != 'None') {
-                        data.push(['{{ item.id }}', '{{ item.name }}', '{{ item.resource }}', new Date('{{ item.start }}'), new Date('{{ item.end }}'), null, null, null]);
-                    }
-                {% endfor %}
-                {% for item in subteam.gantt_tickets %}
+                {% for item in subteam.gantt_chart_data %}
                     if ('{{ item.start }}' != 'None' && '{{ item.end }}' != 'None') {
                         data.push(['{{ item.id }}', '{{ item.name }}', '{{ item.resource }}', new Date('{{ item.start }}'), new Date('{{ item.end }}'), null, null, null]);
                     }
