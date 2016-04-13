@@ -32,7 +32,6 @@
                 <div class="tab-pane{% if user.humanresource.functional_group == group.group %} active{% endif %}" id="{{ group.group.abbreviation }}">
                     <ul id="subnav-pills" class="nav nav-pills">
                         <li class="active"><a href="#{{ group.group.abbreviation }}-all" data-toggle="pill">All</a></li>
-{#                        {% for subteam in group.group.subteam_set.all %}#}
                         {% for subteam in group.subteams %}
                             <li><a href="#{{ group.group.abbreviation }}_{{ subteam.team.name|slugify }}" data-toggle="pill">{{ subteam.team.name }}</a></li>
                         {% endfor %}
@@ -132,7 +131,7 @@
                         </div>
                         {% for subteam in group.subteams %}
                             <div class="tab-pane" id="{{ group.group.abbreviation }}_{{ subteam.team.name|slugify }}">
-                                <div class="row">
+                                <div class="row" style="margin-top: 30px;">
                                     <div id="{{ group.group.abbreviation }}_{{ subteam.team.name|slugify }}_gantt">
                                     </div>
                                 </div>
@@ -253,12 +252,18 @@
 
         function drawChart() {
             var options = {
-                    //height: 275,
-                    width: 800,
-                };
+                height: 400,
+                width: 800,
+                gantt: {
+                    trackHeight: 30
+                }
+            };
+
             {% for subteam in subteams %}
-                var {{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_data = new google.visualization.DataTable();
-                add_column_to_data({{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_data);
+                var location = '{{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_gantt';
+                window[location + '_data'] = new google.visualization.DataTable();
+
+                add_column_to_data(window[location + '_data']);
 
                 var data = [];
                 {% for item in subteam.gantt_phases %}
@@ -266,13 +271,23 @@
                         data.push(['{{ item.id }}', '{{ item.name }}', '{{ item.resource }}', new Date('{{ item.start }}'), new Date('{{ item.end }}'), null, null, null]);
                     }
                 {% endfor %}
+                {% for item in subteam.gantt_tickets %}
+                    if ('{{ item.start }}' != 'None' && '{{ item.end }}' != 'None') {
+                        data.push(['{{ item.id }}', '{{ item.name }}', '{{ item.resource }}', new Date('{{ item.start }}'), new Date('{{ item.end }}'), null, null, null]);
+                    }
+                {% endfor %}
 
                 //console.log(data);
                 if (data.length > 0) {
-                    {{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_data.addRows(data);
+                    $('#'+location).removeClass();
+                    window[location + '_data'].addRows(data);
 
-                    var {{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_chart = new google.visualization.Gantt(document.getElementById('{{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_gantt'));
-                    {{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_chart.draw({{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_data, options);
+                    window[location + '_chart'] = new google.visualization.Gantt(document.getElementById(location));
+                    window[location + '_chart'].draw(window[location + '_data'], options);
+                } else {
+{#                    window[location + '_data'].addRows(gantt_row_data);#}
+{#                    window[location + '_chart'] = new google.visualization.Gantt(document.getElementById(location));#}
+{#                    window[location + '_chart'].draw(window[location + '_data'], options);#}
                 }
             {% endfor %}
         }
