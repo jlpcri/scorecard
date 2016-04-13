@@ -211,6 +211,11 @@ function add_column_to_data(data){
     data.addColumn('string', 'Dependencies');
 }
 
+// For Gantt Chart Render
+function daysToMilliseconds(days) {
+    return days * 24 * 60 * 60 * 1000;
+}
+
 var gantt_row_data = [
     ['Research', 'Find sources', null,
      new Date(2015, 0, 1), new Date(2015, 0, 5), null,  100,  null],
@@ -223,3 +228,4 @@ var gantt_row_data = [
     ['Outline', 'Outline paper', 'write',
      null, new Date(2015, 0, 6), daysToMilliseconds(1), 100, 'Research']
 ];
+var gantt_row_empty = [null, null, null, null, null, null, null];

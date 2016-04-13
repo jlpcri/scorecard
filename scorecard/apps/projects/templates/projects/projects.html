@@ -251,27 +251,29 @@
         google.charts.load('current', {'packages':['gantt']});
         google.charts.setOnLoadCallback(drawChart);
 
-        function toMilliseconds(minutes) {
-            return minutes * 60 * 1000;
-        }
-
-        function daysToMilliseconds(days) {
-            return days * 24 * 60 * 60 * 1000;
-        }
-
         function drawChart() {
             {% for subteam in subteams %}
                 var {{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_data = new google.visualization.DataTable();
                 add_column_to_data({{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_data);
 
-                console.log('{{ subteam.gantt_phases }}');
-                {{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_data.addRows([]);
+                var data = [];
+                {% for item in subteam.gantt_phases %}
+                    if ('{{ item.start }}' != 'None' && '{{ item.end }}' != 'None') {
+                        data.push(['{{ item.id }}', '{{ item.name }}', '{{ item.resource }}', new Date('{{ item.start }}'), new Date('{{ item.end }}'), null, null, null]);
+                    }
+                {% endfor %}
 
+                //console.log(data);
+                if (data.length > 0) {
+                    {{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_data.addRows(data);
+                } else {
+                    {{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_data.addRows(gantt_row_data);
+                }
             {% endfor %}
 
             var options = {
-                //height: 400,
-                width: 600,
+                //height: 275,
+                width: 800,
             };
 
             {% for subteam in subteams %}

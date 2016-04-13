@@ -126,8 +126,8 @@ class Subteam(models.Model):
                 'id': item.id,
                 'name': item.name,
                 'resource': item.project.name,
-                'start': item.actual_start.strftime('%b %-d'),
-                'end': item.actual_end.strftime('%b %-d'),
+                'start': item.actual_start.strftime('%Y-%m-%d') if item.actual_start else None,
+                'end': item.actual_end.strftime('%Y-%m-%d') if item.actual_end else None,
                 'duration': None,
                 'percent_complete': None,
                 'dependencies': None
@@ -139,17 +139,16 @@ class Subteam(models.Model):
     def gantt_tickets(self):
         data = []
         for item in self.ticket_set.all():
-            temp = []
-            temp.append(item.id)
-            temp.append(item.key)
-            temp.append(item.revenue_scale)
-            temp.append(str(item.actual_start))
-            temp.append(str(item.actual_end))
-            temp.append(None)  # Duration
-            temp.append(None)  # Percent complete
-            temp.append(None)  # Dependencies
-
-            data.append(temp)
+            data.append({
+                'id': item.id,
+                'name': item.key,
+                'resource': item.revenue_scale,
+                'start': item.actual_start.strftime('%Y-%m-%d') if item.actual_start else None,
+                'end': item.actual_end.strftime('%Y-%m-%d') if item.actual_end else None,
+                'duration': None,
+                'percent_complete': None,
+                'dependencies': None
+            })
 
         return data
 
