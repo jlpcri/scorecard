@@ -252,6 +252,10 @@
         google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {
+            var options = {
+                    //height: 275,
+                    width: 800,
+                };
             {% for subteam in subteams %}
                 var {{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_data = new google.visualization.DataTable();
                 add_column_to_data({{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_data);
@@ -266,21 +270,11 @@
                 //console.log(data);
                 if (data.length > 0) {
                     {{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_data.addRows(data);
-                } else {
-                    {{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_data.addRows(gantt_row_data);
+
+                    var {{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_chart = new google.visualization.Gantt(document.getElementById('{{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_gantt'));
+                    {{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_chart.draw({{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_data, options);
                 }
             {% endfor %}
-
-            var options = {
-                //height: 275,
-                width: 800,
-            };
-
-            {% for subteam in subteams %}
-                var {{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_chart = new google.visualization.Gantt(document.getElementById('{{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_gantt'));
-                {{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_chart.draw({{ subteam.parent.abbreviation }}_{{ subteam.name|slugify }}_data, options);
-            {% endfor %}
-
         }
     </script>
 

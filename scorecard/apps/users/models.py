@@ -122,16 +122,17 @@ class Subteam(models.Model):
     def gantt_phases(self):
         data = []
         for item in self.projectphase_set.all():
-            data.append({
-                'id': item.id,
-                'name': item.name,
-                'resource': item.project.name,
-                'start': item.actual_start.strftime('%Y-%m-%d') if item.actual_start else None,
-                'end': item.actual_end.strftime('%Y-%m-%d') if item.actual_end else None,
-                'duration': None,
-                'percent_complete': None,
-                'dependencies': None
-            })
+            if not item.actual_end:
+                data.append({
+                    'id': item.id,
+                    'name': item.name,
+                    'resource': item.project.name,
+                    'start': item.estimate_start.strftime('%Y-%m-%d') if item.estimate_start else None,
+                    'end': item.estimate_end.strftime('%Y-%m-%d') if item.estimate_end else None,
+                    'duration': None,
+                    'percent_complete': None,
+                    'dependencies': None
+                })
 
         return data
 
@@ -139,16 +140,17 @@ class Subteam(models.Model):
     def gantt_tickets(self):
         data = []
         for item in self.ticket_set.all():
-            data.append({
-                'id': item.id,
-                'name': item.key,
-                'resource': item.revenue_scale,
-                'start': item.actual_start.strftime('%Y-%m-%d') if item.actual_start else None,
-                'end': item.actual_end.strftime('%Y-%m-%d') if item.actual_end else None,
-                'duration': None,
-                'percent_complete': None,
-                'dependencies': None
-            })
+            if not item.actual_end:
+                data.append({
+                    'id': item.id,
+                    'name': item.key,
+                    'resource': item.revenue_scale,
+                    'start': item.estimate_start.strftime('%Y-%m-%d') if item.estimate_start else None,
+                    'end': item.estimate_end.strftime('%Y-%m-%d') if item.estimate_end else None,
+                    'duration': None,
+                    'percent_complete': None,
+                    'dependencies': None
+                })
 
         return data
 

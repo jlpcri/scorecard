@@ -127,12 +127,20 @@ def project_phase_edit(request):
 
             if phase_estimate_start:
                 phase.estimate_start = timezone(settings.TIME_ZONE).localize(datetime.strptime(phase_estimate_start, '%m/%d/%Y'))
+            else:
+                phase.estimate_start = None
             if phase_estimate_end:
                 phase.estimate_end = timezone(settings.TIME_ZONE).localize(datetime.strptime(phase_estimate_end, '%m/%d/%Y'))
+            else:
+                phase.estimate_end = None
             if phase_actual_start:
                 phase.actual_start = timezone(settings.TIME_ZONE).localize(datetime.strptime(phase_actual_start, '%m/%d/%Y'))
+            else:
+                phase.actual_start = None
             if phase_actual_end:
                 phase.actual_end = timezone(settings.TIME_ZONE).localize(datetime.strptime(phase_actual_end, '%m/%d/%Y'))
+            else:
+                phase.actual_end = None
 
             phase.save()
             messages.success(request, 'Project Phase is updated')
@@ -169,12 +177,20 @@ def ticket_edit(request):
 
             if ticket_estimate_start:
                 ticket.estimate_start = timezone(settings.TIME_ZONE).localize(datetime.strptime(ticket_estimate_start, '%m/%d/%Y'))
+            else:
+                ticket.estimate_start = None
             if ticket_estimate_end:
                 ticket.estimate_end = timezone(settings.TIME_ZONE).localize(datetime.strptime(ticket_estimate_end, '%m/%d/%Y'))
+            else:
+                ticket.estimate_end = None
             if ticket_actual_start:
                 ticket.actual_start = timezone(settings.TIME_ZONE).localize(datetime.strptime(ticket_actual_start, '%m/%d/%Y'))
+            else:
+                ticket.actual_start = None
             if ticket_actual_end:
                 ticket.actual_end = timezone(settings.TIME_ZONE).localize(datetime.strptime(ticket_actual_end, '%m/%d/%Y'))
+            else:
+                ticket.actual_end = None
 
             ticket.save()
             messages.success(request, 'Ticket is updated')

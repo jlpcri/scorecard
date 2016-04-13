@@ -228,4 +228,3 @@ var gantt_row_data = [
     ['Outline', 'Outline paper', 'write',
      null, new Date(2015, 0, 6), daysToMilliseconds(1), 100, 'Research']
 ];
-var gantt_row_empty = [null, null, null, null, null, null, null];
