@@ -2,6 +2,16 @@
 
 {% block title %} Projects {% endblock %}
 
+{% block extrahead %}
+    <style>
+        .tab-content > .tab-pane:not(.active){
+            display: block;
+            height: 0;
+            overflow-y: hidden;
+        }
+    </style>
+{% endblock %}
+
 {% block subnav %}
     <div class="container" style="margin-top: 10px;">
         <div class="row" style="margin-bottom: 10px;">
@@ -268,7 +278,7 @@
                 var data = [];
                 {% for item in subteam.gantt_chart_data %}
                     if ('{{ item.start }}' != 'None' && '{{ item.end }}' != 'None') {
-                        data.push(['{{ item.id }}', '{{ item.name }}', '{{ item.resource }}', new Date('{{ item.start }}'), new Date('{{ item.end }}'), null, null, null]);
+                        data.push(['{{ item.id }}', '{{ item.name }}', '{{ item.resource }}', new Date('{{ item.start }}'), new Date('{{ item.end }}'), null, 100, null]);
                     }
                 {% endfor %}
 
