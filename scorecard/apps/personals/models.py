@@ -162,7 +162,7 @@ class TestStats(BaseStats):
     @property
     def phase_delay_and_duration(self):
         data = []
-        phases = self.human_resource.projectphase_set.all()
+        phases = self.human_resource.phase_lead.all()
         for phase in phases:
             temp = {}
             temp['project'] = phase.project.name
@@ -179,13 +179,13 @@ class TestStats(BaseStats):
 
     @property
     def phases_lead_count(self):
-        phases = self.human_resource.projectphase_set.all()
+        phases = self.human_resource.phase_lead.all()
 
         return len(phases)
 
     @property
     def tickets_worked(self):
-        tickets = self.human_resource.ticket_set.all()
+        tickets = self.human_resource.ticket_lead.all()
 
         return len(tickets)
 

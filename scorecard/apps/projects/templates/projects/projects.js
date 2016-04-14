@@ -37,21 +37,27 @@ $('.newPhase form').on('submit', function(event){
     var project = $('.newPhase form #id_project').val(),
         subteam = $('.newPhase form #id_subteam').val(),
         lead = $('.newPhase form #id_lead').val(),
-        name = $('.newPhase form #id_name').val();
+        name = $('.newPhase form #id_name').val(),
+        estimate_start_string = $('#newPhaseEstimateStart').val(),
+        estimate_end_string = $('#newPhaseEstimateEnd').val(),
+        actual_start_string = $('#newPhaseActualStart').val(),
+        actual_end_string = $('#newPhaseActualEnd').val();
+
+
     if (project == '') {
         showErrMsg('#newPhaseErrMessage', 'Project is not selected');
         return false;
-    }
-    if (subteam == '') {
+    } else if (subteam == '') {
         showErrMsg('#newPhaseErrMessage', 'Subteam is not selected');
         return false;
-    }
-    if (lead == '') {
+    } else if (lead == '') {
         showErrMsg('#newPhaseErrMessage', 'Lead is not selected');
         return false;
-    }
-    if (name == '') {
+    } else if (name == '') {
         showErrMsg('#newPhaseErrMessage', 'Name is empty');
+        return false;
+    }
+    if (!check_start_end_date(estimate_start_string, estimate_end_string, actual_start_string, actual_end_string, '#newPhaseErrMessage')) {
         return false;
     }
 });
@@ -59,17 +65,24 @@ $('.newPhase form').on('submit', function(event){
 $('.newTicket form').on('submit', function(event){
     var subteam = $('.newTicket form #id_subteam').val(),
         lead = $('.newTicket form #id_lead').val(),
-        key = $('.newTicket form #id_key').val();
+        key = $('.newTicket form #id_key').val(),
+        estimate_start_string = $('#newTicketEstimateStart').val(),
+        estimate_end_string = $('#newTicketEstimateEnd').val(),
+        actual_start_string = $('#newTicketActualStart').val(),
+        actual_end_string = $('#newTicketActualEnd').val();
+
     if (subteam == '') {
         showErrMsg('#newTicketErrMessage', 'Subteam is not selected');
         return false;
-    }
-    if (lead == '') {
+    } else if (lead == '') {
         showErrMsg('#newTicketErrMessage', 'Lead is not selected');
         return false;
-    }
-    if (key == '') {
+    } else if (key == '') {
         showErrMsg('#newTicketErrMessage', 'Key is empty');
+        return false;
+    }
+
+    if (!check_start_end_date(estimate_start_string, estimate_end_string, actual_start_string, actual_end_string, '#newTicketErrMessage')) {
         return false;
     }
 });
@@ -104,25 +117,16 @@ $('.editTicket').on('show.bs.modal', function(e){
 
 $('.editTicket form').on('submit', function(event){
     var key = $('#editTicketKey').val();
-    var estimate_start = $('#editTicketEstimateStart').val(),
-        estimate_end = $('#editTicketEstimateEnd').val(),
-        actual_start = $('#editTicketActualStart').val(),
-        actual_end = $('#editTicketActualEnd').val();
+    var estimate_start_string = $('#editTicketEstimateStart').val(),
+        estimate_end_string = $('#editTicketEstimateEnd').val(),
+        actual_start_string = $('#editTicketActualStart').val(),
+        actual_end_string = $('#editTicketActualEnd').val();
 
     if (key == ''){
         showErrMsg('#editTicketErrMessage', 'Key is Empty');
         return false;
-    } else if (estimate_start && !(moment(estimate_start, 'MM/DD/YYYY', true).isValid())){
-        showErrMsg('#editTicketErrMessage', 'Estimate Start format should be MM/DD/YYYY ');
-        return false;
-    } else if (estimate_end && !(moment(estimate_end, 'MM/DD/YYYY', true).isValid())){
-        showErrMsg('#editTicketErrMessage', 'Estimate End format should be MM/DD/YYYY ');
-        return false;
-    } else if (actual_start && !(moment(actual_start, 'MM/DD/YYYY', true).isValid())){
-        showErrMsg('#editTicketErrMessage', 'Actual Start format should be MM/DD/YYYY ');
-        return false;
-    } else if (actual_end && !(moment(actual_end, 'MM/DD/YYYY', true).isValid())){
-        showErrMsg('#editTicketErrMessage', 'Actual End format should be MM/DD/YYYY ');
+    }
+    if (!check_start_end_date(estimate_start_string, estimate_end_string, actual_start_string, actual_end_string, '#editTicketErrMessage')) {
         return false;
     }
 });
@@ -162,32 +166,13 @@ $('.editPhase form').on('submit', function(event){
         estimate_start_string = $('#editPhaseEstimateStart').val(),
         estimate_end_string = $('#editPhaseEstimateEnd').val(),
         actual_start_string = $('#editPhaseActualStart').val(),
-        actual_end_string = $('#editPhaseActualEnd').val(),
-        estimate_start = new Date(estimate_start_string),
-        estimate_end = new Date(estimate_end_string),
-        actual_start = new Date(actual_start_string),
-        actual_end = new Date(actual_end_string);
+        actual_end_string = $('#editPhaseActualEnd').val();
 
     if (name == ''){
         showErrMsg('#editPhaseErrMessage', 'Name is Empty');
         return false;
-    } else if (estimate_start_string && !(moment(estimate_start_string, 'MM/DD/YYYY', true).isValid())){
-        showErrMsg('#editPhaseErrMessage', 'Estimate Start format should be MM/DD/YYYY ');
-        return false;
-    } else if (estimate_end_string && !(moment(estimate_end_string, 'MM/DD/YYYY', true).isValid())){
-        showErrMsg('#editPhaseErrMessage', 'Estimate End format should be MM/DD/YYYY ');
-        return false;
-    } else if (actual_start_string && !(moment(actual_start_string, 'MM/DD/YYYY', true).isValid())){
-        showErrMsg('#editPhaseErrMessage', 'Actual Start format should be MM/DD/YYYY ');
-        return false;
-    } else if (actual_end_string && !(moment(actual_end_string, 'MM/DD/YYYY', true).isValid())){
-        showErrMsg('#editPhaseErrMessage', 'Actual End format should be MM/DD/YYYY ');
-        return false;
-    } else if (estimate_start > estimate_end) {
-        showErrMsg('#editPhaseErrMessage', 'Estimate End cannot be earlier than Estimate Start');
-        return false;
-    } else if (actual_start > actual_end) {
-        showErrMsg('#editPhaseErrMessage', 'Actual End cannot be earlier than Actual Start');
+    }
+    if (!check_start_end_date(estimate_start_string, estimate_end_string, actual_start_string, actual_end_string, '#editPhaseErrMessage')) {
         return false;
     }
 });
@@ -200,6 +185,7 @@ function showErrMsg(location, msg) {
     $(location).html('Error: ' + msg);
 }
 
+// For Gantt Chart Render
 function add_column_to_data(data){
     data.addColumn('string', 'Task ID');
     data.addColumn('string', 'Task Name');
@@ -211,30 +197,33 @@ function add_column_to_data(data){
     data.addColumn('string', 'Dependencies');
 }
 
-// For Gantt Chart Render
-var gantt_row_data = [
-    ['2014Spring', 'Spring 2014', 'spring',
-    new Date(2014, 2, 22), new Date(2014, 5, 20), null, 100, null],
-    ['2014Summer', 'Summer 2014', 'summer',
-    new Date(2014, 5, 21), new Date(2014, 8, 20), null, 100, null],
-    ['2014Autumn', 'Autumn 2014', 'autumn',
-    new Date(2014, 8, 21), new Date(2014, 11, 20), null, 100, null],
-    ['2014Winter', 'Winter 2014', 'winter',
-    new Date(2014, 11, 21), new Date(2015, 2, 21), null, 100, null],
-    ['2015Spring', 'Spring 2015', 'spring',
-    new Date(2015, 2, 22), new Date(2015, 5, 20), null, 50, null],
-    ['2015Summer', 'Summer 2015', 'summer',
-    new Date(2015, 5, 21), new Date(2015, 8, 20), null, 0, null],
-    ['2015Autumn', 'Autumn 2015', 'autumn',
-    new Date(2015, 8, 21), new Date(2015, 11, 20), null, 0, null],
-    ['2015Winter', 'Winter 2015', 'winter',
-    new Date(2015, 11, 21), new Date(2016, 2, 21), null, 0, null],
-    ['Football', 'Football Season', 'sports',
-    new Date(2014, 8, 4), new Date(2015, 1, 1), null, 100, null],
-    ['Baseball', 'Baseball Season', 'sports',
-    new Date(2015, 2, 31), new Date(2015, 9, 20), null, 14, null],
-    ['Basketball', 'Basketball Season', 'sports',
-    new Date(2014, 9, 28), new Date(2015, 5, 20), null, 86, null],
-    ['Hockey', 'Hockey Season', 'sports',
-    new Date(2014, 9, 8), new Date(2015, 5, 21), null, 89, null]
-];
+
+// Check Estimate/Actual Start/End date format, logical
+function check_start_end_date(estimate_start_string, estimate_end_string, actual_start_string, actual_end_string, location){
+    var estimate_start = new Date(estimate_start_string),
+        estimate_end = new Date(estimate_end_string),
+        actual_start = new Date(actual_start_string),
+        actual_end = new Date(actual_end_string);
+
+    if (estimate_start_string && !(moment(estimate_start_string, 'MM/DD/YYYY', true).isValid())){
+        showErrMsg(location, 'Estimate Start format should be MM/DD/YYYY ');
+        return false;
+    } else if (estimate_end_string && !(moment(estimate_end_string, 'MM/DD/YYYY', true).isValid())){
+        showErrMsg(location, 'Estimate End format should be MM/DD/YYYY ');
+        return false;
+    } else if (actual_start_string && !(moment(actual_start_string, 'MM/DD/YYYY', true).isValid())){
+        showErrMsg(location, 'Actual Start format should be MM/DD/YYYY ');
+        return false;
+    } else if (actual_end_string && !(moment(actual_end_string, 'MM/DD/YYYY', true).isValid())){
+        showErrMsg(location, 'Actual End format should be MM/DD/YYYY ');
+        return false;
+    } else if (estimate_start > estimate_end) {
+        showErrMsg(location, 'Estimate End cannot be earlier than Estimate Start');
+        return false;
+    } else if (actual_start > actual_end) {
+        showErrMsg(location, 'Actual End cannot be earlier than Actual Start');
+        return false;
+    } else {
+        return true;
+    }
+}
