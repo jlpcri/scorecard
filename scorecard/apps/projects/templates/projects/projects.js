@@ -37,21 +37,27 @@ $('.newPhase form').on('submit', function(event){
     var project = $('.newPhase form #id_project').val(),
         subteam = $('.newPhase form #id_subteam').val(),
         lead = $('.newPhase form #id_lead').val(),
-        name = $('.newPhase form #id_name').val();
+        name = $('.newPhase form #id_name').val(),
+        estimate_start_string = $('#newPhaseEstimateStart').val(),
+        estimate_end_string = $('#newPhaseEstimateEnd').val(),
+        actual_start_string = $('#newPhaseActualStart').val(),
+        actual_end_string = $('#newPhaseActualEnd').val();
+
+
     if (project == '') {
         showErrMsg('#newPhaseErrMessage', 'Project is not selected');
         return false;
-    }
-    if (subteam == '') {
+    } else if (subteam == '') {
         showErrMsg('#newPhaseErrMessage', 'Subteam is not selected');
         return false;
-    }
-    if (lead == '') {
+    } else if (lead == '') {
         showErrMsg('#newPhaseErrMessage', 'Lead is not selected');
         return false;
-    }
-    if (name == '') {
+    } else if (name == '') {
         showErrMsg('#newPhaseErrMessage', 'Name is empty');
+        return false;
+    }
+    if (!check_start_end_date(estimate_start_string, estimate_end_string, actual_start_string, actual_end_string, '#newPhaseErrMessage')) {
         return false;
     }
 });
@@ -210,4 +216,35 @@ function add_column_to_data(data){
     data.addColumn('number', 'Duration');
     data.addColumn('number', 'Percent Complete');
     data.addColumn('string', 'Dependencies');
+}
+
+
+// Check Estimate/Actual Start/End date format, logical
+function check_start_end_date(estimate_start_string, estimate_end_string, actual_start_string, actual_end_string, location){
+    var estimate_start = new Date(estimate_start_string),
+        estimate_end = new Date(estimate_end_string),
+        actual_start = new Date(actual_start_string),
+        actual_end = new Date(actual_end_string);
+
+    if (estimate_start_string && !(moment(estimate_start_string, 'MM/DD/YYYY', true).isValid())){
+        showErrMsg(location, 'Estimate Start format should be MM/DD/YYYY ');
+        return false;
+    } else if (estimate_end_string && !(moment(estimate_end_string, 'MM/DD/YYYY', true).isValid())){
+        showErrMsg(location, 'Estimate End format should be MM/DD/YYYY ');
+        return false;
+    } else if (actual_start_string && !(moment(actual_start_string, 'MM/DD/YYYY', true).isValid())){
+        showErrMsg(location, 'Actual Start format should be MM/DD/YYYY ');
+        return false;
+    } else if (actual_end_string && !(moment(actual_end_string, 'MM/DD/YYYY', true).isValid())){
+        showErrMsg(location, 'Actual End format should be MM/DD/YYYY ');
+        return false;
+    } else if (estimate_start > estimate_end) {
+        showErrMsg(location, 'Estimate End cannot be earlier than Estimate Start');
+        return false;
+    } else if (actual_start > actual_end) {
+        showErrMsg(location, 'Actual End cannot be earlier than Actual Start');
+        return false;
+    } else {
+        return true;
+    }
 }

@@ -89,10 +89,25 @@ def project_edit(request):
 @login_required
 def project_phase_new(request):
     if request.method == 'POST':
+        phase_estimate_start = request.POST.get('newPhaseEstimateStart', '')
+        phase_estimate_end = request.POST.get('newPhaseEstimateEnd', '')
+        phase_actual_start = request.POST.get('newPhaseActualStart', '')
+        phase_actual_end = request.POST.get('newPhaseActualEnd', '')
+
         form = ProjectPhaseNewForm(request.POST)
         if form.is_valid():
             phase = form.save()
-            messages.success(request, 'ProjecPhase is added')
+            if phase_estimate_start:
+                phase.estimate_start = timezone(settings.TIME_ZONE).localize(datetime.strptime(phase_estimate_start, '%m/%d/%Y'))
+            if phase_estimate_end:
+                phase.estimate_end = timezone(settings.TIME_ZONE).localize(datetime.strptime(phase_estimate_end, '%m/%d/%Y'))
+            if phase_actual_start:
+                phase.actual_start = timezone(settings.TIME_ZONE).localize(datetime.strptime(phase_actual_start, '%m/%d/%Y'))
+            if phase_actual_end:
+                phase.actual_end = timezone(settings.TIME_ZONE).localize(datetime.strptime(phase_actual_end, '%m/%d/%Y'))
+            phase.save()
+
+            messages.success(request, 'ProjectPhase is added')
         else:
             messages.error(request, 'Errors found')
 
@@ -204,9 +219,24 @@ def ticket_edit(request):
 @login_required
 def ticket_new(request):
     if request.method == 'POST':
+        ticket_estimate_start = request.POST.get('newTicketEstimateStart', '')
+        ticket_estimate_end = request.POST.get('newTicketEstimateEnd', '')
+        ticket_actual_start = request.POST.get('newTicketActualStart', '')
+        ticket_actual_end = request.POST.get('newTicketActualEnd', '')
         form = TicketNewForm(request.POST)
+
         if form.is_valid():
             ticket = form.save()
+            if ticket_estimate_start:
+                ticket.estimate_start = timezone(settings.TIME_ZONE).localize(datetime.strptime(ticket_estimate_start, '%m/%d/%Y'))
+            if ticket_estimate_end:
+                ticket.estimate_end = timezone(settings.TIME_ZONE).localize(datetime.strptime(ticket_estimate_end, '%m/%d/%Y'))
+            if ticket_actual_start:
+                ticket.actual_start = timezone(settings.TIME_ZONE).localize(datetime.strptime(ticket_actual_start, '%m/%d/%Y'))
+            if ticket_actual_end:
+                ticket.actual_end = timezone(settings.TIME_ZONE).localize(datetime.strptime(ticket_actual_end, '%m/%d/%Y'))
+            ticket.save()
+
             messages.success(request, 'Ticket is added')
         else:
             messages.error(request, 'Errors found')
