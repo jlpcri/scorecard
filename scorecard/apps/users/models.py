@@ -129,7 +129,7 @@ class Subteam(models.Model):
                         dependencies = scale[1]
 
                 data.append({
-                    'id': item.id,
+                    'id': 'phase_' + str(item.id),
                     'name': 'Phase: ' + item.name,
                     'resource': 'Workers: ' + str(item.worker.count()) + ', Revenue: ' + dependencies,
                     'start': item.estimate_start.strftime('%Y-%m-%d') if item.estimate_start else None,
@@ -151,7 +151,7 @@ class Subteam(models.Model):
                     if item.revenue_scale == scale[0]:
                         dependencies = scale[1]
                 data.append({
-                    'id': item.id,
+                    'id': 'ticket_' + str(item.id),
                     'name': 'Ticket: ' + item.key,
                     'resource': 'Workers: ' + str(item.worker.count()) + ', Revenue: ' + dependencies,
                     'start': item.estimate_start.strftime('%Y-%m-%d') if item.estimate_start else None,
