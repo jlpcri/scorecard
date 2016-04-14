@@ -130,7 +130,7 @@ class Subteam(models.Model):
 
                 data.append({
                     'id': 'phase_' + str(item.id),
-                    'name': 'Phase: ' + item.name,
+                    'name': item.project.name + ': ' + item.name,
                     'resource': 'Workers: ' + str(item.worker.count()) + ', Revenue: ' + dependencies,
                     'start': item.estimate_start.strftime('%Y-%m-%d') if item.estimate_start else None,
                     'end': item.estimate_end.strftime('%Y-%m-%d') if item.estimate_end else None,
