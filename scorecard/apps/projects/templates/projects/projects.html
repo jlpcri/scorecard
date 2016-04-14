@@ -284,15 +284,11 @@
 
                 //console.log(data);
                 if (data.length > 0) {
-                    $('#'+location).removeClass();
+                    $('#'+location).height((data.length + 1) * 40 );
                     window[location + '_data'].addRows(data);
 
                     window[location + '_chart'] = new google.visualization.Gantt(document.getElementById(location));
                     window[location + '_chart'].draw(window[location + '_data'], options);
-                } else {
-{#                    window[location + '_data'].addRows(gantt_row_data);#}
-{#                    window[location + '_chart'] = new google.visualization.Gantt(document.getElementById(location));#}
-{#                    window[location + '_chart'].draw(window[location + '_data'], options);#}
                 }
             {% endfor %}
         }
