@@ -15,10 +15,12 @@ $('.newProject form').on('submit', function(event){
 
 $('.editProject').on('show.bs.modal', function(e){
     var project_id = $(e.relatedTarget).data('project-id'),
-        project_name = $(e.relatedTarget).data('project-name');
+        project_name = $(e.relatedTarget).data('project-name'),
+        project_revenue = $(e.relatedTarget).data('project-revenue');
 
     $(e.currentTarget).find('input[name="editProjectId"]').val(project_id);
     $(e.currentTarget).find('input[name="editProjectName"]').val(project_name);
+    $(e.currentTarget).find('select[name="editProjectRevenue"]').val(project_revenue);
 
     $('.editProject .modal-title').html('Project Edit - ' + project_name);
 });
@@ -33,15 +35,15 @@ $('.editProject form').on('submit', function(event){
 
 $('.newPhase form').on('submit', function(event){
     var project = $('.newPhase form #id_project').val(),
-        fg = $('.newPhase form #id_functional_group').val(),
+        subteam = $('.newPhase form #id_subteam').val(),
         lead = $('.newPhase form #id_lead').val(),
         name = $('.newPhase form #id_name').val();
     if (project == '') {
         showErrMsg('#newPhaseErrMessage', 'Project is not selected');
         return false;
     }
-    if (fg == '') {
-        showErrMsg('#newPhaseErrMessage', 'Functional Group is not selected');
+    if (subteam == '') {
+        showErrMsg('#newPhaseErrMessage', 'Subteam is not selected');
         return false;
     }
     if (lead == '') {
@@ -55,11 +57,11 @@ $('.newPhase form').on('submit', function(event){
 });
 
 $('.newTicket form').on('submit', function(event){
-    var fg = $('.newTicket form #id_functional_group').val(),
+    var subteam = $('.newTicket form #id_subteam').val(),
         lead = $('.newTicket form #id_lead').val(),
         key = $('.newTicket form #id_key').val();
-    if (fg == '') {
-        showErrMsg('#newTicketErrMessage', 'Functional Group is not selected');
+    if (subteam == '') {
+        showErrMsg('#newTicketErrMessage', 'Subteam is not selected');
         return false;
     }
     if (lead == '') {
@@ -75,16 +77,22 @@ $('.newTicket form').on('submit', function(event){
 $('.editTicket').on('show.bs.modal', function(e){
     var ticket_id = $(e.relatedTarget).data('ticket-id'),
         ticket_key = $(e.relatedTarget).data('ticket-key'),
-        ticket_fg = $(e.relatedTarget).data('ticket-fg'),
+        ticket_subteam = $(e.relatedTarget).data('ticket-subteam'),
+        ticket_revenue = $(e.relatedTarget).data('ticket-revenue'),
         ticket_lead = $(e.relatedTarget).data('ticket-lead'),
         ticket_estimate_start = $(e.relatedTarget).data('ticket-estimate-start'),
         ticket_estimate_end = $(e.relatedTarget).data('ticket-estimate-end'),
         ticket_actual_start = $(e.relatedTarget).data('ticket-actual-start'),
         ticket_actual_end = $(e.relatedTarget).data('ticket-actual-end');
 
+    $.getJSON("{% url 'projects:fetch_workers' %}?id={0}&type=ticket".format(ticket_id)).done(function(data){
+        $('#editTicketWorker').val(data);
+    });
+
     $(e.currentTarget).find('input[name="editTicketId"]').val(ticket_id);
     $(e.currentTarget).find('input[name="editTicketKey"]').val(ticket_key);
-    $('#editTicketFunctionalGroup').val(ticket_fg);
+    $('#editTicketSubteam').val(ticket_subteam);
+    $('#editTicketRevenue').val(ticket_revenue);
     $('#editTicketLead').val(ticket_lead);
     $('#editTicketEstimateStart').val(ticket_estimate_start);
     $('#editTicketEstimateEnd').val(ticket_estimate_end);
@@ -122,7 +130,7 @@ $('.editTicket form').on('submit', function(event){
 $('.editPhase').on('show.bs.modal', function(e) {
     var phase_id = $(e.relatedTarget).data('phase-id'),
         phase_project = $(e.relatedTarget).data('phase-project'),
-        phase_fg = $(e.relatedTarget).data('phase-fg'),
+        phase_subteam = $(e.relatedTarget).data('phase-subteam'),
         phase_lead = $(e.relatedTarget).data('phase-lead'),
         phase_name = $(e.relatedTarget).data('phase-name'),
         phase_key = $(e.relatedTarget).data('phase-key'),
@@ -131,8 +139,12 @@ $('.editPhase').on('show.bs.modal', function(e) {
         phase_actual_start = $(e.relatedTarget).data('phase-actual-start'),
         phase_actual_end = $(e.relatedTarget).data('phase-actual-end');
 
+    $.getJSON("{% url 'projects:fetch_workers' %}?id={0}&type=phase".format(phase_id)).done(function(data){
+        $('#editPhaseWorker').val(data);
+    });
+
     $('#editPhaseProject').val(phase_project);
-    $('#editPhaseFunctionalGroup').val(phase_fg);
+    $('#editPhaseSubteam').val(phase_subteam);
     $('#editPhaseLead').val(phase_lead);
     $(e.currentTarget).find('input[name="editPhaseId"]').val(phase_id);
     $(e.currentTarget).find('input[name="editPhaseName"]').val(phase_name);
@@ -187,3 +199,42 @@ function showErrMsg(location, msg) {
     });
     $(location).html('Error: ' + msg);
 }
+
+function add_column_to_data(data){
+    data.addColumn('string', 'Task ID');
+    data.addColumn('string', 'Task Name');
+    data.addColumn('string', 'Resource');
+    data.addColumn('date', 'Start');
+    data.addColumn('date', 'End');
+    data.addColumn('number', 'Duration');
+    data.addColumn('number', 'Percent Complete');
+    data.addColumn('string', 'Dependencies');
+}
+
+// For Gantt Chart Render
+var gantt_row_data = [
+    ['2014Spring', 'Spring 2014', 'spring',
+    new Date(2014, 2, 22), new Date(2014, 5, 20), null, 100, null],
+    ['2014Summer', 'Summer 2014', 'summer',
+    new Date(2014, 5, 21), new Date(2014, 8, 20), null, 100, null],
+    ['2014Autumn', 'Autumn 2014', 'autumn',
+    new Date(2014, 8, 21), new Date(2014, 11, 20), null, 100, null],
+    ['2014Winter', 'Winter 2014', 'winter',
+    new Date(2014, 11, 21), new Date(2015, 2, 21), null, 100, null],
+    ['2015Spring', 'Spring 2015', 'spring',
+    new Date(2015, 2, 22), new Date(2015, 5, 20), null, 50, null],
+    ['2015Summer', 'Summer 2015', 'summer',
+    new Date(2015, 5, 21), new Date(2015, 8, 20), null, 0, null],
+    ['2015Autumn', 'Autumn 2015', 'autumn',
+    new Date(2015, 8, 21), new Date(2015, 11, 20), null, 0, null],
+    ['2015Winter', 'Winter 2015', 'winter',
+    new Date(2015, 11, 21), new Date(2016, 2, 21), null, 0, null],
+    ['Football', 'Football Season', 'sports',
+    new Date(2014, 8, 4), new Date(2015, 1, 1), null, 100, null],
+    ['Baseball', 'Baseball Season', 'sports',
+    new Date(2015, 2, 31), new Date(2015, 9, 20), null, 14, null],
+    ['Basketball', 'Basketball Season', 'sports',
+    new Date(2014, 9, 28), new Date(2015, 5, 20), null, 86, null],
+    ['Hockey', 'Hockey Season', 'sports',
+    new Date(2014, 9, 8), new Date(2015, 5, 21), null, 89, null]
+];
