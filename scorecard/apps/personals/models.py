@@ -184,8 +184,24 @@ class TestStats(BaseStats):
         return len(phases)
 
     @property
-    def tickets_worked(self):
+    def tickets_lead_count(self):
         tickets = self.human_resource.ticket_lead.all()
 
         return len(tickets)
+
+    @property
+    def ticket_delay_and_duration(self):
+        data = []
+        tickets = self.human_resource.ticket_lead.all()
+        for ticket in tickets:
+            temp = {}
+            temp['ticket'] = ticket.key
+            temp['start_delay'] = ticket.start_delays
+            temp['diff_duration'] = ticket.diff_durations
+
+            data.append(temp)
+
+        data.sort(key=itemgetter('ticket'))
+
+        return data
 

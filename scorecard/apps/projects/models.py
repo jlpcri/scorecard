@@ -74,4 +74,23 @@ class Ticket(models.Model):
                                       self.lead.user,
                                       self.subteam)
 
+    @property
+    def start_delays(self):
+        if self.estimate_start and self.actual_start:
+            data = calculate_business_day(self.estimate_start, self.actual_start)
+        else:
+            data = 'Null'
+
+        return data
+
+    @property
+    def diff_durations(self):
+        if self.estimate_start and self.estimate_end and self.actual_start and self.actual_end:
+            data = calculate_business_day(self.actual_start, self.actual_end)\
+                   - calculate_business_day(self.estimate_start, self.estimate_end)
+        else:
+            data = 'Null'
+
+        return data
+
 

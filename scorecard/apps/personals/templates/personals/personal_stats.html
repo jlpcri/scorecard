@@ -27,19 +27,6 @@
                         </div>
                     {% endfor %}
 
-{#                    <div class="row">#}
-{#                        <div class="col-sm-6"><label>Overtime Weekday:</label></div>#}
-{#                        <div class="col-sm-6">{{ form.overtime_weekday }}</div>#}
-{#                    </div>#}
-{#                    <div class="row">#}
-{#                        <div class="col-sm-6"><label>Overtime Weekend:</label></div>#}
-{#                        <div class="col-sm-6">{{ form.overtime_weekend }}</div>#}
-{#                    </div>#}
-{#                    <div class="row">#}
-{#                        <div class="col-sm-6"><label>Rework Time:</label></div>#}
-{#                        <div class="col-sm-6">{{ form.rework_time }}</div>#}
-{#                    </div>#}
-
                     <br>
                     <div class="row">
                         <div class="col-sm-1"></div>
@@ -52,18 +39,18 @@
                     </div>
                 </div>
                 <div class="col-sm-6">
-                    {% with key=personal_stat.human_resource.functional_group.key phase_count=personal_stat.phases_lead_count %}
+                    {% with key=personal_stat.human_resource.functional_group.key phases_count=personal_stat.phases_lead_count tickets_count=personal_stat.tickets_lead_count %}
                         {% if key in 'QA, TE' %}
                             <div class="row">
                                 <div class="col-sm-6">
                                     <label>Phases Lead:</label>
                                 </div>
                                 <div class="col-sm-6">
-                                    <input class="gentle" value="{{ phase_count }}" disabled/>
+                                    <input class="gentle" value="{{ phases_count }}" disabled/>
                                 </div>
                             </div>
 
-                            {% if phase_count > 0 %}
+                            {% if phases_count > 0 %}
                                 <h5>Start Delays and Diff Durations (Business Days)</h5>
                                 <div class="row">
                                     <div class="col-sm-1"></div>
@@ -86,12 +73,31 @@
                             <br>
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <label>Tickets Worked:</label>
+                                    <label>Tickets Lead:</label>
                                 </div>
                                 <div class="col-sm-6">
-                                    <input class="gentle" value="{{ personal_stat.tickets_worked }}" disabled/>
+                                    <input class="gentle" value="{{ tickets_count }}" disabled/>
                                 </div>
                             </div>
+                            {% if tickets_count > 0 %}
+                                <h5>Start Delays and Diff Durations (Business Days)</h5>
+                                <div class="row">
+                                    <div class="col-sm-1"></div>
+                                    <div class="col-sm-3"></div>
+                                    <div class="col-sm-3"><label>Ticket</label></div>
+                                    <div class="col-sm-2"><label>Start Delay</label></div>
+                                    <div class="col-sm-2"><label>Diff Duration</label></div>
+                                </div>
+                                {%  for item in personal_stat.ticket_delay_and_duration %}
+                                    <div class="row">
+                                        <div class="col-sm-1"></div>
+                                        <div class="col-sm-3"></div>
+                                        <div class="col-sm-3">{{ item.ticket }}</div>
+                                        <div {% if item.start_delay >= 0 %} class="col-sm-2" {% else %} class="col-sm-2 text-success" {% endif %}>{{ item.start_delay }}</div>
+                                        <div {% if item.diff_duration >= 0 %} class="col-sm-2" {% else %} class="col-sm-2 text-success" {% endif %}>{{ item.diff_duration }}</div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
                         {% endif %}
                     {% endwith %}
                 </div>
