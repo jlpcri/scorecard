@@ -3,13 +3,17 @@ from django.test import TestCase
 
 from scorecard.apps.projects.forms import ProjectNewForm, ProjectPhaseNewForm, TicketNewForm
 from scorecard.apps.projects.models import Project
-from scorecard.apps.users.models import FunctionalGroup, HumanResource
+from scorecard.apps.users.models import FunctionalGroup, HumanResource, Subteam
 
 
 class ProjectNewFormTest(TestCase):
+    def setUp(self):
+        self.revenue_scale = 3
+
     def test_project_new_form_valid_with_valid_params(self):
         data = {
-            'name': 'New Project'
+            'name': 'New Project',
+            'revenue_scale': self.revenue_scale
         }
         form = ProjectNewForm(data=data)
         self.assertTrue(form.is_valid())
@@ -18,7 +22,8 @@ class ProjectNewFormTest(TestCase):
         form = ProjectNewForm({})
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {
-            'name': ['This field is required.']
+            'name': ['This field is required.'],
+            'revenue_scale': ['This field is required.']
         })
 
 
@@ -30,6 +35,10 @@ class ProjectPhaseNewFormTest(TestCase):
         self.fg = FunctionalGroup.objects.create(
             name='Quality Innovation',
             key='QI'
+        )
+        self.subteam = Subteam.objects.create(
+            name='QI subteam',
+            parent=self.fg,
         )
         self.user = User.objects.create(
             username='Username',
@@ -44,7 +53,7 @@ class ProjectPhaseNewFormTest(TestCase):
     def test_project_phase_new_form_valid_with_valid_params(self):
         data = {
             'project': self.project.id,
-            'functional_group': self.fg.id,
+            'subteam': self.subteam.id,
             'lead': self.hr.id,
             'name': 'Phase Name',
             'key': 'Phase Key'
@@ -57,7 +66,7 @@ class ProjectPhaseNewFormTest(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {
             'project':  ['This field is required.'],
-            'functional_group':  ['This field is required.'],
+            'subteam':  ['This field is required.'],
             'lead':  ['This field is required.'],
             'name':  ['This field is required.']
         })
@@ -69,6 +78,10 @@ class TicketNewFormTest(TestCase):
             name='Quality Innovation',
             key='QI'
         )
+        self.subteam = Subteam.objects.create(
+            name='QI subteam',
+            parent=self.fg,
+        )
         self.user = User.objects.create(
             username='Username',
             password='Password'
@@ -78,12 +91,14 @@ class TicketNewFormTest(TestCase):
             user=self.user,
             manager=True
         )
+        self.revenue_scale = 3
 
     def test_ticket_new_form_valid_with_valid_params(self):
         data = {
-            'functional_group': self.fg.id,
+            'subteam': self.subteam.id,
             'lead': self.hr.id,
-            'key': 'Ticket Key'
+            'key': 'Ticket Key',
+            'revenue_scale': self.revenue_scale
         }
         form = TicketNewForm(data=data)
         self.assertTrue(form.is_valid())
@@ -92,7 +107,8 @@ class TicketNewFormTest(TestCase):
         form = TicketNewForm({})
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {
-            'functional_group': ['This field is required.'],
+            'subteam': ['This field is required.'],
             'lead': ['This field is required.'],
-            'key': ['This field is required.']
+            'key': ['This field is required.'],
+            'revenue_scale': ['This field is required.']
         })

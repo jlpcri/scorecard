@@ -20,10 +20,12 @@ class HumanResourceModelTest(TestCase):
     def setUp(self):
         self.functional_group = FunctionalGroup.objects.create(
             name='Test Team Engineering',
-            key='TTE'
+            abbreviation='TTE'
         )
         self.user = User.objects.create(
             username='Test User',
+            first_name='First Name',
+            last_name='Last Name',
             password='Password'
         )
 
@@ -32,8 +34,9 @@ class HumanResourceModelTest(TestCase):
             functional_group=self.functional_group,
             user=self.user
         )
-        self.assertEqual(str(human), '{0}: {1}'.format(human.user.username,
-                                                       human.functional_group.key))
+        self.assertEqual(str(human), '{0} {1}: {2}'.format(human.user.first_name,
+                                                            human.user.last_name,
+                                                            human.functional_group.abbreviation))
 
     def test_verbose_name_plural(self):
         self.assertEqual(str(HumanResource._meta.verbose_name_plural), 'human resources')
