@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse, resolve
 from scorecard.apps.projects.models import Project, ProjectPhase, Ticket
 from scorecard.apps.projects.forms import ProjectNewForm, ProjectPhaseNewForm, TicketNewForm
 from scorecard.apps.projects.views import projects, project_new, project_phase_new, ticket_new
-from scorecard.apps.users.models import FunctionalGroup, HumanResource
+from scorecard.apps.users.models import FunctionalGroup, HumanResource, Subteam
 
 
 class ProjectViewTest(TestCase):
@@ -157,6 +157,7 @@ class ProjectNewTest(TestCase):
             user=self.user,
             manager=True
         )
+        self.small_revenue = 3
 
     def test_project_new_url_resolve_to_view(self):
         found = resolve(reverse('projects:project_new'))
@@ -168,7 +169,8 @@ class ProjectNewTest(TestCase):
 
     def test_project_new_valid_with_valid_params(self):
         data = {
-            'name': 'New Project'
+            'name': 'New Project',
+            'revenue_scale': self.small_revenue
         }
         response = self.client.post(reverse('projects:project_new'), data)
         project = Project.objects.get(name=data['name'])
@@ -197,6 +199,10 @@ class ProjectPhaseNewTest(TestCase):
         self.fg_qi = FunctionalGroup.objects.create(
             name='Quality Innovation',
             abbreviation='QI'
+        )
+        self.subteam = Subteam.objects.create(
+            name='QI subteam',
+            parent=self.fg_qi,
         )
         self.fg_re = FunctionalGroup.objects.create(
             name='Requirment Engineering',
@@ -235,7 +241,7 @@ class ProjectPhaseNewTest(TestCase):
     def test_project_phase_new_valid_with_valid_params(self):
         data = {
             'project': self.project.id,
-            'functional_group': self.fg_qi.id,
+            'subteam': self.subteam.id,
             'lead': self.user.id,
             'name': 'Phase New Name',
             'key': 'Phase New key'
@@ -265,6 +271,10 @@ class TicketNewTest(TestCase):
             name='Quality Innovation',
             abbreviation='QI'
         )
+        self.subteam = Subteam.objects.create(
+            name='QI subteam',
+            parent=self.fg_qi,
+        )
         self.fg_re = FunctionalGroup.objects.create(
             name='Requirment Engineering',
             abbreviation='RE'
@@ -290,6 +300,7 @@ class TicketNewTest(TestCase):
             user=self.user,
             manager=True
         )
+        self.revenue_scale = 3
 
     def test_ticket_new_url_resolve_to_view(self):
         found = resolve(reverse('projects:ticket_new'))
@@ -301,9 +312,10 @@ class TicketNewTest(TestCase):
 
     def test_ticket_new_valid_with_valid_params(self):
         data = {
-            'functional_group': self.fg_qi.id,
+            'subteam': self.subteam.id,
             'lead': self.user.id,
-            'key': 'Phase New key'
+            'key': 'Phase New key',
+            'revenue_scale': self.revenue_scale
         }
         response = self.client.post(reverse('projects:ticket_new'), data)
         ticket = Ticket.objects.get(key=data['key'])
