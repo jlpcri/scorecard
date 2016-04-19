@@ -10,3 +10,10 @@ $('#automation-new-modal form').submit(function(event){
         }
     }
 });
+
+$(document).ready(function(){
+    var role = $('#user_role').val();
+    if (role == 'normal') {
+        $('a[href="#personal"]').click();
+    }
+});
