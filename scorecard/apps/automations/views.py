@@ -13,7 +13,7 @@ from scorecard.apps.users.models import FunctionalGroup, Subteam
 @login_required
 def automations(request):
     groups = []
-    functional_groups = FunctionalGroup.objects.all()
+    functional_groups = FunctionalGroup.objects.all().order_by('name')
     for group in functional_groups:
         group_dict = {
             'group': group,
@@ -23,6 +23,12 @@ def automations(request):
             }
              for team in Subteam.objects.filter(parent=group).exclude(name='Legacy')]
         }
+        if request.user.is_superuser:
+            personals_all = Automation.objects.filter(human_resource__functional_group=group)
+            group_dict['subteams'].append({
+                'team': {'name': 'Personals'},
+                'columns': personals_all
+            })
         groups.append(group_dict)
 
     try:

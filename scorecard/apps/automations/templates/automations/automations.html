@@ -64,7 +64,14 @@
                                         <tbody>
                                             {% for item in subteam.columns %}
                                                 <tr>
-                                                    <td><a href="{% url 'automations:automation_detail' item.id %}">{{ item.column_field }}</a></td>
+                                                    <td>
+                                                        {% if subteam.team.name == 'Personals' %}
+                                                            <a href="{% url 'automations:automation_detail' item.id %}?type=personal">
+                                                        {% else %}
+                                                            <a href="{% url 'automations:automation_detail' item.id %}">
+                                                        {% endif %}
+                                                            {{ item.column_field }}</a>
+                                                    </td>
                                                     <td>{{ item.script_name }}</td>
                                                     <td>{{ item.last_success }}</td>
                                                     <td>{{ item.tests_run }}</td>
