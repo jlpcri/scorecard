@@ -66,11 +66,10 @@
                                                 <tr>
                                                     <td>
                                                         {% if subteam.team.name == 'Personals' %}
-                                                            <a href="{% url 'automations:automation_detail' item.id %}?type=personal">
+                                                            <a href="{% url 'automations:automation_detail' item.id %}?type=personal">{{ item.column_field }}</a>, {{ item.human_resource.user.first_name }} {{ item.human_resource.user.last_name }}
                                                         {% else %}
-                                                            <a href="{% url 'automations:automation_detail' item.id %}">
+                                                            <a href="{% url 'automations:automation_detail' item.id %}">{{ item.column_field }}</a>
                                                         {% endif %}
-                                                            {{ item.column_field }}</a>
                                                     </td>
                                                     <td>{{ item.script_name }}</td>
                                                     <td>{{ item.last_success }}</td>
