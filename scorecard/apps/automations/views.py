@@ -24,7 +24,7 @@ def automations(request):
              for team in Subteam.objects.filter(parent=group).exclude(name='Legacy')]
         }
         if request.user.is_superuser:
-            personals_all = Automation.objects.filter(human_resource__functional_group=group)
+            personals_all = Automation.objects.filter(human_resource__functional_group=group).order_by('column_field')
             group_dict['subteams'].append({
                 'team': {'name': 'Personals'},
                 'columns': personals_all
