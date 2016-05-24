@@ -119,3 +119,37 @@ class AutomationPersonalForm(ModelForm):
             'column_field': forms.TextInput(attrs={'class': 'form-control',
                                                    'readonly': True}),
         }
+
+
+class AutomationPersonalBatchForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(AutomationPersonalBatchForm, self).__init__(*args, **kwargs)
+        level = 'personal'
+        try:
+            abbreviation = kwargs.pop('initial')['abbreviation']
+        except KeyError:
+            abbreviation = ''
+
+        level = 'person'
+        if abbreviation == 'QE':
+            choices = get_model_fields(InnovationStats, abbreviation, level=level)
+        elif abbreviation == 'TL':
+            choices = get_model_fields(LabStats, abbreviation, level=level)
+        elif abbreviation == 'RE':
+            choices = get_model_fields(RequirementStats, abbreviation, level=level)
+        elif abbreviation in ['QA', 'TE']:
+            choices = get_model_fields(TestStats, abbreviation, level=level)
+        else:
+            choices = ''
+
+        self.fields['subteam'] = forms.ModelChoiceField(widget=forms.Select(attrs={'class': 'form-control'}),
+                                                        queryset=Subteam.objects.filter(parent__abbreviation=abbreviation))
+        self.fields['subteam'].empty_label = None
+        self.fields['column_field'] = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}),
+                                                        choices=choices)
+
+    subteam = forms.ChoiceField()
+    column_field = forms.ChoiceField()
+    script_name = forms.CharField(required=False,
+                                  widget=forms.TextInput(attrs={'class': 'form-control'}))
+    script_file = forms.FileField(required=False)

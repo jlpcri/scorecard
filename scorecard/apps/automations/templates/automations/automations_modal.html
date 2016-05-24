@@ -61,3 +61,35 @@
         </form>
     </div>
 </div>
+
+<!-- Push Personal Automation Batch Modal -->
+<div class="modal fade batchAutomation" id="automation-personal-batch-modal">
+    <div class="modal-dialog">
+        <form action="{% url 'automations:automation_push_personal_batch' %}" method="post" enctype="multipart/form-data">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span> </button>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <h4 class="modal-title">Personal Automation Batch</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    {{ form_personal_batch }}
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div id="batchAutomationPersonalErrMessage">&nbsp;</div>
+                        </div>
+                    </div>
+                    {% csrf_token %}
+                </div>
+                <div class="modal-footer">
+                    <input id="automation_personal_batch" class="btn btn-primary" type="submit" value="Push Batch Personal Automation">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

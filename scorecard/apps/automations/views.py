@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
 
 from models import Automation
-from forms import AutomationNewForm, AutomationPersonalNewForm, AutomationForm, AutomationPersonalForm
+from forms import AutomationNewForm, AutomationPersonalNewForm, AutomationForm, AutomationPersonalForm, AutomationPersonalBatchForm
 from scorecard.apps.users.models import FunctionalGroup, Subteam
 
 
@@ -39,6 +39,9 @@ def automations(request):
             'human_resource': request.user.humanresource,
             'abbreviation': request.user.humanresource.functional_group.abbreviation
         })
+        automation_personal_batch_form = AutomationPersonalBatchForm(initial={
+            'abbreviation': request.user.humanresource.functional_group.abbreviation
+        })
 
     except AttributeError as e:
         print e.message, type(e)
@@ -49,12 +52,16 @@ def automations(request):
             'human_resource': request.user.humanresource,
             'abbreviation': 'QA'
         })
+        automation_personal_batch_form = AutomationPersonalBatchForm(initial={
+            'abbreviation': 'QA'
+        })
 
     personals = request.user.humanresource.automation_set.order_by('column_field')
     context = RequestContext(request, {
         'groups': groups,
         'form': automation_new_form,
         'form_personal': automation_personal_new_form,
+        'form_personal_batch': automation_personal_batch_form,
         'personals': personals
     })
     return render(request, 'automations/automations.html', context)
@@ -173,3 +180,20 @@ def run_script(request):
         }
 
     return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+def automation_push_personal_batch(request):
+    if request.method == 'POST':
+        form = AutomationPersonalBatchForm(request.POST,
+                                           request.FILES,
+                                           initial={
+                                               'abbreviation': request.user.humanresource.functional_group.abbreviation
+                                           })
+        if form.is_valid():
+            subteam = form.cleaned_data['subteam']
+            column_field = form.cleaned_data['column_field']
+
+        else:
+            print(form.errors)
+
+        return redirect('automations:automations')
