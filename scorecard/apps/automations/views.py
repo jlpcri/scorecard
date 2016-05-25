@@ -44,7 +44,7 @@ def automations(request):
         })
 
     except AttributeError as e:
-        # print e.message, type(e)
+        print e.message, type(e)
         automation_new_form = AutomationNewForm(initial={
             'subteam': Subteam.objects.filter(parent__abbreviation='QA'),
             'abbreviation': 'QA'})
