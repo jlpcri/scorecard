@@ -44,7 +44,7 @@ def automations(request):
         })
 
     except AttributeError as e:
-        print e.message, type(e)
+        # print e.message, type(e)
         automation_new_form = AutomationNewForm(initial={
             'subteam': Subteam.objects.filter(parent__abbreviation='QA'),
             'abbreviation': 'QA'})
@@ -147,7 +147,7 @@ def automation_new(request):
         return redirect('automations:automations')
 
 
-def run_script(request):
+def script_test(request):
     automation_id = request.GET.get('automation_id', '')
     automation = get_object_or_404(Automation, pk=automation_id)
 
@@ -158,7 +158,7 @@ def run_script(request):
             exec(script_code)
 
             try:
-                result = run_script()
+                result = run_script(None, automation.human_resource.user.username)
                 automation.result = result
             except Exception as e:
                 print '{0}: {1}'.format(e.message, type(e))
