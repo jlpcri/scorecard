@@ -193,7 +193,32 @@ def automation_push_personal_batch(request):
             subteam = form.cleaned_data['subteam']
             column_field = form.cleaned_data['column_field']
 
+            if not request.FILES:
+                messages.error(request, 'No upload file selected.')
+                return redirect('automations:automations')
+            elif not request.FILES['script_file'].name.endswith('.py'):
+                messages.error(request, 'Invalid file type, unable to upload (must be .py)')
+                return redirect('automations:automations')
+            elif not form.cleaned_data['script_name']:
+                script_name = request.FILES['script_file'].name
+            else:
+                script_name = form.cleaned_data['script_name']
+
+            for hr in subteam.humanresource_set.all():
+                try:
+                    automation = Automation.objects.get(human_resource=hr,
+                                                        column_field=column_field)
+                    automation.script_name = script_name
+                    automation.script_file = request.FILES['script_file']
+                    automation.save()
+                except Automation.DoesNotExist:
+                    Automation.objects.create(human_resource=hr,
+                                              script_name=script_name,
+                                              script_file=request.FILES['script_file'],
+                                              column_field=column_field)
+            messages.success(request, 'Script \'{0}\' pushed to subteam \'{1}\''.format(script_name, subteam))
+
         else:
-            print(form.errors)
+            messages.error(request, form.errors)
 
         return redirect('automations:automations')
