@@ -158,7 +158,10 @@ def script_test(request):
             exec(script_code)
 
             try:
-                result = run_script(None, automation.human_resource.user.username)
+                if automation.human_resource:
+                    result = run_script(None, automation.human_resource.user.username)
+                else:
+                    result = run_script()
                 automation.result = result
             except Exception as e:
                 print '{0}: {1}'.format(e.message, type(e))
