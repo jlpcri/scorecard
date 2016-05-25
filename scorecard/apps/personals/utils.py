@@ -46,7 +46,7 @@ def get_automation_data(request, personal_stat):
                     continue
 
                 try:
-                    result = run_script(date)
+                    result = run_script(date, automation.human_resource.user.username)
                 except Exception:
                     result = 0
 

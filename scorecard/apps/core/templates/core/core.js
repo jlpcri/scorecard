@@ -65,3 +65,10 @@ function attachDateRangePicker() {
     }, setDate(start, end));
 }
 
+function showErrMsg(location, msg) {
+    $(location).css({
+        'font-size': 15,
+        'color': 'blue'
+    });
+    $(location).html('Error: ' + msg);
+}

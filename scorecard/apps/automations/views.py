@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
 
 from models import Automation
-from forms import AutomationNewForm, AutomationPersonalNewForm, AutomationForm, AutomationPersonalForm
+from forms import AutomationNewForm, AutomationPersonalNewForm, AutomationForm, AutomationPersonalForm, AutomationPersonalBatchForm
 from scorecard.apps.users.models import FunctionalGroup, Subteam
 
 
@@ -39,6 +39,9 @@ def automations(request):
             'human_resource': request.user.humanresource,
             'abbreviation': request.user.humanresource.functional_group.abbreviation
         })
+        automation_personal_batch_form = AutomationPersonalBatchForm(initial={
+            'abbreviation': request.user.humanresource.functional_group.abbreviation
+        })
 
     except AttributeError as e:
         print e.message, type(e)
@@ -49,12 +52,16 @@ def automations(request):
             'human_resource': request.user.humanresource,
             'abbreviation': 'QA'
         })
+        automation_personal_batch_form = AutomationPersonalBatchForm(initial={
+            'abbreviation': 'QA'
+        })
 
     personals = request.user.humanresource.automation_set.order_by('column_field')
     context = RequestContext(request, {
         'groups': groups,
         'form': automation_new_form,
         'form_personal': automation_personal_new_form,
+        'form_personal_batch': automation_personal_batch_form,
         'personals': personals
     })
     return render(request, 'automations/automations.html', context)
@@ -140,7 +147,7 @@ def automation_new(request):
         return redirect('automations:automations')
 
 
-def run_script(request):
+def script_test(request):
     automation_id = request.GET.get('automation_id', '')
     automation = get_object_or_404(Automation, pk=automation_id)
 
@@ -151,7 +158,7 @@ def run_script(request):
             exec(script_code)
 
             try:
-                result = run_script()
+                result = run_script(None, automation.human_resource.user.username)
                 automation.result = result
             except Exception as e:
                 print '{0}: {1}'.format(e.message, type(e))
@@ -173,3 +180,45 @@ def run_script(request):
         }
 
     return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+def automation_push_personal_batch(request):
+    if request.method == 'POST':
+        form = AutomationPersonalBatchForm(request.POST,
+                                           request.FILES,
+                                           initial={
+                                               'abbreviation': request.user.humanresource.functional_group.abbreviation
+                                           })
+        if form.is_valid():
+            subteam = form.cleaned_data['subteam']
+            column_field = form.cleaned_data['column_field']
+
+            if not request.FILES:
+                messages.error(request, 'No upload file selected.')
+                return redirect('automations:automations')
+            elif not request.FILES['script_file'].name.endswith('.py'):
+                messages.error(request, 'Invalid file type, unable to upload (must be .py)')
+                return redirect('automations:automations')
+            elif not form.cleaned_data['script_name']:
+                script_name = request.FILES['script_file'].name
+            else:
+                script_name = form.cleaned_data['script_name']
+
+            for hr in subteam.humanresource_set.all():
+                try:
+                    automation = Automation.objects.get(human_resource=hr,
+                                                        column_field=column_field)
+                    automation.script_name = script_name
+                    automation.script_file = request.FILES['script_file']
+                    automation.save()
+                except Automation.DoesNotExist:
+                    Automation.objects.create(human_resource=hr,
+                                              script_name=script_name,
+                                              script_file=request.FILES['script_file'],
+                                              column_field=column_field)
+            messages.success(request, 'Script \'{0}\' pushed to subteam \'{1}\''.format(script_name, subteam))
+
+        else:
+            messages.error(request, form.errors)
+
+        return redirect('automations:automations')

@@ -177,14 +177,6 @@ $('.editPhase form').on('submit', function(event){
     }
 });
 
-function showErrMsg(location, msg) {
-    $(location).css({
-        'font-size': 15,
-        'color': 'blue'
-    });
-    $(location).html('Error: ' + msg);
-}
-
 // For Gantt Chart Render
 function add_column_to_data(data){
     data.addColumn('string', 'Task ID');

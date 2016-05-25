@@ -18,7 +18,7 @@
 
             <div class="col-xs-6">
                 <div class="row">
-                    <label for="script-content">Script Content (Main function: run_script, Called function: Global):</label>
+                    <label for="script-content">Main function: run_script(date=None, username=None), Called function: Global</label>
                     <textarea class="form-control" id="script-content" name="script-content" rows="20" readonly>{{ script_content }}
                     </textarea>
                 </div>
@@ -41,8 +41,7 @@
 {% block footer %}
     <script>
         $('#run-script').click(function () {
-            $.getJSON("{% url 'automations:run_script' %}?automation_id={0}".format({{ automation.id }})).done(function(data){
-                console.log(data);
+            $.getJSON("{% url 'automations:script_test' %}?automation_id={0}".format({{ automation.id }})).done(function(data){
                 $('#run-script-result').val(data['result'])
             })
         })
