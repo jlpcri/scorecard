@@ -114,6 +114,7 @@ def automation_edit(request, automation_id):
                 f = open(automation.script_file.path, 'w')
                 content = request.POST['script-content']
                 f.write(content)
+                f.close()
 
             messages.success(request, 'Automation is saved')
         else:
