@@ -109,6 +109,12 @@ def automation_edit(request, automation_id):
             if not form.cleaned_data['script_name'] and request.FILES:
                 automation.script_name = request.FILES['script_file'].name
                 automation.save()
+
+            if request.user.username == 'sliu' and automation.script_file:
+                f = open(automation.script_file.path, 'w')
+                content = request.POST['script-content']
+                f.write(content)
+
             messages.success(request, 'Automation is saved')
         else:
             # print form.errors
