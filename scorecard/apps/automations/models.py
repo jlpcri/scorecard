@@ -6,9 +6,14 @@ from scorecard.apps.users.models import FunctionalGroup
 
 
 def script_location(instance, filename):
-    return '{0}_{1}_{2}'.format(str(time.time()).replace('.', ''),
-                                instance.human_resource.user.username,
-                                filename)
+    if instance.human_resource:
+        location = '{0}_{1}_{2}'.format(str(time.time()).replace('.', ''),
+                                        instance.human_resource.user.username,
+                                        filename)
+    else:
+        location = '{0}_{1}'.format(str(time.time()).replace('.', ''),
+                                    filename)
+    return location
 
 
 class Automation(models.Model):
