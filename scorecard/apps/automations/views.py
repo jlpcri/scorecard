@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -158,6 +159,8 @@ def script_test(request):
     automation_id = request.GET.get('automation_id', '')
     automation = get_object_or_404(Automation, pk=automation_id)
 
+    test_date = request.GET.get('test_date', '')
+
     # execute python code read from script file of automation
     if automation.script_file:
         try:
@@ -166,9 +169,9 @@ def script_test(request):
 
             try:
                 if automation.human_resource:
-                    result = run_script(None, automation.human_resource.user.username)
+                    result = run_script(test_date, automation.human_resource.user.username)
                 else:
-                    result = run_script()
+                    result = run_script(test_date)
                 automation.result = result
             except Exception as e:
                 print '{0}: {1}'.format(e.message, type(e))
