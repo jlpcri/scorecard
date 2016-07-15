@@ -16,12 +16,20 @@
                 </div>
 
                 <div class="col-xs-6">
-                    <div class="row">
-                        <label for="script-content">Main function: run_script(date=None, username=None), Called function: Global</label>
-                        <textarea class="form-control" id="script-content" name="script-content" rows="20" {% if not request.user.username == 'sliu' %}readonly{% endif %}>{{ script_content }}</textarea>
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-xs-12">
+                            <label for="testDatePicker">Test Date:</label>
+                            <input type="text" id="testDatePicker" name="testDatePicker">
+                        </div>
                     </div>
-                    <br>
-                    <div class="row">
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-xs-12">
+                            <label for="script-content">Main function: run_script(date=None, username=None), Called function: Global</label>
+                            <textarea class="form-control" id="script-content" name="script-content" rows="20" {% if not request.user.username == 'sliu' %}readonly{% endif %}>{{ script_content }}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 10px;">
                         <div class="col-xs-2">
                             <button type="button" id="run-script" name="run-script" class="btn btn-primary">Run Script</button>
                         </div>
@@ -40,10 +48,21 @@
 {% block footer %}
     <script>
         $('#run-script').click(function () {
-            $.getJSON("{% url 'automations:script_test' %}?automation_id={0}".format({{ automation.id }})).done(function(data){
+            var test_date = $('#testDatePicker').val();
+            $.getJSON("{% url 'automations:script_test' %}?automation_id={0}&test_date={1}".format({{ automation.id }}, test_date)).done(function(data){
                 $('#run-script-result').val(data['result'])
             })
-        })
+        });
+
+        var today = moment();
+        $('#testDatePicker').datepicker({
+            beforeShowDay: function(date){
+                return [date.getDay() == 5];
+            },
+            dateFormat: 'yy-mm-dd'
+        });
+        $('#testDatePicker').val(today.format('YYYY-MM-DD'));
+
 
     </script>
 {% endblock %}
