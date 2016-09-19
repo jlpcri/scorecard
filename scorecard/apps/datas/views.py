@@ -73,12 +73,12 @@ def export_excel(request):
                                                           created__year=date.year,
                                                           created__month=date.month,
                                                           created__day=date.day)
-                if not metric.updated:
-                    update_error = True
-                    update_error_list.append(str(functional_group.abbreviation))
-                else:
-                    write_to_excel(metric, ws)
-                    export_date = metric.created
+                # if not metric.updated:
+                #     update_error = True
+                #     update_error_list.append(str(functional_group.abbreviation))
+                # else:
+                write_to_excel(metric, ws)
+                export_date = metric.created
 
             if export_date:
                 export_file_name += get_week_ending_date(export_date)
@@ -123,17 +123,19 @@ def export_excel(request):
 
             metrics = functional_group.metrics_set.filter(subteam=None,
                                                           created__range=(start, end))
-            result = check_metrics_updated(metrics)
+            # result = check_metrics_updated(metrics)
 
-            if result['valid']:
-                write_to_excel_all(metrics, ws, functional_group.abbreviation)
-            else:
-                update_error = True
-                update_error_list.append(result['team'])
+            write_to_excel_all(metrics, ws, functional_group.abbreviation)
 
-        if update_error:
-            messages.error(request, 'Team {0} not updated'.format(update_error_list))
-            return redirect('datas:datas')
+            # if result['valid']:
+            #     write_to_excel_all(metrics, ws, functional_group.abbreviation)
+            # else:
+            #     update_error = True
+            #     update_error_list.append(result['team'])
+
+        # if update_error:
+        #     messages.error(request, 'Team {0} not updated'.format(update_error_list))
+        #     return redirect('datas:datas')
 
     response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
     response['Content-disposition'] = 'attachment; filename="{0}.xlsx"'.format(export_file_name)
