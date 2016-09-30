@@ -1,9 +1,9 @@
 from django.contrib.auth.models import User
 from django.db import models
-
 import simplejson
 
 from scorecard.apps.teams.models import TestMetrics, LabMetrics, InnovationMetrics, RequirementMetrics
+from scorecard.apps.projects.utils import REVENUE_SCALE_CHOICES
 
 
 class FunctionalGroup(models.Model):
@@ -26,7 +26,7 @@ class FunctionalGroup(models.Model):
     metric_type = models.CharField(max_length=13, choices=METRIC_CHOICES, default=TESTING)
 
     def __unicode__(self):
-        return self.name
+        return '{0}: {1}'.format(self.name, self.abbreviation)
 
     class Meta:
         verbose_name_plural = "Functional Groups"
@@ -118,6 +118,55 @@ class Subteam(models.Model):
         elif parent_metric_type == self.parent.LAB:
             return self.labmetrics_set
 
+    @property
+    def gantt_phases(self):
+        data = []
+        dependencies = ''
+        for item in self.projectphase_set.all():
+            if not item.actual_end:
+                for scale in REVENUE_SCALE_CHOICES:
+                    if item.project.revenue_scale == scale[0]:
+                        dependencies = scale[1]
+
+                data.append({
+                    'id': 'phase_' + str(item.id),
+                    'name': item.project.name + ': ' + item.name,
+                    'resource': 'Workers: ' + str(item.worker.count()) + ', Revenue: ' + dependencies,
+                    'start': item.estimate_start.strftime('%Y-%m-%d') if item.estimate_start else None,
+                    'end': item.estimate_end.strftime('%Y-%m-%d') if item.estimate_end else None,
+                    'duration': None,
+                    'percent_complete': None,
+                    'dependencies': None
+                })
+
+        return data
+
+    @property
+    def gantt_tickets(self):
+        data = []
+        dependencies = ''
+        for item in self.ticket_set.all():
+            if not item.actual_end:
+                for scale in REVENUE_SCALE_CHOICES:
+                    if item.revenue_scale == scale[0]:
+                        dependencies = scale[1]
+                data.append({
+                    'id': 'ticket_' + str(item.id),
+                    'name': 'Ticket: ' + item.key,
+                    'resource': 'Workers: ' + str(item.worker.count()) + ', Revenue: ' + dependencies,
+                    'start': item.estimate_start.strftime('%Y-%m-%d') if item.estimate_start else None,
+                    'end': item.estimate_end.strftime('%Y-%m-%d') if item.estimate_end else None,
+                    'duration': None,
+                    'percent_complete': None,
+                    'dependencies': None
+                })
+
+        return data
+
+    @property
+    def gantt_chart_data(self):
+        return self.gantt_phases + self.gantt_tickets
+
 
 class HumanResource(models.Model):
     """
@@ -132,11 +181,11 @@ class HumanResource(models.Model):
 
     def __unicode__(self):
         if self.functional_group:
-            return '{0}: {1}: {2}'.format(self.user.username,
-                                          self.functional_group.abbreviation,
-                                          self.manager)
+            return '{0} {1}: {2}'.format(self.user.first_name,
+                                          self.user.last_name,
+                                          self.functional_group.abbreviation)
         else:
-            return '{0}: {1}: {2}'.format(self.user.username, 'No Team',  self.manager)
+            return '{0}: {1}'.format(self.user.username, 'No Team')
 
     @property
     def stat_set(self):

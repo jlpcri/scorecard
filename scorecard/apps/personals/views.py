@@ -8,7 +8,7 @@ from django.template import RequestContext
 from scorecard.apps.core.views import check_user_team
 
 from scorecard.apps.personals.tasks import weekly_personal_stats_new
-from scorecard.apps.personals.utils import get_distinct_dates
+from scorecard.apps.personals.utils import get_distinct_dates, get_automation_data
 from scorecard.apps.users.models import FunctionalGroup, HumanResource
 from models import InnovationStats, LabStats, RequirementStats, TestStats
 from scorecard.apps.users.views import user_is_superuser
@@ -23,7 +23,7 @@ def personals(request):
     if request.GET.get('expand', None) and (request.user.is_superuser or request.user.humanresource.manager):
         return render(request, 'personals/nonmanager.html', {'stats': HumanResource.objects.get(id=request.GET.get('expand', None)).stat_set.all().order_by('-created')})
 
-    function_groups = FunctionalGroup.objects.all()
+    function_groups = FunctionalGroup.objects.all().order_by('name')
     dates = get_distinct_dates()
     context = RequestContext(request, {
         'groups': function_groups,
@@ -217,3 +217,28 @@ def fetch_personals_per_team_per_date(key, date):
 
     return data
 
+
+def collect_data(request):
+    key = request.GET.get('key', '')
+    stats_id = request.GET.get('stats_id', '')
+
+    try:
+        fg = FunctionalGroup.objects.get(abbreviation=key)
+        if fg.metric_type == FunctionalGroup.TESTING:
+            personal_stat = TestStats.objects.get(pk=stats_id)
+        elif fg.metric_type == FunctionalGroup.DEVELOPMENT:
+            personal_stat = InnovationStats.objects.get(pk=stats_id)
+        elif fg.metric_type == FunctionalGroup.REQUIREMENTS:
+            personal_stat = RequirementStats.objects.get(pk=stats_id)
+        elif fg.metric_type == FunctionalGroup.LAB:
+            personal_stat = LabStats.objects.get(pk=stats_id)
+        else:
+            raise ValueError("Fell through stat retrieval table")
+    except Exception as e:
+        print e
+        messages.error(request, 'Failed to load selected scorecard. Please email QEIInnovation@west.com for assistance.')
+        return redirect('personals:personals')
+
+    automation_data = get_automation_data(request, personal_stat)
+
+    return HttpResponse(json.dumps(automation_data), content_type="application/json")

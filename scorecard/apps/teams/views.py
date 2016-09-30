@@ -11,7 +11,8 @@ from forms import InnovationForm, LabForm, RequirementForm, TestForm
 from scorecard.apps.core.views import check_user_team
 from scorecard.apps.users.views import user_is_superuser, user_is_manager
 from tasks import weekly_metric_new, weekly_send_email
-from utils import context_teams, fetch_team_members_per_team_per_date, fetch_collect_data_per_team_per_date
+from utils import context_teams, fetch_team_members_per_team_per_date, fetch_collect_data_per_team_per_date, \
+    aggregate_subteam_to_team
 from scorecard.apps.users.models import FunctionalGroup, Subteam
 
 from django.http import HttpResponse
@@ -23,18 +24,6 @@ def teams(request):
     check_user_team(request)
 
     context = RequestContext(request, context_teams(request))
-
-    groups = []
-    for group in FunctionalGroup.objects.all():
-        group_dict = {'group': group,
-                      'weeks': group.metrics_set.filter(subteam=None).order_by('-created'),
-                      'subteams': [{'team': team, 'weeks': team.metrics_set.all().order_by('-created')}
-                                   for team in Subteam.objects.filter(parent=group)]}
-        groups.append(group_dict)
-        if group.abbreviation == 'TL':
-            print group_dict
-    context.update({'groups': groups})
-
 
     return render(request, 'teams/teams.html', context)
 
@@ -127,10 +116,14 @@ def metric_edit(request, metric_id):
                 metric.updated = True
                 metric.save()
 
+            # Aggregate Subteam to Team
+            aggregate_subteam_to_team(metric)
+
             context = context_teams(request)
             context['key'] = key
             return render(request, 'teams/teams.html', context)
         else:
+            # print form.errors
             messages.error(request, 'Correct errors in the form')
             context = RequestContext(request, {
                 'metric': metric,
@@ -169,7 +162,7 @@ def collect_data(request):
     date = request.GET.get('date', '')
     subteam = request.GET.get('subteam', '')
 
-    initial_data = fetch_collect_data_per_team_per_date(key, date, subteam)
+    initial_data = fetch_collect_data_per_team_per_date(key, date, subteam, metric_id)
 
     try:
         test_metric_config = TestMetricsConfiguration.objects.get(functional_group__abbreviation=key)

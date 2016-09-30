@@ -1,29 +1,33 @@
 from django import forms
 from django.forms import ModelForm
 
-from models import Automation, FunctionalGroup
-from utils import CHOICES_QE, CHOICES_TL, CHOICES_RE, CHOICES_QA_TE
+from models import Automation
+from scorecard.apps.users.models import Subteam, HumanResource
+from scorecard.apps.personals.models import InnovationStats, LabStats, RequirementStats, TestStats
+from scorecard.apps.teams.models import InnovationMetrics, LabMetrics, RequirementMetrics, TestMetrics
+from utils import get_model_fields
 
 
 class AutomationNewForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(AutomationNewForm, self).__init__(*args, **kwargs)
+        level = 'team'
         try:
             abbreviation = kwargs.pop('initial')['abbreviation']
         except KeyError:
             abbreviation = ''
         if abbreviation == 'QE':
-            choices = CHOICES_QE
+            choices = get_model_fields(InnovationMetrics, abbreviation, level=level)
         elif abbreviation == 'TL':
-            choices = CHOICES_TL
+            choices = get_model_fields(LabMetrics, abbreviation, level=level)
         elif abbreviation == 'RE':
-            choices = CHOICES_RE
+            choices = get_model_fields(RequirementMetrics, abbreviation, level=level)
         elif abbreviation in ['QA', 'TE']:
-            choices = CHOICES_QA_TE
+            choices = get_model_fields(TestMetrics, abbreviation, level=level)
         else:
             choices = ''
-        self.fields['functional_group'] = forms.ModelChoiceField(widget=forms.Select(attrs={'class': 'form-control'}),
-                                                                 queryset=FunctionalGroup.objects.filter(abbreviation=abbreviation))
+        self.fields['subteam'] = forms.ModelChoiceField(widget=forms.Select(attrs={'class': 'form-control'}),
+                                                        queryset=Subteam.objects.filter(parent__abbreviation=abbreviation))
         self.fields['column_field'] = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}),
                                                         choices=choices)
 
@@ -32,9 +36,46 @@ class AutomationNewForm(ModelForm):
 
     class Meta:
         model = Automation
-        fields = ['functional_group', 'column_field', 'script_name', 'script_file']
+        fields = ['subteam', 'column_field', 'script_name', 'script_file']
         widgets = {
-            'functional_group': forms.Select(attrs={'class': 'form-control'}),
+            'subteam': forms.Select(attrs={'class': 'form-control'}),
+            'column_field': forms.Select(attrs={'class': 'form-control'}),
+            # 'script_name': forms.TextInput(attrs={'class': 'form-control'})
+        }
+
+
+class AutomationPersonalNewForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(AutomationPersonalNewForm, self).__init__(*args, **kwargs)
+        try:
+            abbreviation = kwargs.pop('initial')['abbreviation']
+        except KeyError:
+            abbreviation = ''
+
+        level = 'person'
+        if abbreviation == 'QE':
+            choices = get_model_fields(InnovationStats, abbreviation, level=level)
+        elif abbreviation == 'TL':
+            choices = get_model_fields(LabStats, abbreviation, level=level)
+        elif abbreviation == 'RE':
+            choices = get_model_fields(RequirementStats, abbreviation, level=level)
+        elif abbreviation in ['QA', 'TE']:
+            choices = get_model_fields(TestStats, abbreviation, level=level)
+        else:
+            choices = ''
+        self.fields['human_resource'] = forms.ModelChoiceField(widget=forms.Select(attrs={'class': 'form-control'}),
+                                                               queryset=HumanResource.objects.filter(functional_group__abbreviation=abbreviation))
+        self.fields['column_field'] = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}),
+                                                        choices=choices)
+
+    script_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}),
+                                  required=False)
+
+    class Meta:
+        model = Automation
+        fields = ['human_resource', 'column_field', 'script_name', 'script_file']
+        widgets = {
+            'human_resource': forms.Select(attrs={'class': 'form-control'}),
             'column_field': forms.Select(attrs={'class': 'form-control'}),
             # 'script_name': forms.TextInput(attrs={'class': 'form-control'})
         }
@@ -44,19 +85,71 @@ class AutomationForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(AutomationForm, self).__init__(*args, **kwargs)
         if self.instance:
-            self.fields['functional_group'] = forms.ModelChoiceField(queryset=FunctionalGroup.objects.filter(abbreviation=self.instance.functional_group.abbreviation),
-                                                                     widget=forms.Select(attrs={'class': 'form-control',
-                                                                                                'readonly': True}))
+            self.fields['subteam'] = forms.ModelChoiceField(queryset=Subteam.objects.filter(parent__abbreviation=self.instance.subteam.parent.abbreviation),
+                                                            widget=forms.Select(attrs={'class': 'form-control',
+                                                                                       'readonly': True}))
 
     script_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}),
                                   required=False)
 
     class Meta:
         model = Automation
-        fields = ['functional_group', 'column_field', 'script_name', 'script_file']
+        fields = ['subteam', 'column_field', 'script_name', 'script_file']
         widgets = {
-            # 'functional_group': forms.Select(attrs={'class': 'form-control',
-            #                                         'readonly': True}),
             'column_field': forms.TextInput(attrs={'class': 'form-control',
                                                    'readonly': True}),
         }
+
+
+class AutomationPersonalForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(AutomationPersonalForm, self).__init__(*args, **kwargs)
+        if self.instance:
+            self.fields['human_resource'] = forms.ModelChoiceField(queryset=HumanResource.objects.filter(),
+                                                            widget=forms.Select(attrs={'class': 'form-control',
+                                                                                       'readonly': True}))
+
+    script_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}),
+                                  required=False)
+
+    class Meta:
+        model = Automation
+        fields = ['human_resource', 'column_field', 'script_name', 'script_file']
+        widgets = {
+            'column_field': forms.TextInput(attrs={'class': 'form-control',
+                                                   'readonly': True}),
+        }
+
+
+class AutomationPersonalBatchForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(AutomationPersonalBatchForm, self).__init__(*args, **kwargs)
+        level = 'personal'
+        try:
+            abbreviation = kwargs.pop('initial')['abbreviation']
+        except KeyError:
+            abbreviation = ''
+
+        level = 'person'
+        if abbreviation == 'QE':
+            choices = get_model_fields(InnovationStats, abbreviation, level=level)
+        elif abbreviation == 'TL':
+            choices = get_model_fields(LabStats, abbreviation, level=level)
+        elif abbreviation == 'RE':
+            choices = get_model_fields(RequirementStats, abbreviation, level=level)
+        elif abbreviation in ['QA', 'TE']:
+            choices = get_model_fields(TestStats, abbreviation, level=level)
+        else:
+            choices = ''
+
+        self.fields['subteam'] = forms.ModelChoiceField(widget=forms.Select(attrs={'class': 'form-control'}),
+                                                        queryset=Subteam.objects.filter(parent__abbreviation=abbreviation))
+        self.fields['subteam'].empty_label = None
+        self.fields['column_field'] = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}),
+                                                        choices=choices)
+
+    subteam = forms.ChoiceField()
+    column_field = forms.ChoiceField()
+    script_name = forms.CharField(required=False,
+                                  widget=forms.TextInput(attrs={'class': 'form-control'}))
+    script_file = forms.FileField(required=False)

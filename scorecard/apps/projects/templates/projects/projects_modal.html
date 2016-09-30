@@ -46,6 +46,16 @@
                             <input type="text" class="form-control input-sm" name="editProjectName" id="editProjectName">
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label for="editProjectRevenue">Revenue Scale:</label>
+                            <select id="editProjectRevenue" name="editProjectRevenue" class="form-control">
+                                {% for revenue in revenues %}
+                                    <option value="{{ revenue.0 }}">{{ revenue.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
                     <br>
                     <div class="row">
                         <div class="col-xs-10">
@@ -77,6 +87,28 @@
                 </div>
                 <div class="modal-body">
                     {{ project_phase_new_form }}
+
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <label for="newPhaseEstimateStart">Estimate Start:</label>
+                            <input type="text" class="form-control input-date" name="newPhaseEstimateStart" id="newPhaseEstimateStart">
+                        </div>
+                        <div class="col-xs-6">
+                            <label for="newPhaseEstimateEnd">Estimate End:</label>
+                            <input type="text" class="form-control input-date" name="newPhaseEstimateEnd" id="newPhaseEstimateEnd">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <label for="newPhaseActualStart">Actual Start:</label>
+                            <input type="text" class="form-control input-date" name="newPhaseActualStart" id="newPhaseActualStart">
+                        </div>
+                        <div class="col-xs-6">
+                            <label for="newPhaseActualEnd">Actual End:</label>
+                            <input type="text" class="form-control input-date" name="newPhaseActualEnd" id="newPhaseActualEnd">
+                        </div>
+                    </div>
+
                     <br>
                     <div class="row">
                         <div class="col-xs-12">
@@ -117,10 +149,10 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12">
-                            <label for="editPhaseFunctionalGroup">Functional Group:</label>
-                            <select id="editPhaseFunctionalGroup" name="editPhaseFunctionalGroup" class="form-control">
-                                {% for function_group in function_groups %}
-                                    <option value="{{ function_group.id }}">{{ function_group.name }}</option>
+                            <label for="editPhaseSubteam">Subteam:</label>
+                            <select id="editPhaseSubteam" name="editPhaseSubteam" class="form-control">
+                                {% for item in subteams %}
+                                    <option value="{{ item.id }}">{{ item.parent.abbreviation }} {{ item.name }}</option>
                                 {% endfor %}
                             </select>
                             </div>
@@ -129,8 +161,18 @@
                         <div class="col-xs-12">
                             <label for="editPhaseLead">Lead:</label>
                             <select id="editPhaseLead" name="editPhaseLead" class="form-control">
-                                {% for lead in leads %}
+                                {% for lead in hrs %}
                                     <option value="{{ lead.id }}">{{ lead.user.first_name }} {{ lead.user.last_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label for="editPhaseWorker">Worker:</label>
+                            <select multiple id="editPhaseWorker" name="editPhaseWorker" class="form-control">
+                                {% for worker in hrs %}
+                                    <option value="{{ worker.id }}">{{ worker.user.first_name }} {{ worker.user.last_name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -199,6 +241,26 @@
                 </div>
                 <div class="modal-body">
                     {{ ticket_new_form }}
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <label for="newTicketEstimateStart">Estimate Start:</label>
+                            <input type="text" class="form-control input-date" name="newTicketEstimateStart" id="newTicketEstimateStart">
+                        </div>
+                        <div class="col-xs-6">
+                            <label for="newTicketEstimateEnd">Estimate End:</label>
+                            <input type="text" class="form-control input-date" name="newTicketEstimateEnd" id="newTicketEstimateEnd">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <label for="newTicketActualStart">Actual Start:</label>
+                            <input type="text" class="form-control input-date" name="newTicketActualStart" id="newTicketActualStart">
+                        </div>
+                        <div class="col-xs-6">
+                            <label for="newTicketActualEnd">Actual End:</label>
+                            <input type="text" class="form-control input-date" name="newTicketActualEnd" id="newTicketActualEnd">
+                        </div>
+                    </div>
                     <br>
                     <div class="row">
                         <div class="col-xs-12">
@@ -229,20 +291,40 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xs-12">
-                            <label for="editTicketFunctionalGroup">Functional Group:</label>
-                            <select id="editTicketFunctionalGroup" name="editTicketFunctionalGroup" class="form-control">
-                                {% for function_group in function_groups %}
-                                    <option value="{{ function_group.id }}">{{ function_group.name }}</option>
+                            <label for="editTicketSubteam">Subteam:</label>
+                            <select id="editTicketSubteam" name="editTicketSubteam" class="form-control">
+                                {% for item in subteams %}
+                                    <option value="{{ item.id }}">{{ item.parent.abbreviation }} {{ item.name }}</option>
                                 {% endfor %}
                             </select>
                             </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12">
+                            <label for="editTicketRevenue">Revenue Scale:</label>
+                            <select id="editTicketRevenue" name="editTicketRevenue" class="form-control">
+                                {% for revenue in revenues %}
+                                    <option value="{{ revenue.0 }}">{{ revenue.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
                             <label for="editTicketLead">Lead:</label>
                             <select id="editTicketLead" name="editTicketLead" class="form-control">
-                                {% for lead in leads %}
+                                {% for lead in hrs %}
                                     <option value="{{ lead.id }}">{{ lead.user.first_name }} {{ lead.user.last_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label for="editTicketWorker">Worker:</label>
+                            <select multiple id="editTicketWorker" name="editTicketWorker" class="form-control">
+                                {% for worker in hrs %}
+                                    <option value="{{ worker.id }}">{{ worker.user.first_name }} {{ worker.user.last_name }}</option>
                                 {% endfor %}
                             </select>
                         </div>

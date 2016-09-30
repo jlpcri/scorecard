@@ -6,14 +6,24 @@ from scorecard.apps.users.models import FunctionalGroup
 
 
 def script_location(instance, filename):
-    return '{0}_{1}'.format(str(time.time()).replace('.', ''), filename)
+    if instance.human_resource:
+        location = '{0}_{1}_{2}'.format(str(time.time()).replace('.', ''),
+                                        instance.human_resource.user.username,
+                                        filename)
+    else:
+        location = '{0}_{1}'.format(str(time.time()).replace('.', ''),
+                                    filename)
+    return location
 
 
 class Automation(models.Model):
     """
     Let user upload python script to automatically fetch data from Server: JIRA, ISR, Confluence, Pheme etc.
     """
-    functional_group = models.ForeignKey('users.FunctionalGroup')
+    # functional_group = models.ForeignKey('users.FunctionalGroup')
+    subteam = models.ForeignKey('users.Subteam', blank=True, null=True)
+    human_resource = models.ForeignKey('users.HumanResource', blank=True, null=True)
+
     tests_run = models.PositiveIntegerField(default=0)  # how many times to click Tested button
     last_success = models.DateTimeField(auto_now=True, db_index=True)
     last_failure = models.DateTimeField(auto_now=True, db_index=True)
@@ -26,13 +36,19 @@ class Automation(models.Model):
     column_field = models.CharField(max_length=50)
 
     class Meta:
-        unique_together = (("functional_group", "column_field"), )
+        unique_together = (("subteam", "column_field"), ("human_resource", "column_field"), )
 
     def __unicode__(self):
-        return '{0}: {1}: {2}: {3}'.format(self.functional_group.abbreviation,
-                                           self.column_field,
-                                           self.tests_run,
-                                           localtime(self.last_success))
+        if self.subteam:
+            return '{0}: {1}: {2}: {3}'.format(self.subteam.parent.abbreviation,
+                                               self.column_field,
+                                               self.tests_run,
+                                               localtime(self.last_success))
+        else:
+            return '{0}: {1}: {2}: {3}'.format(self.human_resource,
+                                               self.column_field,
+                                               self.tests_run,
+                                               localtime(self.last_success))
 
 
 

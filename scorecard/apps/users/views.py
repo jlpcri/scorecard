@@ -22,7 +22,7 @@ def home(request):
 
     return render(request, 'users/home.html',
                   {
-                      'groups': FunctionalGroup.objects.all(),
+                      'groups': FunctionalGroup.objects.all().order_by('name'),
                       'column_preferences': ColumnPreference.objects.filter(user=request.user)
                   })
 
@@ -39,10 +39,15 @@ def user_manager_check(request):
     data = {}
     user_id = request.GET.get('user_id', '')
     user = User.objects.get(pk=user_id)
+
     try:
         data['group'] = user.humanresource.functional_group.id
     except AttributeError:
         data['group'] = None
+    try:
+        data['subteam'] = user.humanresource.subteam.id
+    except AttributeError:
+        data['subteam'] = None
 
     if user.humanresource.manager:
         data['manager'] = True

@@ -43,14 +43,14 @@
                         {% endif %}
                     </th>
                     <th class="col-xs-1">
-                        {% if sort == 'humanresource__functional_group__key' %}
-                            <a href="{% url 'users:management' %}?sort=-humanresource__functional_group__key">
+                        {% if sort == 'humanresource__functional_group__abbreviation' %}
+                            <a href="{% url 'users:management' %}?sort=-humanresource__functional_group__abbreviation">
                             <strong>Team</strong></a>&nbsp;<i class="fa fa-sort-asc"></i>
-                        {% elif sort == '-humanresource__functional_group__key' %}
-                            <a href="{% url 'users:management' %}?sort=humanresource__functional_group__key">
+                        {% elif sort == '-humanresource__functional_group__abbreviation' %}
+                            <a href="{% url 'users:management' %}?sort=humanresource__functional_group__abbreviation">
                             <strong>Team</strong></a>&nbsp;<i class="fa fa-sort-desc"></i>
                         {% else %}
-                            <a href="{% url 'users:management' %}?sort=humanresource__functional_group__key">
+                            <a href="{% url 'users:management' %}?sort=humanresource__functional_group__abbreviation">
                             <strong>Team</strong></a>&nbsp;<i class="fa fa-sort"></i>
                         {% endif %}
                     </th>
@@ -65,7 +65,7 @@
                     <td>{{ user.username }}</td>
                     <td>{{ user.first_name }} {{ user.last_name }}</td>
                     <td>{{ user.last_login }}</td>
-                    <td>{{ user.humanresource.functional_group.key }}</td>
+                    <td>{{ user.humanresource.functional_group.abbreviation }}</td>
                     <td style="text-align: center;">
                         <input type="checkbox" name="is_active" {% if user.is_active %}checked{% endif %}>
                     </td>

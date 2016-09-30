@@ -1,10 +1,21 @@
 {% extends 'core/base.html' %}
+{% load staticfiles %}
 
 {% block title %} Personal Status{% endblock %}
 
 {% block body %}
     <div class="container">
-        <h2>{{ personal_stat.human_resource.user.first_name }} {{ personal_stat.human_resource.user.last_name }}, Personal Status - {{ personal_stat.created|date }}</h2>
+        <div class="col-sm-8">
+            <h2>{{ personal_stat.human_resource.user.first_name }} {{ personal_stat.human_resource.user.last_name }}, Personal Status - {{ personal_stat.created|date }}</h2>
+        </div>
+        <div class="col-sm-2">
+            <br>
+            <input id="collect-data-button" class="btn btn-primary" style="width:100%;" type="button" value="Collect Data">
+        </div>
+        <div class="col-sm-1">
+            <br>
+            <img id="collect-data-progress" src="{% static 'scorecard/floating.gif' %}" height="42" width="42" hidden>
+        </div>
         <br>
         <form action="{% url 'personals:personal_stats_edit' personal_stat.id %}?key={{ personal_stat.human_resource.functional_group.key }}" method="post">
             <div class="row">
@@ -28,18 +39,18 @@
                     </div>
                 </div>
                 <div class="col-sm-6">
-                    {% with key=personal_stat.human_resource.functional_group.key phase_count=personal_stat.phases_lead_count %}
+                    {% with key=personal_stat.human_resource.functional_group.key phases_count=personal_stat.phases_lead_count tickets_count=personal_stat.tickets_lead_count %}
                         {% if key in 'QA, TE' %}
                             <div class="row">
                                 <div class="col-sm-6">
                                     <label>Phases Lead:</label>
                                 </div>
                                 <div class="col-sm-6">
-                                    <input class="gentle" value="{{ phase_count }}" disabled/>
+                                    <input class="gentle" value="{{ phases_count }}" disabled/>
                                 </div>
                             </div>
 
-                            {% if phase_count > 0 %}
+                            {% if phases_count > 0 %}
                                 <h5>Start Delays and Diff Durations (Business Days)</h5>
                                 <div class="row">
                                     <div class="col-sm-1"></div>
@@ -62,12 +73,31 @@
                             <br>
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <label>Tickets Worked:</label>
+                                    <label>Tickets Lead:</label>
                                 </div>
                                 <div class="col-sm-6">
-                                    <input class="gentle" value="{{ personal_stat.tickets_worked }}" disabled/>
+                                    <input class="gentle" value="{{ tickets_count }}" disabled/>
                                 </div>
                             </div>
+                            {% if tickets_count > 0 %}
+                                <h5>Start Delays and Diff Durations (Business Days)</h5>
+                                <div class="row">
+                                    <div class="col-sm-1"></div>
+                                    <div class="col-sm-3"></div>
+                                    <div class="col-sm-3"><label>Ticket</label></div>
+                                    <div class="col-sm-2"><label>Start Delay</label></div>
+                                    <div class="col-sm-2"><label>Diff Duration</label></div>
+                                </div>
+                                {%  for item in personal_stat.ticket_delay_and_duration %}
+                                    <div class="row">
+                                        <div class="col-sm-1"></div>
+                                        <div class="col-sm-3"></div>
+                                        <div class="col-sm-3">{{ item.ticket }}</div>
+                                        <div {% if item.start_delay >= 0 %} class="col-sm-2" {% else %} class="col-sm-2 text-success" {% endif %}>{{ item.start_delay }}</div>
+                                        <div {% if item.diff_duration >= 0 %} class="col-sm-2" {% else %} class="col-sm-2 text-success" {% endif %}>{{ item.diff_duration }}</div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
                         {% endif %}
                     {% endwith %}
                 </div>
@@ -76,4 +106,10 @@
             {% csrf_token %}
         </form>
     </div>
+{% endblock %}
+
+{% block footer %}
+    <script>
+        {% include 'personals/personal_stats.js' %}
+    </script>
 {% endblock %}

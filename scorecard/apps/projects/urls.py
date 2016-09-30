@@ -14,4 +14,6 @@ urlpatterns = [
        url(r'^ticket/new/$', views.ticket_new, name='ticket_new'),
        url(r'^ticket/edit/$', views.ticket_edit, name='ticket_edit'),
 
+       url(r'^fetch_workers/$', views.fetch_workers, name='fetch_workers'),
+
 ]

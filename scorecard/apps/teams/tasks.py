@@ -14,7 +14,7 @@ from scorecard.apps.datas.utils import get_week_ending_date
 def weekly_metric_new():
     now = timezone.now()
     if now.isoweekday() == 1:
-        this_friday = now + timedelta(days=4)
+        this_friday = now + timedelta(days=5-now.isoweekday())
         try:
             qi = InnovationMetrics.objects.latest('created')
             if qi.created.date() == this_friday.date():
@@ -53,23 +53,37 @@ def metric_new(created):
                 TestMetrics.objects.create(functional_group=functional_group,
                                            subteam=subteam,
                                            created=created)
+            TestMetrics.objects.create(functional_group=functional_group,
+                                       created=created)  # Team entry
         elif functional_group.abbreviation == 'TE':
             for subteam in functional_group.subteam_set.exclude(name='Legacy'):
                 TestMetrics.objects.create(functional_group=functional_group,
                                            subteam=subteam,
                                            created=created)
+            TestMetrics.objects.create(functional_group=functional_group,
+                                       created=created)  # Team entry
         elif functional_group.abbreviation == 'QE':
+            for subteam in functional_group.subteam_set.all():
+                InnovationMetrics.objects.create(functional_group=functional_group,
+                                                 subteam=subteam,
+                                                 created=created)
             InnovationMetrics.objects.create(functional_group=functional_group,
-                                             subteam=functional_group.subteam_set.all()[0],
-                                             created=created)
+                                             created=created)  # Team Entry
+
         elif functional_group.abbreviation == 'RE':
+            for subteam in functional_group.subteam_set.all():
+                RequirementMetrics.objects.create(functional_group=functional_group,
+                                                  subteam=subteam,
+                                                  created=created)
             RequirementMetrics.objects.create(functional_group=functional_group,
-                                              subteam=functional_group.subteam_set.all()[0],
-                                              created=created)
+                                              created=created)  # Team Entry
         elif functional_group.abbreviation == 'TL':
+            for subteam in functional_group.subteam_set.all():
+                LabMetrics.objects.create(functional_group=functional_group,
+                                          subteam=subteam,
+                                          created=created)
             LabMetrics.objects.create(functional_group=functional_group,
-                                      subteam=functional_group.subteam_set.all()[0],
-                                      created=created)
+                                      created=created)  # Team Entry
 
     weekly_send_email()
 
@@ -77,6 +91,11 @@ def metric_new(created):
 def weekly_send_email():
 
     today = datetime.today()
+    today_weekday = today.isoweekday()
+    if today_weekday != 5:
+        this_friday = today + timedelta(days=5-today_weekday)
+    else:
+        this_friday = today
     functional_groups = FunctionalGroup.objects.all()
 
     subject = 'Weekly ScoreCard Data'
@@ -92,9 +111,9 @@ def weekly_send_email():
         'pjneuberger@west.com',  # TL: Paul Neuberger
         'CAHeyden@west.com'  # QI
     ]
-    # to_email = ['sliu@west.com', 'QEIInnovation@west.com'] + managers_email
-    to_email = ['sliu@west.com']
-    content = '<p>Following are the links to access the week <strong>{0}</strong> Scorecard manager input:</p>'.format(get_week_ending_date(today))
+    to_email = ['sliu@west.com', 'QEIInnovation@west.com'] + managers_email
+    # to_email = ['sliu@west.com']
+    content = '<p>Following are the links to access the week <strong>{0}</strong> Scorecard manager input:</p>'.format(get_week_ending_date(this_friday))
     content += '<ul>'
 
     for functional_group in functional_groups:
@@ -122,7 +141,6 @@ def weekly_send_email():
     msg = EmailMultiAlternatives(subject, content, from_email, to_email)
     msg.content_subtype = 'html'
 
-    # if socket.gethostname() == 'sliu-OptiPlex-GX520':
     msg.send()
 
 
@@ -136,5 +154,4 @@ def err_message_send_email(err_message):
     msg = EmailMultiAlternatives(subject, content, from_email, to_email)
     msg.content_subtype = 'html'
 
-    if socket.gethostname() == 'sliu-OptiPlex-GX520':
-        msg.send()
+    msg.send()

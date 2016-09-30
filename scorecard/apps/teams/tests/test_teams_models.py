@@ -4,14 +4,14 @@ from django.test import TestCase
 from django.utils.timezone import localtime
 import pytz
 
-from scorecard.apps.teams.models import InnovationMetrics, LabMetrics, RequirementMetrics, TestMetrics, FunctionalGroup, TestMetricsConfiguration
-
+from scorecard.apps.teams.models import InnovationMetrics, LabMetrics, RequirementMetrics, TestMetrics, TestMetricsConfiguration
+from scorecard.apps.users.models import FunctionalGroup
 
 class InnovationMetricsModelTest(TestCase):
     def setUp(self):
         self.functional_group = FunctionalGroup.objects.create(
             name='Quality Innovation',
-            key='QI'
+            abbreviation='QI'
         )
         self.innovation = InnovationMetrics(
             functional_group=self.functional_group,
@@ -63,7 +63,7 @@ class RequirementMetricsModelTest(TestCase):
     def setUp(self):
         self.functional_group = FunctionalGroup.objects.create(
             name='Requirement Engineering',
-            key='RE'
+            abbreviation='RE'
         )
         self.requirement = RequirementMetrics.objects.create(
             functional_group=self.functional_group,
@@ -150,7 +150,7 @@ class LabMetricsModelTest(TestCase):
     def setUp(self):
         self.functional_group = FunctionalGroup.objects.create(
             name='Test Lab',
-            key='TL'
+            abbreviation='TL'
         )
         self.lab = LabMetrics.objects.create(
             functional_group=self.functional_group,
@@ -171,15 +171,15 @@ class TestMetricsModelTest(TestCase):
     def setUp(self):
         self.functional_group = FunctionalGroup.objects.create(
             name='Quality Assurance',
-            key='QA'
+            abbreviation='QA'
         )
         self.functional_group_te = FunctionalGroup.objects.create(
             name='Test Engineering',
-            key='TE'
+            abbreviation='TE'
         )
         self.functional_group_others = FunctionalGroup.objects.create(
             name='Other Group',
-            key='OG'
+            abbreviation='OG'
         )
         self.test_metric_config_qa = TestMetricsConfiguration.objects.create(
             functional_group=self.functional_group,
@@ -200,6 +200,7 @@ class TestMetricsModelTest(TestCase):
         )
         self.staffs = random.randint(1, 100)
         self.contractors = random.randint(1, 100)
+        self.testers = random.randint(1, 100)
 
         self.tc_manual_dev = random.random() * 100
         self.tc_auto_dev = random.random() * 100
@@ -212,6 +213,7 @@ class TestMetricsModelTest(TestCase):
 
         self.tc_manual_execution_time = random.random() * 100
         self.tc_auto_execution_time = random.random() * 100
+        self.estimate_auto_time = random.random() * 100
 
         self.project_prep = random.randint(1, 100)
         self.project_execution = random.randint(1, 100)
@@ -317,18 +319,17 @@ class TestMetricsModelTest(TestCase):
                          round(self.tc_manual_dev_time + self.tc_auto_dev_time + self.tc_manual_execution_time + self.tc_auto_execution_time, 6))
 
     def test_gross_available_time(self):
-        self.test_metric.staffs = self.staffs
-        self.test_metric.contractors = self.contractors
+        self.test_metric.testers = self.testers
         self.test_metric.save()
 
         self.assertEqual(self.test_metric.gross_available_time,
-                         (self.staffs + self.contractors) * 30)
+                         self.testers * 30)
 
     def test_efficiency_no_human_resources(self):
         self.assertEqual(self.test_metric.efficiency, 0)
 
     def test_efficiency(self):
-        self.test_metric.staffs = self.staffs
+        self.test_metric.testers = self.testers
         self.test_metric.contractors = self.contractors
         self.test_metric.tc_manual_dev_time = self.tc_manual_dev_time
         self.test_metric.tc_auto_dev_time = self.tc_auto_dev_time
@@ -337,7 +338,7 @@ class TestMetricsModelTest(TestCase):
         self.test_metric.save()
 
         auto_execution_time = self.tc_manual_dev_time + self.tc_auto_dev_time + self.tc_manual_execution_time + self.tc_auto_execution_time
-        gross_available = (self.staffs + self.contractors) * 30
+        gross_available = self.testers * 30
 
         self.assertEqual(round(self.test_metric.efficiency, 10),
                          round(auto_execution_time / gross_available, 10))
@@ -396,6 +397,7 @@ class TestMetricsModelTest(TestCase):
 
     def test_auto_savings_qa(self):
         self.test_metric.tc_auto_execution_time = self.tc_auto_execution_time
+        self.test_metric.estimate_auto_time = self.estimate_auto_time
         self.test_metric.save()
 
         test_configs = self.functional_group.testmetricsconfiguration_set.all()
@@ -405,11 +407,12 @@ class TestMetricsModelTest(TestCase):
             rate = 0
 
         self.assertEqual(self.test_metric.auto_savings,
-                         self.tc_auto_execution_time * rate)
+                         (self.estimate_auto_time - self.tc_auto_execution_time) * rate)
 
     def test_auto_savings_te(self):
         self.test_metric.functional_group = self.functional_group_te
         self.test_metric.tc_auto_execution_time = self.tc_auto_execution_time
+        self.test_metric.estimate_auto_time = self.estimate_auto_time
         self.test_metric.save()
 
         test_configs = self.functional_group_te.testmetricsconfiguration_set.all()
@@ -419,7 +422,7 @@ class TestMetricsModelTest(TestCase):
             rate = 0
 
         self.assertEqual(self.test_metric.auto_savings,
-                         self.tc_auto_execution_time * rate)
+                         (self.estimate_auto_time - self.tc_auto_execution_time) * rate)
 
     def test_auto_savings_others(self):
         self.test_metric.functional_group = self.functional_group_others
@@ -433,7 +436,7 @@ class TestMetricsConfigurationModelTest(TestCase):
     def setUp(self):
         self.functional_group = FunctionalGroup.objects.create(
             name='Quality Innovation',
-            key='QI'
+            abbreviation='QI'
         )
         self.test_config = TestMetricsConfiguration.objects.create(
             functional_group=self.functional_group,

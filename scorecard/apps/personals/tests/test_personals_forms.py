@@ -1,6 +1,7 @@
 import random
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.utils import timezone
 
 from scorecard.apps.personals.models import InnovationStats, LabStats, RequirementStats, TestStats
 from scorecard.apps.personals.forms import InnovationForm, LabForm, RequirementForm, TestForm
@@ -11,7 +12,7 @@ class InnovationFormTest(TestCase):
     def setUp(self):
         self.fg_qi = FunctionalGroup.objects.create(
             name='Quality Innovation',
-            key='QI'
+            abbreviation='QI'
         )
         self.user_account = {
             'username': 'UserName',
@@ -27,39 +28,31 @@ class InnovationFormTest(TestCase):
             manager=True
         )
         self.personal_stat = InnovationStats.objects.create(
-            human_resource=self.hr
+            human_resource=self.hr,
+            created=timezone.now()
         )
 
     def test_innovation_form_valid_with_valid_params(self):
-        data = {
-            'overtime_weekday': random.randint(1, 100),
-            'overtime_weekend': random.randint(1, 100),
-            'rework_time': random.randint(1, 100),
-            'story_points_execution': random.randint(1, 100),
-            'unit_tests_dev': random.randint(1, 100),
-            'elicitation_analysis_time': random.randint(1, 100)
-        }
+        data = {}
+        for field in InnovationForm().fields:
+            data[field] = random.randint(1, 100)
         form = InnovationForm(instance=self.personal_stat, data=data)
         self.assertTrue(form.is_valid())
 
     def test_innovation_form_invalid_with_blank(self):
         form = InnovationForm({})
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors, {
-            'overtime_weekday': ['This field is required.'],
-            'overtime_weekend': ['This field is required.'],
-            'rework_time': ['This field is required.'],
-            'story_points_execution': ['This field is required.'],
-            'unit_tests_dev': ['This field is required.'],
-            'elicitation_analysis_time': ['This field is required.']
-        })
+        errors = {}
+        for field in InnovationForm().fields:
+            errors[field] = ['This field is required.']
+        self.assertEqual(form.errors, errors)
 
 
 class LabFormTest(TestCase):
     def setUp(self):
         self.fg_tl = FunctionalGroup.objects.create(
             name='Test Lab',
-            key='TL'
+            abbreviation='TL'
         )
         self.user_account = {
             'username': 'UserName',
@@ -75,35 +68,32 @@ class LabFormTest(TestCase):
             manager=True
         )
         self.personal_stat = LabStats.objects.create(
-            human_resource=self.hr
+            human_resource=self.hr,
+            created=timezone.now()
         )
 
     def test_lab_form_valid_with_valid_params(self):
-        data = {
-            'overtime_weekday': random.randint(1, 100),
-            'overtime_weekend': random.randint(1, 100),
-            'rework_time': random.randint(1, 100),
-            'tickets_closed': random.randint(1, 100)
-        }
+        data = {}
+        for field in LabForm().fields:
+            data[field] = random.randint(1, 100)
+
         form = LabForm(instance=self.personal_stat, data=data)
         self.assertTrue(form.is_valid())
 
     def test_lab_form_invalid_with_blank(self):
         form = LabForm({})
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors, {
-            'overtime_weekday': ['This field is required.'],
-            'overtime_weekend': ['This field is required.'],
-            'rework_time': ['This field is required.'],
-            'tickets_closed': ['This field is required.']
-        })
+        errors = {}
+        for field in LabForm().fields:
+            errors[field] = ['This field is required.']
+        self.assertEqual(form.errors, errors)
 
 
 class RequirementFormTest(TestCase):
     def setUp(self):
         self.fg_re = FunctionalGroup.objects.create(
             name='Requirment Engineering',
-            key='RE'
+            abbreviation='RE'
         )
         self.user_account = {
             'username': 'UserName',
@@ -119,41 +109,31 @@ class RequirementFormTest(TestCase):
             manager=True
         )
         self.personal_stat = RequirementStats.objects.create(
-            human_resource=self.hr
+            human_resource=self.hr,
+            created=timezone.now()
         )
 
     def test_requirement_form_valid_with_valid_params(self):
-        data = {
-            'overtime_weekday': random.randint(1, 100),
-            'overtime_weekend': random.randint(1, 100),
-            'rework_time': random.randint(1, 100),
-            'elicitation_analysis_time': random.randint(1, 100),
-            'revisions': random.randint(1, 100),
-            'rework_external_time': random.randint(1, 100),
-            'travel_cost': random.randint(1, 100)
-        }
+        data = {}
+        for field in RequirementForm().fields:
+            data[field] = random.randint(1, 100)
         form = RequirementForm(instance=self.personal_stat, data=data)
         self.assertTrue(form.is_valid())
 
     def test_requirement_form_invalid_with_blank(self):
         form = RequirementForm({})
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors, {
-            'overtime_weekday': ['This field is required.'],
-            'overtime_weekend': ['This field is required.'],
-            'rework_time': ['This field is required.'],
-            'elicitation_analysis_time': ['This field is required.'],
-            'revisions': ['This field is required.'],
-            'rework_external_time': ['This field is required.'],
-            'travel_cost': ['This field is required.']
-        })
+        errors = {}
+        for field in RequirementForm().fields:
+            errors[field] = ['This field is required.']
+        self.assertEqual(form.errors, errors)
 
 
 class TestFormTest(TestCase):
     def setUp(self):
         self.fg_qa = FunctionalGroup.objects.create(
             name='Quality Assurance',
-            key='QA'
+            abbreviation='QA'
         )
         self.user_account = {
             'username': 'UserName',
@@ -169,47 +149,22 @@ class TestFormTest(TestCase):
             manager=True
         )
         self.personal_stat = LabStats.objects.create(
-            human_resource=self.hr
+            human_resource=self.hr,
+            created=timezone.now()
         )
 
     def test_test_form_valid_with_valid_params(self):
-        data = {
-            'overtime_weekday': random.randint(1, 100),
-            'overtime_weekend': random.randint(1, 100),
-            'rework_time': random.randint(1, 100),
-            'tc_manual_dev': random.randint(1, 100),
-            'tc_manual_dev_time': random.randint(1, 100),
-            'tc_manual_execution': random.randint(1, 100),
-            'tc_manual_execution_time': random.randint(1, 100),
-            'tc_auto_dev': random.randint(1, 100),
-            'tc_auto_dev_time': random.randint(1, 100),
-            'tc_auto_execution': random.randint(1, 100),
-            'tc_auto_execution_time': random.randint(1, 100),
-            'defect_caught': random.randint(1, 100),
-            'uat_defects_not_prevented': random.randint(1, 100),
-            'standards_violated': random.randint(1, 100),
-            'resource_swap_time': random.randint(1, 100)
-        }
+        data = {}
+        for field in TestForm().fields:
+            data[field] = random.randint(1, 100)
+
         form = TestForm(instance=self.personal_stat, data=data)
         self.assertTrue(form.is_valid())
 
     def test_test_form_invalid_with_blank(self):
         form = TestForm({})
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors, {
-            'overtime_weekday': ['This field is required.'],
-            'overtime_weekend': ['This field is required.'],
-            'rework_time': ['This field is required.'],
-            'tc_manual_dev': ['This field is required.'],
-            'tc_manual_dev_time': ['This field is required.'],
-            'tc_manual_execution': ['This field is required.'],
-            'tc_manual_execution_time': ['This field is required.'],
-            'tc_auto_dev': ['This field is required.'],
-            'tc_auto_dev_time': ['This field is required.'],
-            'tc_auto_execution': ['This field is required.'],
-            'tc_auto_execution_time': ['This field is required.'],
-            'defect_caught': ['This field is required.'],
-            'uat_defects_not_prevented': ['This field is required.'],
-            'standards_violated': ['This field is required.'],
-            'resource_swap_time': ['This field is required.']
-        })
+        errors = {}
+        for field in TestForm().fields:
+            errors[field] = ['This field is required.']
+        self.assertEqual(form.errors, errors)

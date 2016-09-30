@@ -5,28 +5,29 @@
 
 {% block subnav %}
     <div class="container" style="margin-top: 10px;">
-        {% if user.is_superuser %}
-            <div class="row" style="margin-bottom:10px;">
+        <div class="row" style="margin-bottom:10px;">
+            {% if user.is_superuser %}
                 <div class="col-xs-2">
                     <small>
                         <a href="{% url 'teams:weekly_metric_new_manually' %}" ><i class="fa fa-pencil fa-fw"></i> New Weekly Team Metric</a>
                     </small>
                 </div>
                 <div class="col-xs-2">
-                    {% if user.is_superuser %}
-                        <small>
-                            <a  href="{% url 'teams:send_email' %}"><i class="fa fa-envelope-o fa-fw"></i> Send Email</a>
-                        </small>
-                    {% endif %}
+                    <small>
+                        <a  href="{% url 'teams:send_email' %}"><i class="fa fa-envelope-o fa-fw"></i> Send Email</a>
+                    </small>
                 </div>
+            {% endif %}
+            {% if user.is_superuser or user.humanresource.manager %}
                 <div class="col-xs-8">
                     <div id="date-range" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
                         <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
                         <span></span> <b class="caret"></b>
                     </div>
                 </div>
-            </div>
-        {% endif %}
+            {% endif %}
+        </div>
+
         <ul id="subnav-tabs" class="nav nav-tabs">
             {% if user.is_superuser %}
                 {% for group in groups %}
@@ -35,7 +36,7 @@
                     </li>
                 {% endfor %}
             {% elif user.humanresource.manager  %}
-                <li class="active"><a href="#{{ group.group.abbreviation }}" data-toggle="tab">{{ group.group.name }}</a></li>
+                <li class="active"><a href="#{{ user.humanresource.functional_group.abbreviation }}" data-toggle="tab">{{ user.humanresource.functional_group.name }}</a></li>
             {% else %}
                 You have not been authorized to enter team-level data.
             {% endif %}
