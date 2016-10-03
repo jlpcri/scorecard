@@ -94,7 +94,13 @@ class RequirementStats(BaseStats):
     """
     # Throughput
     elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                                    verbose_name='Elicitation/Analysis Time')  # in hours
+
+    research_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                                     verbose_name='Research Time')  # in hours
+    initiatives = models.PositiveIntegerField(default=0, verbose_name='Team Initiatives')
+    active_projects = models.PositiveIntegerField(default=0, verbose_name='Active Projects')
+    backlog = models.PositiveIntegerField(default=0, verbose_name='Backlog')
 
     # Quality
     revisions = models.PositiveIntegerField(default=0, verbose_name='Revisions')
@@ -102,6 +108,8 @@ class RequirementStats(BaseStats):
     # Efficiency
     rework_external_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                                verbose_name='Rework External Time')
+    resource_swap_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                             verbose_name='Resource Swap Time')  # in hours
 
     # Costs
     travel_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0,
