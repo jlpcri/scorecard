@@ -64,15 +64,22 @@ def metric_detail(request, metric_id):
     if key in ['QA', 'TE']:
         metric = get_object_or_404(TestMetrics, pk=metric_id)
         form = TestForm(instance=metric)
+        if key == 'QA':
+            title = 'Quality Assurance'
+        else:
+            title = 'Test Engineering'
     elif key in ['QI', 'QE']:
         metric = get_object_or_404(InnovationMetrics, pk=metric_id)
         form = InnovationForm(instance=metric)
+        title = 'Automation Engineering'
     elif key == 'RE':
         metric = get_object_or_404(RequirementMetrics, pk=metric_id)
         form = RequirementForm(instance=metric)
+        title = 'Requirements Engineering'
     elif key == 'TL':
         metric = get_object_or_404(LabMetrics, pk=metric_id)
         form = LabForm(instance=metric)
+        title = 'Test Lab'
     else:
         messages.error(request, 'No key to Functional Group found')
         return redirect('teams:teams')
@@ -82,6 +89,7 @@ def metric_detail(request, metric_id):
     context = RequestContext(request, {
         'metric': metric,
         'form': form,
+        'title': title,
         'test_metric_config': test_metric_config
     })
 
