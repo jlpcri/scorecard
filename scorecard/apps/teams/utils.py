@@ -80,9 +80,10 @@ def get_start_end_from_request(request):
 
 
 def fetch_team_members_per_team_per_date(key, date, subteam):
-    year = date[:4]
-    month = date[6:7]
-    day = date[8:10]
+    dates = date.split('-')
+    year = dates[0]
+    month = dates[1]
+    day = dates[2]
     team_personals = []
 
     if key in ['QA', 'TE']:
