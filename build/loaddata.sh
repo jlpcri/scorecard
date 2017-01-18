@@ -11,3 +11,4 @@ workon scorecard
 ./manage.py loaddata  dumpdata/teams.json --settings=scorecard.settings.dev_sliu
 ./manage.py loaddata  dumpdata/automations.json --settings=scorecard.settings.dev_sliu
 
+deactivate

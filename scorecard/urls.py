@@ -37,3 +37,10 @@ admin.site.site_header = 'Score Card Administration'
 urlpatterns += patterns('', (r'^scorecard/media/(?P<path>.*)$',
                              'django.views.static.serve',
                              {'document_root': settings.MEDIA_ROOT}))
+
+if settings.DEBUG:
+    import debug_toolbar
+
+    urlpatterns += patterns('',
+        url(r'^scorecard/__debug__/', include(debug_toolbar.urls)),
+    )
