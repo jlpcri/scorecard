@@ -48,7 +48,7 @@ DATABASES = {
 #         'NAME': 'scorecard',
 #         'USER': 'ceeq',
 #         'PASSWORD': 'ceeq_development',
-#         'HOST': 'mydbinstance.ce8tamiymyr9.us-west-2.rds.amazonaws.com',
+#         'HOST': 'pginstance.ce8tamiymyr9.us-west-2.rds.amazonaws.com',
 #         'PORT': '5432'
 #     }
 # }
