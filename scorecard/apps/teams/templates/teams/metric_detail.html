@@ -267,30 +267,9 @@
                         <div class="col-sm-2"><label>Elicitation Analysis</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2">
-                            <input id="id_backlog" name="backlog"
-                                {% if automation_data.backlog%}
-                                   value="{{ automation_data.backlog}}" class="gentle"
-                                {% else %}
-                                   value="{{ metric.backlog}}"
-                                {% endif %}>
-                        </div>
-                        <div class="col-sm-2">
-                            <input id="id_active_projects" name="active_projects"
-                                {% if automation_data.active_projects%}
-                                   value="{{ automation_data.active_projects}}" class="gentle"
-                                {% else %}
-                                   value="{{ metric.active_projects}}"
-                                {% endif %}>
-                        </div>
-                        <div class="col-sm-2">
-                            <input id="id_team_initiative" name="team_initiative"
-                                {% if automation_data.team_initiative %}
-                                   value="{{ automation_data.team_initiative }}" class="gentle"
-                                {% else %}
-                                   value="{{ metric.team_initiative }}"
-                                {% endif %}>
-                        </div>
+                        <div class="col-sm-2">{{ form.backlog }}</div>
+                        <div class="col-sm-2">{{ form.active_projects }}</div>
+                        <div class="col-sm-2">{{ form.team_initiative }}</div>
                         <div class="col-sm-2">{{ form.elicitation_analysis_time }}</div>
                     </div>
                 {% else %}  <!-- Throughput QA TE -->

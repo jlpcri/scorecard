@@ -12,6 +12,12 @@ ALLOWED_HOSTS = ['*']
 HOST_URL = 'http://10.6.20.106:8000' + LOGIN_URL
 # HOST_URL = 'http://apps.qaci01.wic.west.com' + LOGIN_URL
 
+
+if socket.gethostname() == 'sliu-OptiPlex-GX520':
+    INSTALLED_APPS += ('debug_toolbar', )
+    MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware', )
+    INTERNAL_IPS = ['127.0.0.1', '10.6.20.127', '10.27.170.225']
+
 # if socket.gethostname() == 'sliu-OptiPlex-GX520':
 #     DATABASES = {
 #         'default': {
@@ -35,3 +41,14 @@ DATABASES = {
         'PORT': '5432'
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'scorecard',
+#         'USER': 'ceeq',
+#         'PASSWORD': 'ceeq_development',
+#         'HOST': 'pginstance.ce8tamiymyr9.us-west-2.rds.amazonaws.com',
+#         'PORT': '5432'
+#     }
+# }

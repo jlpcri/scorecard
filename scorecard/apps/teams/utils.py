@@ -133,6 +133,7 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
 
     # RE
     revisions = rework_external_time = travel_cost = 0
+    backlog = active_projects = team_initiatives = 0
 
     # TL
     tickets_closed = 0
@@ -297,6 +298,11 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
             rework_external_time += person.rework_external_time
             travel_cost += person.travel_cost
 
+            backlog += person.backlog
+            active_projects += person.active_projects
+            team_initiatives += person.initiatives
+            pto_holiday_time += person.pto_holiday_time
+
         form_data = {
             'overtime_weekday': overtime_weekday,
             'overtime_weekend': overtime_weekend,
@@ -304,7 +310,11 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
             'elicitation_analysis_time': elicitation_analysis_time,
             'revisions': revisions,
             'rework_external_time':  rework_external_time,
-            'travel_cost': travel_cost
+            'travel_cost': travel_cost,
+            'backlog': backlog,
+            'team_initiative': team_initiatives,
+            'active_projects': active_projects,
+            'pto_holiday_time': pto_holiday_time
         }
         calculate_data = {
             'gross_available_time': len(team_personals) * 6 * 5,
