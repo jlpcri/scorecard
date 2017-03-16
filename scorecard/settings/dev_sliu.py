@@ -18,20 +18,19 @@ if socket.gethostname() == 'sliu-OptiPlex-GX520':
     MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware', )
     INTERNAL_IPS = ['127.0.0.1', '10.6.20.127', '10.27.170.225']
 
-# if socket.gethostname() == 'sliu-OptiPlex-GX520':
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#             'NAME': 'scorecard_subteamed',
-#             'USER': 'scorecard',
-#             'PASSWORD': 'scorecard_development',
-#             'HOST': 'qaci01.wic.west.com',
-#             # 'PORT': '5432',
-#             'PORT': '5433'  # another postgres instance
-#         }
-#     }
+DB_QACI01 = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'scorecard_subteamed',
+        'USER': 'scorecard',
+        'PASSWORD': 'scorecard_development',
+        'HOST': 'qaci01.wic.west.com',
+        # 'PORT': '5432',
+        'PORT': '5433'  # another postgres instance
+    }
+}
 
-DATABASES = {
+DB_6437 = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'scorecard',
@@ -42,13 +41,14 @@ DATABASES = {
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'scorecard',
-#         'USER': 'ceeq',
-#         'PASSWORD': 'ceeq_development',
-#         'HOST': 'pginstance.ce8tamiymyr9.us-west-2.rds.amazonaws.com',
-#         'PORT': '5432'
-#     }
-# }
+DB_DOCKER = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'HOST': 'db',
+        'PORT': '5432'
+    }
+}
+
+DATABASES = DB_6437
