@@ -21,7 +21,7 @@ if socket.gethostname() == 'sliu-OptiPlex-GX520':
 DB_QACI01 = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'scorecard_subteamed',
+        'NAME': 'scorecard',
         'USER': 'scorecard',
         'PASSWORD': 'scorecard_development',
         'HOST': 'qaci01.wic.west.com',
@@ -51,4 +51,4 @@ DB_DOCKER = {
     }
 }
 
-DATABASES = DB_6437
+DATABASES = DB_QACI01

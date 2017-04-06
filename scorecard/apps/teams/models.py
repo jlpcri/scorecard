@@ -100,6 +100,9 @@ class TestMetrics(BaseMetrics):
     standard_work_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                              validators=[MinValueValidator(Decimal(0))],
                                              verbose_name='Standard Work Time')  #  hours spent doing test documentation and associated overhead
+    initiative_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                          validators=[MinValueValidator(Decimal(0))],
+                                          verbose_name='Initiatives Time')  # in hours
 
     # Quality
     defect_caught = models.PositiveIntegerField(default=0, verbose_name='Eefects Caught')
@@ -162,7 +165,7 @@ class TestMetrics(BaseMetrics):
     @property
     def utilization(self):
         if (self.testers * 40 - self.pto_holiday_time) != 0:
-            return self.productive_hours / (self.testers * 40 - self.pto_holiday_time)
+            return (self.productive_hours + self.initiative_time) / (self.testers * 40 - self.pto_holiday_time)
         else:
             return 0
 
