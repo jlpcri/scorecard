@@ -275,11 +275,11 @@
                 {% else %}  <!-- Throughput QA TE -->
                     <div class="row">
                         <div class="col-sm-2"><label>Team Initiatives</label></div>
+						<div class="col-sm-2"><label>Initiatives Time</label></div>
                         <div class="col-sm-2"><label>Tickets Backlog</label></div>
                         <div class="col-sm-2"><label>Tickets Prep</label></div>
                         <div class="col-sm-2"><label>Tickets Execution</label></div>
                         <div class="col-sm-2"><label>Tickets Closed</label></div>
-                        <div class="col-sm-2"><label>Projects Backlog</label></div>
                     </div>
                     <div class="row">
                         <div class="col-sm-2">
@@ -290,6 +290,7 @@
                                    value="{{ metric.team_initiative }}"
                                 {% endif %}>
                         </div>
+						<div class="col-sm-2">{{ form.initiative_time }}</div>
                         <div class="col-sm-2">
                             <input id="id_ticket_backlog" name="ticket_backlog"
                                 {% if automation_data.ticket_backlog%}
@@ -322,7 +323,17 @@
                                    value="{{ metric.ticket_closed}}"
                                 {% endif %}>
                         </div>
-                        <div class="col-sm-2">
+                    </div>
+                    <div class="row">
+						<div class="col-sm-2"><label>Projects Backlog</label></div>
+                        <div class="col-sm-2"><label>Projects Prep</label></div>
+                        <div class="col-sm-2"><label>Projects Execution</label></div>
+                        <div class="col-sm-2"><label>Projects Closed</label></div>
+                        <div class="col-sm-2"><label>Manual TCs Dev</label></div>
+                        <div class="col-sm-2"><label>Manual TC Dev Time</label></div>
+                    </div>
+                    <div class="row">
+						<div class="col-sm-2">
                             <input id="id_project_backlog" name="project_backlog"
                                 {% if automation_data.project_backlog%}
                                    value="{{ automation_data.project_backlog}}" class="gentle"
@@ -330,16 +341,6 @@
                                    value="{{ metric.project_backlog}}"
                                 {% endif %}>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-2"><label>Projects Prep</label></div>
-                        <div class="col-sm-2"><label>Projects Execution</label></div>
-                        <div class="col-sm-2"><label>Projects Closed</label></div>
-                        <div class="col-sm-2"><label>Manual TCs Dev</label></div>
-                        <div class="col-sm-2"><label>Manual TC Dev Time</label></div>
-                        <div class="col-sm-2"><label>Manual Tcs Execution</label></div>
-                    </div>
-                    <div class="row">
                         <div class="col-sm-2">
                             <input id="id_project_prep" name="project_prep"
                                 {% if automation_data.project_prep%}
@@ -366,13 +367,13 @@
                         </div>
                         <div class="col-sm-2">{{ form.tc_manual_dev }}</div>
                         <div class="col-sm-2">{{ form.tc_manual_dev_time }}</div>
-                        <div class="col-sm-2">{{ form.tc_manual_execution }}</div>
                     </div>
                     <div class="row">
                         <div class="col-sm-2"><label>Auto TCs Dev</label></div>
                         <div class="col-sm-2"><label>Auto TCs Dev Time</label></div>
                         <div class="col-sm-2"><label>Auto Tcs Execution</label></div>
                         <div class="col-sm-2"><label>Auto Tcs ExecTime</label></div>
+						<div class="col-sm-2"><label>Manual Tcs Execution</label></div>
                         <div class="col-sm-2"><label>Manual Tcs ExecTime</label></div>
                     </div>
                     <div class="row">
@@ -380,8 +381,12 @@
                         <div class="col-sm-2">{{ form.tc_auto_dev_time }}</div>
                         <div class="col-sm-2">{{ form.tc_auto_execution }}</div>
                         <div class="col-sm-2">{{ form.tc_auto_execution_time }}</div>
+						<div class="col-sm-2">{{ form.tc_manual_execution }}</div>
                         <div class="col-sm-2">{{ form.tc_manual_execution_time }}</div>
                     </div>
+
+
+
                     <div class="row">
                         <div class="col-sm-2"><label>Estimated Manual Time For Automation</label></div>
                         <div class="col-sm-2"><label>Standard Work Time</label></div>

@@ -251,29 +251,17 @@ function efficiencyCal() {
             break;
         case 'QA':
         case 'TE':
-            $('#id_ticket_prep').on('input', function(){
+            $('#id_ticket_prep, #id_ticket_execution').on('input', function(){
                 activeTicketsCal();
             });
-            $('#id_ticket_execution').on('input', function(){
-                activeTicketsCal();
-            });
-            $('#id_project_prep').on('input', function(){
+            $('#id_project_prep, #id_project_execution').on('input', function(){
                 activeProjectsCal();
             });
-            $('#id_project_execution').on('input', function(){
-                activeProjectsCal();
-            });
-            $('#id_tc_manual_dev_time').on('input', function(){
+            $('#id_tc_manual_dev_time, #id_tc_manual_execution_time, #id_tc_auto_dev_time, #id_tc_auto_execution_time').on('input', function(){
                 autoAndExecTimeCal();
             });
-            $('#id_tc_manual_execution_time').on('input', function(){
-                autoAndExecTimeCal();
-            });
-            $('#id_tc_auto_dev_time').on('input', function(){
-                autoAndExecTimeCal();
-            });
-            $('#id_tc_auto_execution_time').on('input', function(){
-                autoAndExecTimeCal();
+            $('#id_initiative_time, #id_pto_holiday_time').on('input', function(){
+                efficiencyUtilizationCal();
             });
             $('#id_standard_work_time').on('input', function(){
                 productiveTimeCal();
@@ -370,7 +358,7 @@ function efficiencyUtilizationCal(){
     switch (key){
         case 'QA':
         case 'TE':
-            value = $('#productive_hours').val() / ($('#id_testers').val() * 40 - parseFloat($('#id_pto_holiday_time').val())) * 100;
+            value = (parseFloat($('#productive_hours').val()) + parseFloat($('#id_initiative_time').val())) / ($('#id_testers').val() * 40 - parseFloat($('#id_pto_holiday_time').val())) * 100;
             $('#id_test_utilization').val(value.toFixed(2) + '%');
             break;
         case 'TL':

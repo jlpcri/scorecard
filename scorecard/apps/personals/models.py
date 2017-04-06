@@ -146,6 +146,9 @@ class TestStats(BaseStats):
     standard_work_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                              validators=[MinValueValidator(Decimal(0))],
                                              verbose_name='Standard Work Time')  #  hours spent doing test documentation and associated overhead
+    initiative_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                          validators=[MinValueValidator(Decimal(0))],
+                                          verbose_name='Initiatives Time')  # in hours
 
     # Quality
     defect_caught = models.PositiveIntegerField(default=0,

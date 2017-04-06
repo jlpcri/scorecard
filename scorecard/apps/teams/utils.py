@@ -125,7 +125,7 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
     tc_manual_dev = tc_manual_dev_time = tc_manual_execution = tc_manual_execution_time = 0
     tc_auto_dev = tc_auto_dev_time = tc_auto_execution = tc_auto_execution_time = 0
     defect_caught = uat_defects_not_prevented = standards_violated = resource_swap_time = 0
-    estimate_auto_time = standard_work_time = loe_deviation = 0
+    estimate_auto_time = standard_work_time = initiative_time = loe_deviation = 0
 
     # QI
     story_points_execution = unit_tests_dev = elicitation_analysis_time = 0
@@ -171,6 +171,7 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
             pto_holiday_time += person.pto_holiday_time
             estimate_auto_time += person.estimate_auto_time
             standard_work_time += person.standard_work_time
+            initiative_time += person.initiative_time
             loe_deviation += person.loe_deviation
 
         form_data = {
@@ -193,6 +194,7 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
             'pto_holiday_time': pto_holiday_time,
             'estimate_auto_time': estimate_auto_time,
             'standard_work_time': standard_work_time,
+            'initiative_time': initiative_time,
             'loe_deviation': loe_deviation
         }
 
