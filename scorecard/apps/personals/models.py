@@ -92,31 +92,58 @@ class RequirementStats(BaseStats):
     """
     Personal Performance status for RE team
     """
-    # Throughput
+    # Utilization & Efficiency
     elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                                    verbose_name='Elicitation/Analysis Time')  # in hours
-
+                                                      verbose_name='Elicitation/Analysis Time')  # in hours
     research_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                                    verbose_name='Research Time')  # in hours
+                                         verbose_name='Research Time')  # in hours
+    active_projects = models.PositiveIntegerField(default=0, verbose_name='Project WIP')
+    # active_projects = models.PositiveIntegerField(default=0, verbose_name='Active Projects')
+    srs_initial = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='SRS Initial Time')
+    srs_detail = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='SRS Detail Time')
+    gap_analysis = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='GAP Analysis Time')
+    efficiency = models.FloatField(default=0.0, verbose_name='Efficiency')
+    project_time = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Project Time')
+    utilization = models.FloatField(default=0.0, verbose_name='Utilization')
+
+    # Initiatives
     initiatives = models.PositiveIntegerField(default=0, verbose_name='Team Initiatives')
-    active_projects = models.PositiveIntegerField(default=0, verbose_name='Active Projects')
+    time_initiatives = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Initiatives Time')
+
+    # Scope Management
+    # revisions = models.PositiveIntegerField(default=0, verbose_name='Revisions')
+    revisions = models.PositiveIntegerField(default=0, verbose_name='Rework')
+    creep = models.PositiveIntegerField(default=0, verbose_name='Scope Creep')
+    rework_external_time = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Scope Creep Time')
+    resource_swap_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                              verbose_name='Resource Swap Time')  # in hours
+    # rework_external_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+    #                                            verbose_name='Rework External Time')
     backlog = models.PositiveIntegerField(default=0, verbose_name='Backlog')
 
-    # Quality
-    revisions = models.PositiveIntegerField(default=0, verbose_name='Revisions')
+    # Levels of Efforts
+    project_loe = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Project LOE'S")
+    project_actuals = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Project Actual's")
 
-    # Efficiency
-    rework_external_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                               verbose_name='Rework External Time')
-    resource_swap_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                             verbose_name='Resource Swap Time')  # in hours
+    # SLA's
+    system_met = models.PositiveIntegerField(default=0, verbose_name='System SLA Met')
+    system_miss = models.PositiveIntegerField(default=0, verbose_name='System SLA Miss')
+    actual_met = models.PositiveIntegerField(default=0, verbose_name='Actual SLA Met')
+    actual_miss = models.PositiveIntegerField(default=0, verbose_name='Actual SLA Miss')
+
+    # Optimization
+    optimization_time = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Optimization Time")
+
+    # Client Satisfaction
+    compliments = models.PositiveIntegerField(default=0, verbose_name='Compliments')
+    survey = models.FloatField(default=0.0, verbose_name='Survey')
 
     # Costs
     travel_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                       verbose_name='Travel Costs')
 
     def stat_summary(self):
-        return {'Analysis/Elicitation': self.elicitation_analysis_time, 'Overtime': self.overtime_weekday+self.overtime_weekend, 'Rework': self.rework_time}
+        return {'Overtime': self.overtime_weekday+self.overtime_weekend, 'Rework': self.rework_time}
 
 
 class TestStats(BaseStats):
