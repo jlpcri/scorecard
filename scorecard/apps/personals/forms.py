@@ -19,7 +19,7 @@ class LabForm(ModelForm):
 class RequirementForm(ModelForm):
     class Meta:
         model = RequirementStats
-        exclude = ['created', 'confirmed', 'updated', 'human_resource']
+        exclude = ['created', 'confirmed', 'updated', 'human_resource', 'elicitation_analysis_time', 'research_time', 'resource_swap_time']
 
 
 class TestForm(ModelForm):

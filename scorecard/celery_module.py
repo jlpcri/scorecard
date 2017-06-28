@@ -6,6 +6,8 @@ from celery import Celery
 
 if socket.gethostname() == "sliu-OptiPlex-GX520":
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'scorecard.settings.local')
+elif socket.gethostname() == "seenaomi-HP-Compaq-6005-Pro-SFF-PC":
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'scorecard.settings.dev_see')
 elif socket.gethostname() == 'qaci01':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'scorecard.settings.qaci01')
 else:
@@ -14,3 +16,4 @@ else:
 app = Celery('scorecard')
 app.config_from_object('scorecard.celery_config')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS, related_name='tasks')
+
