@@ -92,11 +92,15 @@ class RequirementStats(BaseStats):
     """
     Personal Performance status for RE team
     """
-    # Utilization & Efficiency
+    # Excluded but left for historical data
     elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                                       verbose_name='Elicitation/Analysis Time')  # in hours
     research_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                          verbose_name='Research Time')  # in hours
+    resource_swap_time = models.DecimalField( max_digits=10, decimal_places=2, default=0,
+                                              verbose_name='Resource Swap Time' )  # in hours
+
+    # Utilization & Efficiency
     active_projects = models.PositiveIntegerField(default=0, verbose_name='Project WIP')
     # active_projects = models.PositiveIntegerField(default=0, verbose_name='Active Projects')
     srs_initial = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='SRS Initial Time')
@@ -115,8 +119,7 @@ class RequirementStats(BaseStats):
     revisions = models.PositiveIntegerField(default=0, verbose_name='Rework')
     creep = models.PositiveIntegerField(default=0, verbose_name='Scope Creep')
     rework_external_time = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Scope Creep Time')
-    resource_swap_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                              verbose_name='Resource Swap Time')  # in hours
+
     # rework_external_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
     #                                            verbose_name='Rework External Time')
     backlog = models.PositiveIntegerField(default=0, verbose_name='Backlog')
