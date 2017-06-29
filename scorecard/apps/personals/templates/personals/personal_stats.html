@@ -39,7 +39,7 @@
                     </div>
                 </div>
                 <div class="col-sm-6">
-                    {% with key=personal_stat.human_resource.functional_group.key phases_count=personal_stat.phases_lead_count tickets_count=personal_stat.tickets_lead_count %}
+                    {% with key=personal_stat.human_resource.functional_group.key efficiency=personal_stat.efficiency utilization=personal_stat.utilization phases_count=personal_stat.phases_lead_count tickets_count=personal_stat.tickets_lead_count %}
                         {% if key in 'RE' %}
                             <div class="row">
                                 <div class="col-sm-6">

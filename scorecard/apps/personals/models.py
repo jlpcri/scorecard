@@ -150,11 +150,13 @@ class RequirementStats(BaseStats):
 
     @property
     def efficiency(self):
-        return (self.srs_initial + self.srs_detail + self.gap_analysis + self.time_initiatives) / 30
+        eff_avg = (self.srs_initial + self.srs_detail + self.gap_analysis + self.time_initiatives) / 30
+        return float("{0:.2f}".format(eff_avg))
 
     @property
     def utilization(self):
-        return (self.project_time + self.time_initiatives) / 40
+        util_avg = (self.project_time + self.time_initiatives) / 40
+        return float("{0:.2f}".format(util_avg))
 
 
 class TestStats(BaseStats):
