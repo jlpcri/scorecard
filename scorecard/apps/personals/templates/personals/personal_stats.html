@@ -40,6 +40,26 @@
                 </div>
                 <div class="col-sm-6">
                     {% with key=personal_stat.human_resource.functional_group.key phases_count=personal_stat.phases_lead_count tickets_count=personal_stat.tickets_lead_count %}
+                        {% if key in 'RE' %}
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Efficiency:</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="gentle" value="{{ efficiency }}" disabled/>
+                                </div>
+                            </div>
+                            </br>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Utilization:</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="gentle" value="{{ utilization }}" disabled/>
+                                </div>
+                            </div>
+                        {% endif %}
+
                         {% if key in 'QA, TE' %}
                             <div class="row">
                                 <div class="col-sm-6">

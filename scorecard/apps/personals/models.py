@@ -106,9 +106,9 @@ class RequirementStats(BaseStats):
     srs_initial = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='SRS Initial Time')
     srs_detail = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='SRS Detail Time')
     gap_analysis = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='GAP Analysis Time')
-    efficiency = models.FloatField(default=0.0, verbose_name='Efficiency')
+    # efficiency = models.FloatField(default=0.0, verbose_name='Efficiency')
     project_time = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Project Time')
-    utilization = models.FloatField(default=0.0, verbose_name='Utilization')
+    # utilization = models.FloatField(default=0.0, verbose_name='Utilization')
 
     # Initiatives
     initiatives = models.PositiveIntegerField(default=0, verbose_name='Team Initiatives')
@@ -139,7 +139,7 @@ class RequirementStats(BaseStats):
 
     # Client Satisfaction
     compliments = models.PositiveIntegerField(default=0, verbose_name='Compliments')
-    survey = models.FloatField(default=0.0, verbose_name='Survey')
+    survey = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Survey')
 
     # Costs
     travel_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0,
@@ -147,6 +147,14 @@ class RequirementStats(BaseStats):
 
     def stat_summary(self):
         return {'Overtime': self.overtime_weekday+self.overtime_weekend, 'Rework': self.rework_time}
+
+    @property
+    def efficiency(self):
+        return (self.srs_initial + self.srs_detail + self.gap_analysis + self.time_initiatives) / 30
+
+    @property
+    def utilization(self):
+        return (self.project_time + self.time_initiatives) / 40
 
 
 class TestStats(BaseStats):
