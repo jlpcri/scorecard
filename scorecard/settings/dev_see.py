@@ -9,14 +9,12 @@ ALLOWED_HOSTS = ['*']
 # STATIC_URL = 'http://10.6.20.109/static/'
 
 # used for sending email
-HOST_URL = 'http://10.6.20.106:8000' + LOGIN_URL
+# HOST_URL = 'http://10.6.20.106:8000' + LOGIN_URL
 # HOST_URL = 'http://apps.qaci01.wic.west.com' + LOGIN_URL
 
-
-if socket.gethostname() == 'sliu-OptiPlex-GX520':
-    INSTALLED_APPS += ('debug_toolbar', )
-    MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware', )
-    INTERNAL_IPS = ['127.0.0.1', '10.6.20.127', '10.27.170.225']
+INSTALLED_APPS += ('debug_toolbar',)
+MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+INTERNAL_IPS = ['127.0.0.1', '10.6.20.97', '10.6.20.60']
 
 DB_QACI01 = {
     'default': {
@@ -51,4 +49,4 @@ DB_DOCKER = {
     }
 }
 
-DATABASES = DB_6437
+DATABASES = DB_QACI01
