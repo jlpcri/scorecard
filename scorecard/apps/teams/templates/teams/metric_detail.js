@@ -145,14 +145,14 @@ function qualityCal() {
                 $('#avg_throughput_qi').val(avg_throughput.toFixed(2));
             });
             break;
-        case 'RE':
-            $('#id_active_projects').on('input', function(){
-                $('#avg_throughput').val(parseFloat(this.value) + parseFloat($('#id_team_initiative').val()));
-            });
-            $('#id_team_initiative').on('input', function(){
-                $('#avg_throughput').val(parseFloat(this.value) + parseFloat($('#id_active_projects').val()));
-            });
-            break;
+        // case 'RE':
+        //     $('#id_active_projects').on('input', function(){
+        //         $('#avg_throughput').val(parseFloat(this.value) + parseFloat($('#id_team_initiative').val()));
+        //     });
+        //     $('#id_team_initiative').on('input', function(){
+        //         $('#avg_throughput').val(parseFloat(this.value) + parseFloat($('#id_active_projects').val()));
+        //     });
+        //     break;
         case 'TL':
             $('#id_builds_submitted').on('input', function(){
                 tlBuildRejectedCal();
@@ -219,7 +219,8 @@ function efficiencyCal() {
     switch (key) {
         case 'RE':
             staff.on('input', function(){
-                $('#gross_available').val(this.value * 6 * 5);
+                $('#gross_available' +
+                    '').val(this.value * 6 * 5);
                 var efficiency = ($('#id_elicitation_analysis_time').val() / (this.value * 6 * 5) * 100).toFixed(2) ;
                 $('#id_efficiency').val(efficiency + '%');
             });
