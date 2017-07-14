@@ -39,7 +39,7 @@ class RequirementForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(RequirementForm, self).__init__(*args, **kwargs)
         for field in self.fields:
-            if field in ['elicitation_analysis_time',
+            if field in [
                          'slas_missed', 'rework_introduced_time',
                          'overtime_weekday', 'overtime_weekend', 'rework_external_time', 'resource_swap_time',
                          'travel_cost'
@@ -53,11 +53,12 @@ class RequirementForm(ModelForm):
 
     class Meta:
         model = RequirementMetrics
-        fields = ['staffs', 'openings', 'contractors', 'compliments', 'complaints',
-                  'backlog', 'team_initiative', 'active_projects', 'elicitation_analysis_time',
-                  'revisions', 'rework_introduced_time', 'slas_met', 'slas_missed', 'escalations',
+        fields = ['staffs', 'openings', 'contractors', 'compliments', 'complaints', 'project_loe',
+                  'backlog', 'team_initiative', 'time_initiatives', 'active_projects', 'project_actuals',
+                  'revisions', 'rework_introduced_time', 'srs_initial', 'srs_detail', 'escalations',
                   'overtime_weekday', 'overtime_weekend', 'rework_external_time', 'pto_holiday_time',
-                  'travel_cost', 'other_savings'
+                  'travel_cost', 'other_savings', 'gap_analysis', 'project_time', 'creep', 'system_met',
+                  'system_miss', 'actual_met', 'actual_miss'
                   ]
 
 

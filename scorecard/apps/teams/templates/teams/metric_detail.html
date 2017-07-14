@@ -175,7 +175,6 @@
                 </div>
              <!-- For RE -->
             {% elif metric.functional_group.key == 'RE' %}
-                {% with key=personal_stat.human_resource.functional_group.key %}
                 <legend style="margin-top: 30px;">Resources: Utilization vs. Efficiency</legend> <!-- RE Resources -->
                 <div class="row">
                     <div class="col-sm-2"><label>Efficiency</label></div>
@@ -196,12 +195,11 @@
                     </div>
                     <div class="col-sm-2">
                             <input class="gentle" id="id_utilization" title="(Project Time + GAP Analysis Time + Initiatives Time + Rework Time + Scope Creep Time)/((Staff + Contractors-Manager) *40)"
-{#                                {% if calculate_data %}#}
-{#                               value="{{ calculate_data.utilization|percentage_format }}"#}
-{#                                {% else %}#}
+                                {% if calculate_data %}
+                               value="{{ calculate_data.utilization|percentage_format }}"
+                                {% else %}
                                value="{{ metric.utilization|percentage_format }}"
-{#                                {% endif %} #}
-                                disabled/>
+                                {% endif %} disabled/>
                     </div>
                     <div class="col-sm-2">{{ form.staffs }}</div>
                     <div class="col-sm-2">{{ form.openings }}</div>
@@ -242,7 +240,7 @@
                         <div class="col-sm-2">{{ form.project_time }}</div>
                         <div class="col-sm-2">{{ form.backlog }}</div>
                     </div>
-                <legend style="margin-top: 30px;">Quality</legend><!--Quality RE -->
+                <legend style="margin-top: 30px;">Quality</legend>
                     <div class="row">
                         <div class="col-sm-2"><label>Rework</label></div>
                         <div class="col-sm-2"><label>Rework Time</label></div>
@@ -340,7 +338,6 @@
                         <div class="col-sm-2"><label>Optimization Time</label></div>
                     </div>
                     <div class="row">
-{#                        <div class="col-sm-2">{{ form.optimization_time }}</div>#}
                         <div class="col-sm-2">
                         <input id="id_optimization_time" name="optimization_time"
                                     {% if automation_data.optimization_time %} value="{{ automation_data.optimization_time }}"
@@ -376,7 +373,6 @@
                         <div class="col-sm-2">{{ form.other_savings }}</div>
                         <div class="col-sm-2">{{ form.pto_holiday_time }}</div>
                     </div>
-                {% endwith %}
             {% else %} <!-- For QA, TE, QI -->
                 <legend style="margin-top: 30px;">Human Resource</legend>
                 <div class="row">

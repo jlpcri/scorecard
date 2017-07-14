@@ -218,16 +218,16 @@ function autoFootprintExecutionAge(){
 function efficiencyCal() {
     switch (key) {
         case 'RE':
-            staff.on('input', function(){
-                $('#gross_available' +
-                    '').val(this.value * 6 * 5);
-                var efficiency = ($('#id_elicitation_analysis_time').val() / (this.value * 6 * 5) * 100).toFixed(2) ;
-                $('#id_efficiency').val(efficiency + '%');
-            });
-            $('#id_elicitation_analysis_time').on('input', function(){
-                var efficiency = (this.value / $('#gross_available').val() * 100).toFixed(2) ;
-                $('#id_efficiency').val(efficiency + '%');
-            });
+            // staff.on('input', function(){
+            //     $('#gross_available' +
+            //         '').val(this.value * 6 * 5);
+            //     var efficiency = ($('#id_elicitation_analysis_time').val() / (this.value * 6 * 5) * 100).toFixed(2) ;
+            //     $('#id_efficiency').val(efficiency + '%');
+            // });
+            // $('#id_elicitation_analysis_time').on('input', function(){
+            //     var efficiency = (this.value / $('#gross_available').val() * 100).toFixed(2) ;
+            //     $('#id_efficiency').val(efficiency + '%');
+            // });
             break;
         case 'TL':
             $('#id_administration_time').on('input', function(){
