@@ -371,6 +371,8 @@ class RequirementMetrics(BaseMetrics):
     travel_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                       verbose_name='Travel Costs')
 
+    survey = models.DecimalField( max_digits=10, decimal_places=2, default=0, verbose_name='Survey' )
+
     @property
     def avg_throughput(self):
         return self.active_projects + self.team_initiative

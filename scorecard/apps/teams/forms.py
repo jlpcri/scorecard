@@ -39,26 +39,18 @@ class RequirementForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(RequirementForm, self).__init__(*args, **kwargs)
         for field in self.fields:
-            if field in [
-                         'slas_missed', 'rework_introduced_time',
-                         'overtime_weekday', 'overtime_weekend', 'rework_external_time', 'resource_swap_time',
-                         'travel_cost'
+            if field in ['overtime_weekday', 'overtime_weekend', 'rework_external_time', 'resource_swap_time',
+                         'travel_cost', 'survey'
                          ]:
                 self.fields[field] = forms.DecimalField(widget=forms.NumberInput(attrs={'min': '0'}))
-
-        self.fields['slas_met'] = forms.DecimalField(widget=forms.NumberInput(attrs={'min': '0',
-                                                                                     'max': '1',
-                                                                                     'step': '0.05',
-                                                                                     'style': 'width: 100%'}))
 
     class Meta:
         model = RequirementMetrics
         fields = ['staffs', 'openings', 'contractors', 'compliments', 'complaints', 'project_loe',
                   'backlog', 'team_initiative', 'time_initiatives', 'active_projects', 'project_actuals',
-                  'revisions', 'rework_introduced_time', 'srs_initial', 'srs_detail', 'escalations',
-                  'overtime_weekday', 'overtime_weekend', 'rework_external_time', 'pto_holiday_time',
-                  'travel_cost', 'other_savings', 'gap_analysis', 'project_time', 'creep', 'system_met',
-                  'system_miss', 'actual_met', 'actual_miss'
+                  'revisions','srs_initial', 'srs_detail', 'overtime_weekday', 'overtime_weekend',
+                  'rework_external_time', 'pto_holiday_time', 'travel_cost', 'other_savings', 'gap_analysis',
+                  'project_time', 'creep', 'system_met', 'system_miss', 'actual_met', 'actual_miss', 'survey'
                   ]
 
 
