@@ -225,7 +225,7 @@ function efficiencyCal() {
                     parseFloat($('#id_gap_analysis').val()) +
                     parseFloat($('#id_time_initiatives').val()));
 
-                var effpeople = ((parseFloat($('#id_staffs').val()) + parseFloat($('#id_contractors').val()) -1) * 30);
+                var effpeople = ((parseFloat($('#id_staffs').val()) + parseFloat($('#id_contractors').val()) -1) * 6 * 5);
 
                 var operational = ((parseFloat($('#id_staffs').val()) + parseFloat($('#id_contractors').val()) -1) * 30 * 50);
 
@@ -385,7 +385,7 @@ function efficiencyUtilizationCal(){
                 parseFloat($('#id_time_initiatives').val()));
                 console.log(utistats);
 
-                var utipeople = ((parseFloat($('#id_staffs').val()) + parseFloat($('#id_contractors').val()) - 1) * 40);
+                var utipeople = ((parseFloat($('#id_staffs').val()) + parseFloat($('#id_contractors').val()) - 1) * 8 * 5);
                 console.log(utipeople);
                 $('#id_utilization').val(((utistats / utipeople) * 100).toFixed(2) + '%');
             });

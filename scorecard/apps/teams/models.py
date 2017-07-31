@@ -384,12 +384,12 @@ class RequirementMetrics(BaseMetrics):
 
     @property
     def utilization(self):
-        util_avg = (self.project_time + self.gap_analysis + self.time_initiatives + self.rework_time + self.rework_external_time)/((self.staffs - 1 + self.contractors)*40)
+        util_avg = (self.project_time + self.gap_analysis + self.time_initiatives + self.rework_time + self.rework_external_time)/((self.staffs - 1 + self.contractors)* 8 * 5)
         return float(util_avg)
 
     @property
     def efficiency(self):
-        eff_avg = (self.srs_initial + self.srs_detail + self.gap_analysis + self.time_initiatives)/((self.staffs - 1 + self.contractors)*30)
+        eff_avg = (self.srs_initial + self.srs_detail + self.gap_analysis + self.time_initiatives)/((self.staffs - 1 + self.contractors)* 6 * 5)
         return float(eff_avg)
 
     @property

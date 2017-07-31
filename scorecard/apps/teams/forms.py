@@ -52,16 +52,11 @@ class RequirementForm(ModelForm):
         self.fields['actual_met'] = forms.DecimalField(widget=forms.NumberInput(attrs={'min': '0',
                                                                                        'max': '1',
                                                                                        'step': '0.05',
-
                                                                                        'style': 'width: 100%'}))
+
     class Meta:
         model = RequirementMetrics
-        fields = ['staffs', 'openings', 'contractors', 'compliments', 'complaints', 'project_loe',
-                  'backlog', 'team_initiative', 'time_initiatives', 'active_projects', 'project_actuals',
-                  'revisions','srs_initial', 'srs_detail', 'overtime_weekday', 'overtime_weekend',
-                  'rework_external_time', 'pto_holiday_time', 'travel_cost', 'other_savings', 'gap_analysis',
-                  'project_time', 'creep', 'system_met', 'system_miss', 'actual_met', 'actual_miss', 'survey'
-                  ]
+        exclude = ['escalations', 'slas_met', 'elicitation_analysis_time', 'research_time', 'resource_swap_time']
 
 
 class TestForm(ModelForm):

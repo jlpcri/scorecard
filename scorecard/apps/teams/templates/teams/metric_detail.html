@@ -186,7 +186,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-2">
-                        <input class="gentle" id="id_efficiency" title="(SRS Initial Time + SRS Detail Time + GAP Analysis Time + Initiatives Time)/((Staff + Contractors-Manager) *30)"
+                        <input class="gentle" id="id_efficiency" title="(SRS Initial Time + SRS Detail Time + GAP Analysis Time + Initiatives Time)/((Staff + Contractors-Manager) * 6 * 5)"
                                 {% if calculate_data %}
                                value="{{ calculate_data.efficiency|percentage_format }}"
                                 {% else %}
@@ -194,7 +194,7 @@
                                 {% endif %} disabled/>
                     </div>
                     <div class="col-sm-2">
-                            <input class="gentle" id="id_utilization" title="(Project Time + GAP Analysis Time + Initiatives Time + Rework Time + Scope Creep Time)/((Staff + Contractors-Manager) *40)"
+                            <input class="gentle" id="id_utilization" title="(Project Time + GAP Analysis Time + Initiatives Time + Rework Time + Scope Creep Time)/((Staff + Contractors-Manager) * 8 * 5)"
                                 {% if calculate_data %}
                                value="{{ calculate_data.utilization|percentage_format }}"
                                 {% else %}
