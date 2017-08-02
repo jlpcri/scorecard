@@ -58,7 +58,7 @@ class RequirementForm(ModelForm):
         model = RequirementMetrics
         fields = ['staffs', 'openings', 'contractors', 'compliments', 'complaints', 'project_loe',
                   'backlog', 'team_initiative', 'time_initiatives', 'active_projects', 'project_actuals',
-                  'revisions','srs_initial', 'srs_detail', 'overtime_weekday', 'overtime_weekend',
+                  'revisions','srs_initial', 'srs_detail', 'overtime_weekday', 'overtime_weekend', 'rework_time',
                   'rework_external_time', 'pto_holiday_time', 'travel_cost', 'other_savings', 'gap_analysis',
                   'project_time', 'creep', 'system_met', 'system_miss', 'actual_met', 'actual_miss', 'survey'
                   ]
