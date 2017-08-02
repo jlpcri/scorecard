@@ -381,7 +381,6 @@ function efficiencyUtilizationCal(){
                 var utistats = (parseFloat($('#id_project_time').val()) +
                 parseFloat($('#id_rework_time').val()) +
                 parseFloat($('#id_rework_external_time').val()) +
-                parseFloat($('#id_gap_analysis').val()) +
                 parseFloat($('#id_time_initiatives').val()));
                 console.log(utistats);
 

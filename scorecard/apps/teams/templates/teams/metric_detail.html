@@ -194,7 +194,7 @@
                                 {% endif %} disabled/>
                     </div>
                     <div class="col-sm-2">
-                            <input class="gentle" id="id_utilization" title="(Project Time + GAP Analysis Time + Initiatives Time + Rework Time + Scope Creep Time)/((Staff + Contractors-Manager) * 8 * 5)"
+                            <input class="gentle" id="id_utilization" title="(Project Time + Initiatives Time + Rework Time + Scope Creep Time)/((Staff + Contractors-Manager) * 8 * 5)"
                                 {% if calculate_data %}
                                value="{{ calculate_data.utilization|percentage_format }}"
                                 {% else %}
@@ -249,9 +249,10 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-2">{{ form.revisions }}</div>
+{#                        <div class="col-sm-2">{{ form.rework_time }}</div>#}
                         <div class="col-sm-2">
                             <input id="id_rework_time" name="rework_time"
-                                {% if automation_data.rework_time%}
+                                {% if automation_data.rework_time %}
                                    value="{{ automation_data.rework_time}}" class="gentle"
                                 {% else %}
                                    value="{{ metric.rework_time}}"
@@ -277,38 +278,10 @@
                         <div class="col-sm-2"><label>Actual SLA Miss</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2">
-                            <input id="id_system_met" name="system_met"
-                                    {% if automation_data.system_met %}
-                                   value="{{ automation_data.system_met }}" class="gentle"
-                                    {% else %}
-                                   value="{{ metric.system_met }}"
-                                    {% endif %}>
-                        </div>
-                        <div class="col-sm-2">
-                            <input id="id_system_miss" name="system_miss"
-                                    {% if automation_data.system_miss %}
-                                   value="{{ automation_data.system_miss }}" class="gentle"
-                                    {% else %}
-                                   value="{{ metric.system_miss }}"
-                                    {% endif %}>
-                        </div>
-                        <div class="col-sm-2">
-                            <input id="id_actual_met" name="actual_met"
-                                    {% if automation_data.actual_met %}
-                                   value="{{ automation_data.actual_met }}" class="gentle"
-                                    {% else %}
-                                   value="{{ metric.actual_met }}"
-                                    {% endif %}>
-                        </div>
-                        <div class="col-sm-2">
-                            <input id="id_actual_miss" name="actual_miss"
-                                    {% if automation_data.actual_miss %}
-                                   value="{{ automation_data.actual_miss }}" class="gentle"
-                                    {% else %}
-                                   value="{{ metric.actual_miss}}"
-                                    {% endif %}>
-                        </div>
+                        <div class="col-sm-2">{{ form.system_met }}</div>
+                        <div class="col-sm-2">{{ form.system_miss }}</div>
+                        <div class="col-sm-2">{{ form.actual_met }}</div>
+                        <div class="col-sm-2">{{ form.actual_miss }}</div>
                     </div>
                 <legend style="margin-top: 30px;">Client Satisfaction</legend>
                     <div class="row">
@@ -317,21 +290,9 @@
                         <div class="col-sm-2"><label>Complaints</label></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2">
-                            <input id="id_compliments" name="compliments"
-                                    {% if automation_data.compliments %} value="{{ automation_data.compliments }}"
-                                   class="gentle" {% else %} value="{{ metric.compliments }}" {% endif %}>
-                        </div>
-                        <div class="col-sm-2">
-                            <input id="id_survey" name="survey"
-                                   {%  if automation_data.survey %} value="{{ automation_data.survey }}"
-                                   class="gentle" {% else %} value="{{ metric.survey }}" {% endif %}>
-                        </div>
-                        <div class="col-sm-2">
-                            <input id="id_complaints" name="complaints"
-                                    {% if automation_data.complaints %} value="{{ automation_data.complaints }}"
-                                   class="gentle" {% else %} value="{{ metric.complaints }}" {% endif %}>
-                        </div>
+                        <div class="col-sm-2">{{ form.compliments }}</div>
+                        <div class="col-sm-2">{{ form.survey }}</div>
+                        <div class="col-sm-2">{{ form.complaints }}</div>
                     </div>
                 <legend style="margin-top: 30px;">Optimization</legend>
                     <div class="row">

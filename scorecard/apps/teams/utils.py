@@ -132,9 +132,10 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
     customer_facing_time = documentation_time = ticketless_dev_time = 0
 
     # RE
-    revisions = rework_external_time = travel_cost = creep = project_loe= 0
+    revisions = rework_external_time = travel_cost = creep = project_loe = 0
     backlog = active_projects = team_initiatives = time_initiatives = 0
-    srs_initial = srs_detail = gap_analysis = project_actuals = 0
+    srs_initial = srs_detail = gap_analysis = project_actuals = compliments = 0
+    complaints = survey = system_met = system_miss = actual_met = actual_miss = 0
 
     # TL
     tickets_closed = 0
@@ -295,7 +296,14 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
         for person in team_personals:
             overtime_weekday += person.overtime_weekday
             overtime_weekend += person.overtime_weekend
+            compliments += person.compliments
+            complaints += person.complaints
+            survey += person.survey
             rework_time += person.rework_time
+            system_met += person.system_met
+            system_miss += person.system_miss
+            actual_met += person.actual_met
+            actual_miss += person.actual_miss
             elicitation_analysis_time += person.elicitation_analysis_time
             revisions += person.revisions
             rework_external_time += person.rework_external_time
@@ -316,7 +324,14 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
         form_data = {
             'overtime_weekday': overtime_weekday,
             'overtime_weekend': overtime_weekend,
+            'compliments': compliments,
+            'complaints': complaints,
+            'survey': survey,
             'rework_time': rework_time,
+            'system_met': system_met,
+            'system_miss': system_miss,
+            'actual_met': actual_met,
+            'actual_miss': actual_miss,
             'elicitation_analysis_time': elicitation_analysis_time,
             'revisions': revisions,
             'rework_external_time':  rework_external_time,
@@ -337,7 +352,7 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
         calculate_data = {
             'gross_available_time': len(team_personals) * 6 * 5,
             'efficiency': (srs_initial + srs_detail + gap_analysis + time_initiatives / (len(team_personals) - 1) * 6 * 5) if len(team_personals) > 0 else 0,
-            'utilization': (project_time + gap_analysis + time_initiatives + rework_time + rework_external_time / (len(team_personals) - 1) * 8 * 5) if len(team_personals) > 0 else 0,
+            'utilization': (project_time + time_initiatives + rework_time + rework_external_time / (len(team_personals) - 1) * 8 * 5) if len(team_personals) > 0 else 0,
             'operational_cost': (len(team_personals) - 1) * 30 * 50,
             'rework_external_cost': rework_external_time * 50
         }
