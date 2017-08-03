@@ -132,8 +132,10 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
     customer_facing_time = documentation_time = ticketless_dev_time = 0
 
     # RE
-    revisions = rework_external_time = travel_cost = 0
-    backlog = active_projects = team_initiatives = 0
+    revisions = rework_external_time = travel_cost = creep = project_loe = 0
+    backlog = active_projects = team_initiatives = time_initiatives = 0
+    srs_initial = srs_detail = gap_analysis = project_actuals = compliments = 0
+    complaints = survey = system_met = system_miss = actual_met = actual_miss = 0
 
     # TL
     tickets_closed = 0
@@ -294,34 +296,64 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
         for person in team_personals:
             overtime_weekday += person.overtime_weekday
             overtime_weekend += person.overtime_weekend
+            compliments += person.compliments
+            complaints += person.complaints
+            survey += person.survey
             rework_time += person.rework_time
+            system_met += person.system_met
+            system_miss += person.system_miss
+            actual_met += person.actual_met
+            actual_miss += person.actual_miss
             elicitation_analysis_time += person.elicitation_analysis_time
             revisions += person.revisions
             rework_external_time += person.rework_external_time
+            creep += person.creep
             travel_cost += person.travel_cost
-
+            srs_initial += person.srs_initial
+            srs_detail += person.srs_detail
+            gap_analysis += person.gap_analysis
             backlog += person.backlog
+            project_time += person.project_time
+            project_actuals += person.project_actuals
+            project_loe += person.project_loe
             active_projects += person.active_projects
             team_initiatives += person.initiatives
+            time_initiatives += person.time_initiatives
             pto_holiday_time += person.pto_holiday_time
 
         form_data = {
             'overtime_weekday': overtime_weekday,
             'overtime_weekend': overtime_weekend,
+            'compliments': compliments,
+            'complaints': complaints,
+            'survey': survey,
             'rework_time': rework_time,
+            'system_met': system_met,
+            'system_miss': system_miss,
+            'actual_met': actual_met,
+            'actual_miss': actual_miss,
             'elicitation_analysis_time': elicitation_analysis_time,
             'revisions': revisions,
             'rework_external_time':  rework_external_time,
+            'creep': creep,
             'travel_cost': travel_cost,
+            'srs_initial': srs_initial,
+            'srs_detail': srs_detail,
+            'gap_analysis': gap_analysis,
             'backlog': backlog,
+            'project_time': project_time,
+            'project_actuals': project_actuals,
+            'project_loe': project_loe,
             'team_initiative': team_initiatives,
+            'time_initiatives': time_initiatives,
             'active_projects': active_projects,
             'pto_holiday_time': pto_holiday_time
         }
         calculate_data = {
             'gross_available_time': len(team_personals) * 6 * 5,
-            'efficiency': elicitation_analysis_time / (len(team_personals) * 6 * 5) if len(team_personals) > 0 else 0,
-            'operational_cost': len(team_personals) * 30 * 50,
+            'efficiency': (srs_initial + srs_detail + gap_analysis + time_initiatives / (len(team_personals) - 1) * 6 * 5),
+            'utilization': (project_time + time_initiatives + rework_time + rework_external_time / (len(team_personals) - 1) * 8 * 5),
+            'operational_cost': (len(team_personals) - 1) * 30 * 50,
             'rework_external_cost': rework_external_time * 50
         }
         automation_fields = get_model_fields(RequirementMetrics, key, level='team')

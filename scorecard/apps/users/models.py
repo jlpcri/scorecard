@@ -48,8 +48,21 @@ class FunctionalGroup(models.Model):
             return None
 
         fields = metric._meta.get_fields()
-        EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated', 'subteam']
-        return [field for field in fields if field.name not in EXCLUSION_LIST]
+
+        if self.metric_type == self.TESTING:
+            EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated', 'subteam']
+            return [field for field in fields if field.name not in EXCLUSION_LIST]
+        elif self.metric_type == self.DEVELOPMENT:
+            EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated', 'subteam']
+            return [field for field in fields if field.name not in EXCLUSION_LIST]
+        elif self.metric_type == self.REQUIREMENTS:
+            EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated', 'subteam', 'escalations',
+                              'slas_met', 'sdis_not_prevented', 'rework_introduced_time', 'resource_swap',
+                              'resource_swap_time', 'license_cost', 'slas_missed', 'elicitation_analysis_time']
+            return [field for field in fields if field.name not in EXCLUSION_LIST]
+        elif self.metric_type == self.LAB:
+            EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated', 'subteam']
+            return [field for field in fields if field.name not in EXCLUSION_LIST]
 
     def metrics(self):
         if self.metric_type == self.TESTING:

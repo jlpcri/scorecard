@@ -334,37 +334,64 @@ class RequirementMetrics(BaseMetrics):
     # Throughput
     backlog = models.PositiveIntegerField(default=0, verbose_name='Backlog')
     team_initiative = models.PositiveIntegerField(default=0, verbose_name='Team Initiative')
-    active_projects = models.PositiveIntegerField(default=0, verbose_name='Active Project')
+    time_initiatives = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                            verbose_name='Initiatives Time')
     elicitation_analysis_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                                     verbose_name='Research Time')  # in hours
+    # Project Work
+    active_projects = models.PositiveIntegerField(default=0, verbose_name='Project WIP')
+    srs_initial = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='SRS Initial Time')
+    srs_detail = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='SRS Detail Time')
+    gap_analysis = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='GAP Analysis Time')
+    project_time = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Project Time')
+
+    # Levels of Efforts
+    project_loe = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Project LOE'S")
+    project_actuals = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Project Actual's")
 
     # Quality
-    revisions = models.PositiveIntegerField(default=0, verbose_name='Revisions')
+    revisions = models.PositiveIntegerField(default=0, verbose_name='Rework')
+    creep = models.PositiveIntegerField( default=0, verbose_name='Scope Creep')
+    rework_external_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                                verbose_name='Scope Creep Time')
+
+    # SLAs
+    # This is now system_miss as it's pulling from Personal now
     slas_missed = models.DecimalField(max_digits=3, decimal_places=2, default=0,
                                       verbose_name='SLAs Missed')
+    system_met = models.DecimalField(max_digits=3, decimal_places=2, default=0, verbose_name='System SLA Met')
+    system_miss = models.DecimalField(max_digits=3, decimal_places=2, default=0, verbose_name='System SLA Miss')
+    actual_met = models.DecimalField(max_digits=3, decimal_places=2, default=0, verbose_name='Actual SLA Met')
+    actual_miss = models.DecimalField(max_digits=3, decimal_places=2, default=0, verbose_name='Actual SLA Miss')
 
-    # Efficiency
-    rework_external_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                               verbose_name='Rework External Time')
-
+    # Optimization
+    optimization_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
+                                             verbose_name="Optimization Time")
     # Costs
     travel_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                       verbose_name='Travel Costs')
+
+    survey = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Survey')
+
 
     @property
     def avg_throughput(self):
         return self.active_projects + self.team_initiative
 
     @property
+    # this is now deprecated and has been replaced with utilization
     def gross_available_time(self):
         return self.staffs * 6 * 5
 
     @property
+    def utilization(self):
+        util_avg = (self.project_time + self.time_initiatives + self.rework_time + self.rework_external_time)/((self.staffs - 1 + self.contractors)* 8 * 5)
+        return '{0:.2f}%'.format(util_avg * 100)
+
+    @property
     def efficiency(self):
-        if self.gross_available_time == 0:
-            return 0
-        else:
-            return self.elicitation_analysis_time / self.gross_available_time
+        eff_avg = (self.srs_initial + self.srs_detail + self.gap_analysis + self.time_initiatives)/((self.staffs - 1 + self.contractors)* 6 * 5)
+        return '{0:.2f}%'.format(eff_avg * 100)
 
     @property
     def rework_external_cost(self):
@@ -372,7 +399,7 @@ class RequirementMetrics(BaseMetrics):
 
     @property
     def operational_cost(self):
-        return (self.staffs + self.contractors) * 30 * 50
+        return (self.staffs - 1 + self.contractors) * 30 * 50
 
     @property
     def total_operational_cost(self):

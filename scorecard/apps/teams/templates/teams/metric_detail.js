@@ -26,6 +26,7 @@ switch (key) {
         costReworkCal();
         qualityCal();
         efficiencyCal();
+        efficiencyUtilizationCal();
         break;
     case 'QA':
     case 'TE':
@@ -145,14 +146,14 @@ function qualityCal() {
                 $('#avg_throughput_qi').val(avg_throughput.toFixed(2));
             });
             break;
-        case 'RE':
-            $('#id_active_projects').on('input', function(){
-                $('#avg_throughput').val(parseFloat(this.value) + parseFloat($('#id_team_initiative').val()));
-            });
-            $('#id_team_initiative').on('input', function(){
-                $('#avg_throughput').val(parseFloat(this.value) + parseFloat($('#id_active_projects').val()));
-            });
-            break;
+        // case 'RE':
+        //     $('#id_active_projects').on('input', function(){
+        //         $('#avg_throughput').val(parseFloat(this.value) + parseFloat($('#id_team_initiative').val()));
+        //     });
+        //     $('#id_team_initiative').on('input', function(){
+        //         $('#avg_throughput').val(parseFloat(this.value) + parseFloat($('#id_active_projects').val()));
+        //     });
+        //     break;
         case 'TL':
             $('#id_builds_submitted').on('input', function(){
                 tlBuildRejectedCal();
@@ -219,12 +220,20 @@ function efficiencyCal() {
     switch (key) {
         case 'RE':
             staff.on('input', function(){
-                $('#gross_available').val(this.value * 6 * 5);
-                var efficiency = ($('#id_elicitation_analysis_time').val() / (this.value * 6 * 5) * 100).toFixed(2) ;
-                $('#id_efficiency').val(efficiency + '%');
+                var effstats = (parseFloat($('#id_srs_initial').val()) +
+                    parseFloat($('#id_srs_detail').val()) +
+                    parseFloat($('#id_gap_analysis').val()) +
+                    parseFloat($('#id_time_initiatives').val()));
+
+                var effpeople = ((parseFloat($('#id_staffs').val()) + parseFloat($('#id_contractors').val()) -1) * 6 * 5);
+
+                var operational = ((parseFloat($('#id_staffs').val()) + parseFloat($('#id_contractors').val()) -1) * 30 * 50);
+
+                $('#id_efficiency').val(((effstats / effpeople) * 100).toFixed(2) + '%');
+                $('#operational_cost').val(operational.toFixed(2));
             });
             $('#id_elicitation_analysis_time').on('input', function(){
-                var efficiency = (this.value / $('#gross_available').val() * 100).toFixed(2) ;
+                var efficiency = (this.value / $('#gross_available').val() * 100).toFixed(2);
                 $('#id_efficiency').val(efficiency + '%');
             });
             break;
@@ -367,6 +376,18 @@ function efficiencyUtilizationCal(){
                 + parseFloat($('#id_ticket_time').val())) / ($('#id_staffs').val() * 40 - parseFloat($('#id_pto_holiday_time').val())) * 100;
             $('#id_utilization').val(value.toFixed(2) + '%');
             break;
+        case 'RE':
+            staff.on('input', function () {
+                var utistats = (parseFloat($('#id_project_time').val()) +
+                parseFloat($('#id_rework_time').val()) +
+                parseFloat($('#id_rework_external_time').val()) +
+                parseFloat($('#id_time_initiatives').val()));
+                console.log(utistats);
+
+                var utipeople = ((parseFloat($('#id_staffs').val()) + parseFloat($('#id_contractors').val()) - 1) * 8 * 5);
+                console.log(utipeople);
+                $('#id_utilization').val(((utistats / utipeople) * 100).toFixed(2) + '%');
+            });
     }
 }
 
