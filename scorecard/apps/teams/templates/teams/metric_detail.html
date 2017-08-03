@@ -188,17 +188,17 @@
                     <div class="col-sm-2">
                         <input class="gentle" id="id_efficiency" title="(SRS Initial Time + SRS Detail Time + GAP Analysis Time + Initiatives Time)/((Staff + Contractors-Manager) * 6 * 5)"
                                 {% if calculate_data %}
-                               value="{{ calculate_data.efficiency|percentage_format }}"
+                               value="{{ calculate_data.efficiency|percentage_result }}"
                                 {% else %}
-                               value="{{ metric.efficiency|percentage_format }}"
+                               value="{{ metric.efficiency }}"
                                 {% endif %} disabled/>
                     </div>
                     <div class="col-sm-2">
                             <input class="gentle" id="id_utilization" title="(Project Time + Initiatives Time + Rework Time + Scope Creep Time)/((Staff + Contractors-Manager) * 8 * 5)"
                                 {% if calculate_data %}
-                               value="{{ calculate_data.utilization|percentage_format }}"
+                               value="{{ calculate_data.utilization|percentage_result }}"
                                 {% else %}
-                               value="{{ metric.utilization|percentage_format }}"
+                               value="{{ metric.utilization }}"
                                 {% endif %} disabled/>
                     </div>
                     <div class="col-sm-2">{{ form.staffs }}</div>

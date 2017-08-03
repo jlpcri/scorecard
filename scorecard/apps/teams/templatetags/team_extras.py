@@ -15,3 +15,9 @@ def prepend_dollars(dollars):
 @register.filter
 def percentage_format(value):
     return '{0:.2f}%'.format(value * 100)
+
+
+@register.filter
+def percentage_result(value):
+    return '{0:.2f}%'.format(value)
+
