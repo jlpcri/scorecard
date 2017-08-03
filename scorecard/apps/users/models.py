@@ -56,14 +56,10 @@ class FunctionalGroup(models.Model):
             EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated', 'subteam']
             return [field for field in fields if field.name not in EXCLUSION_LIST]
         elif self.metric_type == self.REQUIREMENTS:
-            FIELD_LIST = ['efficiency', 'utilization', 'staffs', 'contractors', 'openings', 'compliments', 'complaints',
-                          'overtime_weekday',
-                          'overtime_weekend', 'rework_time', 'pto_holiday_time', 'other_savings', 'backlog',
-                          'team_initiative', 'time_initiatives', 'active_projects', 'srs_initial', 'srs_detail',
-                          'gap_analysis', 'project_time', 'project_loe', 'project_actuals', 'revisions', 'creep',
-                          'rework_external_time', 'system_met', 'system_miss', 'actual_met', 'actual_miss',
-                          'travel_cost', 'survey']
-            return [field for field in fields if field.name in FIELD_LIST]
+            EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated', 'subteam', 'escalations',
+                              'slas_met', 'sdis_not_prevented', 'rework_introduced_time', 'resource_swap',
+                              'resource_swap_time', 'license_cost', 'slas_missed', 'elicitation_analysis_time']
+            return [field for field in fields if field.name not in EXCLUSION_LIST]
         elif self.metric_type == self.LAB:
             EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated', 'subteam']
             return [field for field in fields if field.name not in EXCLUSION_LIST]
