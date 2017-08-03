@@ -351,8 +351,8 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
         }
         calculate_data = {
             'gross_available_time': len(team_personals) * 6 * 5,
-            'efficiency': (srs_initial + srs_detail + gap_analysis + time_initiatives / (len(team_personals) - 1) * 6 * 5) if len(team_personals) > 0 else 0,
-            'utilization': (project_time + time_initiatives + rework_time + rework_external_time / (len(team_personals) - 1) * 8 * 5) if len(team_personals) > 0 else 0,
+            'efficiency': (srs_initial + srs_detail + gap_analysis + time_initiatives / (len(team_personals) - 1) * 6 * 5),
+            'utilization': (project_time + time_initiatives + rework_time + rework_external_time / (len(team_personals) - 1) * 8 * 5),
             'operational_cost': (len(team_personals) - 1) * 30 * 50,
             'rework_external_cost': rework_external_time * 50
         }
