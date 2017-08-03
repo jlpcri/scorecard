@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-import simplejson
+import json as simplejson
 
 from scorecard.apps.teams.models import TestMetrics, LabMetrics, InnovationMetrics, RequirementMetrics
 from scorecard.apps.projects.utils import REVENUE_SCALE_CHOICES
@@ -74,33 +74,32 @@ class FunctionalGroup(models.Model):
         elif self.metric_type == self.LAB:
             return LabMetrics.objects.filter(functional_group=self).first()
 
-    @property
     def quality_graph(self):
         try:
-            return self.metrics().quality_graph
+            return self.metrics().quality_graph()
         except AttributeError:  # metrics == None, i.e. no data loaded
-            # print self.metrics()
+            print self.metrics()
             return None
 
     def efficiency_graph(self):
         try:
             return self.metrics().efficiency_graph()
         except AttributeError:  # metrics == None, i.e. no data loaded
-            # print self.metrics()
+            print self.metrics()
             return None
 
     def throughput_graph(self):
         try:
             return self.metrics().throughput_graph()
         except AttributeError:  # metrics == None, i.e. no data loaded
-            # print self.metrics()
+            print self.metrics()
             return None
 
     def progress_graph(self):
         try:
             return self.metrics().progress_graph()
         except AttributeError:  # metrics == None, i.e. no data loaded
-            # print self.metrics()
+            print self.metrics()
             return None
 
     @property

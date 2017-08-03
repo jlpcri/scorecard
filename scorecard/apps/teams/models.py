@@ -419,7 +419,7 @@ class RequirementMetrics(BaseMetrics):
     def efficiency_graph(cls):
         data = cls.objects.filter(subteam=None).order_by("-created")[:12]
         return {'title': 'Utilization',
-                'data': [{'date': week.created.strftime("%b %-d"), 'value': week.efficiency} for week in data],
+                'data': [{'date': week.created.strftime("%b %-d"), 'value': week.gross_available_time} for week in data],
                 'thresholds': {'too_high': 1,
                                'upper_ideal': .85,
                                'lower_ideal': .7}}
