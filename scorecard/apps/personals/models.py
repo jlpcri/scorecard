@@ -152,6 +152,14 @@ class RequirementStats(BaseStats):
         util_avg = (self.project_time + self.time_initiatives) / 40
         return float("{0:.2f}".format(util_avg))
 
+    def new_stat_summary(self):
+        return {'Utilization': self.utilization, 'Efficiency': self.efficiency, "Project LOE's": self.project_loe,
+                "Project Actual's": self.project_actuals, 'Project WIP': self.active_projects,
+                'Project Time': self.project_time, 'Rework': self.revisions, 'Rework Time': self.rework_time,
+                'Scope Creep': self.creep, 'Scope Creep Time': self.rework_external_time,
+                'Team Initiatives': self.initiatives, 'Initiatives Time': self.time_initiatives,
+                'Compliments': self.compliments, 'Survey': self.survey, 'Complaints': self.complaints}
+
 
 class TestStats(BaseStats):
     """
