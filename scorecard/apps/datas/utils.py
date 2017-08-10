@@ -56,26 +56,28 @@ HEAD_RE = [
     'Contractors',
     'Throughput',
     'Backlog',
-    'Active Projects',
+    'Project WIP',
     'Team Initiatives',
-    'Elicitation and Analysis Hours',
+    'Avg Throughput = Project WIP + Team',
+    'Utilization',
+    'Utilization %',
     'Quality',
-    'Revisions (post review)',
-    'Rework introduced (Hours)',
-    'Avg Throughput = Active Projects + Team initiatives',
-    'SLAs met (%age)',
-    'SLAs missed (%age)',
-    'Escalations',
+    'Rework',
+    'Rework Time',
+    'Scope Creep',
+    'Scope Creep Time',
+    'Actual SLA Met',
+    'Actual SLA Miss',
+    'System SLA Met',
+    'System SLA Miss',
     'Efficiency',
+    'Effident Time',
+    'Effidency %',
+    'Overtime Weekend in Hours',
+    'Overtime Weekday Hours',
     'PTO Holiday',
-    'Gross Available Hours',
-    'Efficiency - (Elicitation & Analysis hrs)/Gross Available',
-    'Overtime Weekend in Hours (from PARTE)',
-    'Overtime Weekday Hours (greater than 6 hours /day)',
-    'Rework From External teams (Hours)',
     'Costs',
-    'Cost of Rework',
-    'Resource Swap (Hours)',
+    'Scope Creep Costs',
     'Operational Costs',
     'Travel Costs',
     'Overall Operating Costs',
@@ -302,7 +304,7 @@ mediumBorder = Border(left=Side(style='medium'),
 ROW_START_INDEX = 4
 
 COL_EXCLUDE_QE = [2, 6, 14, 21, 31, 37]
-COL_EXCLUDE_RE = [2, 6, 11, 18, 25]
+COL_EXCLUDE_RE = [2, 6, 13, 22, 28]
 COL_EXCLUDE_TL = [2, 6, 12, 18, 26]
 COL_EXCLUDE_QA_TE = [2, 6, 27, 37, 49]
 COL_EXCLUDE_TEST_SUMMARY = [2, 6, 11]
@@ -503,48 +505,50 @@ def write_body_re(ws, row, metric):
     ws.cell(row=row, column=7).value = metric.backlog
     ws.cell(row=row, column=8).value = metric.active_projects
     ws.cell(row=row, column=9).value = metric.team_initiative
-    ws.cell(row=row, column=10).value = metric.elicitation_analysis_time
+    ws.cell(row=row, column=10).value = metric.avg_throughput
+    ws.cell(row=row, column=11).value = metric.utilization_time
+    ws.cell(row=row, column=12).value = metric.utilization
+    ws.cell(row=row, column=12).number_format = '0.00%'
 
-    # column 11
-    background_color_fill(ws, row, col=11, background_color=rebeccaPurpleFill)
-    ws.column_dimensions[get_column_letter(11)].width = 4
+    # column 13
+    background_color_fill(ws, row, col=13, background_color=rebeccaPurpleFill)
+    ws.column_dimensions[get_column_letter(13)].width = 4
 
-    # column 12
-    ws.cell(row=row, column=12).value = metric.revisions
-    ws.cell(row=row, column=13).value = metric.rework_introduced_time
-    ws.cell(row=row, column=14).value = metric.avg_throughput
-    ws.cell(row=row, column=15).value = metric.slas_met
-    ws.cell(row=row, column=16).value = metric.slas_missed
-    # ws.cell(row=row, column=17).value = metric.delays_introduced_time
-    ws.cell(row=row, column=17).value = metric.escalations
+    # column 14
+    ws.cell(row=row, column=14).value = metric.revisions
+    ws.cell(row=row, column=15).value = metric.rework_time
+    ws.cell(row=row, column=16).value = metric.creep
+    ws.cell(row=row, column=17).value = metric.rework_external_time
+    ws.cell(row=row, column=18).value = metric.actual_met
+    ws.cell(row=row, column=19).value = metric.actual_miss
+    ws.cell(row=row, column=20).value = metric.system_met
+    ws.cell(row=row, column=21).value = metric.system_miss
 
-    # column 18
-    background_color_fill(ws, row, col=18, background_color=saddleBrownFill)
-    ws.column_dimensions[get_column_letter(18)].width = 4
+    # column 22
+    background_color_fill(ws, row, col=22, background_color=saddleBrownFill)
+    ws.column_dimensions[get_column_letter(22)].width = 4
 
-    # column 19
-    ws.cell(row=row, column=19).value = metric.pto_holiday_time
-    ws.cell(row=row, column=20).value = metric.gross_available_time
-    ws.cell(row=row, column=21).value = metric.efficiency
-    ws.cell(row=row, column=21).number_format = '0.00%'
-    ws.cell(row=row, column=22).value = metric.overtime_weekend
-    ws.cell(row=row, column=23).value = metric.overtime_weekday
-    ws.cell(row=row, column=24).value = metric.rework_external_time
+    # column 23
+    ws.cell(row=row, column=23).value = metric.efficiency_time
+    ws.cell(row=row, column=24).value = metric.efficiency
+    ws.cell(row=row, column=24).number_format = '0.00%'
+    ws.cell(row=row, column=25).value = metric.overtime_weekend
+    ws.cell(row=row, column=26).value = metric.overtime_weekday
+    ws.cell(row=row, column=27).value = metric.pto_holiday_time
 
-    # column 25
-    background_color_fill(ws, row, col=25, background_color=oliveDrabFill)
-    ws.column_dimensions[get_column_letter(25)].width = 4
+    # column 28
+    background_color_fill(ws, row, col=28, background_color=oliveDrabFill)
+    ws.column_dimensions[get_column_letter(28)].width = 4
 
-    # column 26
-    add_dollar_symbol(ws, row, col_start=26, col_end=26)
-    add_dollar_symbol(ws, row, col_start=28, col_end=31)
+    # column 29
+    add_dollar_symbol(ws, row, col_start=29, col_end=33)
+    # add_dollar_symbol(ws, row, col_start=30, col_end=33)
 
-    ws.cell(row=row, column=26).value = metric.rework_external_cost
-    ws.cell(row=row, column=27).value = metric.resource_swap_time
-    ws.cell(row=row, column=28).value = metric.operational_cost
-    ws.cell(row=row, column=29).value = metric.travel_cost
-    ws.cell(row=row, column=30).value = metric.overall_cost
-    ws.cell(row=row, column=31).value = metric.other_savings
+    ws.cell(row=row, column=29).value = metric.rework_external_cost
+    ws.cell(row=row, column=30).value = metric.operational_cost
+    ws.cell(row=row, column=31).value = metric.travel_cost
+    ws.cell(row=row, column=32).value = metric.overall_cost
+    ws.cell(row=row, column=33).value = metric.other_savings
 
 
 def write_body_qa_te(ws, row, metric):
@@ -961,8 +965,8 @@ def apply_header_style(ws, cols, key):
         pale_green = [4, 11, 12, 19, 26, 34, 37, 38, 39, 40, 41]
         corn_silk = [33, 35]
     elif key == 'RE':
-        pale_green = [4, 28]
-        corn_silk = [20, 21, 25, 27, 29]
+        pale_green = [4, 30]
+        # corn_silk = [20, 21, 25, 27, 29]
     elif key in ['QA', 'TE']:
         pale_green = [4, 20, 24, 38, 51, 54]
         corn_silk = [25, 26, 42, 43, 44, 50, 52, 53]
