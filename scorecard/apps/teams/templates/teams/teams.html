@@ -84,6 +84,7 @@
                                                 <td><a href="{% url 'teams:metric_detail' week.id %}?key={{ group.group.abbreviation }}">{{ week.created | date:"SHORT_DATE_FORMAT" }}</a></td>
                                                 <td>{{ week.efficiency }} </td>
                                                 <td>{{ week.utilization }} </td>
+                                                <td>{{ week.staff_minus_manager }} </td>
                                                 {% for field in week.table_row %}
                                                 <td>{{ field }}</td>
                                                 {% endfor %}
