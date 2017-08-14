@@ -373,6 +373,9 @@ class RequirementMetrics(BaseMetrics):
 
     survey = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Survey')
 
+    @property
+    def staff_minus_manager(self):
+        return self.staffs - 1
 
     @property
     def avg_throughput(self):
@@ -385,13 +388,21 @@ class RequirementMetrics(BaseMetrics):
 
     @property
     def utilization(self):
-        util_avg = (self.project_time + self.time_initiatives + self.rework_time + self.rework_external_time)/((self.staffs - 1 + self.contractors)* 8 * 5)
+        util_avg = (self.project_time + self.time_initiatives)/((self.staffs - 1 + self.contractors)* 8 * 5)
         return '{0:.2f}%'.format(util_avg * 100)
+
+    @property
+    def utilization_time(self):
+        return self.project_time + self.time_initiatives
 
     @property
     def efficiency(self):
         eff_avg = (self.srs_initial + self.srs_detail + self.gap_analysis + self.time_initiatives)/((self.staffs - 1 + self.contractors)* 6 * 5)
         return '{0:.2f}%'.format(eff_avg * 100)
+
+    @property
+    def efficiency_time(self):
+        return self.srs_initial + self.srs_detail + self.gap_analysis + self.time_initiatives
 
     @property
     def rework_external_cost(self):
