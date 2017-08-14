@@ -107,7 +107,7 @@ def export_excel(request):
 
     else:
         export_file_name += 'All-' + today
-        dates = InnovationMetrics.objects.filter(created__range=(start, end), subteam=None).values_list('created', flat=True)
+        dates = InnovationMetrics.objects.filter(created__range=(start, end), subteam=None).values_list('created', flat=True).order_by('-created')
 
         # export formula to Testing Summar
         ws = wb.active
@@ -122,7 +122,7 @@ def export_excel(request):
             ws = wb.create_sheet(functional_group.name)
 
             metrics = functional_group.metrics_set.filter(subteam=None,
-                                                          created__range=(start, end))
+                                                          created__range=(start, end)).order_by('-created')
             # result = check_metrics_updated(metrics)
 
             write_to_excel_all(metrics, ws, functional_group.abbreviation)

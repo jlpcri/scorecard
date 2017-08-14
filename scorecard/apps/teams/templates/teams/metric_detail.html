@@ -201,7 +201,14 @@
                                value="{{ metric.utilization }}"
                                 {% endif %} disabled/>
                     </div>
-                    <div class="col-sm-2">{{ form.staffs }}</div>
+                    <div class="col-sm-2">
+                        <input class="gentle" id="id_staff_minus_manager" title="(Staff - 1)"
+                                {% if calculate_data %}
+                               value="{{ calculate_data.staff_minus_manager }}"
+                                {% else %}
+                               value="{{ metric.staff_minus_manager }}"
+                                {% endif %} />
+                    </div>
                     <div class="col-sm-2">{{ form.openings }}</div>
                     <div class="col-sm-2">{{ form.contractors }}</div>
                     <div class="col-sm-2">{{ form.overtime_weekday }}</div>

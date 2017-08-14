@@ -373,6 +373,9 @@ class RequirementMetrics(BaseMetrics):
 
     survey = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Survey')
 
+    @property
+    def staff_minus_manager(self):
+        return self.staffs - 1
 
     @property
     def avg_throughput(self):
@@ -390,7 +393,7 @@ class RequirementMetrics(BaseMetrics):
 
     @property
     def utilization_time(self):
-        return self.active_projects + self.time_initiatives
+        return self.project_time + self.time_initiatives
 
     @property
     def efficiency(self):
