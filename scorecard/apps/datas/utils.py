@@ -349,11 +349,11 @@ def write_to_excel(metric, ws):
 
         apply_header_style(ws, len(HEAD_RE) + 1, metric.functional_group.abbreviation)
 
-        apply_border_style(ws, row_start + 1, len(HEAD_RE) + 1)
+        apply_border_style(ws, row_start -1, len(HEAD_RE))
 
-        write_ytd(ws, len(HEAD_RE) + 1, row_start, row_start, COL_EXCLUDE_RE)
+        # write_ytd(ws, len(HEAD_RE) + 1, row_start, row_start, COL_EXCLUDE_RE)
 
-        write_body_re(ws, row_start, metric)
+        write_body_re(ws, row_start - 2, metric)
 
     else:
         head = []
@@ -702,6 +702,7 @@ def write_to_excel_all(metrics, ws, key):
         for metric in metrics:
             write_body_qi(ws, row_start, metric)
             row_start += 1
+
     elif key == 'TL':
         write_head_title(ws, HEAD_TL)
 
