@@ -294,7 +294,6 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
 
     elif key == 'RE':
         for person in team_personals:
-            staffs += person.staffs
             overtime_weekday += person.overtime_weekday
             overtime_weekend += person.overtime_weekend
             compliments += person.compliments
@@ -323,7 +322,6 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
             pto_holiday_time += person.pto_holiday_time
 
         form_data = {
-            'staffs': staffs,
             'overtime_weekday': overtime_weekday,
             'overtime_weekend': overtime_weekend,
             'compliments': compliments,
