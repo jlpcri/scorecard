@@ -229,8 +229,12 @@ function efficiencyCal() {
 
                 var operational = ((parseFloat($('#id_staffs').val()) + parseFloat($('#id_contractors').val()) -1) * 30 * 50);
 
+                var staff_minus_manager = parseFloat($('#id_staffs').val()) -1;
+
                 $('#id_efficiency').val(((effstats / effpeople) * 100).toFixed(2) + '%');
                 $('#operational_cost').val(operational.toFixed(2));
+                $('#id_staff_minus_manager').val(staff_minus_manager);
+
             });
             $('#id_elicitation_analysis_time').on('input', function(){
                 var efficiency = (this.value / $('#gross_available').val() * 100).toFixed(2);
