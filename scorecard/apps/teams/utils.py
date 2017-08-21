@@ -135,7 +135,7 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
     revisions = rework_external_time = travel_cost = creep = project_loe = 0
     backlog = active_projects = team_initiatives = time_initiatives = 0
     srs_initial = srs_detail = gap_analysis = project_actuals = compliments = 0
-    complaints = survey = system_met = system_miss = actual_met = actual_miss = 0
+    complaints = survey = system_met = system_miss = actual_met = actual_miss = staffs = 0
 
     # TL
     tickets_closed = 0
@@ -294,6 +294,7 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
 
     elif key == 'RE':
         for person in team_personals:
+            staffs += person.staffs
             overtime_weekday += person.overtime_weekday
             overtime_weekend += person.overtime_weekend
             compliments += person.compliments
@@ -322,6 +323,7 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
             pto_holiday_time += person.pto_holiday_time
 
         form_data = {
+            'staffs': staffs,
             'overtime_weekday': overtime_weekday,
             'overtime_weekend': overtime_weekend,
             'compliments': compliments,
