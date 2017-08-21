@@ -56,7 +56,7 @@ class FunctionalGroup(models.Model):
             EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated', 'subteam']
             return [field for field in fields if field.name not in EXCLUSION_LIST]
         elif self.metric_type == self.REQUIREMENTS:
-            EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated', 'subteam', 'escalations',
+            EXCLUSION_LIST = ['id', 'created', 'staffs', 'confirmed', 'functional_group', 'updated', 'subteam', 'escalations',
                               'slas_met', 'sdis_not_prevented', 'rework_introduced_time', 'resource_swap',
                               'resource_swap_time', 'license_cost', 'slas_missed', 'elicitation_analysis_time']
             return [field for field in fields if field.name not in EXCLUSION_LIST]

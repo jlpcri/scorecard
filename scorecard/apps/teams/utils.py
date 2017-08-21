@@ -354,6 +354,7 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
             'efficiency': (srs_initial + srs_detail + gap_analysis + time_initiatives / (len(team_personals) - 1) * 6 * 5),
             'utilization': (project_time + time_initiatives + rework_time + rework_external_time / (len(team_personals) - 1) * 8 * 5),
             'operational_cost': (len(team_personals) - 1) * 30 * 50,
+            'staff_minus_manager': len(team_personals) - 1,
             'rework_external_cost': rework_external_time * 50
         }
         automation_fields = get_model_fields(RequirementMetrics, key, level='team')
