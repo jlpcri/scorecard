@@ -748,7 +748,11 @@
                         <div class="col-sm-2">{{ form.pto_holiday_time }}</div>
                         <div class="col-sm-2">
                             <input class="gentle" id="productive_hours" title="AutoAndExec Time + Standard Work Time"
-                                   value="{{ metric.productive_hours }}" disabled/>
+                                {% if calculate_data %}
+                                   value="{{ calculate_data.productive_hours|floatformat:2 }}"
+                                {% else %}
+                                   value="{{ metric.productive_hours }}"
+                                {% endif %} disabled/>
                         </div>
                     </div>
 
