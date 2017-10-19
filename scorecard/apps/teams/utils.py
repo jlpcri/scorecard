@@ -213,6 +213,7 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
         if len(team_personals) > 0:
             avg_throughput = (tc_manual_dev + tc_auto_dev + tc_manual_execution + tc_auto_execution) / float(len(team_personals))
             efficiency = auto_and_execution_time / gross_available_time
+            productive_hours = auto_and_execution_time + standard_work_time
         else:
             avg_throughput = 0
             efficiency = 0
@@ -221,6 +222,7 @@ def fetch_collect_data_per_team_per_date(key, date, subteam, metric_id):
             'auto_footprint_dev_age': auto_footprint_dev_age,
             'auto_footprint_execution_age': auto_footprint_execution_age,
             'avg_throughput': avg_throughput,
+            'productive_hours': productive_hours,
             'auto_and_execution_time': auto_and_execution_time,
             'gross_available_time': gross_available_time,
             # 'efficiency':  efficiency,
