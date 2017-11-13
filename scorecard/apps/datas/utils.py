@@ -56,26 +56,33 @@ HEAD_RE = [
     'Contractors',
     'Throughput',
     'Backlog',
-    'Active Projects',
+    'Project WIP',
     'Team Initiatives',
-    'Elicitation and Analysis Hours',
+    'Avg Throughput = Project WIP + Team',
+    'Utilization',
+    'Utilization %',
+    "Project LOE's",
+    "Project Actual's",
     'Quality',
-    'Revisions (post review)',
-    'Rework introduced (Hours)',
-    'Avg Throughput = Active Projects + Team initiatives',
-    'SLAs met (%age)',
-    'SLAs missed (%age)',
-    'Escalations',
+    'Rework',
+    'Rework Time',
+    'Scope Creep',
+    'Scope Creep Time',
+    'Actual SLA Met',
+    'Actual SLA Miss',
+    'System SLA Met',
+    'System SLA Miss',
+    'Compliments',
+    'Complaints',
+    'Surveys',
     'Efficiency',
+    'Efficiency Time',
+    'Efficiency %',
+    'Overtime Weekend in Hours',
+    'Overtime Weekday Hours',
     'PTO Holiday',
-    'Gross Available Hours',
-    'Efficiency - (Elicitation & Analysis hrs)/Gross Available',
-    'Overtime Weekend in Hours (from PARTE)',
-    'Overtime Weekday Hours (greater than 6 hours /day)',
-    'Rework From External teams (Hours)',
     'Costs',
-    'Cost of Rework',
-    'Resource Swap (Hours)',
+    'Scope Creep Costs',
     'Operational Costs',
     'Travel Costs',
     'Overall Operating Costs',
@@ -302,7 +309,7 @@ mediumBorder = Border(left=Side(style='medium'),
 ROW_START_INDEX = 4
 
 COL_EXCLUDE_QE = [2, 6, 14, 21, 31, 37]
-COL_EXCLUDE_RE = [2, 6, 11, 18, 25]
+COL_EXCLUDE_RE = [2, 6, 15, 27, 33]
 COL_EXCLUDE_TL = [2, 6, 12, 18, 26]
 COL_EXCLUDE_QA_TE = [2, 6, 27, 37, 49]
 COL_EXCLUDE_TEST_SUMMARY = [2, 6, 11]
@@ -342,11 +349,11 @@ def write_to_excel(metric, ws):
 
         apply_header_style(ws, len(HEAD_RE) + 1, metric.functional_group.abbreviation)
 
-        apply_border_style(ws, row_start + 1, len(HEAD_RE) + 1)
+        apply_border_style(ws, row_start -1, len(HEAD_RE))
 
-        write_ytd(ws, len(HEAD_RE) + 1, row_start, row_start, COL_EXCLUDE_RE)
+        # write_ytd(ws, len(HEAD_RE) + 1, row_start, row_start, COL_EXCLUDE_RE)
 
-        write_body_re(ws, row_start, metric)
+        write_body_re(ws, row_start - 2, metric)
 
     else:
         head = []
@@ -503,48 +510,54 @@ def write_body_re(ws, row, metric):
     ws.cell(row=row, column=7).value = metric.backlog
     ws.cell(row=row, column=8).value = metric.active_projects
     ws.cell(row=row, column=9).value = metric.team_initiative
-    ws.cell(row=row, column=10).value = metric.elicitation_analysis_time
+    ws.cell(row=row, column=10).value = metric.avg_throughput
+    ws.cell(row=row, column=11).value = metric.utilization_time
+    ws.cell(row=row, column=12).value = metric.utilization
+    ws.cell(row=row, column=12).number_format = '0.00%'
+    ws.cell(row=row, column=13).value = metric.project_loe
+    ws.cell(row=row, column=14).value = metric.project_actuals
 
-    # column 11
-    background_color_fill(ws, row, col=11, background_color=rebeccaPurpleFill)
-    ws.column_dimensions[get_column_letter(11)].width = 4
+    # column 15
+    background_color_fill(ws, row, col=15, background_color=rebeccaPurpleFill)
+    ws.column_dimensions[get_column_letter(15)].width = 4
 
-    # column 12
-    ws.cell(row=row, column=12).value = metric.revisions
-    ws.cell(row=row, column=13).value = metric.rework_introduced_time
-    ws.cell(row=row, column=14).value = metric.avg_throughput
-    ws.cell(row=row, column=15).value = metric.slas_met
-    ws.cell(row=row, column=16).value = metric.slas_missed
-    # ws.cell(row=row, column=17).value = metric.delays_introduced_time
-    ws.cell(row=row, column=17).value = metric.escalations
+    # column 16
+    ws.cell(row=row, column=16).value = metric.revisions
+    ws.cell(row=row, column=17).value = metric.rework_time
+    ws.cell(row=row, column=18).value = metric.creep
+    ws.cell(row=row, column=19).value = metric.rework_external_time
+    ws.cell(row=row, column=20).value = metric.actual_met
+    ws.cell(row=row, column=21).value = metric.actual_miss
+    ws.cell(row=row, column=22).value = metric.system_met
+    ws.cell(row=row, column=23).value = metric.system_miss
+    ws.cell(row=row, column=24).value = metric.compliments
+    ws.cell(row=row, column=25).value = metric.complaints
+    ws.cell(row=row, column=26).value = metric.survey
 
-    # column 18
-    background_color_fill(ws, row, col=18, background_color=saddleBrownFill)
-    ws.column_dimensions[get_column_letter(18)].width = 4
+    # column 27
+    background_color_fill(ws, row, col=27, background_color=saddleBrownFill)
+    ws.column_dimensions[get_column_letter(27)].width = 4
 
-    # column 19
-    ws.cell(row=row, column=19).value = metric.pto_holiday_time
-    ws.cell(row=row, column=20).value = metric.gross_available_time
-    ws.cell(row=row, column=21).value = metric.efficiency
-    ws.cell(row=row, column=21).number_format = '0.00%'
-    ws.cell(row=row, column=22).value = metric.overtime_weekend
-    ws.cell(row=row, column=23).value = metric.overtime_weekday
-    ws.cell(row=row, column=24).value = metric.rework_external_time
+    # column 28
+    ws.cell(row=row, column=28).value = metric.efficiency_time
+    ws.cell(row=row, column=29).value = metric.efficiency
+    ws.cell(row=row, column=29).number_format = '0.00%'
+    ws.cell(row=row, column=30).value = metric.overtime_weekend
+    ws.cell(row=row, column=31).value = metric.overtime_weekday
+    ws.cell(row=row, column=32).value = metric.pto_holiday_time
 
-    # column 25
-    background_color_fill(ws, row, col=25, background_color=oliveDrabFill)
-    ws.column_dimensions[get_column_letter(25)].width = 4
+    # column 33
+    background_color_fill(ws, row, col=33, background_color=oliveDrabFill)
+    ws.column_dimensions[get_column_letter(33)].width = 4
 
-    # column 26
-    add_dollar_symbol(ws, row, col_start=26, col_end=26)
-    add_dollar_symbol(ws, row, col_start=28, col_end=31)
+    # column 34
+    add_dollar_symbol(ws, row, col_start=34, col_end=38)
 
-    ws.cell(row=row, column=26).value = metric.rework_external_cost
-    ws.cell(row=row, column=27).value = metric.resource_swap_time
-    ws.cell(row=row, column=28).value = metric.operational_cost
-    ws.cell(row=row, column=29).value = metric.travel_cost
-    ws.cell(row=row, column=30).value = metric.overall_cost
-    ws.cell(row=row, column=31).value = metric.other_savings
+    ws.cell(row=row, column=34).value = metric.rework_external_cost
+    ws.cell(row=row, column=35).value = metric.operational_cost
+    ws.cell(row=row, column=36).value = metric.travel_cost
+    ws.cell(row=row, column=37).value = metric.overall_cost
+    ws.cell(row=row, column=38).value = metric.other_savings
 
 
 def write_body_qa_te(ws, row, metric):
@@ -635,10 +648,13 @@ def write_human_resource(ws, row, metric):
     # column 2
     background_color_fill(ws, row, col=2, background_color=blackFill)
     ws.column_dimensions[get_column_letter(2)].width = 4
+    if metric.functional_group.abbreviation == 'RE':
+        ws.cell(row=row, column=3).value = metric.staff_minus_manager
+    else:
+        ws.cell(row=row, column=3).value = metric.staffs
 
-    ws.cell(row=row, column=3).value = metric.staffs
     ws.cell(row=row, column=4).value = metric.openings
-    ws.cell(row=row, column=5).value = metric.contractors
+    ws.cell( row=row, column=5).value = metric.contractors
 
     # column 6
     background_color_fill(ws, row, col=6, background_color=cornFlowerBlueFill)
@@ -686,6 +702,7 @@ def write_to_excel_all(metrics, ws, key):
         for metric in metrics:
             write_body_qi(ws, row_start, metric)
             row_start += 1
+
     elif key == 'TL':
         write_head_title(ws, HEAD_TL)
 
@@ -961,8 +978,8 @@ def apply_header_style(ws, cols, key):
         pale_green = [4, 11, 12, 19, 26, 34, 37, 38, 39, 40, 41]
         corn_silk = [33, 35]
     elif key == 'RE':
-        pale_green = [4, 28]
-        corn_silk = [20, 21, 25, 27, 29]
+        pale_green = [4, 35]
+        # corn_silk = [20, 21, 25, 27, 29]
     elif key in ['QA', 'TE']:
         pale_green = [4, 20, 24, 38, 51, 54]
         corn_silk = [25, 26, 42, 43, 44, 50, 52, 53]

@@ -102,26 +102,19 @@ class RequirementStats(BaseStats):
 
     # Utilization & Efficiency
     active_projects = models.PositiveIntegerField(default=0, verbose_name='Project WIP')
-    # active_projects = models.PositiveIntegerField(default=0, verbose_name='Active Projects')
     srs_initial = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='SRS Initial Time')
     srs_detail = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='SRS Detail Time')
     gap_analysis = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='GAP Analysis Time')
-    # efficiency = models.FloatField(default=0.0, verbose_name='Efficiency')
     project_time = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Project Time')
-    # utilization = models.FloatField(default=0.0, verbose_name='Utilization')
 
     # Initiatives
     initiatives = models.PositiveIntegerField(default=0, verbose_name='Team Initiatives')
     time_initiatives = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Initiatives Time')
 
     # Scope Management
-    # revisions = models.PositiveIntegerField(default=0, verbose_name='Revisions')
     revisions = models.PositiveIntegerField(default=0, verbose_name='Rework')
     creep = models.PositiveIntegerField(default=0, verbose_name='Scope Creep')
     rework_external_time = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Scope Creep Time')
-
-    # rework_external_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-    #                                            verbose_name='Rework External Time')
     backlog = models.PositiveIntegerField(default=0, verbose_name='Backlog')
 
     # Levels of Efforts
@@ -133,12 +126,17 @@ class RequirementStats(BaseStats):
     system_miss = models.PositiveIntegerField(default=0, verbose_name='System SLA Miss')
     actual_met = models.PositiveIntegerField(default=0, verbose_name='Actual SLA Met')
     actual_miss = models.PositiveIntegerField(default=0, verbose_name='Actual SLA Miss')
+    # system_met = models.DecimalField(max_digits=3, decimal_places=2, default=0, verbose_name='System SLA Met')
+    # system_miss = models.DecimalField(max_digits=3, decimal_places=2, default=0, verbose_name='System SLA Miss')
+    # actual_met = models.DecimalField(max_digits=3, decimal_places=2, default=0, verbose_name='Actual SLA Met')
+    # actual_miss = models.DecimalField(max_digits=3, decimal_places=2, default=0, verbose_name='Actual SLA Miss')
 
     # Optimization
     optimization_time = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Optimization Time")
 
     # Client Satisfaction
     compliments = models.PositiveIntegerField(default=0, verbose_name='Compliments')
+    complaints = models.PositiveIntegerField(default=0, verbose_name='Complaints')
     survey = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Survey')
 
     # Costs

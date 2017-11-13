@@ -195,6 +195,7 @@ def fetch_personals_per_team_per_date(key, date):
             temp['staff'] = person.human_resource.user.first_name + ' ' + person.human_resource.user.last_name
             temp['analysis_time'] = str(person.elicitation_analysis_time)
             temp['revisions'] = str(person.revisions)
+            temp['rework_time'] = str(person.rework_time)
             temp['rework_internal'] = str(person.rework_time)
             temp['rework_external'] = str(person.rework_external_time)
             temp['travel_cost'] = str(person.travel_cost)
