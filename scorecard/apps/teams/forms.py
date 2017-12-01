@@ -44,15 +44,15 @@ class RequirementForm(ModelForm):
                          ]:
                 self.fields[field] = forms.DecimalField(widget=forms.NumberInput(attrs={'min': '0'}))
 
-        self.fields['system_met'] = forms.DecimalField(widget=forms.NumberInput(attrs={'min': '0',
-                                                                                       'max': '1',
-                                                                                       'step': '0.05',
-                                                                                       'style': 'width: 100%'}))
-
-        self.fields['actual_met'] = forms.DecimalField(widget=forms.NumberInput(attrs={'min': '0',
-                                                                                       'max': '1',
-                                                                                       'step': '0.05',
-                                                                                       'style': 'width: 100%'}))
+        # self.fields['system_met'] = forms.DecimalField(widget=forms.NumberInput(attrs={'min': '0',
+        #                                                                                'max': '1',
+        #                                                                                'step': '0.05',
+        #                                                                                'style': 'width: 100%'}))
+        #
+        # self.fields['actual_met'] = forms.DecimalField(widget=forms.NumberInput(attrs={'min': '0',
+        #                                                                                'max': '1',
+        #                                                                                'step': '0.05',
+        #                                                                                'style': 'width: 100%'}))
 
     class Meta:
         model = RequirementMetrics
