@@ -19,11 +19,12 @@ from scorecard.apps.core.views import check_user_team
 @login_required
 def home(request):
     check_user_team(request)
+    user = request.user
+
     try:
         key = request.user.humanresource.functional_group.abbreviation
     except AttributeError:
         key = ''
-    user = request.user
 
     if key != 'RE' and user_is_manager(user) is False:
         return render(request, 'users/home.html', {'groups': FunctionalGroup.objects.all().order_by('name'),
