@@ -19,12 +19,24 @@ from scorecard.apps.core.views import check_user_team
 @login_required
 def home(request):
     check_user_team(request)
+    try:
+        key = request.user.humanresource.functional_group.abbreviation
+    except AttributeError:
+        key = ''
+    user = request.user
 
-    return render(request, 'users/home.html',
-                  {
-                      'groups': FunctionalGroup.objects.all().order_by('name'),
-                      'column_preferences': ColumnPreference.objects.filter(user=request.user)
-                  })
+    if key != 'RE' and user_is_manager(user) is False:
+        return render(request, 'users/home.html', {'groups': FunctionalGroup.objects.all().order_by('name'),
+                                                    'column_preferences': ColumnPreference.objects.filter(
+                                                        user=request.user)})
+    elif key == 'RE' and user_is_manager(user) is False:
+        return render(request, 'users/home_requirements_nonmanager.html',
+                       {'groups': FunctionalGroup.objects.all().order_by('name'),
+                        'column_preferences': ColumnPreference.objects.filter(user=request.user)})
+    else:
+        return render(request, 'users/home_requirements_manager.html',
+                       {'groups': FunctionalGroup.objects.all().order_by('name'),
+                        'column_preferences': ColumnPreference.objects.filter(user=request.user)})
 
 
 def user_is_superuser(user):

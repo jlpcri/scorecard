@@ -178,13 +178,15 @@
 
 {% block body %}
 
+    {%  include 'users/manager_chart_menu.html' %}
+
     <div class="container west_container">
+
         <ul id="subnav-tabs" class="nav nav-tabs">
             {% for group in groups %}
             <li><a href="#{{ group.abbreviation }}" data-toggle="tab">{{ group.name }}</a></li>
             {% endfor %}
         </ul>
-
         <form action="." method="POST">
             {% csrf_token %}
             <div class="tab-content">
