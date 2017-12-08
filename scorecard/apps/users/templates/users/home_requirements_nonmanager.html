@@ -181,7 +181,9 @@
     <div class="container west_container">
         <ul id="subnav-tabs" class="nav nav-tabs">
             {% for group in groups %}
-            <li><a href="#{{ group.abbreviation }}" data-toggle="tab">{{ group.name }}</a></li>
+                {% if group.abbreviation == 'RE' %}
+                    <li><a href="#{{ group.abbreviation }}" data-toggle="tab">{{ group.name }}</a></li>
+                {% endif %}
             {% endfor %}
         </ul>
 
@@ -194,18 +196,6 @@
                     <div class="title-wrapper" style="width:520px;float:left">
                         <h2>{{ group.quality_graph.title }}</h2>
                         <div id="quality-chart-{{ group.abbreviation }}" style="height:260px;width:520px;"></div>
-                    </div>
-                    <div class="title-wrapper" style="width:520px;float:left">
-                        <h2>{{ group.efficiency_graph.title }}</h2>
-                        <div id="efficiency-chart-{{ group.abbreviation }}" style="height:260px;width:520px;"></div>
-                    </div>
-                    <div class="title-wrapper" style="width:520px;float:left">
-                        <h2>{{ group.throughput_graph.title }}</h2>
-                        <div id="throughput-chart-{{ group.abbreviation }}" style="height:260px;width:520px;"></div>
-                    </div>
-                    <div class="title-wrapper" style="width:520px;float:left">
-                        <h2>{{ group.progress_graph.title }}</h2>
-                        <div id="progress-chart-{{ group.abbreviation }}" style="height:260px;width:520px;"></div>
                     </div>
                 </div>
                 {% endfor %}

@@ -30,6 +30,17 @@
             padding: 0.2em;
         }
 
+        .dataview {
+            dislpay:inline;
+            float:right;
+            margin-top: 15px;
+        }
+
+        .dropdown-menu > li > a:hover {
+                background-color: #ececec;
+                color: #000;
+        }
+
         .td_show_hide_sub_table {
             width: 300px;
             height: 35px;
@@ -113,78 +124,29 @@
                         min: 0
                     }
                 })
-                //data = [[0, .53], [1, .97], [2, 1.35], [3, 1.03], [4, 0.96], [5, 0.89], [6, 0.81]]
-                data = [{% for week in group.efficiency_graph.data reversed %}[{{ forloop.counter0 }}, {{ week.value }}], {% endfor %}]
-                $.plot("#efficiency-chart-{{ group.abbreviation }}", [data], {
-                    series: {
-                        lines: {
-                            show: true,
-                        },
-                        {% if group.efficiency_graph.thresholds %}{% with group.efficiency_graph.thresholds as thresholds %}
-                        threshold: [
-                            {
-                                below: {{ thresholds.too_high }},
-                                color: '#eba51f' //yellow-gold
-                            }, {
-                                below: {{ thresholds.upper_ideal }},
-                                color: '#0d1' //green
-                            }, {
-                                below: {{ thresholds.lower_ideal }},
-                                color: '#f22' //red
-                            }
-                        ]
-                        {% endwith %}{% endif %}
-                    },
-                    xaxis: {
-                        ticks: [{% for week in group.efficiency_graph.data reversed %}[{{ forloop.counter0 }}, "{{ week.date }}"], {% endfor %}]
-                    },
-                    yaxis: {
-                        {% if not group.efficiency_graph.allow_negative %}min: 0{% endif %}
-                    },
-                    colors: ['#ff751f'],
-
-                })
-                data = [{% for week in group.throughput_graph.data reversed %}[{{ forloop.counter0 }}, {{ week.value }}], {% endfor %}]
-                $.plot("#throughput-chart-{{ group.abbreviation }}", [data], {
-                    lines: {show: true},
-                    xaxis: {
-                        ticks: [{% for week in group.throughput_graph.data reversed %}[{{ forloop.counter0 }}, "{{ week.date }}"], {% endfor %}]
-                    },
-                    yaxis: {
-                        {% if not group.throughput_graph.allow_negative %}min: 0{% endif %}
-                    },
-                    colors: ['#1daff2'] //powder blue
-                })
-                $.plot("#progress-chart-{{ group.abbreviation }}",
-                    [
-                        {data: {{ group.progress_graph.data.negative.value }}, color: 'rgba(256,0,0,.9)', width: 6, label: "{{ group.progress_graph.data.negative.label }}"},
-                        {data: {{ group.progress_graph.data.positive.value }}, color: 'rgba(5,5,220,.9)', stroke: {color:'rgba(5,5,220,1)', width: 5}, label: "{{ group.progress_graph.data.positive.label }}"}
-                    ],
-                    {
-                        series: {
-                            pie: {
-                                show: true,
-                                stroke: {width: 2}
-                        }
-                            },
-                        legend: {show: false}
-                    })
             }
-
             {% endfor %}
         </script>
 {% endblock extrahead %}
 
 
 {% block body %}
-
+    <div class="btn-group dataview" data-toggle="buttons">
+        <label class="btn btn-default dropdown-toggle drop-button" data-toggle="dropdown">
+            <span class="caret"></span><span id="text">DataView Options</span>
+        </label>
+        <ul class="dropdown-menu" id="">
+            <li><a class="dropdown-item" id="team"> Team </a></li>
+            <li><a class="dropdown-item" id="personal"> Naomi See </a></li>
+        </ul>
+    </div>
     {%  include 'users/manager_chart_menu.html' %}
-
     <div class="container west_container">
-
         <ul id="subnav-tabs" class="nav nav-tabs">
             {% for group in groups %}
-            <li><a href="#{{ group.abbreviation }}" data-toggle="tab">{{ group.name }}</a></li>
+                {% if group.abbreviation == 'RE' %}
+                    <li style="position:relative;"><a href="#{{ group.abbreviation }}" data-toggle="tab">{{ group.name }}</a></li>
+                {% endif %}
             {% endfor %}
         </ul>
         <form action="." method="POST">
@@ -196,18 +158,6 @@
                     <div class="title-wrapper" style="width:520px;float:left">
                         <h2>{{ group.quality_graph.title }}</h2>
                         <div id="quality-chart-{{ group.abbreviation }}" style="height:260px;width:520px;"></div>
-                    </div>
-                    <div class="title-wrapper" style="width:520px;float:left">
-                        <h2>{{ group.efficiency_graph.title }}</h2>
-                        <div id="efficiency-chart-{{ group.abbreviation }}" style="height:260px;width:520px;"></div>
-                    </div>
-                    <div class="title-wrapper" style="width:520px;float:left">
-                        <h2>{{ group.throughput_graph.title }}</h2>
-                        <div id="throughput-chart-{{ group.abbreviation }}" style="height:260px;width:520px;"></div>
-                    </div>
-                    <div class="title-wrapper" style="width:520px;float:left">
-                        <h2>{{ group.progress_graph.title }}</h2>
-                        <div id="progress-chart-{{ group.abbreviation }}" style="height:260px;width:520px;"></div>
                     </div>
                 </div>
                 {% endfor %}
