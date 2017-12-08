@@ -30,6 +30,10 @@
             padding: 0.2em;
         }
 
+        .titleup {
+            margin-top: -20px;
+        }
+
         .dataview {
             dislpay:inline;
             float:right;
@@ -145,7 +149,7 @@
         <ul id="subnav-tabs" class="nav nav-tabs">
             {% for group in groups %}
                 {% if group.abbreviation == 'RE' %}
-                    <li style="position:relative;"><a href="#{{ group.abbreviation }}" data-toggle="tab">{{ group.name }}</a></li>
+                    <li class="titleup"><a href="#{{ group.abbreviation }}" data-toggle="tab">{{ group.name }}</a></li>
                 {% endif %}
             {% endfor %}
         </ul>
