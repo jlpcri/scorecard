@@ -25,10 +25,10 @@
         ----------------------------------------------------- */
 
         #mainsidebar {
-            width: 350px;
+            width: 300px;
             position: fixed;
             top: 0px;
-            left: -350px;
+            left: -300px;
             height: 100vh;
             z-index: 100001;
             background: #fff;
@@ -83,7 +83,7 @@
         }
 
         #mainsidebar .mainsidebar-header {
-            padding: 22px 10px;
+            padding: 20px;
             background: #d1d1d1;
         }
 
@@ -149,10 +149,19 @@
                     <i class="sideBarCloseIcon glyphicon glyphicon-remove" aria-hidden="true"></i>
                 </div>
                 <div class="mainsidebar-header">
-                    <h2>ManagerView Chart Editor</h2>
+                    <h2>ManagerView</h2>
+                    <h3 style="margin-top: -5px;">Chart Editor</h3>
                 </div>
-                <ul class="list-unstyled components">
-                </ul>
+                {% for group in groups %}
+                    {% if group.abbreviation == 'RE' %}
+                    <ul class="list-unstyled components" style="margin-left: 20px;">
+                        {% for chart_field in group.metric_fields %}
+                                <input type='checkbox' id="chart_field" value="{{ chart_field }}"/>
+                                <label for="chart_field" style="margin-left: 5px;">{{ chart_field.verbose_name | capfirst }}</label><br/>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                {% endfor %}
      </div>
 {% endblock %}
 
