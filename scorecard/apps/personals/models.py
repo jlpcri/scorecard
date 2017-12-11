@@ -11,6 +11,7 @@ class BaseStats(models.Model):
     """
     Base Individual Status for all teams
     """
+
     human_resource = models.ForeignKey(HumanResource)
     created = models.DateTimeField(db_index=True)
     confirmed = models.DateTimeField(auto_now=True, db_index=True)
@@ -253,4 +254,72 @@ class TestStats(BaseStats):
         data.sort(key=itemgetter('ticket'))
 
         return data
+
+
+class PersonalGroup(models.Model):
+    """Functional Group, such as RE, QA, QI, TL"""
+    TESTING = 'Testing'
+    DEVELOPMENT = 'Development'
+    REQUIREMENTS = 'Requirements'
+    LAB = 'Lab'
+    METRIC_CHOICES = (
+        ('Testing', TESTING),
+        ('Development', DEVELOPMENT),
+        ('Requirements', REQUIREMENTS),
+        ('Lab', LAB)
+    )
+
+    def __unicode__(self):
+        return '{0}: {1}'.format(self.name, self.abbreviation)
+
+    class Meta:
+        verbose_name_plural = "Functional Groups"
+
+    @property
+    def metrics_set(self):
+        if self.metric_type == self.TESTING:
+            return self.teststats_set
+        elif self.metric_type == self.DEVELOPMENT:
+            return self.innovationstats_set
+        elif self.metric_type == self.REQUIREMENTS:
+            return self.requirementstats_set
+        elif self.metric_type == self.LAB:
+            return self.labstats_set
+
+    def metric_fields(self):
+        metric = self.metrics()
+        if not metric:
+            return None
+
+        fields = metric._meta.get_fields()
+
+        if self.metric_type == self.TESTING:
+            EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated', 'subteam']
+            return [field for field in fields if field.name not in EXCLUSION_LIST]
+        elif self.metric_type == self.DEVELOPMENT:
+            EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated', 'subteam']
+            return [field for field in fields if field.name not in EXCLUSION_LIST]
+        elif self.metric_type == self.REQUIREMENTS:
+            EXCLUSION_LIST = ['id', 'created', 'staffs', 'confirmed', 'functional_group', 'updated', 'subteam', 'escalations',
+                              'slas_met', 'sdis_not_prevented', 'rework_introduced_time', 'resource_swap',
+                              'resource_swap_time', 'license_cost', 'slas_missed', 'elicitation_analysis_time']
+            return [field for field in fields if field.name not in EXCLUSION_LIST]
+        elif self.metric_type == self.LAB:
+            EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated', 'subteam']
+            return [field for field in fields if field.name not in EXCLUSION_LIST]
+
+    def metrics(self):
+        if self.metric_type == self.TESTING:
+            return TestStats.objects.filter(human_resource=self).first()
+        elif self.metric_type == self.DEVELOPMENT:
+            return InnovationStats.objects.filter(human_resource=self).first()
+        elif self.metric_type == self.REQUIREMENTS:
+            return RequirementStats.objects.filter(human_resource=self).first()
+        elif self.metric_type == self.LAB:
+            return LabStats.objects.filter(human_resource=self).first()
+
+
+    @property
+    def key(self):
+        return self.abbreviation if self.abbreviation not in ['BPO', 'QE'] else 'QI'
 
