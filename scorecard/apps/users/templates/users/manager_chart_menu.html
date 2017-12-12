@@ -129,6 +129,14 @@
             background: #d1d1d1;
         }
 
+        .create {
+            margin-bottom: 20px;
+            margin-top: -10px;
+            margin-right: 10px;
+            background-color: #373838;
+            color: #fff;
+        }
+
     </style>
 {% endblock%}
 
@@ -160,6 +168,7 @@
                                 <label for="chart_field" style="margin-left: 5px;">{{ chart_field.verbose_name | capfirst }}</label><br/>
                         {% endfor %}
                     </ul>
+                        <button type="button" class="btn pull-right create">Create</button>
                     {% endif %}
                 {% endfor %}
      </div>

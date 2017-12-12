@@ -132,36 +132,41 @@
 
 
 {% block body %}
-    <div class="btn-group dataview" data-toggle="buttons">
-        <label class="btn btn-default dropdown-toggle drop-button" data-toggle="dropdown">
-            <span class="caret"></span><span id="text">DataView Options</span>
-        </label>
-        <ul class="dropdown-menu" id="">
-            <li><a class="dropdown-item" id="team"> Team </a></li>
-            <li><a class="dropdown-item" id="personal"> Naomi See </a></li>
-        </ul>
-    </div>
-    <div class="container west_container">
-        <ul id="subnav-tabs" class="nav nav-tabs">
-            {% for group in groups %}
-                {% if group.abbreviation == 'RE' %}
-                    <li><a href="#{{ group.abbreviation }}" data-toggle="tab">{{ group.name }}</a></li>
-                {% endif %}
-            {% endfor %}
-        </ul>
-        <form action="." method="POST">
-            {% csrf_token %}
-            <div class="tab-content">
-                {% for group in groups %}
-                <div class="tab-pane" id="{{ group.abbreviation }}">
-                    <br>
-                    <div class="title-wrapper" style="width:520px;float:left">
-                        <h2>{{ group.quality_graph.title }}</h2>
-                        <div id="quality-chart-{{ group.abbreviation }}" style="height:260px;width:520px;"></div>
-                    </div>
-                </div>
-                {% endfor %}
+    {% for group in groups %}
+        {% if group.abbreviation == 'RE' %}
+            <div class="btn-group dataview" data-toggle="buttons">
+                <label class="btn btn-default dropdown-toggle drop-button" data-toggle="dropdown">
+                    <span class="caret"></span> <span id="text">DataView Options</span>
+                </label>
+                <ul class="dropdown-menu" id="">
+                    {% for subteam in group.subteam_set.all %}
+                        <li><a class="dropdown-item" id="team"> {{ subteam.name }} </a></li>
+                        {% for user in subteam.humanresource_set.all %}
+                            <li><a class="dropdown-item"
+                                   id="personal"> {{ user.user.first_name | title }} {{ user.user.last_name | title }}</a>
+                            </li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
             </div>
-        </form>
-    </div>
+            <div class="container west_container">
+                <ul id="subnav-tabs" class="nav nav-tabs">
+                    <li><a href="#{{ group.abbreviation }}" data-toggle="tab">{{ group.name }}</a></li>
+                </ul>
+                <form action="." method="POST">
+                    {% csrf_token %}
+                    <div class="tab-content">
+                        <div class="tab-pane" id="{{ group.abbreviation }}">
+                            <br>
+                            <div class="title-wrapper" style="width:520px;float:left">
+                                <h2>{{ group.quality_graph.title }}</h2>
+                                <div id="quality-chart-{{ group.abbreviation }}"
+                                     style="height:260px;width:520px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+    {% endfor %}
 {% endblock body %}
