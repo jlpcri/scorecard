@@ -146,32 +146,45 @@
             <i class="glyphicon glyphicon-menu-hamburger activatehamburger"
                aria-hidden="true"></i>
         </a>
-       <a class="navbar-brand"></a>
+        <a class="navbar-brand"></a>
     </div>
-        <div class="row">
-            <div class="overlay"></div>
-        </div>
+    <div class="row">
+        <div class="overlay"></div>
+    </div>
 
-     <div id="mainsidebar">
-                <div id="dismiss">
-                    <i class="sideBarCloseIcon glyphicon glyphicon-remove" aria-hidden="true"></i>
-                </div>
-                <div class="mainsidebar-header">
-                    <h2>ManagerView</h2>
-                    <h3 style="margin-top: -5px;">Chart Editor</h3>
-                </div>
-                {% for group in groups %}
-                    {% if group.abbreviation == 'RE' %}
-                    <ul class="list-unstyled components" style="margin-left: 20px;">
-                        {% for chart_field in group.metric_fields %}
-                                <input type='checkbox' id="chart_field" value="{{ chart_field }}"/>
-                                <label for="chart_field" style="margin-left: 5px;">{{ chart_field.verbose_name | capfirst }}</label><br/>
-                        {% endfor %}
-                    </ul>
-                        <button type="button" class="btn pull-right create">Create</button>
-                    {% endif %}
-                {% endfor %}
-     </div>
+    <div id="mainsidebar">
+        <div id="dismiss">
+            <i class="sideBarCloseIcon glyphicon glyphicon-remove" aria-hidden="true"></i>
+        </div>
+        <div class="mainsidebar-header">
+            <h2>ManagerView</h2>
+            <h3 style="margin-top: -5px;">Chart Editor</h3>
+        </div>
+        {% for group in groups %}
+            {% if group.abbreviation == 'RE' %}
+                <ul class="list-unstyled components" style="margin-left: 20px;">
+                    <input type='checkbox' id="chart_field" value="{{ chart_field.efficiency }}"/>
+                        <label for="chart_field.efficiency"
+                               style="margin-left: 5px;">Efficiency</label><br/>
+                        <input type='checkbox' id="chart_field" value="{{ chart_field.utilization }}"/>
+                        <label for="chart_field.utilization"
+                               style="margin-left: 5px;">Utilization</label><br/>
+                        <input type='checkbox' id="chart_field" value="{{ chart_field.staffs }}"/>
+                        <label for="chart_field.staffs"
+                               style="margin-left: 5px;">Staff</label><br/>
+                        <input type='checkbox' id="chart_field" value="{{ chart_field.staff_minus_manager }}"/>
+                        <label for="chart_field.staff_minus_manager"
+                               style="margin-left: 5px;">Analysts</label><br/>
+                    {% for chart_field in group.metric_fields %}
+                        <input type='checkbox' id="chart_field" value="{{ chart_field }}"/>
+                        <label for="chart_field"
+                               style="margin-left: 5px;">{{ chart_field.verbose_name | capfirst }}</label><br/>
+                    {% endfor %}
+                </ul>
+                <button type="button" class="btn pull-right create">Create</button>
+            {% endif %}
+        {% endfor %}
+    </div>
 {% endblock %}
 
 {% block footer %}
