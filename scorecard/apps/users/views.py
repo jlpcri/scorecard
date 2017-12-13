@@ -26,11 +26,11 @@ def home(request):
     except AttributeError:
         key = ''
 
-    if key != 'RE' and user_is_manager(user) is False:
+    if key != 'RE':
         return render(request, 'users/home.html', {'groups': FunctionalGroup.objects.all().order_by('name'),
                                                     'column_preferences': ColumnPreference.objects.filter(
                                                         user=request.user)})
-    elif key == 'RE' and user_is_manager(user) is False:
+    elif key == 'RE' and user_is_only_manager(user) is False:
         return render(request, 'users/home_requirements_nonmanager.html',
                        {'groups': FunctionalGroup.objects.all().order_by('name'),
                         'column_preferences': ColumnPreference.objects.filter(user=request.user)})
@@ -46,6 +46,10 @@ def user_is_superuser(user):
 
 def user_is_manager(user):
     return user.is_superuser or user.humanresource.manager
+
+
+def user_is_only_manager(user):
+    return user.humanresource.manager
 
 
 def user_manager_check(request):

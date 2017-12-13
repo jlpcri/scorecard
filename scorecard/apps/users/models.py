@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 import json as simplejson
 
@@ -179,6 +180,22 @@ class Subteam(models.Model):
     @property
     def gantt_chart_data(self):
         return self.gantt_phases + self.gantt_tickets
+
+
+class TeamGraph(models.Model):
+    functional_group = models.ForeignKey(FunctionalGroup, null=True, blank=True)
+    name = models.CharField(default='', max_length=50, blank=True)
+    field_selections = ArrayField(
+        ArrayField(models.CharField(max_length=50, blank=True), size=5,), size=5,)
+    position = models.CharField(max_length=120, blank=True)
+
+
+class IndividualGraph(models.Model):
+    functional_group = models.ForeignKey(FunctionalGroup, null=True, blank=True)
+    name = models.CharField(default='', max_length=50, blank=False)
+    field_selections = ArrayField(
+        ArrayField(models.CharField(max_length=50, blank=True), size=5,), size=5,)
+    position = models.CharField(max_length=120, blank=True)
 
 
 class HumanResource(models.Model):
