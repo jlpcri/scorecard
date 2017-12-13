@@ -4,6 +4,7 @@ import json as simplejson
 
 from scorecard.apps.teams.models import TestMetrics, LabMetrics, InnovationMetrics, RequirementMetrics
 from scorecard.apps.projects.utils import REVENUE_SCALE_CHOICES
+from scorecard.apps.personals.models import TestStats, RequirementStats, InnovationStats, LabStats
 
 
 class FunctionalGroup(models.Model):
@@ -213,6 +214,54 @@ class HumanResource(models.Model):
 
     class Meta:
         ordering = ['user__last_name', ]
+
+    @property
+    def metrics_set(self):
+        if self.metric_type == self.TESTING:
+            return self.teststats_set
+        elif self.metric_type == self.DEVELOPMENT:
+            return self.innovationstats_set
+        elif self.metric_type == self.REQUIREMENTS:
+            return self.requirementstats_set
+        elif self.metric_type == self.LAB:
+            return self.labstats_set
+
+    def metric_fields(self):
+        metric = self.metrics()
+        if not metric:
+            return None
+
+        fields = metric._meta.get_fields()
+
+        if self.metric_type == self.TESTING:
+            EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated', 'subteam']
+            return [field for field in fields if field.name not in EXCLUSION_LIST]
+        elif self.metric_type == self.DEVELOPMENT:
+            EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated', 'subteam']
+            return [field for field in fields if field.name not in EXCLUSION_LIST]
+        elif self.metric_type == self.REQUIREMENTS:
+            EXCLUSION_LIST = ['id', 'created', 'staffs', 'confirmed', 'functional_group', 'updated', 'subteam',
+                              'escalations',
+                              'slas_met', 'sdis_not_prevented', 'rework_introduced_time', 'resource_swap',
+                              'resource_swap_time', 'license_cost', 'slas_missed', 'elicitation_analysis_time']
+            return [field for field in fields if field.name not in EXCLUSION_LIST]
+        elif self.metric_type == self.LAB:
+            EXCLUSION_LIST = ['id', 'created', 'confirmed', 'functional_group', 'updated', 'subteam']
+            return [field for field in fields if field.name not in EXCLUSION_LIST]
+
+    def metrics(self):
+        if self.metric_type == self.TESTING:
+            return TestStats.objects.filter(human_resource=self).first()
+        elif self.metric_type == self.DEVELOPMENT:
+            return InnovationStats.objects.filter(human_resource=self).first()
+        elif self.metric_type == self.REQUIREMENTS:
+            return RequirementStats.objects.filter(human_resource=self).first()
+        elif self.metric_type == self.LAB:
+            return LabStats.objects.filter(human_resource=self).first()
+
+    @property
+    def key(self):
+        return self.abbreviation if self.abbreviation not in ['BPO', 'QE'] else 'QI'
 
 
 class ColumnPreference(models.Model):
