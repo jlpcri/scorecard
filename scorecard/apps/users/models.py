@@ -184,7 +184,7 @@ class Subteam(models.Model):
 
 class TeamGraph(models.Model):
     functional_group = models.ForeignKey(FunctionalGroup, null=True, blank=True)
-    name = models.CharField(default='', max_length=50, blank=True)
+    graph_name = models.CharField(default='', max_length=50, blank=True)
     field_selections = ArrayField(
         ArrayField(models.CharField(max_length=50, blank=True), size=5,), size=5,)
     position = models.CharField(max_length=120, blank=True)
@@ -192,7 +192,7 @@ class TeamGraph(models.Model):
 
 class IndividualGraph(models.Model):
     functional_group = models.ForeignKey(FunctionalGroup, null=True, blank=True)
-    name = models.CharField(default='', max_length=50, blank=False)
+    graph_name = models.CharField(default='', max_length=50, blank=False)
     field_selections = ArrayField(
         ArrayField(models.CharField(max_length=50, blank=True), size=5,), size=5,)
     position = models.CharField(max_length=120, blank=True)
