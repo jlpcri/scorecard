@@ -182,21 +182,6 @@ class Subteam(models.Model):
         return self.gantt_phases + self.gantt_tickets
 
 
-class TeamGraph(models.Model):
-    functional_group = models.ForeignKey(FunctionalGroup, null=True, blank=True)
-    graph_name = models.CharField(default='', max_length=50, blank=True)
-    field_selections = ArrayField(
-        ArrayField(models.CharField(max_length=50, blank=True), size=5,), size=5,)
-    position = models.CharField(max_length=120, blank=True)
-
-
-class IndividualGraph(models.Model):
-    functional_group = models.ForeignKey(FunctionalGroup, null=True, blank=True)
-    graph_name = models.CharField(default='', max_length=50, blank=False)
-    field_selections = ArrayField(
-        ArrayField(models.CharField(max_length=50, blank=True), size=5,), size=5,)
-    position = models.CharField(max_length=120, blank=True)
-
 
 class HumanResource(models.Model):
     """
