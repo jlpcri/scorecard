@@ -14,17 +14,34 @@ from django.views.decorators.csrf import csrf_exempt
 
 import simplejson
 from scorecard.apps.core.views import check_user_team
-
+from .forms import graph_metrics
 
 @login_required
 def home(request):
     check_user_team(request)
 
-    return render(request, 'users/home.html',
+    groups = FunctionalGroup.objects.all().order_by('name')
+
+
+    #for group in groups:
+    #    print(group.metrics())
+
+
+
+    return render(request, 'users/temp.html',
                   {
-                      'groups': FunctionalGroup.objects.all().order_by('name'),
+                      'groups': groups,
                       'column_preferences': ColumnPreference.objects.filter(user=request.user)
                   })
+
+
+def temp(request):
+    if request.method == "POST":
+        print('post method')
+        form = graph_metrics(request.POST)
+        print('the form data :',form)
+
+    redirect('users:home')
 
 
 def user_is_superuser(user):

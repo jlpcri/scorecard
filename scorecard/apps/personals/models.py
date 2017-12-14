@@ -254,3 +254,11 @@ class TestStats(BaseStats):
 
         return data
 
+
+class IndividualGraph(models.Model):
+
+    functional_group = models.ForeignKey('users.FunctionalGroup')
+    selections = models.TextField()
+
+    def get_selections(self):
+        return eval(self.selections)

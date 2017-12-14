@@ -557,3 +557,12 @@ class TestMetricsConfiguration(models.Model):
                                            self.hours_per_week,
                                            self.costs_per_hour_staff,
                                            self.costs_per_hour_contractor)
+
+
+class TeamGraph(models.Model):
+
+    functional_group = models.ForeignKey('users.FunctionalGroup')
+    selections = models.TextField()
+
+    def get_selections(self):
+        return eval(self.selections)

@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from scorecard.apps.users import views
 
@@ -16,5 +16,6 @@ urlpatterns = [
     url(r'^add_home_chart?$', views.add_home_chart, name='add_home_chart'),
     url(r'^delete_home_chart?$', views.delete_home_chart, name='delete_home_chart'),
     url(r'^update_user_chart_preferences?$', views.update_user_chart_preferences, name='update_user_chart_preferences'),
+    url(r'^temp/$', views.temp, name='temp'),
 ]
 
