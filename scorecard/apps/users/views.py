@@ -15,11 +15,12 @@ from django.views.decorators.csrf import csrf_exempt
 import simplejson
 from scorecard.apps.core.views import check_user_team
 
-
 @login_required
 def home(request):
     check_user_team(request)
     user = request.user
+    groups = FunctionalGroup.objects.all().order_by('name')
+    column_preference = ColumnPreference.objects.filter(user=user)
 
     try:
         key = request.user.humanresource.functional_group.abbreviation
@@ -27,17 +28,26 @@ def home(request):
         key = ''
 
     if key != 'RE':
-        return render(request, 'users/home.html', {'groups': FunctionalGroup.objects.all().order_by('name'),
-                                                    'column_preferences': ColumnPreference.objects.filter(
-                                                        user=request.user)})
+        return render(request, 'users/home.html',
+                      {'groups': groups,
+                       'column_preferences': column_preference})
     elif key == 'RE' and user_is_only_manager(user) is False:
         return render(request, 'users/home_requirements_nonmanager.html',
-                       {'groups': FunctionalGroup.objects.all().order_by('name'),
-                        'column_preferences': ColumnPreference.objects.filter(user=request.user)})
+                       {'groups': groups,
+                        'column_preferences': column_preference})
     else:
         return render(request, 'users/home_requirements_manager.html',
-                       {'groups': FunctionalGroup.objects.all().order_by('name'),
-                        'column_preferences': ColumnPreference.objects.filter(user=request.user)})
+                       {'groups': groups,
+                        'column_preferences': column_preference})
+
+
+def temp(request):
+    if request.method == "POST":
+        print('post method')
+        form = graph_metrics(request.POST)
+        print('the form data :',form)
+
+    redirect('users:home')
 
 
 def user_is_superuser(user):

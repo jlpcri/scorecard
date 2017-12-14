@@ -4,6 +4,7 @@ from decimal import Decimal
 from django.db import models
 from django.utils.timezone import localtime
 from django.core.validators import MinValueValidator
+from django.contrib.postgres.fields import ArrayField
 
 
 class BaseMetrics(models.Model):
@@ -553,3 +554,13 @@ class TestMetricsConfiguration(models.Model):
                                            self.hours_per_week,
                                            self.costs_per_hour_staff,
                                            self.costs_per_hour_contractor)
+
+
+class TeamGraph(models.Model):
+    functional_group = models.ForeignKey('users.FunctionalGroup')
+    graph_name = models.CharField(default='', max_length=50, blank=False)
+    selections = ArrayField(
+        ArrayField(models.CharField(max_length=50, blank=True), size=5,), size=5,)
+
+    def get_selections(self):
+        return eval(self.selections)

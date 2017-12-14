@@ -1,6 +1,7 @@
 from operator import itemgetter
 from decimal import Decimal
 from django.core.validators import MinValueValidator
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.utils.timezone import localtime
 
@@ -250,3 +251,13 @@ class TestStats(BaseStats):
 
         return data
 
+
+class IndividualGraph(models.Model):
+
+    functional_group = models.ForeignKey('users.FunctionalGroup')
+    graph_name = models.CharField(default='', max_length=50, blank=False)
+    selections = ArrayField(
+        ArrayField(models.CharField(max_length=50, blank=True), size=5,), size=5,)
+
+    def get_selections(self):
+        return eval(self.selections)

@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from django.contrib.postgres.fields import ArrayField
 from django.db import models
 import json as simplejson
 
@@ -180,7 +179,6 @@ class Subteam(models.Model):
     @property
     def gantt_chart_data(self):
         return self.gantt_phases + self.gantt_tickets
-
 
 
 class HumanResource(models.Model):
