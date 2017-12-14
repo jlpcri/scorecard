@@ -363,10 +363,6 @@ class RequirementMetrics(BaseMetrics):
     system_miss = models.PositiveIntegerField(default=0, verbose_name='System SLA Miss')
     actual_met = models.PositiveIntegerField(default=0, verbose_name='Actual SLA Met')
     actual_miss = models.PositiveIntegerField(default=0, verbose_name='Actual SLA Miss')
-    # system_met = models.DecimalField(max_digits=3, decimal_places=2, default=0, verbose_name='System SLA Met')
-    # system_miss = models.DecimalField(max_digits=3, decimal_places=2, default=0, verbose_name='System SLA Miss')
-    # actual_met = models.DecimalField(max_digits=3, decimal_places=2, default=0, verbose_name='Actual SLA Met')
-    # actual_miss = models.DecimalField(max_digits=3, decimal_places=2, default=0, verbose_name='Actual SLA Miss')
 
     # Optimization
     optimization_time = models.DecimalField(max_digits=10, decimal_places=2, default=0,

@@ -1,0 +1,243 @@
+{% extends 'core/base.html' %}
+{% load staticfiles %}
+{% load team_extras %}
+
+{% block title %} Home {% endblock %}
+
+{% block extrahead %}
+
+    <style>
+
+        .west_container {
+            min-width: 60%;
+        }
+
+        .metrics_table th {
+            white-space: nowrap;
+            padding: 0.2em;
+        }
+
+        .metrics_table td {
+            text-align: right;
+            padding: 0.2em;
+        }
+
+        .titleup {
+            margin-top: -40px;
+        }
+
+        .dataview {
+            dislpay:inline;
+            float:right;
+            margin-top: 15px;
+        }
+
+        .dropdown-menu > li > a:hover {
+                background-color: #ececec;
+                color: #000;
+        }
+
+
+    </style>
+    <script>
+            {% include 'users/chartjs_utils.js' %}
+            $(function(){
+                {% for group in groups %}
+                    $("a[href='#{{ group.abbreviation }}']").on("shown.bs.tab", plot{{ group.abbreviation }})
+                {% endfor %}
+                {% if user.humanresource.functional_group %}
+                    $("a[href='#{{ user.humanresource.functional_group.abbreviation }}']").click()
+                {% endif %}
+            })
+            {% for group in groups %}
+            function plot{{ group.abbreviation }}(event) {
+                //var data = [["Jan 7", 0], ["Jan 14", 1], ["Jan 21", 0], ["Jan 28", 0], ["Feb 5", 1], ["Feb 12", 0], ["Feb 19", 1]]
+                var data = [{% for week in group.quality_graph.data reversed %}["{{ week.date }}", {{ week.value }}], {% endfor %}]
+{#                $.plot("#quality-chart-{{ group.abbreviation }}",#}
+{#                [data],#}
+{#                {#}
+{#                    series: {#}
+{#                        bars: {#}
+{#                            show: true,#}
+{#                            align: 'center',#}
+{#                        }#}
+{#                    },#}
+{#                    colors: ['rgba(255,0,0,1)'],#}
+{#                    xaxis: {#}
+{#                        mode: "categories",#}
+{#                        tickLength: 0#}
+{#                    },#}
+{#                    yaxis: {#}
+{#                        tickSize: 5,#}
+{#                        min: 0#}
+{#                    }#}
+{#                })#}
+            }
+            {% endfor %}
+            var lineChartData = {
+        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        datasets: [{
+            label: "My First dataset",
+            borderColor: window.chartColors.orange,
+            backgroundColor: window.chartColors.orange,
+            fill: false,
+            data: [
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor()
+            ],
+            yAxisID: "y-axis-1",
+        }, {
+            label: "My Second dataset",
+            borderColor: window.chartColors.blue,
+            backgroundColor: window.chartColors.blue,
+            fill: false,
+            data: [
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor()
+            ],
+            yAxisID: "y-axis-2"
+        }]
+    };
+
+    window.onload = function() {
+        var ctx = document.getElementById("canvas").getContext("2d");
+        window.myLine = Chart.Line(ctx, {
+            data: lineChartData,
+            options: {
+                responsive: true,
+                hoverMode: 'index',
+                stacked: false,
+                legend: {
+                        position: 'bottom'
+                },
+                title:{
+                    display: true,
+                    text:'Chart.js Line Chart - Multi Axis'
+                },
+                scales: {
+                    yAxes: [{
+                        type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                        display: true,
+                        position: "left",
+                        id: "y-axis-1",
+                    }, {
+                        type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                        display: true,
+                        position: "right",
+                        id: "y-axis-2",
+
+                        // grid line settings
+                        gridLines: {
+                            drawOnChartArea: false, // only want the grid lines for one axis to show up
+                        },
+                    }],
+                }
+            }
+        });
+    };
+
+        function plotUser(user, userpk) {
+            var ctx = document.getElementById("canvas").getContext("2d");
+            console.log('' + userpk + ', ' + user);
+            //console.log({{ user }});
+            var data = [];
+        {% for group in groups %}
+            data = [{% for week in group.quality_graph.data reversed %}["{{ week.date }}", {{ week.value }}], {% endfor %}]
+            console.log(data);
+        {% endfor %}
+            LineChartData = {
+                labels: ["January", "February", "March", "April", "May", "June", "July"],
+                datasets: [{
+                    label: "My First dataset",
+                    borderColor: window.chartColors.orange,
+                    backgroundColor: window.chartColors.orange,
+                    fill: false,
+                    data: [
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor()
+                    ],
+                    yAxisID: "y-axis-1",
+                }, {
+                    label: "My Second dataset",
+                    borderColor: window.chartColors.blue,
+                    backgroundColor: window.chartColors.blue,
+                    fill: false,
+                    data: [
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor()
+                    ],
+                    yAxisID: "y-axis-2"
+                }]
+            };
+        }
+        </script>
+{% endblock extrahead %}
+
+
+{% block body %}
+    {% for group in groups %}
+        <!-- groups are RE, QA, QE, TL, TE -->
+
+        {% if group.abbreviation == 'RE' %}
+            <div class="btn-group dataview" data-toggle="buttons">
+                <label class="btn btn-default dropdown-toggle drop-button" data-toggle="dropdown">
+                    <span class="caret"></span> <span id="text">DataView Options</span>
+                </label>
+                <ul class="dropdown-menu" id="test">
+                    {% for subteam in group.subteam_set.all %}
+                        <li>
+                            <a class="dropdown-item" id="team" name="team" onclick="plotTeam('{{ subteam }}','{{ subteam.pk }}')"> {{ subteam.name }} </a></li>
+                        {% for user in subteam.humanresource_set.all %}
+                            <li>
+                                <a class="dropdown-item" id="personal" name="personal" onclick="plotUser('{{ user.user }}','{{ user.pk }}')">
+                                    {{ user.user.first_name | title }} {{ user.user.last_name | title }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <div><h1>test</h1></div>
+            {% include 'users/manager_chart_menu.html' %}
+            <div class="container west_container">
+                <ul id="subnav-tabs" class="titleup nav nav-tabs">
+                    <li><a href="#{{ group.abbreviation }}" data-toggle="tab">{{ group.name }}</a></li>
+                </ul>
+                <form action="." method="POST">
+                    {% csrf_token %}
+                    <div class="tab-content">
+                        <div class="tab-pane" id="{{ group.abbreviation }}">
+                            <br>
+                            <div class="title-wrapper" style="width:50%;">
+{#                                <h2>{{ group.quality_graph.title }}</h2>#}
+{#                                <div id="quality-chart-{{ group.abbreviation }}"#}
+{#                                     style="height:260px;width:520px;"></div>#}
+                                <canvas id="canvas"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endblock body %}

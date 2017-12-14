@@ -25,6 +25,9 @@
         <link href="{% static 'common/bootstrap-daterangepicker/2.1.17/daterangepicker.css' %}" rel="stylesheet">
         <script src="{% static 'common/bootstrap-daterangepicker/2.1.17/daterangepicker.js' %}"></script>
 
+        <!-- jQuery Nicescroll CDN -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.6.8-fix/jquery.nicescroll.min.js"></script>
+
         <!--[if lt IE 9]>
             <script src="http://apps.qaci01.wic.west.com/static/common/bootstrap/3.0.0/assets/js/html5shiv.js"></script>
             <script src="http://apps.qaci01.wic.west.com/static/common/bootstrap/3.0.0/assets/js/respond.min.js"></script>
@@ -32,10 +35,12 @@
 
         <link rel="stylesheet" type="text/css" href="{% static 'd3charts/d3_west_charts.css' %}"/>
 
-        <script type="text/javascript" language="javascript" src="{% static 'flot/jquery.flot.js' %}"></script>
-        <script type="text/javascript" language="javascript" src="{% static 'flot/jquery.flot.categories.js' %}"></script>
-        <script type="text/javascript" language="javascript" src="{% static 'flot/jquery.flot.pie.js' %}"></script>
-        <script type="text/javascript" language="javascript" src="http://www.flotcharts.org/flot/jquery.flot.threshold.js"></script>
+        <script type="text/javascript" language="javascript" src="{% static 'common/chartjs/chart.js/dist/Chart.js' %}"></script>
+
+{#        <script type="text/javascript" language="javascript" src="{% static 'flot/jquery.flot.js' %}"></script>#}
+{#        <script type="text/javascript" language="javascript" src="{% static 'flot/jquery.flot.categories.js' %}"></script>#}
+{#        <script type="text/javascript" language="javascript" src="{% static 'flot/jquery.flot.pie.js' %}"></script>#}
+{#        <script type="text/javascript" language="javascript" src="http://www.flotcharts.org/flot/jquery.flot.threshold.js"></script>#}
 
 
         <style>
@@ -152,7 +157,7 @@
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-won"></i> Welcome,
+                                <i class=""></i> Welcome,
                                 {% if user.first_name %}
                                     {{ user.first_name }}
                                 {% else %}

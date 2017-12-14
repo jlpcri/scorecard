@@ -1,0 +1,172 @@
+{% extends 'core/base.html' %}
+{% load staticfiles %}
+{% load team_extras %}
+
+{% block title %} Home {% endblock %}
+
+{% block extrahead %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-data-tables/css/jquery.dataTables.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-data-tables/css/jquery-ui.min.css' %}">
+
+
+    <script type="text/javascript" language="javascript" src="{% static 'jquery-data-tables/js/jquery.dataTables.js' %}"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'jquery-data-tables/syntax/shCore.js' %}"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'jquery-data-tables/js/demo.js' %}"></script>
+
+    <style>
+
+        .west_container {
+            min-width: 60%;
+        }
+
+        .metrics_table th {
+            white-space: nowrap;
+            padding: 0.2em;
+        }
+
+        .metrics_table td {
+            text-align: right;
+            padding: 0.2em;
+        }
+
+        .dataview {
+            dislpay:inline;
+            float:right;
+            margin-top: 15px;
+        }
+
+        .dropdown-menu > li > a:hover {
+                background-color: #ececec;
+                color: #000;
+        }
+
+        .td_show_hide_sub_table {
+            width: 300px;
+            height: 35px;
+            white-space: nowrap;
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .td_show_hide_table {
+            border: 1px solid darkgray;
+            white-space: nowrap;
+            padding-left: 10px;
+            padding-right: 10px;
+            text-align:center;
+        }
+
+        .tr1_show_hide_table {
+            border: 0px solid black;
+            width: 200px;
+            min-width: 190px;
+            white-space: nowrap;
+            text-align:center;
+            height:35px;
+        }
+
+        .tr2_show_hide_table {
+            border: 1px solid lightgray;
+            width: 200px;
+            min-width: 190px;
+            white-space: nowrap;
+            text-align:center;
+        }
+
+        .chart_td {
+            border: 0px solid black;
+            width:  400px;
+            height: 400px;
+        }
+
+        .ui-dialog-titlebar {
+            border: 0;
+            padding: .5em 1em;
+            background: darkgray;
+            overflow: auto;
+            zoom: 1;
+        }
+
+    </style>
+    <script>
+            {% include 'users/show_hide_columns.js' %}
+            $(function(){
+                {% for group in groups %}
+                    $("a[href='#{{ group.abbreviation }}']").on("shown.bs.tab", plot{{ group.abbreviation }})
+                {% endfor %}
+                {% if user.humanresource.functional_group %}
+                    $("a[href='#{{ user.humanresource.functional_group.abbreviation }}']").click()
+                {% endif %}
+            })
+            {% for group in groups %}
+            function plot{{ group.abbreviation }}(event) {
+                //var data = [["Jan 7", 0], ["Jan 14", 1], ["Jan 21", 0], ["Jan 28", 0], ["Feb 5", 1], ["Feb 12", 0], ["Feb 19", 1]]
+                var data = [{% for week in group.quality_graph.data reversed %}["{{ week.date }}", {{ week.value }}], {% endfor %}]
+                $.plot("#quality-chart-{{ group.abbreviation }}",
+                [data],
+                {
+                    series: {
+                        bars: {
+                            show: true,
+                            align: 'center',
+                        }
+                    },
+                    colors: ['rgba(255,0,0,1)'],
+                    xaxis: {
+                        mode: "categories",
+                        tickLength: 0
+                    },
+                    yaxis: {
+                        tickSize: 5,
+                        min: 0
+                    }
+                })
+            }
+
+            {% endfor %}
+        </script>
+{% endblock extrahead %}
+
+
+{% block body %}
+    {% for group in groups %}
+        {% if group.abbreviation == 'RE' %}
+            <div class="btn-group dataview" data-toggle="buttons">
+                <label class="btn btn-default dropdown-toggle drop-button" data-toggle="dropdown">
+                    <span class="caret"></span> <span id="text">DataView Options</span>
+                </label>
+                <ul class="dropdown-menu" id="">
+                    {% for subteam in group.subteam_set.all %}
+                        <li><a class="dropdown-item" id="team"> {{ subteam.name }} </a></li>
+                        {% for user in subteam.humanresource_set.all %}
+                            <li><a class="dropdown-item"
+                                   id="personal"> {{ user.user.first_name | title }} {{ user.user.last_name | title }}</a>
+                            </li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="container west_container">
+                <ul id="subnav-tabs" class="nav nav-tabs">
+                    <li><a href="#{{ group.abbreviation }}" data-toggle="tab">{{ group.name }}</a></li>
+                </ul>
+                <form action="." method="POST">
+                    {% csrf_token %}
+                    <div class="tab-content">
+                        <div class="tab-pane" id="{{ group.abbreviation }}">
+                            <br>
+                            <div class="title-wrapper" style="width:520px;float:left">
+                                <h2>{{ group.quality_graph.title }}</h2>
+                                <div id="quality-chart-{{ group.abbreviation }}"
+                                     style="height:260px;width:520px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endblock body %}

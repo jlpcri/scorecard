@@ -1,0 +1,212 @@
+{% block extrahead %}
+    <style type="text/css">
+        p {
+            font-size: 1.5em;
+            font-weight: 500;
+            line-height: 1.7em;
+            color: #999;
+        }
+
+        a, a:hover, a:focus {
+            color: inherit;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .activatehamburger {
+            font-size:1.75em;
+            color:black;
+{#            margin-top:.5em;#}
+            margin-left:.6em;
+{#            z-index:9999;#}
+        }
+
+        /* ---------------------------------------------------
+                        SIDEBAR STYLE
+        ----------------------------------------------------- */
+
+        #mainsidebar {
+            width: 300px;
+            position: fixed;
+            top: 0px;
+            left: -300px;
+            height: 100vh;
+            z-index: 100001;
+            background: #fff;
+            color: #000;
+            transition: all 0.3s;
+            overflow-y: scroll;
+            box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.6);
+        }
+
+        #mainsidebar.active {
+            left: 0;
+        }
+
+        #mainsidebarCollapse {
+            cursor: pointer;
+        }
+
+        #dismiss {
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            background: #d1d1d1;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            -webkit-transition: all 0.3s;
+            -o-transition: all 0.3s;
+            transition: all 0.3s;
+        }
+
+        #dismiss:hover {
+            background: #fff;
+            color: #d1d1d1;
+        }
+
+        .overlay {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background: #D1D1D1;
+            opacity: 0.1;
+            z-index: 100000;
+            top: 0;
+            left: 0;
+            display: none;
+            -webkit-transition: all 0.5s ease;
+            -moz-transition: all 0.5s ease;
+            -o-transition: all 0.5s ease;
+            transition: all 0.5s ease;
+        }
+
+        #mainsidebar .mainsidebar-header {
+            padding: 20px;
+            background: #d1d1d1;
+        }
+
+        #mainsidebar ul.components {
+            padding: 20px 0;
+        }
+
+        #mainsidebar ul p {
+            color: #fff;
+            padding: 10px;
+        }
+
+        #mainsidebar ul li a {
+            padding: 10px;
+            font-size: 1.2em;
+            display: block;
+        }
+
+        #mainsidebar ul li a:hover {
+            color: #7386D5;
+            background: #fff;
+        }
+
+        a[data-toggle="collapse"] {
+            position: relative;
+        }
+
+        a[aria-labelledby="false"]::before, a[aria-labelledby="true"]::before {
+            content: '\e259';
+            display: block;
+            position: absolute;
+            right: 20px;
+            font-size: 0.7em;
+        }
+
+        a[aria-labelledby="true"]::before {
+            content: '\e260';
+        }
+
+        ul ul a {
+            font-size: 1em !important;
+            padding-left: 30px !important;
+            background: #d1d1d1;
+        }
+
+        .create {
+            margin-bottom: 20px;
+            margin-top: -10px;
+            margin-right: 10px;
+            background-color: #373838;
+            color: #fff;
+        }
+
+    </style>
+{% endblock%}
+
+{% block body %}
+    <div class="row" role="navigation">
+        <a id="mainsidebarCollapse" class="navbar-brand">
+            <i class="glyphicon glyphicon-menu-hamburger activatehamburger"
+               aria-hidden="true"></i>
+        </a>
+        <a class="navbar-brand"></a>
+    </div>
+    <div class="row">
+        <div class="overlay"></div>
+    </div>
+
+    <div id="mainsidebar">
+        <div id="dismiss">
+            <i class="sideBarCloseIcon glyphicon glyphicon-remove" aria-hidden="true"></i>
+        </div>
+        <div class="mainsidebar-header">
+            <h2>ManagerView</h2>
+            <h3 style="margin-top: -5px;">Chart Editor</h3>
+        </div>
+        {% for group in groups %}
+            {% if group.abbreviation == 'RE' %}
+                <ul class="list-unstyled components" style="margin-left: 20px;">
+                    <input type='checkbox' id="chart_field" value="{{ chart_field.efficiency }}"/>
+                        <label for="chart_field.efficiency"
+                               style="margin-left: 5px;">Efficiency</label><br/>
+                        <input type='checkbox' id="chart_field" value="{{ chart_field.utilization }}"/>
+                        <label for="chart_field.utilization"
+                               style="margin-left: 5px;">Utilization</label><br/>
+                        <input type='checkbox' id="chart_field" value="{{ chart_field.staffs }}"/>
+                        <label for="chart_field.staffs"
+                               style="margin-left: 5px;">Staff</label><br/>
+                        <input type='checkbox' id="chart_field" value="{{ chart_field.staff_minus_manager }}"/>
+                        <label for="chart_field.staff_minus_manager"
+                               style="margin-left: 5px;">Analysts</label><br/>
+                    {% for chart_field in group.metric_fields %}
+                        <input type='checkbox' id="chart_field" value="{{ chart_field }}"/>
+                        <label for="chart_field"
+                               style="margin-left: 5px;">{{ chart_field.verbose_name | capfirst }}</label><br/>
+                    {% endfor %}
+                </ul>
+                <button type="button" class="btn pull-right create">Create</button>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block footer %}
+    <script>
+        $(document).ready(function () {
+            $("#mainsidebar").niceScroll({
+                cursorcolor: '#53619d',
+                cursorwidth: 4,
+                cursorborder: 'none'
+            });
+
+            $('#dismiss, .overlay').on('click', function () {
+                $('#mainsidebar').removeClass('active');
+                $('.overlay').fadeOut();
+            });
+
+            $('#mainsidebarCollapse').on('click', function () {
+                $('#mainsidebar').addClass('active');
+                $('.overlay').fadeIn();
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-labelledby=true]').attr('aria-labelledby', 'false');
+            });
+        });
+    </script>
+{% endblock %}
