@@ -87,4 +87,3 @@ class TicketModelTest(TestCase):
 
     def test_verbose_name_plural(self):
         self.assertEqual(str(Ticket._meta.verbose_name_plural), 'tickets')
-

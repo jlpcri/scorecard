@@ -1,17 +1,21 @@
 from datetime import datetime
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.template import RequestContext
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
-from scorecard.apps.datas.utils import write_to_excel, write_to_excel_all, write_to_excel_test_summary, \
-    write_to_excel_qi_tl_summary, get_week_ending_date
 
-from scorecard.apps.users.models import FunctionalGroup
-from scorecard.apps.teams.models import InnovationMetrics, LabMetrics, RequirementMetrics, TestMetrics
+from scorecard.apps.datas.utils import (get_week_ending_date, write_to_excel,
+                                        write_to_excel_all,
+                                        write_to_excel_qi_tl_summary,
+                                        write_to_excel_test_summary)
+from scorecard.apps.teams.models import (InnovationMetrics, LabMetrics,
+                                         RequirementMetrics, TestMetrics)
 from scorecard.apps.teams.utils import get_start_end_from_request
+from scorecard.apps.users.models import FunctionalGroup
 
 
 @login_required

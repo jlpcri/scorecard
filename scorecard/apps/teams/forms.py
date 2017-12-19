@@ -1,6 +1,8 @@
 from django import forms
 from django.forms import ModelForm
-from models import TestMetrics, InnovationMetrics, LabMetrics, RequirementMetrics
+
+from models import (InnovationMetrics, LabMetrics, RequirementMetrics,
+                    TestMetrics)
 
 
 class InnovationForm(ModelForm):

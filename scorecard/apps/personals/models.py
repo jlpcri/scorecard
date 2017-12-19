@@ -1,7 +1,8 @@
-from operator import itemgetter
 from decimal import Decimal
-from django.core.validators import MinValueValidator
+from operator import itemgetter
+
 from django.contrib.postgres.fields import ArrayField
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.timezone import localtime
 

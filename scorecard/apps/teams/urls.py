@@ -31,5 +31,3 @@ urlpatterns = [
     url(r'^add_test_lab_chart?$', views.add_test_lab_chart, name='add_test_lab_chart'),
     url(r'^delete_test_lab_chart?$', views.delete_test_lab_chart, name='delete_test_lab_chart'),
 ]
-
-

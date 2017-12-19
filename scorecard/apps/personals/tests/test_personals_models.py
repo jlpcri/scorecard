@@ -1,9 +1,10 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
-from django.utils.timezone import localtime
 from django.utils import timezone
+from django.utils.timezone import localtime
 
-from scorecard.apps.personals.models import InnovationStats, TestStats, LabStats, RequirementStats
+from scorecard.apps.personals.models import (InnovationStats, LabStats,
+                                             RequirementStats, TestStats)
 from scorecard.apps.users.models import FunctionalGroup, HumanResource
 
 

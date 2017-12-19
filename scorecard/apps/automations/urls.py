@@ -2,7 +2,6 @@ from django.conf.urls import url
 
 from scorecard.apps.automations import views
 
-
 urlpatterns = [
     url(r'^$', views.automations, name='automations'),
     url(r'automation_detail/(?P<automation_id>\d+)/$', views.automation_detail, name='automation_detail'),
@@ -12,5 +11,3 @@ urlpatterns = [
 
     url(r'script_test/$', views.script_test, name='script_test'),
 ]
-
-

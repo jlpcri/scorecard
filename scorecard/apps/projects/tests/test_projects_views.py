@@ -1,10 +1,12 @@
 from django.contrib.auth.models import User
-from django.test import TestCase, Client
-from django.core.urlresolvers import reverse, resolve
+from django.core.urlresolvers import resolve, reverse
+from django.test import Client, TestCase
 
+from scorecard.apps.projects.forms import (ProjectNewForm, ProjectPhaseNewForm,
+                                           TicketNewForm)
 from scorecard.apps.projects.models import Project, ProjectPhase, Ticket
-from scorecard.apps.projects.forms import ProjectNewForm, ProjectPhaseNewForm, TicketNewForm
-from scorecard.apps.projects.views import projects, project_new, project_phase_new, ticket_new
+from scorecard.apps.projects.views import (project_new, project_phase_new,
+                                           projects, ticket_new)
 from scorecard.apps.users.models import FunctionalGroup, HumanResource, Subteam
 
 

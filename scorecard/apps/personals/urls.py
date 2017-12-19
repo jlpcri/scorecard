@@ -2,7 +2,6 @@ from django.conf.urls import url
 
 from scorecard.apps.personals import views
 
-
 urlpatterns = [
     url(r'^$', views.personals, name='personals'),
     url(r'^weekly_personal_new_manually/$', views.weekly_personal_stats_new_manually, name='weekly_personal_stats_new_manually'),
@@ -12,5 +11,3 @@ urlpatterns = [
     url(r'collect_data/$', views.collect_data, name='collect_data'),
 
 ]
-
-

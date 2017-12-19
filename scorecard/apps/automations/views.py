@@ -1,13 +1,16 @@
-from datetime import datetime
 import json
+from datetime import datetime
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template import RequestContext
 
+from forms import (AutomationForm, AutomationNewForm,
+                   AutomationPersonalBatchForm, AutomationPersonalForm,
+                   AutomationPersonalNewForm)
 from models import Automation
-from forms import AutomationNewForm, AutomationPersonalNewForm, AutomationForm, AutomationPersonalForm, AutomationPersonalBatchForm
 from scorecard.apps.users.models import FunctionalGroup, Subteam
 
 

@@ -1,10 +1,11 @@
 from __future__ import division
 
 from decimal import Decimal
+
+from django.contrib.postgres.fields import ArrayField
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.timezone import localtime
-from django.core.validators import MinValueValidator
-from django.contrib.postgres.fields import ArrayField
 
 
 class BaseMetrics(models.Model):

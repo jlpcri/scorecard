@@ -20,4 +20,3 @@ def percentage_format(value):
 @register.filter
 def percentage_result(value):
     return '{0:.2f}%'.format(value)
-

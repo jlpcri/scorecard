@@ -1,22 +1,23 @@
 import json
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template import RequestContext
-
-from models import TestMetrics, RequirementMetrics, InnovationMetrics, LabMetrics, TestMetricsConfiguration
-from forms import InnovationForm, LabForm, RequirementForm, TestForm
-from scorecard.apps.core.views import check_user_team
-from scorecard.apps.users.views import user_is_superuser, user_is_manager
-from tasks import weekly_metric_new, weekly_send_email
-from utils import context_teams, fetch_team_members_per_team_per_date, fetch_collect_data_per_team_per_date, \
-    aggregate_subteam_to_team
-from scorecard.apps.users.models import FunctionalGroup, Subteam
-
-from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+
+from forms import InnovationForm, LabForm, RequirementForm, TestForm
+from models import (InnovationMetrics, LabMetrics, RequirementMetrics,
+                    TestMetrics, TestMetricsConfiguration)
+from scorecard.apps.core.views import check_user_team
+from scorecard.apps.users.models import FunctionalGroup, Subteam
+from scorecard.apps.users.views import user_is_manager, user_is_superuser
+from tasks import weekly_metric_new, weekly_send_email
+from utils import (aggregate_subteam_to_team, context_teams,
+                   fetch_collect_data_per_team_per_date,
+                   fetch_team_members_per_team_per_date)
 
 
 @login_required

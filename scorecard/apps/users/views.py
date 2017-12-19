@@ -1,19 +1,19 @@
 import json
-from django.conf import settings
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.template import RequestContext
-
-from models import HumanResource, FunctionalGroup, ColumnPreference, Subteam
-
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
 
 import simplejson
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.models import User
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
+from django.template import RequestContext
+from django.views.decorators.csrf import csrf_exempt
+
+from models import ColumnPreference, FunctionalGroup, HumanResource, Subteam
 from scorecard.apps.core.views import check_user_team
+
 
 @login_required
 def home(request):
@@ -261,4 +261,3 @@ def user_team_assign(request):
         hr.save()
 
         return redirect('users:home')
-

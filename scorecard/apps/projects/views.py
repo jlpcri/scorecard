@@ -1,18 +1,20 @@
-from datetime import datetime
 import json
+from datetime import datetime
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template import RequestContext
 from pytz import timezone
 
 from models import Project, ProjectPhase, Ticket
 from scorecard.apps.core.views import check_user_team
-from scorecard.apps.projects.forms import ProjectNewForm, TicketNewForm, ProjectPhaseNewForm
+from scorecard.apps.projects.forms import (ProjectNewForm, ProjectPhaseNewForm,
+                                           TicketNewForm)
 from scorecard.apps.users.models import FunctionalGroup, HumanResource, Subteam
 from utils import REVENUE_SCALE_CHOICES
 
@@ -257,4 +259,3 @@ def fetch_workers(request):
         data.append(hr.id)
 
     return HttpResponse(json.dumps(data), content_type='application/json')
-

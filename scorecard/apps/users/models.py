@@ -1,9 +1,11 @@
-from django.contrib.auth.models import User
-from django.db import models
 import json as simplejson
 
-from scorecard.apps.teams.models import TestMetrics, LabMetrics, InnovationMetrics, RequirementMetrics
+from django.contrib.auth.models import User
+from django.db import models
+
 from scorecard.apps.projects.utils import REVENUE_SCALE_CHOICES
+from scorecard.apps.teams.models import (InnovationMetrics, LabMetrics,
+                                         RequirementMetrics, TestMetrics)
 
 
 class FunctionalGroup(models.Model):
@@ -233,5 +235,3 @@ class ColumnPreference(models.Model):
 
     def unpack(self):
         return simplejson.dumps(self.hide_list) if self.hide_list else []
-
-

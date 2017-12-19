@@ -1,10 +1,10 @@
 from django.contrib.auth.models import User
-from django.test import Client, TestCase
 from django.core.urlresolvers import resolve, reverse
+from django.test import Client, TestCase
 from django.utils import timezone
 
 from scorecard.apps.teams.models import TestMetrics
-from scorecard.apps.teams.views import teams, metric_detail
+from scorecard.apps.teams.views import metric_detail, teams
 from scorecard.apps.users.models import FunctionalGroup, HumanResource, Subteam
 
 

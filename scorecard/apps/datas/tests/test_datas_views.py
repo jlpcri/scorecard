@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.core.urlresolvers import resolve, reverse
-from django.test import TestCase, Client
+from django.test import Client, TestCase
 
 from scorecard.apps.datas.views import datas, export_excel
 from scorecard.apps.users.models import FunctionalGroup, HumanResource

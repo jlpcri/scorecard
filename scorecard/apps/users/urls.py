@@ -2,7 +2,6 @@ from django.conf.urls import url
 
 from scorecard.apps.users import views
 
-
 urlpatterns = [
     url(r'^home/$', views.home, name='home'),
     url(r'^signin/$', views.sign_in, name='sign_in'),
@@ -18,4 +17,3 @@ urlpatterns = [
     url(r'^update_user_chart_preferences?$', views.update_user_chart_preferences, name='update_user_chart_preferences'),
     url(r'^temp/$', views.temp, name='temp'),
 ]
-

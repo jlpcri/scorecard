@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse, resolve
-from django.test import TestCase, Client
+from django.core.urlresolvers import resolve, reverse
+from django.test import Client, TestCase
 
 from scorecard.apps.users.models import FunctionalGroup, HumanResource
 from scorecard.apps.users.views import home
@@ -66,4 +66,3 @@ class UsersViewTest(TestCase):
         self.assertContains(response, '<li><a href="/scorecard/datas/"><i class="fa fa-pie-chart fa-fw"></i> Data</a> </li>')
         self.assertContains(response, '<li><a href="/scorecard/automations/"><i class="fa fa-table fa-fw"></i> Automation</a> </li>')
         # self.assertContains(response, '<li><a href="/scorecard/help/"><i class="fa fa-thumbs-o-up"></i> Help</a> </li>')
-

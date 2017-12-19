@@ -1,7 +1,7 @@
 from django.db import models
 
 from scorecard.apps.users.models import FunctionalGroup, HumanResource, Subteam
-from utils import calculate_business_day, REVENUE_SCALE_CHOICES, SMALL_REVENUE
+from utils import REVENUE_SCALE_CHOICES, SMALL_REVENUE, calculate_business_day
 
 
 class Project(models.Model):
@@ -92,5 +92,3 @@ class Ticket(models.Model):
             data = 'Null'
 
         return data
-
-

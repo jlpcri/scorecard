@@ -2,9 +2,11 @@ from django import forms
 from django.forms import ModelForm
 
 from models import Automation
-from scorecard.apps.users.models import Subteam, HumanResource
-from scorecard.apps.personals.models import InnovationStats, LabStats, RequirementStats, TestStats
-from scorecard.apps.teams.models import InnovationMetrics, LabMetrics, RequirementMetrics, TestMetrics
+from scorecard.apps.personals.models import (InnovationStats, LabStats,
+                                             RequirementStats, TestStats)
+from scorecard.apps.teams.models import (InnovationMetrics, LabMetrics,
+                                         RequirementMetrics, TestMetrics)
+from scorecard.apps.users.models import HumanResource, Subteam
 from utils import get_model_fields
 
 

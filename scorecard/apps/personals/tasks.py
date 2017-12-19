@@ -1,9 +1,10 @@
 from datetime import date, timedelta
+
 from django.utils import timezone
 
-from scorecard.celery_module import app
-from scorecard.apps.users.models import FunctionalGroup
 from models import InnovationStats, LabStats, RequirementStats, TestStats
+from scorecard.apps.users.models import FunctionalGroup
+from scorecard.celery_module import app
 
 
 @app.task

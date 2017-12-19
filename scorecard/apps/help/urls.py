@@ -6,5 +6,3 @@ urlpatterns = [
     url(r'^$', views.guide, name='guide'),
 
 ]
-
-

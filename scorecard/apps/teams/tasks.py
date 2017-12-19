@@ -1,13 +1,15 @@
 import socket
-from django.utils import timezone
 from datetime import datetime, timedelta
-from django.core.mail import EmailMultiAlternatives
-from django.conf import settings
 
-from scorecard.celery_module import app
-from scorecard.apps.users.models import FunctionalGroup
-from models import TestMetrics, InnovationMetrics, RequirementMetrics, LabMetrics
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.utils import timezone
+
+from models import (InnovationMetrics, LabMetrics, RequirementMetrics,
+                    TestMetrics)
 from scorecard.apps.datas.utils import get_week_ending_date
+from scorecard.apps.users.models import FunctionalGroup
+from scorecard.celery_module import app
 
 
 @app.task

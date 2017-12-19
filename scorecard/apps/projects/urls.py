@@ -2,7 +2,6 @@ from django.conf.urls import url
 
 from scorecard.apps.projects import views
 
-
 urlpatterns = [
        url(r'^$', views.projects, name='projects'),
        url(r'^new/$', views.project_new, name='project_new'),

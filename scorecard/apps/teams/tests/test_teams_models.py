@@ -1,11 +1,15 @@
-from datetime import datetime
 import random
+from datetime import datetime
+
+import pytz
 from django.test import TestCase
 from django.utils.timezone import localtime
-import pytz
 
-from scorecard.apps.teams.models import InnovationMetrics, LabMetrics, RequirementMetrics, TestMetrics, TestMetricsConfiguration
+from scorecard.apps.teams.models import (InnovationMetrics, LabMetrics,
+                                         RequirementMetrics, TestMetrics,
+                                         TestMetricsConfiguration)
 from scorecard.apps.users.models import FunctionalGroup
+
 
 class InnovationMetricsModelTest(TestCase):
     def setUp(self):

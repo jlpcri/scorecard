@@ -1,10 +1,13 @@
 import random
+
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils import timezone
 
-from scorecard.apps.personals.models import InnovationStats, LabStats, RequirementStats, TestStats
-from scorecard.apps.personals.forms import InnovationForm, LabForm, RequirementForm, TestForm
+from scorecard.apps.personals.forms import (InnovationForm, LabForm,
+                                            RequirementForm, TestForm)
+from scorecard.apps.personals.models import (InnovationStats, LabStats,
+                                             RequirementStats, TestStats)
 from scorecard.apps.users.models import FunctionalGroup, HumanResource
 
 

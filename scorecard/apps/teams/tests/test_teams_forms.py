@@ -1,8 +1,10 @@
-from datetime import datetime
 import random
+from datetime import datetime
+
 from django.test import TestCase
 
-from scorecard.apps.teams.forms import InnovationForm, RequirementForm, LabForm, TestForm
+from scorecard.apps.teams.forms import (InnovationForm, LabForm,
+                                        RequirementForm, TestForm)
 
 
 class InnovationFormTest(TestCase):

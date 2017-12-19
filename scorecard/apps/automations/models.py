@@ -1,6 +1,7 @@
+import time
+
 from django.db import models
 from django.utils.timezone import localtime
-import time
 
 from scorecard.apps.users.models import FunctionalGroup
 
@@ -49,7 +50,3 @@ class Automation(models.Model):
                                                self.column_field,
                                                self.tests_run,
                                                localtime(self.last_success))
-
-
-
-

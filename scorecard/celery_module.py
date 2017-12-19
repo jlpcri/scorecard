@@ -1,8 +1,8 @@
 import os
 import socket
-from django.conf import settings
 
 from celery import Celery
+from django.conf import settings
 
 if socket.gethostname() == "sliu-OptiPlex-GX520":
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'scorecard.settings.local')
@@ -18,4 +18,3 @@ else:
 app = Celery('scorecard')
 app.config_from_object('scorecard.celery_config')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS, related_name='tasks')
-

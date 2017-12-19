@@ -1,10 +1,10 @@
 from datetime import date, timedelta
 from itertools import groupby
 
-from models import InnovationStats, TestStats, RequirementStats, LabStats
+from models import InnovationStats, LabStats, RequirementStats, TestStats
 from scorecard.apps.automations.models import Automation
-from scorecard.apps.datas.utils import get_week_ending_date
 from scorecard.apps.automations.utils import get_model_fields
+from scorecard.apps.datas.utils import get_week_ending_date
 
 
 def get_distinct_dates():

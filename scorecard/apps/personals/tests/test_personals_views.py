@@ -1,11 +1,13 @@
 from django.contrib.auth.models import User
-from django.test import TestCase, Client
 from django.core.urlresolvers import resolve, reverse
+from django.test import Client, TestCase
 from django.utils import timezone
 
-from scorecard.apps.personals.models import InnovationStats, LabStats, RequirementStats, TestStats
-from scorecard.apps.personals.forms import InnovationForm, LabForm, RequirementForm, TestForm
-from scorecard.apps.personals.views import personals, personal_stats
+from scorecard.apps.personals.forms import (InnovationForm, LabForm,
+                                            RequirementForm, TestForm)
+from scorecard.apps.personals.models import (InnovationStats, LabStats,
+                                             RequirementStats, TestStats)
+from scorecard.apps.personals.views import personal_stats, personals
 from scorecard.apps.users.models import FunctionalGroup, HumanResource, Subteam
 
 
@@ -158,4 +160,3 @@ class PersonalStatsViewTest(TestCase):
     def test_personal_stats_view_return_200(self):
         response = self.client.get(reverse('personals:personal_stats', args=[self.personal_stats.id, ]), follow=True)
         self.assertEqual(response.status_code, 200)
-

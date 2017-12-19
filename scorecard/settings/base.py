@@ -13,13 +13,15 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
+# LDAP settings
+import ldap
+from django.contrib.messages import constants as messages
+from django_auth_ldap.config import LDAPSearch
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, "..", "media"))
 MEDIA_URL = '/scorecard/media/'
 
-# LDAP settings
-import ldap
-from django_auth_ldap.config import LDAPSearch
 
 LOGIN_URL = '/scorecard/'
 
@@ -148,8 +150,6 @@ SESSION_SAVE_EVERY_REQUEST = True
 STATIC_URL = 'http://apps.qaci01.wic.west.com/static/'
 
 
-# Messages error tag
-from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }

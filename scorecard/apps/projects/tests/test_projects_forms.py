@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from scorecard.apps.projects.forms import ProjectNewForm, ProjectPhaseNewForm, TicketNewForm
+from scorecard.apps.projects.forms import (ProjectNewForm, ProjectPhaseNewForm,
+                                           TicketNewForm)
 from scorecard.apps.projects.models import Project
 from scorecard.apps.users.models import FunctionalGroup, HumanResource, Subteam
 

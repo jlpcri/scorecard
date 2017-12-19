@@ -1,14 +1,16 @@
 from datetime import datetime, timedelta
-from django.conf import settings
-from django.db.models import Sum, Avg
-from pytz import timezone
-from scorecard.apps.automations.models import Automation
 
-from scorecard.apps.personals.models import TestStats, RequirementStats, LabStats
-from scorecard.apps.personals.models import InnovationStats
-from scorecard.apps.users.models import FunctionalGroup, Subteam
-from models import TestMetricsConfiguration, InnovationMetrics, TestMetrics, RequirementMetrics, LabMetrics
+from django.conf import settings
+from django.db.models import Avg, Sum
+from pytz import timezone
+
+from models import (InnovationMetrics, LabMetrics, RequirementMetrics,
+                    TestMetrics, TestMetricsConfiguration)
+from scorecard.apps.automations.models import Automation
 from scorecard.apps.automations.utils import get_model_fields
+from scorecard.apps.personals.models import (InnovationStats, LabStats,
+                                             RequirementStats, TestStats)
+from scorecard.apps.users.models import FunctionalGroup, Subteam
 
 
 def context_teams(request):
