@@ -38,7 +38,7 @@ def home(request):
         return render(request, 'users/home_requirements_manager.html',
                        {'groups': FunctionalGroup.objects.all().order_by('name'),
                         'column_preferences': ColumnPreference.objects.filter(user=request.user),
-                        'humanresource': HumanResource.objects.all().order_by('name'),
+                        'humanresource': HumanResource.objects.all().order_by('user'),
                         'subteam': Subteam.objects.all().order_by('name')})
 
 

@@ -239,13 +239,13 @@ class HumanResource(models.Model):
 
     def metrics(self):
         if self.functional_group.metric_type == FunctionalGroup.TESTING:
-            return TestStats.objects.filter(human_resource=self).first()
+            return TestStats.objects.filter(human_resource=self).all()
         elif self.functional_group.metric_type == FunctionalGroup.DEVELOPMENT:
-            return InnovationStats.objects.filter(human_resource=self).first()
+            return InnovationStats.objects.filter(human_resource=self).all()
         elif self.functional_group.metric_type == FunctionalGroup.REQUIREMENTS:
-            return RequirementStats.objects.filter(human_resource=self).first()
+            return RequirementStats.objects.filter(human_resource=self).all()
         elif self.functional_group.metric_type == FunctionalGroup.LAB:
-            return LabStats.objects.filter(human_resource=self).first()
+            return LabStats.objects.filter(human_resource=self).all()
 
     @property
     def key(self):

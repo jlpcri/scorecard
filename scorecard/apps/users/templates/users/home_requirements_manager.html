@@ -148,13 +148,17 @@
 
         function plotUser(user, userpk) {
             var ctx = document.getElementById("canvas").getContext("2d");
-            console.log('' + userpk + ', ' + user);
-            //console.log({{ user }});
             var data = [];
-        {% for group in groups %}
-            data = [{% for week in group.quality_graph.data reversed %}["{{ week.date }}", {{ week.value }}], {% endfor %}]
-            console.log(data);
-        {% endfor %}
+            {% for hr in humanresource %}
+                {% if hr.functional_group %}
+                    if(userpk == {{ hr.pk }}) {
+                        {% for metric in hr.metrics %}
+                            console.log("{{ metric.stat_summary }}")
+                        {% endfor %}
+                    }
+                {% endif %}
+            {% endfor %}
+
             LineChartData = {
                 labels: ["January", "February", "March", "April", "May", "June", "July"],
                 datasets: [{
@@ -196,8 +200,6 @@
 
 {% block body %}
     {% for group in groups %}
-        <!-- groups are RE, QA, QE, TL, TE -->
-
         {% if group.abbreviation == 'RE' %}
             <div class="btn-group dataview" data-toggle="buttons">
                 <label class="btn btn-default dropdown-toggle drop-button" data-toggle="dropdown">
