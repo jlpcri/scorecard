@@ -186,7 +186,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-2">
-                        <input class="gentle" id="id_efficiency" title="(SRS Initial Time + SRS Detail Time + GAP Analysis Time + Initiatives Time)/((Staff + Contractors-Manager) * 6 * 5)"
+                        <input class="gentle" id="id_efficiency" title="(SRS Initial Time + SRS Detail Time + GAP Analysis Time + Initiatives Time + Scope Creep Time + External Rework Time)/((Staff + Contractors-Manager) * 6 * 5)"
                                 {% if calculate_data %}
                                value="{{ calculate_data.efficiency|percentage_result }}"
                                 {% else %}

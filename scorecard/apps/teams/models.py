@@ -401,7 +401,9 @@ class RequirementMetrics(BaseMetrics):
 
     @property
     def efficiency(self):
-        eff_avg = (self.srs_initial + self.srs_detail + self.gap_analysis + self.time_initiatives)/((self.staffs - 1 + self.contractors)* 6 * 5)
+        eff_avg = (self.srs_initial + self.srs_detail + self.gap_analysis +
+                   self.time_initiatives + self.creep + self.rework_external_time) /\
+                  ((self.staff_minus_manager + self.contractors)* 6 * 5)
         return '{0:.2f}%'.format(eff_avg * 100)
 
     @property
