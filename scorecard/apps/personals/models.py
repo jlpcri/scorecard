@@ -148,7 +148,8 @@ class RequirementStats(BaseStats):
 
     @property
     def efficiency(self):
-        eff_avg = (self.srs_initial + self.srs_detail + self.gap_analysis + self.time_initiatives) / 30
+        eff_avg = (self.srs_initial + self.srs_detail + self.gap_analysis + self.time_initiatives + self.creep +
+                   self.rework_external_time) / 30
         return float("{0:.2f}".format(eff_avg))
 
     @property
