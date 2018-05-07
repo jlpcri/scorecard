@@ -37,17 +37,16 @@ class Automation(models.Model):
 
     class Meta:
         unique_together = (("subteam", "column_field"), ("human_resource", "column_field"), )
+        order_by = ['human_resource', "column_field", "last_success"]
 
     def __unicode__(self):
         if self.subteam:
-            return '{0}: {1}: {2}: {3}'.format(self.subteam.parent.abbreviation,
+            return '{0}: {1}: {2}'.format(self.subteam.parent.abbreviation,
                                                self.column_field,
-                                               self.tests_run,
                                                localtime(self.last_success))
         else:
-            return '{0}: {1}: {2}: {3}'.format(self.human_resource,
+            return '{0}: {1}: {2}'.format(self.human_resource,
                                                self.column_field,
-                                               self.tests_run,
                                                localtime(self.last_success))
 
 
